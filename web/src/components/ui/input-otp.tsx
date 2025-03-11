@@ -9,6 +9,7 @@ import {cn} from "@/lib/utils";
 function InputOTP({
   className,
   containerClassName,
+  inputMode = "text",
   ...props
 }: React.ComponentProps<typeof OTPInput> & {
   containerClassName?: string;
@@ -16,6 +17,7 @@ function InputOTP({
   return (
     <OTPInput
       data-slot="input-otp"
+      inputMode={inputMode}
       containerClassName={cn("flex items-center flex-wrap justify-center gap-2 has-disabled:opacity-50", containerClassName)}
       className={cn("disabled:cursor-not-allowed", className)}
       {...props}
