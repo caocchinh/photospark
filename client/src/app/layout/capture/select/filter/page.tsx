@@ -102,15 +102,17 @@ const FilterPage = () => {
         const slotPosition = photo.selectedImages.findIndex((selectedImage) => selectedImage.id == image.id);
         const imageResponse = await createImage(image.href, photo.id!, slotPosition);
         if (imageResponse.error) {
-          console.error("Failed to upload media to database");
+          console.error("Failed to upload image to database");
         } else {
-          console.log("Media uploaded to database successfully");
+          console.log("Image uploaded to database successfully");
         }
       }
       if (photo.video.r2_url) {
         const videoResponse = await createVideo(photo.video.r2_url, photo.id!);
         if (videoResponse.error) {
           socket.emit("upload-video-error", {url: photo.video.r2_url, id: photo.id!});
+        } else {
+          console.log("Video uploaded to database successfully");
         }
       }
       setIsMediaUploaded(true);

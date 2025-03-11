@@ -11,6 +11,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.758.0",
     "@neondatabase/serverless": "^0.10.4",
+    "@radix-ui/react-slot": "^1.1.2",
     "babel-plugin-react-compiler": "^19.0.0-beta-bafa41b-20250307",
     "canvas": "^3.1.0",
     "class-variance-authority": "^0.7.1",
@@ -26,8 +27,10 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-icons": "^5.5.0",
+    "react-konva": "^19.0.3",
     "tailwind-merge": "^3.0.2",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "use-image": "^1.1.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

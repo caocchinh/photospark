@@ -36,6 +36,7 @@ const PrintPage = () => {
       return photo!.images[photo!.images.length - 1].href != "";
     }
   }, [photo]);
+
   const videoRequestSent = useRef(false);
 
   useEffect(() => {
@@ -46,6 +47,8 @@ const PrintPage = () => {
         {
           dataURL: photo.video.data,
           id: photo.id!,
+          frameImageUrl: photo.theme.frame.src,
+          processingMode: "overlay",
         },
         async (response: {success: boolean; r2_url: string}) => {
           if (response.success) {
@@ -80,7 +83,7 @@ const PrintPage = () => {
             (prevStyle) =>
               prevStyle && {
                 ...prevStyle,
-                images: prevStyle.images.map((item) => (item.id === latestImage.id ? {...item, href: r2Response.url} : item)),
+                images: prevStyle.images.map((item) => (item.id === latestImage.id ? {...item, href: imageUrl} : item)),
               }
           );
         } else {

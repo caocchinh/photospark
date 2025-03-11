@@ -44,19 +44,16 @@ const USAGYUUN_Y_SLOT_SEPERATION = (index: number) => {
 };
 
 const PROM_Y_INIT_POS = 20 * MULTIPLIER;
-const PROM_IMAGE_HEIGHT = 210 * MULTIPLIER;
 const PROM_IMAGE_WIDTH = 292 * MULTIPLIER;
 const PROM_X_POS = 31 * MULTIPLIER;
+const PROM_IMAGE_HEIGHT = 210 * MULTIPLIER;
+
 const PROM_Y_SLOT_SEPERATION = (index: number) => {
   return (280 * (index + 1) - (PROM_Y_INIT_POS / MULTIPLIER) * index) * MULTIPLIER;
 };
 
 export const FrameOptions: {
-  [key in ValidThemeType]: Array<{
-    type: ValidFrameType;
-    src: `/frame/${key}/${key}_${number}.png`;
-    thumbnail?: `/frame/${key}/thumbnail/${key}_${number}.${string}`;
-    slotCount: number;
+  [key in ValidThemeType]: {
     slotDimensions: {
       width: number;
       height: number;
@@ -65,417 +62,53 @@ export const FrameOptions: {
       x: number;
       y: number;
     }[];
-  }>;
+  };
 } = {
-  prom: [
-    {
-      type: "singular",
-      src: "/frame/prom/prom_1.png",
-      thumbnail: "/frame/prom/thumbnail/prom_1.jpg",
-      slotCount: 2,
-      slotDimensions: {
-        height: PROM_IMAGE_HEIGHT,
-        width: PROM_IMAGE_WIDTH,
+  prom: {
+    slotPositions: [
+      {
+        y: PROM_Y_INIT_POS,
+        x: PROM_X_POS,
       },
-      slotPositions: [
-        {
-          y: PROM_Y_INIT_POS,
-          x: PROM_X_POS,
-        },
 
-        {
-          y: PROM_Y_SLOT_SEPERATION(0),
-          x: PROM_X_POS,
-        },
-      ],
-    },
-    {
-      type: "singular",
-      src: "/frame/prom/prom_2.png",
-      thumbnail: "/frame/prom/thumbnail/prom_2.jpg",
-      slotCount: 2,
-      slotDimensions: {
-        height: PROM_IMAGE_HEIGHT,
-        width: PROM_IMAGE_WIDTH,
+      {
+        y: PROM_Y_SLOT_SEPERATION(0),
+        x: PROM_X_POS,
       },
-      slotPositions: [
-        {
-          y: PROM_Y_INIT_POS,
-          x: PROM_X_POS,
-        },
-
-        {
-          y: PROM_Y_SLOT_SEPERATION(0),
-          x: PROM_X_POS,
-        },
-      ],
+    ],
+    slotDimensions: {
+      width: PROM_IMAGE_WIDTH,
+      height: PROM_IMAGE_HEIGHT,
     },
-    {
-      type: "singular",
-      src: "/frame/prom/prom_3.png",
-      thumbnail: "/frame/prom/thumbnail/prom_3.jpg",
-      slotCount: 2,
-      slotDimensions: {
-        height: PROM_IMAGE_HEIGHT,
-        width: PROM_IMAGE_WIDTH,
+  },
+  usagyuun: {
+    slotPositions: [
+      {
+        y: USAGYUUN_Y_INIT_POS,
+        x: USAGYUUN_X_POS,
       },
-      slotPositions: [
-        {
-          y: PROM_Y_INIT_POS,
-          x: PROM_X_POS,
-        },
 
-        {
-          y: PROM_Y_SLOT_SEPERATION(0),
-          x: PROM_X_POS,
-        },
-      ],
-    },
-    {
-      type: "singular",
-      src: "/frame/prom/prom_4.png",
-      thumbnail: "/frame/prom/thumbnail/prom_4.jpg",
-      slotCount: 2,
-      slotDimensions: {
-        height: PROM_IMAGE_HEIGHT,
-        width: PROM_IMAGE_WIDTH,
+      {
+        y: USAGYUUN_Y_SLOT_SEPERATION(0),
+        x: USAGYUUN_X_POS,
       },
-      slotPositions: [
-        {
-          y: PROM_Y_INIT_POS,
-          x: PROM_X_POS,
-        },
 
-        {
-          y: PROM_Y_SLOT_SEPERATION(0),
-          x: PROM_X_POS,
-        },
-      ],
-    },
-
-    {
-      type: "singular",
-      src: "/frame/prom/prom_5.png",
-      thumbnail: "/frame/prom/thumbnail/prom_5.jpg",
-      slotCount: 2,
-      slotDimensions: {
-        height: PROM_IMAGE_HEIGHT,
-        width: PROM_IMAGE_WIDTH,
+      {
+        y: USAGYUUN_Y_SLOT_SEPERATION(1),
+        x: USAGYUUN_X_POS,
       },
-      slotPositions: [
-        {
-          y: PROM_Y_INIT_POS,
-          x: PROM_X_POS,
-        },
 
-        {
-          y: PROM_Y_SLOT_SEPERATION(0),
-          x: PROM_X_POS,
-        },
-      ],
-    },
-    {
-      type: "singular",
-      src: "/frame/prom/prom_6.png",
-      thumbnail: "/frame/prom/thumbnail/prom_6.jpg",
-      slotCount: 2,
-      slotDimensions: {
-        height: PROM_IMAGE_HEIGHT,
-        width: PROM_IMAGE_WIDTH,
+      {
+        y: USAGYUUN_Y_SLOT_SEPERATION(2),
+        x: USAGYUUN_X_POS,
       },
-      slotPositions: [
-        {
-          y: PROM_Y_INIT_POS,
-          x: PROM_X_POS,
-        },
-
-        {
-          y: PROM_Y_SLOT_SEPERATION(0),
-          x: PROM_X_POS,
-        },
-      ],
+    ],
+    slotDimensions: {
+      width: USAGYUUN_IMAGE_WIDTH,
+      height: USAGYUUN_IMAGE_HEIGHT,
     },
-  ],
-  usagyuun: [
-    {
-      type: "double",
-      src: "/frame/usagyuun/usagyuun_1.png",
-      thumbnail: "/frame/usagyuun/thumbnail/usagyuun_1.png",
-      slotCount: 4,
-      slotDimensions: {
-        height: USAGYUUN_IMAGE_HEIGHT,
-        width: USAGYUUN_IMAGE_WIDTH,
-      },
-      slotPositions: [
-        {
-          y: USAGYUUN_Y_INIT_POS,
-          x: USAGYUUN_X_POS,
-        },
-
-        {
-          y: USAGYUUN_Y_SLOT_SEPERATION(0),
-          x: USAGYUUN_X_POS,
-        },
-
-        {
-          y: USAGYUUN_Y_SLOT_SEPERATION(1),
-          x: USAGYUUN_X_POS,
-        },
-
-        {
-          y: USAGYUUN_Y_SLOT_SEPERATION(2),
-          x: USAGYUUN_X_POS,
-        },
-      ],
-    },
-    {
-      type: "double",
-      src: "/frame/usagyuun/usagyuun_2.png",
-      thumbnail: "/frame/usagyuun/thumbnail/usagyuun_2.png",
-      slotCount: 4,
-      slotDimensions: {
-        height: USAGYUUN_IMAGE_HEIGHT,
-        width: USAGYUUN_IMAGE_WIDTH,
-      },
-      slotPositions: [
-        {
-          y: USAGYUUN_Y_INIT_POS,
-          x: USAGYUUN_X_POS,
-        },
-
-        {
-          y: USAGYUUN_Y_SLOT_SEPERATION(0),
-          x: USAGYUUN_X_POS,
-        },
-
-        {
-          y: USAGYUUN_Y_SLOT_SEPERATION(1),
-          x: USAGYUUN_X_POS,
-        },
-
-        {
-          y: USAGYUUN_Y_SLOT_SEPERATION(2),
-          x: USAGYUUN_X_POS,
-        },
-      ],
-    },
-    {
-      type: "double",
-      src: "/frame/usagyuun/usagyuun_3.png",
-      thumbnail: "/frame/usagyuun/thumbnail/usagyuun_3.png",
-      slotCount: 4,
-      slotDimensions: {
-        height: USAGYUUN_IMAGE_HEIGHT,
-        width: USAGYUUN_IMAGE_WIDTH,
-      },
-      slotPositions: [
-        {
-          y: USAGYUUN_Y_INIT_POS,
-          x: USAGYUUN_X_POS,
-        },
-
-        {
-          y: USAGYUUN_Y_SLOT_SEPERATION(0),
-          x: USAGYUUN_X_POS,
-        },
-
-        {
-          y: USAGYUUN_Y_SLOT_SEPERATION(1),
-          x: USAGYUUN_X_POS,
-        },
-
-        {
-          y: USAGYUUN_Y_SLOT_SEPERATION(2),
-          x: USAGYUUN_X_POS,
-        },
-      ],
-    },
-    {
-      type: "double",
-      src: "/frame/usagyuun/usagyuun_4.png",
-      thumbnail: "/frame/usagyuun/thumbnail/usagyuun_4.png",
-      slotCount: 4,
-      slotDimensions: {
-        height: USAGYUUN_IMAGE_HEIGHT,
-        width: USAGYUUN_IMAGE_WIDTH,
-      },
-      slotPositions: [
-        {
-          y: USAGYUUN_Y_INIT_POS,
-          x: USAGYUUN_X_POS,
-        },
-
-        {
-          y: USAGYUUN_Y_SLOT_SEPERATION(0),
-          x: USAGYUUN_X_POS,
-        },
-
-        {
-          y: USAGYUUN_Y_SLOT_SEPERATION(1),
-          x: USAGYUUN_X_POS,
-        },
-
-        {
-          y: USAGYUUN_Y_SLOT_SEPERATION(2),
-          x: USAGYUUN_X_POS,
-        },
-      ],
-    },
-    {
-      type: "double",
-      src: "/frame/usagyuun/usagyuun_5.png",
-      thumbnail: "/frame/usagyuun/thumbnail/usagyuun_5.png",
-      slotCount: 4,
-      slotDimensions: {
-        height: USAGYUUN_IMAGE_HEIGHT,
-        width: USAGYUUN_IMAGE_WIDTH,
-      },
-      slotPositions: [
-        {
-          y: USAGYUUN_Y_INIT_POS,
-          x: USAGYUUN_X_POS,
-        },
-
-        {
-          y: USAGYUUN_Y_SLOT_SEPERATION(0),
-          x: USAGYUUN_X_POS,
-        },
-
-        {
-          y: USAGYUUN_Y_SLOT_SEPERATION(1),
-          x: USAGYUUN_X_POS,
-        },
-
-        {
-          y: USAGYUUN_Y_SLOT_SEPERATION(2),
-          x: USAGYUUN_X_POS,
-        },
-      ],
-    },
-    {
-      type: "double",
-      src: "/frame/usagyuun/usagyuun_6.png",
-      thumbnail: "/frame/usagyuun/thumbnail/usagyuun_6.png",
-      slotCount: 4,
-      slotDimensions: {
-        height: USAGYUUN_IMAGE_HEIGHT,
-        width: USAGYUUN_IMAGE_WIDTH,
-      },
-      slotPositions: [
-        {
-          y: USAGYUUN_Y_INIT_POS,
-          x: USAGYUUN_X_POS,
-        },
-
-        {
-          y: USAGYUUN_Y_SLOT_SEPERATION(0),
-          x: USAGYUUN_X_POS,
-        },
-
-        {
-          y: USAGYUUN_Y_SLOT_SEPERATION(1),
-          x: USAGYUUN_X_POS,
-        },
-
-        {
-          y: USAGYUUN_Y_SLOT_SEPERATION(2),
-          x: USAGYUUN_X_POS,
-        },
-      ],
-    },
-    {
-      type: "double",
-      src: "/frame/usagyuun/usagyuun_7.png",
-      thumbnail: "/frame/usagyuun/thumbnail/usagyuun_7.png",
-      slotCount: 4,
-      slotDimensions: {
-        height: USAGYUUN_IMAGE_HEIGHT,
-        width: USAGYUUN_IMAGE_WIDTH,
-      },
-      slotPositions: [
-        {
-          y: USAGYUUN_Y_INIT_POS,
-          x: USAGYUUN_X_POS,
-        },
-
-        {
-          y: USAGYUUN_Y_SLOT_SEPERATION(0),
-          x: USAGYUUN_X_POS,
-        },
-
-        {
-          y: USAGYUUN_Y_SLOT_SEPERATION(1),
-          x: USAGYUUN_X_POS,
-        },
-
-        {
-          y: USAGYUUN_Y_SLOT_SEPERATION(2),
-          x: USAGYUUN_X_POS,
-        },
-      ],
-    },
-    {
-      type: "double",
-      src: "/frame/usagyuun/usagyuun_8.png",
-      thumbnail: "/frame/usagyuun/thumbnail/usagyuun_8.png",
-      slotCount: 4,
-      slotDimensions: {
-        height: USAGYUUN_IMAGE_HEIGHT,
-        width: USAGYUUN_IMAGE_WIDTH,
-      },
-      slotPositions: [
-        {
-          y: USAGYUUN_Y_INIT_POS,
-          x: USAGYUUN_X_POS,
-        },
-
-        {
-          y: USAGYUUN_Y_SLOT_SEPERATION(0),
-          x: USAGYUUN_X_POS,
-        },
-
-        {
-          y: USAGYUUN_Y_SLOT_SEPERATION(1),
-          x: USAGYUUN_X_POS,
-        },
-
-        {
-          y: USAGYUUN_Y_SLOT_SEPERATION(2),
-          x: USAGYUUN_X_POS,
-        },
-      ],
-    },
-  ],
+  },
 };
-
-export const FrameDefaults: {
-  [key in ValidThemeType]: (typeof FrameOptions)[key][number];
-} = {prom: FrameOptions.prom[0], usagyuun: FrameOptions.usagyuun[0]};
-
-export interface PhotoOptions<T extends ValidThemeType> {
-  theme: {
-    name: T;
-    frame: (typeof FrameOptions)[T][number];
-  };
-  quantity: number;
-  images: Array<{
-    id: string;
-    data: string;
-    href: string;
-  }>;
-  selectedImages: Array<{
-    id: string;
-    data: string;
-    href: string;
-  }>;
-  video: {
-    data: Blob;
-    r2_url: string | null;
-  };
-  id: string | null;
-  error: boolean;
-  isTransition: boolean;
-}
 
 export const NUM_OF_IMAGE = 6;
 
