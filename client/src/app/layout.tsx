@@ -47,7 +47,7 @@ export default function RootLayout({
             <body
               className={`${geistSans.variable} ${geistMono.variable} ${Buffalo.variable} font-sans antialiased bg-[url(/background.webp)] bg-no-repeat bg-cover min-h-screen flex items-center justify-center flex-col w-full`}
             >
-              <title>Photobooth</title>
+              <title>VTEAM Photobooth</title>
 
               <CollabTransitionOverlay />
               <Card
@@ -61,7 +61,7 @@ export default function RootLayout({
               </Card>
               <footer className="w-full fixed bottom-0 flex items-center justify-center bg-black">
                 <TextShimmer
-                  className="  min-w-screen   [--base-color:#f97316] [--base-gradient-color:#fdba74] text-center text-md p-2 gap-3"
+                  className="w-max [--base-color:#f97316] [--base-gradient-color:#fdba74] text-center text-md p-2 gap-3"
                   duration={6}
                 >
                   {t("This application is developed and sponsored by VECTR")}

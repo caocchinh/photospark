@@ -97,19 +97,21 @@ const FilterPage = () => {
 
   useEffect(() => {
     async function uploadImageToDatabase() {
-      if (!photo || !socket || !photo.video.r2_url) return;
+      if (!photo || !socket) return;
       for (const image of photo.images) {
         const slotPosition = photo.selectedImages.findIndex((selectedImage) => selectedImage.id == image.id);
-        const imageResponse = await createImage(image.href, photo!.id!, slotPosition);
+        const imageResponse = await createImage(image.href, photo.id!, slotPosition);
         if (imageResponse.error) {
           console.error("Failed to upload media to database");
         } else {
           console.log("Media uploaded to database successfully");
         }
       }
-      const videoResponse = await createVideo(photo.video.r2_url, photo.id!);
-      if (videoResponse.error) {
-        socket.emit("upload-video-error", {url: photo.video.r2_url, id: photo.id!});
+      if (photo.video.r2_url) {
+        const videoResponse = await createVideo(photo.video.r2_url, photo.id!);
+        if (videoResponse.error) {
+          socket.emit("upload-video-error", {url: photo.video.r2_url, id: photo.id!});
+        }
       }
       setIsMediaUploaded(true);
     }
