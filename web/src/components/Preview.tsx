@@ -1,12 +1,12 @@
 "use client";
 import {ProcessedImageTable, ImageTable, VideoTable} from "@/drizzle/schema";
-import {IMAGE_WIDTH, IMAGE_HEIGHT, OFFSET_X, OFFSET_Y, FRAME_WIDTH, FRAME_HEIGHT, FrameOptions} from "@/constants/constants";
+import {FRAME_WIDTH, FRAME_HEIGHT, FrameOptions} from "@/constants/constants";
 import {useRef} from "react";
 import {Stage as StageElement} from "konva/lib/Stage";
 import {Image as KonvaImage} from "react-konva";
 import {Layer, Stage} from "react-konva";
 import useImage from "use-image";
-import CanvasImage from "@/app/CanvasImage";
+import CanvasImage from "@/components/CanvasImage";
 import {generateTimestampFilename} from "@/lib/utils";
 import {Button} from "./ui/button";
 import Link from "next/link";
@@ -63,15 +63,11 @@ const Canvas = ({
     <>
       <Stage
         ref={stageRef}
-        width={IMAGE_WIDTH}
-        height={IMAGE_HEIGHT}
+        width={FRAME_WIDTH}
+        height={FRAME_HEIGHT}
       >
         {Array.from({length: processedImage.type == "singular" ? 1 : 2}, (_, _index) => (
-          <Layer
-            key={_index}
-            x={OFFSET_X}
-            y={OFFSET_Y}
-          >
+          <Layer key={_index}>
             {images?.map(({id, url, slotPosition}) => {
               return (
                 url &&
@@ -93,11 +89,7 @@ const Canvas = ({
         ))}
 
         {Array.from({length: processedImage.type == "singular" ? 1 : 2}, (_, index) => (
-          <Layer
-            key={index}
-            x={OFFSET_X}
-            y={OFFSET_Y}
-          >
+          <Layer key={index}>
             <KonvaImage
               image={frameImg}
               x={(FRAME_WIDTH / 2) * index}

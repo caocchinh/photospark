@@ -19,7 +19,7 @@ const SelectInstruction = ({open}: {open: boolean}) => {
           onOpenChange={setIsOpened}
         >
           <DrawerTrigger asChild>
-            <Button className="w-full z-10 absolute bottom-[-14px] left-0">{t("Instruction")}</Button>
+            <Button className="w-full min-w-[200px] z-10 absolute bottom-[-14px] left-0">{t("Instruction")}</Button>
           </DrawerTrigger>
           <DrawerContent className="min-w-screen">
             <div className="mx-auto w-full min-h-[50vh]">
