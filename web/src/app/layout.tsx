@@ -40,7 +40,7 @@ export default function RootLayout({
           showSpinner={true}
         />
         {children}
-        <footer className="w-full fixed bottom-0 flex items-center justify-center bg-black flex-col sm:flex-row pb-4 sm:pb-1">
+        <footer className="w-full bottom-0 flex items-center justify-center bg-black flex-col sm:flex-row pb-4 sm:pb-1">
           <TextShimmer
             className="w-max [--base-color:#f97316] [--base-gradient-color:#fdba74] text-center text-md p-2 gap-3"
             duration={6}
