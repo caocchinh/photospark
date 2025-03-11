@@ -1,15 +1,11 @@
 import Canvas from "@/components/Preview";
 import {getImage, getProcessedImage, getVideo} from "@/server/actions";
 
-interface PageProps {
-  params: {
-    id: string;
-  };
-}
+type Params = Promise<{id: string}>;
 
-const PreviewPage = async ({params}: PageProps) => {
-  const resolvedParams = await params;
-  const {id} = resolvedParams;
+const PreviewPage = async (props: {params: Params}) => {
+  const params = await props.params;
+  const id = params.id;
 
   const processedImage = await getProcessedImage(id);
   const images = await getImage(id);
