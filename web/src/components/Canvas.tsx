@@ -9,6 +9,7 @@ import useImage from "use-image";
 import CanvasImage from "@/app/CanvasImage";
 import {generateTimestampFilename} from "@/lib/utils";
 import {Button} from "./ui/button";
+import Link from "next/link";
 
 const Canvas = ({
   processedImage,
@@ -107,12 +108,12 @@ const Canvas = ({
         ))}
       </Stage>
 
-      <div className="mt-4 flex justify-center gap-2 flex-col">
+      <div className="flex justify-center gap-5 flex-col">
         <Button
           className="w-[280px] h-[50px] text-white cursor-pointer text-xl"
           onClick={downloadImage}
         >
-          Tải ảnh
+          Download ảnh
         </Button>
 
         {video?.url && (
@@ -120,9 +121,12 @@ const Canvas = ({
             className="w-[280px] h-[50px] text-white cursor-pointer text-xl"
             onClick={downloadVideo}
           >
-            Tải video
+            Download video
           </Button>
         )}
+        <Button className="w-[280px] h-[50px] text-white cursor-pointer text-xl bg-[#f97316] hover:opacity-90 hover:bg-[#f97316]">
+          <Link href={`/${processedImage.id}/edit`}>Sửa ảnh/In thêm</Link>
+        </Button>
       </div>
     </>
   );

@@ -6,14 +6,14 @@ import Image from "next/image";
 import {InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot} from "@/components/ui/input-otp";
 import {TextShimmer} from "@/components/text-shimmer";
 import {BorderTrail} from "@/components/border-trail";
-import {cn} from "@/lib/utils";
+import {cn, isValidUUID} from "@/lib/utils";
 import {FaArrowUp, FaArrowRight} from "react-icons/fa6";
 
 export default function Home() {
   const [imageId, setImageId] = useState("");
-
+  const [validUUID, setValidUUID] = useState(false);
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && imageId.trim().length === 32) {
+    if (e.key === "Enter" && imageId.trim().length === 32 && validUUID) {
       const link = document.getElementById("imageLink");
       if (link) {
         (link as HTMLAnchorElement).click();
@@ -23,7 +23,11 @@ export default function Home() {
 
   const handleChange = (value: string) => {
     const cleanValue = value.match(/[a-zA-Z0-9]/g)?.join("") || "";
-
+    if (isValidUUID(cleanValue.replace(/(.{8})(.{4})(.{4})(.{4})(.{12})/, "$1-$2-$3-$4-$5"))) {
+      setValidUUID(true);
+    } else {
+      setValidUUID(false);
+    }
     setImageId(cleanValue);
   };
 
@@ -31,6 +35,11 @@ export default function Home() {
     e.preventDefault();
     const pastedText = e.clipboardData.getData("text");
     const cleanValue = pastedText.match(/[a-zA-Z0-9]/g)?.join("") || "";
+    if (isValidUUID(cleanValue.replace(/(.{8})(.{4})(.{4})(.{4})(.{12})/, "$1-$2-$3-$4-$5"))) {
+      setValidUUID(true);
+    } else {
+      setValidUUID(false);
+    }
     setImageId(cleanValue);
   };
 
@@ -107,9 +116,10 @@ export default function Home() {
                 <InputOTPSlot index={31} />
               </InputOTPGroup>
             </InputOTP>
+            {!validUUID && imageId.trim().length === 32 && <p className="text-red-500 text-sm">Vui lòng nhập ID hình hợp lệ</p>}
             <div
               className={cn(
-                imageId.trim().length === 32
+                imageId.trim().length === 32 && validUUID
                   ? "bg-black dark:bg-white text-white dark:text-black cursor-pointer"
                   : "bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 pointer-events-none",
                 "relative w-[300px] p-2 rounded flex items-center justify-center"
@@ -124,7 +134,7 @@ export default function Home() {
               <Link
                 id="imageLink"
                 href={imageId.trim() ? `/${imageId.trim().replace(/(.{8})(.{4})(.{4})(.{4})(.{12})/, "$1-$2-$3-$4-$5")}` : "#"}
-                className={`w-full transition-colors text-center flex items-center justify-center gap-1`}
+                className="w-full transition-colors text-center flex items-center justify-center gap-1"
               >
                 {imageId.trim().length === 32 ? "Tìm hình" : "Nhập ID hình"}
                 {imageId.trim().length === 32 ? <FaArrowRight /> : <FaArrowUp />}

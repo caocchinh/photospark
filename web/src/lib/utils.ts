@@ -11,3 +11,8 @@ export function generateTimestampFilename(prefix: string, extension: string): st
 
   return `${prefix}_${timestamp}.${extension}`;
 }
+
+export const isValidUUID = (id: string): boolean => {
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  return uuidRegex.test(id);
+};

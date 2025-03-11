@@ -16,12 +16,19 @@ const PreviewPage = async ({params}: PageProps) => {
   const video = await getVideo(id);
 
   return (
-    <div className="w-full h-full flex items-center justify-center">
-      <Canvas
-        processedImage={processedImage}
-        images={images}
-        video={video}
-      />
+    <div className="w-full min-h-screen flex items-center justify-center gap-4 bg-[url(/background.webp)]  bg-no-repeat bg-cover">
+      {processedImage.error || images.error || video.error ? (
+        <div className="p-6 bg-white/90 rounded-lg shadow-lg">
+          <h2 className="text-xl font-bold text-red-600">Error</h2>
+          <p className="text-gray-800">Processed image is not available.</p>
+        </div>
+      ) : (
+        <Canvas
+          processedImage={processedImage.data}
+          images={images.data}
+          video={video.data}
+        />
+      )}
     </div>
   );
 };
