@@ -48,7 +48,12 @@ export default function RootLayout({
               className={`${geistSans.variable} ${geistMono.variable} ${Buffalo.variable} font-sans antialiased bg-[url(/background.webp)] bg-no-repeat bg-cover min-h-screen flex items-center justify-center flex-col w-full`}
             >
               <title>VTEAM Photobooth</title>
-
+              <head>
+                <link
+                  rel="shortcut icon"
+                  href="/favicon.ico"
+                />
+              </head>
               <CollabTransitionOverlay />
               <Card
                 className={cn(

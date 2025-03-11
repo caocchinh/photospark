@@ -28,6 +28,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <head>
+          <link
+            rel="shortcut icon"
+            href="/favicon.ico"
+          />
+        </head>
         <NextTopLoader
           color="black"
           zIndex={100000}
