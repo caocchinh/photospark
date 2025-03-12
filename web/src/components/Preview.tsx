@@ -103,6 +103,7 @@ const Preview = ({
           ref={stageRef}
           width={FRAME_WIDTH}
           height={FRAME_HEIGHT}
+          className="pointer-events-none"
         >
           {Array.from({length: processedImage.type == "singular" ? 1 : 2}, (_, _index) => (
             <Layer key={_index}>

@@ -250,7 +250,7 @@ const CapturePage = () => {
               playCameraShutterSound();
             }
           }
-          if (count == 0 && cycles < maxCycles && photo?.id) {
+          if (count <= 0 && cycles < maxCycles && photo?.id) {
             setCycles((prevCycle) => prevCycle + 1);
             setCount(duration);
           }
