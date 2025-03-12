@@ -53,7 +53,7 @@ const CapturePage = () => {
           processedImageId,
           photo.theme!.name,
           photo.theme!.frame.src,
-          photo.theme!.frame.type,
+          photo.frameType,
           photo.theme!.frame.slotCount
         );
         if (response.error) {

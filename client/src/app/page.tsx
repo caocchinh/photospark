@@ -12,10 +12,10 @@ import {cn} from "@/lib/utils";
 import Image from "next/image";
 import {Command, CommandGroup, CommandItem, CommandList} from "@/components/ui/command";
 import {CardContent, CardTitle} from "@/components/ui/card";
-import {BorderTrail} from "@/components/ui/border-trail";
 import Link from "next/link";
 import {ROUTES} from "@/constants/routes";
-
+import SingularLayout from "@/components/layout-image/SingularLayout";
+import DoubleLayout from "@/components/layout-image/DoubleLayout";
 const language = [
   {
     value: "vi",
@@ -136,42 +136,17 @@ const ThemePage = () => {
       <CardContent className="flex items-center justify-center gap-12 w-[90%]">
         <Link
           href={ROUTES.THEME}
-          className="relative shadow-lg border cursor-pointer hover:scale-[1.02] active:scale-[0.99]"
+          className=" cursor-pointer hover:scale-[1.02] active:scale-[0.99]"
           onClick={() => handleTypeChange("singular")}
         >
-          <BorderTrail
-            style={{
-              boxShadow: "0px 0px 60px 30px rgb(255 255 255 / 50%), 0 0 100px 60px rgb(0 0 0 / 50%), 0 0 140px 90px rgb(0 0 0 / 50%)",
-            }}
-            size={100}
-          />
-          <Image
-            src="/single.jpg"
-            width={300}
-            height={700}
-            alt="single"
-          />
+          <SingularLayout />
         </Link>
         <Link
           href={ROUTES.THEME}
-          className="shadow-lg border cursor-pointer hover:scale-[1.02] active:scale-[0.99] flex items-center justify-center gap-4 relative"
+          className=" cursor-pointer hover:scale-[1.02] active:scale-[0.99] "
           onClick={() => handleTypeChange("double")}
         >
-          <BorderTrail
-            style={{
-              boxShadow: "0px 0px 60px 30px rgb(255 255 255 / 50%), 0 0 100px 60px rgb(0 0 0 / 50%), 0 0 140px 90px rgb(0 0 0 / 50%)",
-            }}
-            size={100}
-          />
-          {Array.from({length: 2}).map((_, index) => (
-            <Image
-              key={index}
-              src="/double.jpg"
-              width={150}
-              height={150}
-              alt="single"
-            />
-          ))}
+          <DoubleLayout />
         </Link>
       </CardContent>
     </div>

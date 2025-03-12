@@ -108,7 +108,7 @@ const PrintPage = () => {
   const [lastRemovedImage, setLastRemovedImage] = useState<number>(photo ? photo.theme!.frame.slotCount - 1 : 0);
   const isSingle = useMemo(() => {
     if (!photo) return 1;
-    return photo.theme!.frame.type == "singular" ? 1 : 2;
+    return photo.frameType == "singular" ? 1 : 2;
   }, [photo]);
   const [selected, setSelected] = useState(false);
   const scaleContainerRef = useViewportScale();

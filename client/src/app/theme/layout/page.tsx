@@ -16,6 +16,7 @@ import {ScrollArea} from "@/components/ui/scroll-area";
 import {AnimatedBackground} from "@/components/ui/animated-background";
 import ErrorDialog from "@/components/ErrorDialog";
 import {ROUTES} from "@/constants/routes";
+import {Spotlight} from "@/components/ui/spotlight";
 
 const LayoutPage = () => {
   const {photo, setPhoto} = usePhoto();
@@ -132,7 +133,11 @@ const LayoutPage = () => {
           <div className={cn("flex items-center justify-center gap-10 h-full", chosen ? "pointer-events-none" : null)}>
             <div className="flex items-start flex-col justify-center gap-4 w-max">
               <h1 className="text-4xl font-bold uppercase">{t("Choose a frame")}</h1>
-              <div className="rounded border-2 border-gray-500 flex items-center justify-center py-8 px-2 bg-gray-100 w-[40vw]">
+              <div className="relative rounded border-2 border-gray-500 flex items-center justify-center py-8 px-2 bg-gray-100 w-[40vw]">
+                <Spotlight
+                  className="from-blue-800 via-blue-600 z-10 to-blue-400 blur-xl "
+                  size={64}
+                />
                 <IoIosArrowBack
                   size={60}
                   className="text-primary hover:cursor-pointer carousel-pointer"
@@ -285,6 +290,13 @@ const LayoutPage = () => {
                 >
                   <FaArrowLeft />
                   {t("Choose another theme")}
+                </Link>
+                <Link
+                  href={ROUTES.HOME}
+                  className="flex text-center items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-2 hover:opacity-[85%] w-full"
+                >
+                  <FaArrowLeft />
+                  {t("Choose another layout")}
                 </Link>
                 <div className="relative">
                   <GlowEffect

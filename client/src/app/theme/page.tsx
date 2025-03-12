@@ -9,6 +9,8 @@ import {ROUTES} from "@/constants/routes";
 import {useTranslation} from "react-i18next";
 import {useRouter} from "next/navigation";
 import {FaArrowLeftLong} from "react-icons/fa6";
+import SingularLayout from "@/components/layout-image/SingularLayout";
+import DoubleLayout from "@/components/layout-image/DoubleLayout";
 
 const ThemePage = () => {
   const {photo, setPhoto} = usePhoto();
@@ -38,42 +40,48 @@ const ThemePage = () => {
   return (
     <>
       {photo && (
-        <div className="w-full h-full flex items-center justify-start flex-col">
-          <Link
-            href={ROUTES.HOME}
-            className="w-[250px] self-start ext-white py-2 rounded flex items-center justify-center gap-2 bg-black text-white"
-          >
-            <FaArrowLeftLong />
-            {t("Choose another layout")}
-          </Link>
-          <div className="flex flex-col items-center justify-center gap-8 w-full">
-            <CardTitle className="text-4xl uppercase">{t("Choose a theme")}</CardTitle>
-            <CardContent className="flex items-center justify-center gap-8 flex-wrap w-[90%]">
-              {ThemeSelectButton.map((item, index) => {
-                const hasMatchingFrame = FrameOptions[item.theme].some((frame) => frame.type === photo.frameType);
-                return hasMatchingFrame ? (
-                  <Link
-                    href={ROUTES.LAYOUT}
-                    onClick={() => handleThemeChange(item.theme)}
-                    key={index}
-                  >
-                    <div
-                      className="cursor-pointer w-[200px] h-[200px] hover:scale-[1.02] active:scale-[0.99]"
-                      title={item.title}
+        <div className="w-full h-full flex items-center ">
+          <div className="flex items-start justify-evenly w-full">
+            <div className="flex flex-col w-max items-center justify-center gap-6">
+              <CardTitle className="text-4xl uppercase">{t("Current layout")}</CardTitle>
+              {photo.frameType == "singular" ? <SingularLayout /> : <DoubleLayout />}
+              <Link
+                href={ROUTES.HOME}
+                className="w-full self-start ext-white py-2 rounded flex items-center justify-center gap-2 bg-black text-white"
+              >
+                <FaArrowLeftLong />
+                {t("Choose another layout")}
+              </Link>
+            </div>
+            <div className="flex flex-col items-center justify-center gap-8 w-max">
+              <CardTitle className="text-4xl uppercase">{t("Choose a theme")}</CardTitle>
+              <CardContent className="flex items-center justify-center gap-8 flex-wrap w-[90%]">
+                {ThemeSelectButton.map((item, index) => {
+                  const hasMatchingFrame = FrameOptions[item.theme].some((frame) => frame.type === photo.frameType);
+                  return hasMatchingFrame ? (
+                    <Link
+                      href={ROUTES.LAYOUT}
+                      onClick={() => handleThemeChange(item.theme)}
+                      key={index}
                     >
-                      <Image
-                        height={220}
-                        width={220}
-                        alt={item.title}
-                        src={item.image_src}
-                        className="rounded"
-                        style={item.style}
-                      />
-                    </div>
-                  </Link>
-                ) : null;
-              })}
-            </CardContent>
+                      <div
+                        className="cursor-pointer w-[200px] h-[200px] hover:scale-[1.02] active:scale-[0.99]"
+                        title={item.title}
+                      >
+                        <Image
+                          height={220}
+                          width={220}
+                          alt={item.title}
+                          src={item.image_src}
+                          className="rounded"
+                          style={item.style}
+                        />
+                      </div>
+                    </Link>
+                  ) : null;
+                })}
+              </CardContent>
+            </div>
           </div>
         </div>
       )}

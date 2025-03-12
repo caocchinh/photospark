@@ -29,6 +29,7 @@ const i18nConfig = {
         "Please try again": "Please try again",
         "Choose a layout": "Choose a layout",
         "Choose another layout": "Choose another layout",
+        "Current layout": "Current layout",
       },
     },
     vi: {
@@ -55,6 +56,7 @@ const i18nConfig = {
         "Please try again": "Vui lòng thử lại",
         "Choose a layout": "Chọn layout",
         "Choose another layout": "Chọn layout khác",
+        "Current layout": "Layout hiện tại",
       },
     },
     fr: {
@@ -81,6 +83,7 @@ const i18nConfig = {
         "Please try again": "Veuillez réessayer",
         "Choose a layout": "Choisir le layout",
         "Choose another layout": "Choisir un autre layout",
+        "Current layout": "Layout actuel",
       },
     },
     cn: {
@@ -107,6 +110,7 @@ const i18nConfig = {
         "Please try again": "请重试",
         "Choose a layout": "选择布局",
         "Choose another layout": "选择另一个布局",
+        "Current layout": "当前布局",
       },
     },
   },

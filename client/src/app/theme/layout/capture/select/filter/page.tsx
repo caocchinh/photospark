@@ -78,7 +78,7 @@ const FilterPage = () => {
       socket.emit(
         "print",
         {
-          quantity: photo.theme!.frame.type == "singular" ? photo.quantity : photo.quantity! / 2,
+          quantity: photo.frameType == "singular" ? photo.quantity : photo.quantity! / 2,
           dataURL: dataURL,
           theme: photo.theme!.name,
         },
@@ -230,7 +230,7 @@ const FilterPage = () => {
                       fill="white"
                     />
                   </Layer>
-                  {Array.from({length: photo.theme!.frame.type == "singular" ? 1 : 2}, (_, _index) => (
+                  {Array.from({length: photo.frameType == "singular" ? 1 : 2}, (_, _index) => (
                     <Layer
                       key={_index}
                       x={OFFSET_X}
@@ -254,7 +254,7 @@ const FilterPage = () => {
                     </Layer>
                   ))}
 
-                  {Array.from({length: photo.theme!.frame.type == "singular" ? 1 : 2}, (_, index) => (
+                  {Array.from({length: photo.frameType == "singular" ? 1 : 2}, (_, index) => (
                     <Layer
                       key={index}
                       x={OFFSET_X}
@@ -264,21 +264,17 @@ const FilterPage = () => {
                         image={frameImg}
                         x={(FRAME_WIDTH / 2) * index}
                         height={FRAME_HEIGHT}
-                        width={FRAME_WIDTH / (photo.theme!.frame.type == "singular" ? 1 : 2)}
+                        width={FRAME_WIDTH / (photo.frameType == "singular" ? 1 : 2)}
                       />
                     </Layer>
                   ))}
 
                   <Layer>
-                    {Array.from({length: photo.theme!.frame.type == "singular" ? 1 : 2}, (_, index) => (
+                    {Array.from({length: photo.frameType == "singular" ? 1 : 2}, (_, index) => (
                       <KonvaImage
                         key={index}
                         image={qrCodeImage}
-                        x={
-                          photo.theme!.frame.type == "singular"
-                            ? FRAME_WIDTH - OFFSET_X - 19
-                            : (FRAME_WIDTH / 2) * index + OFFSET_X + FRAME_WIDTH / 2.6
-                        }
+                        x={photo.frameType == "singular" ? FRAME_WIDTH - OFFSET_X - 19 : (FRAME_WIDTH / 2) * index + OFFSET_X + FRAME_WIDTH / 2.6}
                         y={FRAME_HEIGHT - OFFSET_Y - 7}
                         height={40}
                         width={40}
