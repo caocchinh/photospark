@@ -13,7 +13,7 @@ const PreviewPage = async (props: {params: Params}) => {
 
   return (
     <div className="w-full min-h-screen flex items-center justify-center bg-[url(/background.webp)] bg-no-repeat bg-cover">
-      {processedImage.error || images.error || video.error || !processedImage.data || !images.data || !video.data ? (
+      {processedImage.error || !processedImage.data ? (
         <div className="p-6 bg-white/90 rounded-lg shadow-lg">
           <h2 className="text-xl font-bold text-red-600">Error</h2>
           <p className="text-gray-800">Hình không tồn tại</p>

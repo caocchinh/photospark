@@ -1,5 +1,5 @@
 "use client";
-import {usePhoto} from "@/context/StyleContext";
+import {usePhoto} from "@/context/PhotoContext";
 import {Button} from "./ui/button";
 import {Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter, DrawerClose, DrawerTrigger} from "./ui/drawer";
 import {useTranslation} from "react-i18next";

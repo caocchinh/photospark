@@ -1,10 +1,11 @@
 "use client";
-import {usePhoto} from "@/context/StyleContext";
+import {usePhoto} from "@/context/PhotoContext";
 import {useEffect, useState} from "react";
 import Image from "next/image";
 import {useTranslation} from "react-i18next";
 import {SlidingNumber} from "@/components/ui/sliding-number";
 import usePreventNavigation from "@/hooks/usePreventNavigation";
+import {ROUTES} from "@/constants/routes";
 
 const ReviewPage = () => {
   const {photo, setPhoto} = usePhoto();
@@ -13,8 +14,8 @@ const ReviewPage = () => {
   const {t} = useTranslation();
 
   useEffect(() => {
-    if (!photo) return navigateTo("/");
-    if (!photo!.video.r2_url) return navigateTo("/");
+    if (!photo) return navigateTo(ROUTES.HOME);
+    if (!photo.video.r2_url) return navigateTo(ROUTES.HOME);
   }, [photo, navigateTo, setPhoto]);
 
   useEffect(() => {
@@ -28,7 +29,7 @@ const ReviewPage = () => {
       return () => clearInterval(timerId);
     } else {
       setPhoto!(undefined);
-      navigateTo("/");
+      navigateTo(ROUTES.HOME);
     }
   }, [navigateTo, setPhoto, timeLeft]);
 

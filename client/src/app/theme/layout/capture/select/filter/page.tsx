@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import {usePhoto} from "@/context/StyleContext";
+import {usePhoto} from "@/context/PhotoContext";
 import {useCallback, useEffect, useRef, useState} from "react";
 import useImage from "use-image";
 import {Image as KonvaImage, Rect} from "react-konva";
@@ -21,6 +21,7 @@ import usePreventNavigation from "@/hooks/usePreventNavigation";
 import {createImage, createVideo, updateFilter} from "@/server/actions";
 import QRCode from "react-qr-code";
 import ReactDOM from "react-dom/client";
+import {ROUTES} from "@/constants/routes";
 
 const FilterPage = () => {
   const {photo, setPhoto} = usePhoto();
@@ -31,11 +32,11 @@ const FilterPage = () => {
   const {t} = useTranslation();
 
   useEffect(() => {
-    if (!photo) return navigateTo("/");
-    if (photo!.selectedImages.length == 0) return navigateTo("/");
+    if (!photo) return navigateTo(ROUTES.HOME);
+    if (photo.selectedImages.length == 0) return navigateTo(ROUTES.SELECT);
   }, [photo, navigateTo, setPhoto]);
 
-  const [frameImg] = useImage(photo ? photo!.theme.frame.src : "");
+  const [frameImg] = useImage(photo ? photo.theme!.frame.src : "");
 
   const [qrCodeURL, setQrCodeURL] = useState<string>("");
   const [qrCodeImage] = useImage(qrCodeURL);
@@ -48,14 +49,14 @@ const FilterPage = () => {
   const [printed, setPrinted] = useState(false);
 
   const printImage = useCallback(async () => {
-    if (stageRef.current && photo && socket) {
+    if (stageRef.current && photo && socket && photo.id) {
       if (!isConnected) {
         console.error("Socket not connected. Cannot print.");
         return;
       }
       if (printed) return;
       setPrinted(true);
-      const filterReponse = await updateFilter(photo.id!, filter ? filter : "Original");
+      const filterReponse = await updateFilter(photo.id, filter ? filter : "Original");
       if (filterReponse.error) {
         console.error("Failed to update filter");
       } else {
@@ -77,9 +78,9 @@ const FilterPage = () => {
       socket.emit(
         "print",
         {
-          quantity: photo.theme.frame.type == "singular" ? photo.quantity : photo.quantity / 2,
+          quantity: photo.theme!.frame.type == "singular" ? photo.quantity : photo.quantity! / 2,
           dataURL: dataURL,
-          theme: photo.theme.name,
+          theme: photo.theme!.name,
         },
         async (response: {success: boolean; message?: string}) => {
           console.log("Print event emitted:", response);
@@ -88,7 +89,7 @@ const FilterPage = () => {
           }
           await videoPreload;
           if (isMediaUploaded) {
-            navigateTo("/layout/capture/select/filter/review");
+            navigateTo(ROUTES.REVIEW);
           }
         }
       );
@@ -229,7 +230,7 @@ const FilterPage = () => {
                       fill="white"
                     />
                   </Layer>
-                  {Array.from({length: photo.theme.frame.type == "singular" ? 1 : 2}, (_, _index) => (
+                  {Array.from({length: photo.theme!.frame.type == "singular" ? 1 : 2}, (_, _index) => (
                     <Layer
                       key={_index}
                       x={OFFSET_X}
@@ -241,10 +242,10 @@ const FilterPage = () => {
                             <SelectedImage
                               key={id}
                               url={data}
-                              y={photo.theme.frame.slotPositions[index].y}
-                              x={photo.theme.frame.slotPositions[index].x + (FRAME_WIDTH / 2) * _index}
-                              height={photo.theme.frame.slotDimensions.height}
-                              width={photo.theme.frame.slotDimensions.width}
+                              y={photo.theme!.frame.slotPositions[index].y}
+                              x={photo.theme!.frame.slotPositions[index].x + (FRAME_WIDTH / 2) * _index}
+                              height={photo.theme!.frame.slotDimensions.height}
+                              width={photo.theme!.frame.slotDimensions.width}
                               filter={filter}
                             />
                           )
@@ -253,7 +254,7 @@ const FilterPage = () => {
                     </Layer>
                   ))}
 
-                  {Array.from({length: photo.theme.frame.type == "singular" ? 1 : 2}, (_, index) => (
+                  {Array.from({length: photo.theme!.frame.type == "singular" ? 1 : 2}, (_, index) => (
                     <Layer
                       key={index}
                       x={OFFSET_X}
@@ -263,18 +264,18 @@ const FilterPage = () => {
                         image={frameImg}
                         x={(FRAME_WIDTH / 2) * index}
                         height={FRAME_HEIGHT}
-                        width={FRAME_WIDTH / (photo.theme.frame.type == "singular" ? 1 : 2)}
+                        width={FRAME_WIDTH / (photo.theme!.frame.type == "singular" ? 1 : 2)}
                       />
                     </Layer>
                   ))}
 
                   <Layer>
-                    {Array.from({length: photo.theme.frame.type == "singular" ? 1 : 2}, (_, index) => (
+                    {Array.from({length: photo.theme!.frame.type == "singular" ? 1 : 2}, (_, index) => (
                       <KonvaImage
                         key={index}
                         image={qrCodeImage}
                         x={
-                          photo.theme.frame.type == "singular"
+                          photo.theme!.frame.type == "singular"
                             ? FRAME_WIDTH - OFFSET_X - 19
                             : (FRAME_WIDTH / 2) * index + OFFSET_X + FRAME_WIDTH / 2.6
                         }

@@ -1,5 +1,5 @@
 "use client";
-import {usePhoto} from "@/context/StyleContext";
+import {usePhoto} from "@/context/PhotoContext";
 import SlideTransition from "@/components/SlideTransition";
 import {useEffect, useState} from "react";
 

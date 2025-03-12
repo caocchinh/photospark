@@ -35,12 +35,17 @@ export default function Home() {
     e.preventDefault();
     const pastedText = e.clipboardData.getData("text");
     const cleanValue = pastedText.match(/[a-zA-Z0-9]/g)?.join("") || "";
-    if (isValidUUID(cleanValue.replace(/(.{8})(.{4})(.{4})(.{4})(.{12})/, "$1-$2-$3-$4-$5"))) {
+
+    if (isValidUUID(formatUUID(cleanValue))) {
       setValidUUID(true);
     } else {
       setValidUUID(false);
     }
     setImageId(cleanValue);
+  };
+
+  const formatUUID = (uuid: string): string => {
+    return uuid.replace(/(.{8})(.{4})(.{4})(.{4})(.{12})/, "$1-$2-$3-$4-$5");
   };
 
   return (
@@ -133,7 +138,7 @@ export default function Home() {
               />
               <Link
                 id="imageLink"
-                href={imageId.trim() ? `/${imageId.trim().replace(/(.{8})(.{4})(.{4})(.{4})(.{12})/, "$1-$2-$3-$4-$5")}` : "#"}
+                href={imageId.trim() ? `/${formatUUID(imageId.trim())}` : "#"}
                 className="w-full transition-colors text-center flex items-center justify-center gap-1"
               >
                 {imageId.trim().length === 32 ? "Tìm hình" : "Nhập ID hình"}

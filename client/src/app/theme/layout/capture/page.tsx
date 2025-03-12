@@ -1,5 +1,5 @@
 "use client";
-import {usePhoto} from "@/context/StyleContext";
+import {usePhoto} from "@/context/PhotoContext";
 import {cn} from "@/lib/utils";
 import {useState, useEffect, useRef, useCallback} from "react";
 import useSound from "use-sound";
@@ -12,6 +12,7 @@ import {SlidingNumber} from "@/components/ui/sliding-number";
 import {TextShimmer} from "@/components/ui/text-shimmer";
 import usePreventNavigation from "@/hooks/usePreventNavigation";
 import {createProcessedImage} from "@/server/actions";
+import {ROUTES} from "@/constants/routes";
 
 const CapturePage = () => {
   const duration = 2;
@@ -33,8 +34,8 @@ const CapturePage = () => {
   const {navigateTo} = usePreventNavigation();
 
   useEffect(() => {
-    if (!photo) return navigateTo("/");
-    if (photo!.images!.length == maxCycles) return navigateTo("/layout/capture/select");
+    if (!photo) return navigateTo(ROUTES.HOME);
+    if (photo!.images!.length == maxCycles) return navigateTo(ROUTES.SELECT);
   }, [photo, navigateTo, maxCycles]);
 
   useEffect(() => {
@@ -50,10 +51,10 @@ const CapturePage = () => {
         });
         const response = await createProcessedImage(
           processedImageId,
-          photo.theme.name,
-          photo.theme.frame.src,
-          photo.theme.frame.type,
-          photo.theme.frame.slotCount
+          photo.theme!.name,
+          photo.theme!.frame.src,
+          photo.theme!.frame.type,
+          photo.theme!.frame.slotCount
         );
         if (response.error) {
           console.log("Error creating processed image: ", response.error);
@@ -63,7 +64,7 @@ const CapturePage = () => {
             }
             return prevStyle;
           });
-          navigateTo("/layout");
+          navigateTo(ROUTES.LAYOUT);
           return;
         }
         console.log("Processed image created successfully: ", processedImageId);
@@ -95,13 +96,14 @@ const CapturePage = () => {
   }, [selectedDevice]);
 
   const handleCapture = useCallback(async () => {
+    if (!photo) return;
     if (videoRef.current) {
       const canvas = document.createElement("canvas");
       const context = canvas.getContext("2d", {colorSpace: "display-p3", willReadFrequently: true});
 
       if (context) {
-        canvas.width = cameraSize!.width || photo!.theme.frame.slotDimensions.width;
-        canvas.height = cameraSize!.height || photo!.theme.frame.slotDimensions.height;
+        canvas.width = cameraSize!.width || photo.theme!.frame.slotDimensions.width;
+        canvas.height = cameraSize!.height || photo.theme!.frame.slotDimensions.height;
         context.scale(-1, 1);
         context.translate(-canvas.width, 0);
         context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
@@ -119,7 +121,7 @@ const CapturePage = () => {
         } else {
           setPhoto!((prevStyle) => prevStyle && {...prevStyle, error: true});
           setUploadedImages([]);
-          navigateTo("/layout");
+          navigateTo(ROUTES.LAYOUT);
         }
       }
     }
@@ -192,7 +194,7 @@ const CapturePage = () => {
 
   useEffect(() => {
     const getVideo = async () => {
-      if (!photoRef.current?.theme.frame.slotDimensions) return;
+      if (!photoRef.current?.theme!.frame.slotDimensions) return;
       const multiplier = Math.min(
         window.innerWidth / photoRef.current?.theme.frame.slotDimensions.width,
         window.innerHeight / photoRef.current?.theme.frame.slotDimensions.height
@@ -268,7 +270,7 @@ const CapturePage = () => {
               return prevStyle;
             });
             setIsCountingDown(false);
-            navigateTo("/layout/capture/select");
+            navigateTo(ROUTES.SELECT);
           }
         }
       }, 1000);

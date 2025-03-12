@@ -1,7 +1,7 @@
 "use client";
 import {Carousel, CarouselContent, CarouselItem, type CarouselApi} from "@/components/ui/carousel";
 import {FrameOptions, ValidThemeType} from "@/constants/constants";
-import {usePhoto} from "@/context/StyleContext";
+import {usePhoto} from "@/context/PhotoContext";
 import {cn} from "@/lib/utils";
 import {WheelGesturesPlugin} from "embla-carousel-wheel-gestures";
 import Image from "next/image";
@@ -15,14 +15,15 @@ import {GlowEffect} from "@/components/ui/glow-effect";
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {AnimatedBackground} from "@/components/ui/animated-background";
 import ErrorDialog from "@/components/ErrorDialog";
+import {ROUTES} from "@/constants/routes";
 
 const LayoutPage = () => {
   const {photo, setPhoto} = usePhoto();
   const router = useRouter();
   const {t} = useTranslation();
   useEffect(() => {
-    if (!photo) return router.push("/");
-    if (photo!.images.length > 0) return router.push("/layout/capture/");
+    if (!photo) return router.push(ROUTES.HOME);
+    if (photo.images.length > 0) return router.push(ROUTES.CAPTURE);
   }, [photo, router]);
   const maxQuantity = 5;
   const [api, setApi] = useState<CarouselApi>();
@@ -31,7 +32,8 @@ const LayoutPage = () => {
   const thumbnailRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [chosen, setChosen] = useState<boolean>(false);
   const handleQuantityChange = (quantity: number) => {
-    setPhoto!((prevStyle) => {
+    if (!setPhoto) return;
+    setPhoto((prevStyle) => {
       if (prevStyle) {
         return {
           ...prevStyle,
@@ -44,33 +46,37 @@ const LayoutPage = () => {
 
   const handleFrameChange = useCallback(
     (frameAttribute: (typeof FrameOptions)[ValidThemeType][number]) => {
-      setPhoto!((prevStyle) => {
-        if (prevStyle) {
-          return {
-            ...prevStyle,
-            theme: {
-              ...prevStyle.theme,
-              frame: frameAttribute,
-            },
-          };
-        }
+      if (!setPhoto) return;
+      setPhoto((prevStyle) => {
+        if (!prevStyle || !prevStyle.theme) return prevStyle;
+        return {
+          ...prevStyle,
+          theme: {
+            ...prevStyle.theme,
+            name: prevStyle.theme.name,
+            frame: frameAttribute,
+          },
+        };
       });
     },
     [setPhoto]
   );
 
   const handleLeftClick = useCallback(() => {
-    api?.scrollPrev();
+    if (!api) return;
+    api.scrollPrev();
   }, [api]);
 
   const handleRightClick = useCallback(() => {
-    api?.scrollNext();
+    if (!api) return;
+    api.scrollNext();
   }, [api]);
 
   const handleCarouselItemClick = useCallback(
     (index: number) => {
-      api?.scrollTo(index);
-      apiPreview?.scrollTo(index);
+      if (!api || !apiPreview) return;
+      api.scrollTo(index);
+      apiPreview.scrollTo(index);
     },
     [api, apiPreview]
   );
@@ -81,20 +87,26 @@ const LayoutPage = () => {
     }
 
     const handleAPISelect = () => {
-      setCurrent(api.selectedScrollSnap() + 1);
-      handleCarouselItemClick(api.selectedScrollSnap());
-      handleFrameChange(FrameOptions[photo!.theme.name][api.selectedScrollSnap()]);
-      thumbnailRefs.current[api.selectedScrollSnap()]?.scrollIntoView({
+      if (!api) return;
+      const selectedIndex = api.selectedScrollSnap();
+      if (thumbnailRefs.current[selectedIndex] == null || !photo.theme) return;
+      setCurrent(selectedIndex + 1);
+      handleCarouselItemClick(selectedIndex);
+      handleFrameChange(FrameOptions[photo.theme.name][selectedIndex]);
+      thumbnailRefs.current[selectedIndex].scrollIntoView({
         behavior: "instant",
         block: "center",
       });
     };
 
     const handlePreviewAPISelect = () => {
-      setCurrent(apiPreview.selectedScrollSnap() + 1);
-      handleCarouselItemClick(apiPreview.selectedScrollSnap());
-      handleFrameChange(FrameOptions[photo!.theme.name][apiPreview.selectedScrollSnap()]);
-      thumbnailRefs.current[apiPreview.selectedScrollSnap()]?.scrollIntoView({
+      if (!apiPreview) return;
+      const selectedIndex = apiPreview.selectedScrollSnap();
+      if (thumbnailRefs.current[selectedIndex] == null || !photo.theme) return;
+      setCurrent(selectedIndex + 1);
+      handleCarouselItemClick(selectedIndex);
+      handleFrameChange(FrameOptions[photo.theme.name][selectedIndex]);
+      thumbnailRefs.current[selectedIndex].scrollIntoView({
         behavior: "instant",
         block: "center",
       });
@@ -110,7 +122,7 @@ const LayoutPage = () => {
 
   return (
     <>
-      {photo && (
+      {photo && photo.theme && (
         <>
           <div className={cn("flex items-center justify-center gap-10 h-full", chosen ? "pointer-events-none" : null)}>
             <div className="flex items-start flex-col justify-center gap-4 w-max">
@@ -130,20 +142,20 @@ const LayoutPage = () => {
                   }}
                 >
                   <CarouselContent>
-                    {FrameOptions[photo!.theme.name].map((item, index) => (
+                    {FrameOptions[photo.theme.name].map((item, index) => (
                       <CarouselItem
                         key={index}
                         className="flex gap-4 basis-[100%] items-center justify-center "
                       >
-                        {Array.from({length: photo!.theme.frame.type == "singular" ? 1 : 2}, (_, index) => {
+                        {Array.from({length: photo.theme!.frame.type == "singular" ? 1 : 2}, (_, index) => {
                           return (
                             <Image
                               key={index}
                               src={item.src}
                               alt="Frame"
                               height={235}
-                              width={photo!.theme.frame.type == "singular" ? 235 : 120}
-                              className={cn(photo!.theme.frame.type == "singular" ? "w-[17vw]" : "w-[9vw]")}
+                              width={photo.theme!.frame.type == "singular" ? 235 : 120}
+                              className={cn(photo.theme!.frame.type == "singular" ? "w-[17vw]" : "w-[9vw]")}
                             />
                           );
                         })}
@@ -167,12 +179,12 @@ const LayoutPage = () => {
                   }}
                 >
                   <CarouselContent className="p-2">
-                    {FrameOptions[photo!.theme.name].map((item, index) => (
+                    {FrameOptions[photo.theme.name].map((item, index) => (
                       <CarouselItem
                         key={index}
                         className={cn(
                           "flex items-center justify-center cursor-pointer",
-                          photo?.theme.frame.type == "singular" ? " basis-1/4" : "basis-[15%]"
+                          photo.theme!.frame.type == "singular" ? " basis-1/4" : "basis-[15%]"
                         )}
                         onClick={() => {
                           handleCarouselItemClick(index);
@@ -212,7 +224,7 @@ const LayoutPage = () => {
                     }}
                   >
                     {Array.from({length: maxQuantity}, (_, index) => {
-                      const quantiy = (index + 1) * (photo?.theme.frame.type == "singular" ? 1 : 2);
+                      const quantiy = (index + 1) * (photo.theme!.frame.type == "singular" ? 1 : 2);
                       return (
                         <div
                           className={cn(
@@ -231,7 +243,7 @@ const LayoutPage = () => {
               </div>
               <ScrollArea className="w-[350px] h-[35%]">
                 <div className="flex gap-4 flex-wrap items-center justify-center w-full">
-                  {FrameOptions[photo!.theme.name].map((item, index) => {
+                  {FrameOptions[photo.theme.name].map((item, index) => {
                     const thumbnail = item.thumbnail;
                     if (!thumbnail) return null;
                     return (
@@ -256,7 +268,7 @@ const LayoutPage = () => {
 
                         <IoIosCheckmark
                           color="#4ade80 "
-                          className={cn("absolute w-full h-full top-0 bg-black/50", photo?.theme.frame.thumbnail == thumbnail ? "block" : "hidden")}
+                          className={cn("absolute w-full h-full top-0 bg-black/50", photo.theme!.frame.thumbnail == thumbnail ? "block" : "hidden")}
                           size={50}
                         />
                       </div>
@@ -266,7 +278,7 @@ const LayoutPage = () => {
               </ScrollArea>
               <div className="flex flex-col gap-4 w-full">
                 <Link
-                  href="/"
+                  href={ROUTES.HOME}
                   className="flex  text-center items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-2 hover:opacity-[85%] w-full"
                 >
                   <FaArrowLeft />
@@ -281,7 +293,7 @@ const LayoutPage = () => {
                     scale={1.02}
                   />
                   <Link
-                    href="/layout/capture"
+                    href={ROUTES.CAPTURE}
                     className="flex text-center items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-2 hover:opacity-[85%] w-full bg-green-700 z-10 relative"
                     onClick={() => {
                       setChosen(true);

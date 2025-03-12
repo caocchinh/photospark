@@ -2,7 +2,7 @@
 
 import {Geist, Geist_Mono} from "next/font/google";
 import "./globals.css";
-import {PhotoProvider} from "@/context/StyleContext";
+import {PhotoProvider} from "@/context/PhotoContext";
 import Image from "next/image";
 import {SocketProvider} from "@/context/SocketContext";
 import {I18nextProvider, useTranslation} from "react-i18next";
@@ -14,7 +14,7 @@ import {cn} from "@/lib/utils";
 import CollabTransitionOverlay from "@/components/CollabTransitionOverlay";
 import {TextShimmer} from "@/components/ui/text-shimmer";
 import localFont from "next/font/local";
-
+import {ROUTES} from "@/constants/routes";
 const Buffalo = localFont({
   src: "./fonts/BuffaloDemoVersionRegular-axZ1R.ttf",
   variable: "--font-buffalo",
@@ -58,8 +58,8 @@ export default function RootLayout({
               <Card
                 className={cn(
                   "bg-background w-[85%] h-[90vh] mb-8 flex items-center p-8 flex-col gap-9",
-                  pathname === "/" ? "justify-start" : "justify-center",
-                  pathname === "/layout/capture" ? "w-[95%] h-[92vh] " : "w-[85%] h-[90vh] "
+                  pathname === ROUTES.HOME ? "justify-start" : "justify-center",
+                  pathname === ROUTES.CAPTURE ? "w-[95%] h-[92vh] " : "w-[85%] h-[90vh] "
                 )}
               >
                 <PageTransitionEffect>{children}</PageTransitionEffect>

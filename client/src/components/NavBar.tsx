@@ -5,11 +5,11 @@ import React from "react";
 import {usePathname} from "next/navigation";
 import {cn} from "@/lib/utils";
 import {BorderTrail} from "./ui/border-trail";
-
+import {ROUTES} from "@/constants/routes";
 const NavBar = () => {
   const path = usePathname();
-  const isActive = path == "/" || path == "/layout";
-  const hideNavBar = path === "/layout/capture";
+  const isActive = path == ROUTES.HOME || path == ROUTES.LAYOUT || path == ROUTES.THEME;
+  const hideNavBar = path === ROUTES.CAPTURE;
   return (
     <header className={cn("bg-transparent pt-4 px-5 fixed w-full top-0", hideNavBar ? "hidden" : null)}>
       <nav className=" flex w-full justify-between">
@@ -22,7 +22,7 @@ const NavBar = () => {
           />
           <Link
             className={cn("flex items-center justify-center p-2 px-1", !isActive ? "pointer-events-none" : null)}
-            href="/"
+            href={ROUTES.HOME}
           >
             <Image
               src="/logo.png"

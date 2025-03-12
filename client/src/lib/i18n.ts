@@ -27,6 +27,8 @@ const i18nConfig = {
         "Drag to switch images position": "Drag to switch images position",
         "An error occurred": "An error occurred",
         "Please try again": "Please try again",
+        "Choose a layout": "Choose a layout",
+        "Choose another layout": "Choose another layout",
       },
     },
     vi: {
@@ -51,6 +53,8 @@ const i18nConfig = {
         "Drag to switch images position": "Kéo để đổi vị trí hình ảnh",
         "An error occurred": "Đã xảy ra lỗi",
         "Please try again": "Vui lòng thử lại",
+        "Choose a layout": "Chọn layout",
+        "Choose another layout": "Chọn layout khác",
       },
     },
     fr: {
@@ -75,6 +79,8 @@ const i18nConfig = {
         "Drag to switch images position": "Glisser pour changer la position des images",
         "An error occurred": "Une erreur est survenue",
         "Please try again": "Veuillez réessayer",
+        "Choose a layout": "Choisir le layout",
+        "Choose another layout": "Choisir un autre layout",
       },
     },
     cn: {
@@ -99,6 +105,8 @@ const i18nConfig = {
         "Drag to switch images position": "拖动以切换图片位置",
         "An error occurred": "发生错误",
         "Please try again": "请重试",
+        "Choose a layout": "选择布局",
+        "Choose another layout": "选择另一个布局",
       },
     },
   },
