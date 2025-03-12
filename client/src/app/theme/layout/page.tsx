@@ -6,7 +6,7 @@ import {cn} from "@/lib/utils";
 import {WheelGesturesPlugin} from "embla-carousel-wheel-gestures";
 import Image from "next/image";
 import Link from "next/link";
-import {useCallback, useEffect, useRef, useState} from "react";
+import {useCallback, useEffect, useRef, useState, useMemo} from "react";
 import {FaArrowLeft, FaArrowRight} from "react-icons/fa6";
 import {IoIosArrowBack, IoIosArrowForward, IoIosCheckmark} from "react-icons/io";
 import {useRouter} from "next/navigation";
@@ -81,6 +81,11 @@ const LayoutPage = () => {
     [api, apiPreview]
   );
 
+  const filteredFrames = useMemo(() => {
+    if (!photo) return [];
+    return FrameOptions[photo.theme!.name].filter((item) => item.type == photo.frameType);
+  }, [photo]);
+
   useEffect(() => {
     if (!api || !apiPreview || !photo) {
       return;
@@ -92,7 +97,7 @@ const LayoutPage = () => {
       if (thumbnailRefs.current[selectedIndex] == null || !photo.theme) return;
       setCurrent(selectedIndex + 1);
       handleCarouselItemClick(selectedIndex);
-      handleFrameChange(FrameOptions[photo.theme.name][selectedIndex]);
+      handleFrameChange(filteredFrames[selectedIndex]);
       thumbnailRefs.current[selectedIndex].scrollIntoView({
         behavior: "instant",
         block: "center",
@@ -105,7 +110,7 @@ const LayoutPage = () => {
       if (thumbnailRefs.current[selectedIndex] == null || !photo.theme) return;
       setCurrent(selectedIndex + 1);
       handleCarouselItemClick(selectedIndex);
-      handleFrameChange(FrameOptions[photo.theme.name][selectedIndex]);
+      handleFrameChange(filteredFrames[selectedIndex]);
       thumbnailRefs.current[selectedIndex].scrollIntoView({
         behavior: "instant",
         block: "center",
@@ -118,7 +123,7 @@ const LayoutPage = () => {
       api.off("select", handleAPISelect);
       apiPreview.off("select", handlePreviewAPISelect);
     };
-  }, [api, apiPreview, handleCarouselItemClick, handleFrameChange, photo]);
+  }, [api, apiPreview, filteredFrames, handleCarouselItemClick, handleFrameChange, photo]);
 
   return (
     <>
@@ -142,20 +147,20 @@ const LayoutPage = () => {
                   }}
                 >
                   <CarouselContent>
-                    {FrameOptions[photo.theme.name].map((item, index) => (
+                    {filteredFrames.map((item, index) => (
                       <CarouselItem
                         key={index}
                         className="flex gap-4 basis-[100%] items-center justify-center "
                       >
-                        {Array.from({length: photo.theme!.frame.type == "singular" ? 1 : 2}, (_, index) => {
+                        {Array.from({length: item.type == "singular" ? 1 : 2}, (_, index) => {
                           return (
                             <Image
                               key={index}
                               src={item.src}
                               alt="Frame"
                               height={235}
-                              width={photo.theme!.frame.type == "singular" ? 235 : 120}
-                              className={cn(photo.theme!.frame.type == "singular" ? "w-[17vw]" : "w-[9vw]")}
+                              width={item.type == "singular" ? 235 : 120}
+                              className={cn(item.type == "singular" ? "w-[17vw]" : "w-[9vw]")}
                             />
                           );
                         })}
@@ -179,13 +184,10 @@ const LayoutPage = () => {
                   }}
                 >
                   <CarouselContent className="p-2">
-                    {FrameOptions[photo.theme.name].map((item, index) => (
+                    {filteredFrames.map((item, index) => (
                       <CarouselItem
                         key={index}
-                        className={cn(
-                          "flex items-center justify-center cursor-pointer",
-                          photo.theme!.frame.type == "singular" ? " basis-1/4" : "basis-[15%]"
-                        )}
+                        className={cn("flex items-center justify-center cursor-pointer", item.type == "singular" ? " basis-1/4" : "basis-[15%]")}
                         onClick={() => {
                           handleCarouselItemClick(index);
                           handleFrameChange(item);
@@ -216,7 +218,7 @@ const LayoutPage = () => {
                 <h1 className="text-4xl font-bold uppercase text-nowrap">{t("Choose number of copies")}</h1>
                 <div className="flex gap-2 flex-wrap items-center justify-center w-[350px]">
                   <AnimatedBackground
-                    defaultValue={photo?.quantity?.toString()}
+                    defaultValue={photo.quantity?.toString()}
                     className="rounded-lg bg-green-700"
                     transition={{
                       ease: "easeInOut",
@@ -224,7 +226,7 @@ const LayoutPage = () => {
                     }}
                   >
                     {Array.from({length: maxQuantity}, (_, index) => {
-                      const quantiy = (index + 1) * (photo.theme!.frame.type == "singular" ? 1 : 2);
+                      const quantiy = (index + 1) * (photo.frameType == "singular" ? 1 : 2);
                       return (
                         <div
                           className={cn(
@@ -243,7 +245,7 @@ const LayoutPage = () => {
               </div>
               <ScrollArea className="w-[350px] h-[35%]">
                 <div className="flex gap-4 flex-wrap items-center justify-center w-full">
-                  {FrameOptions[photo.theme.name].map((item, index) => {
+                  {filteredFrames.map((item, index) => {
                     const thumbnail = item.thumbnail;
                     if (!thumbnail) return null;
                     return (
@@ -278,7 +280,7 @@ const LayoutPage = () => {
               </ScrollArea>
               <div className="flex flex-col gap-4 w-full">
                 <Link
-                  href={ROUTES.HOME}
+                  href={ROUTES.THEME}
                   className="flex  text-center items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-2 hover:opacity-[85%] w-full"
                 >
                   <FaArrowLeft />
@@ -296,8 +298,9 @@ const LayoutPage = () => {
                     href={ROUTES.CAPTURE}
                     className="flex text-center items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-2 hover:opacity-[85%] w-full bg-green-700 z-10 relative"
                     onClick={() => {
+                      if (!setPhoto) return;
                       setChosen(true);
-                      setPhoto!((prevStyle) => {
+                      setPhoto((prevStyle) => {
                         if (prevStyle) {
                           return {...prevStyle, error: false};
                         }

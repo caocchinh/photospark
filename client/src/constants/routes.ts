@@ -2,8 +2,8 @@ export const ROUTES = {
   HOME: "/",
   THEME: "/theme",
   LAYOUT: "/theme/layout",
-  CAPTURE: "/theme/capture",
-  SELECT: "/theme/capture/select",
-  FILTER: "/theme/capture/select/filter",
-  REVIEW: "/theme/capture/select/filter/review",
+  CAPTURE: "/theme/layout/capture",
+  SELECT: "/theme/layout/capture/select",
+  FILTER: "/theme/layout/capture/select/filter",
+  REVIEW: "/theme/layout/capture/select/filter/review",
 };

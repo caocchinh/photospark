@@ -133,7 +133,7 @@ const ThemePage = () => {
       </Popover>
 
       <CardTitle className="text-4xl uppercase mb-8">{t("Choose a layout")}</CardTitle>
-      <CardContent className="flex items-center justify-center gap-12 flex-wrap w-[90%]">
+      <CardContent className="flex items-center justify-center gap-12 w-[90%]">
         <Link
           href={ROUTES.THEME}
           className="relative shadow-lg border cursor-pointer hover:scale-[1.02] active:scale-[0.99]"

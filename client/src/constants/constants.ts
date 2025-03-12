@@ -69,38 +69,6 @@ export const FrameOptions: {
 } = {
   prom: [
     {
-      type: "double",
-      src: "/frame/usagyuun/usagyuun_1.png",
-      thumbnail: "/frame/usagyuun/thumbnail/usagyuun_1.png",
-      slotCount: 4,
-      slotDimensions: {
-        height: USAGYUUN_IMAGE_HEIGHT,
-        width: USAGYUUN_IMAGE_WIDTH,
-      },
-      slotPositions: [
-        {
-          y: USAGYUUN_Y_INIT_POS,
-          x: USAGYUUN_X_POS,
-        },
-
-        {
-          y: USAGYUUN_Y_SLOT_SEPERATION(0),
-          x: USAGYUUN_X_POS,
-        },
-
-        {
-          y: USAGYUUN_Y_SLOT_SEPERATION(1),
-          x: USAGYUUN_X_POS,
-        },
-
-        {
-          y: USAGYUUN_Y_SLOT_SEPERATION(2),
-          x: USAGYUUN_X_POS,
-        },
-      ],
-    },
-    ,
-    {
       type: "singular",
       src: "/frame/prom/prom_1.png",
       thumbnail: "/frame/prom/thumbnail/prom_1.jpg",
@@ -479,10 +447,6 @@ export const FrameOptions: {
     },
   ],
 };
-
-export const FrameDefaults: {
-  [key in ValidThemeType]: (typeof FrameOptions)[key][number];
-} = {prom: FrameOptions.prom[0], usagyuun: FrameOptions.usagyuun[0]};
 
 export interface PhotoOptions<T extends ValidThemeType> {
   theme: {
