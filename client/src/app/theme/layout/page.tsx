@@ -135,7 +135,7 @@ const LayoutPage = () => {
               <h1 className="text-4xl font-bold uppercase">{t("Choose a frame")}</h1>
               <div className="relative rounded border-2 border-gray-500 flex items-center justify-center py-8 px-2 bg-gray-100 w-[40vw]">
                 <Spotlight
-                  className="from-blue-800 via-blue-600 z-10 to-blue-400 blur-xl "
+                  className="from-[#f97316] via-[#f97316] z-10 to-[#fdba74] blur-xl "
                   size={64}
                 />
                 <IoIosArrowBack

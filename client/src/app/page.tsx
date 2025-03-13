@@ -138,6 +138,7 @@ const ThemePage = () => {
           href={ROUTES.THEME}
           className=" cursor-pointer hover:scale-[1.02] active:scale-[0.99]"
           onClick={() => handleTypeChange("singular")}
+          tabIndex={-1}
         >
           <SingularLayout />
         </Link>
@@ -145,6 +146,7 @@ const ThemePage = () => {
           href={ROUTES.THEME}
           className=" cursor-pointer hover:scale-[1.02] active:scale-[0.99] "
           onClick={() => handleTypeChange("double")}
+          tabIndex={-1}
         >
           <DoubleLayout />
         </Link>
