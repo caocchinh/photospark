@@ -15,9 +15,15 @@ export const SocketProvider = ({children}: {children: React.ReactNode}) => {
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    const newSocket = io("http://localhost:6969", {
+    const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL;
+    if (!socketUrl) {
+      console.error("Socket URL is not defined");
+      setIsConnected(false);
+      return;
+    }
+    const newSocket = io(socketUrl, {
       reconnection: true,
-      reconnectionAttempts: 5,
+      reconnectionAttempts: Infinity,
       timeout: 10000,
       autoConnect: false,
     });
@@ -34,9 +40,8 @@ export const SocketProvider = ({children}: {children: React.ReactNode}) => {
       setIsConnected(false);
     });
 
-    newSocket.on("connect_error", (error) => {
-      console.error("Socket connection error:", error);
-      setIsConnected(false);
+    newSocket.on("error", (error) => {
+      console.error("Socket error:", error);
     });
 
     setSocket(newSocket);

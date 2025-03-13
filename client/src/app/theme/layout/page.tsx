@@ -83,8 +83,8 @@ const LayoutPage = () => {
   );
 
   const filteredFrames = useMemo(() => {
-    if (!photo) return [];
-    return FrameOptions[photo.theme!.name].filter((item) => item.type == photo.frameType);
+    if (!photo || !photo.theme) return [];
+    return FrameOptions[photo.theme.name].filter((item) => item.type == photo.frameType);
   }, [photo]);
 
   useEffect(() => {

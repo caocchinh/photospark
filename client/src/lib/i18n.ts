@@ -30,6 +30,8 @@ const i18nConfig = {
         "Choose a layout": "Choose a layout",
         "Choose another layout": "Choose another layout",
         "Current layout": "Current layout",
+        "Waiting for print server": "Waiting for print server",
+        "Please wait while we connect to the print server": "Please wait while we connect to the print server",
       },
     },
     vi: {
@@ -57,6 +59,8 @@ const i18nConfig = {
         "Choose a layout": "Chọn layout",
         "Choose another layout": "Chọn layout khác",
         "Current layout": "Layout hiện tại",
+        "Waiting for print server": "Đang chờ server in",
+        "Please wait while we connect to the print server": "Vui lòng chờ trong khi ứng dụng kết nối với server in",
       },
     },
     fr: {
@@ -84,6 +88,8 @@ const i18nConfig = {
         "Choose a layout": "Choisir le layout",
         "Choose another layout": "Choisir un autre layout",
         "Current layout": "Layout actuel",
+        "Waiting for print server": "En attente du serveur d'impression",
+        "Please wait while we connect to the print server": "Veuillez patienter pendant que nous nous connectons au serveur d'impression",
       },
     },
     cn: {
@@ -111,6 +117,8 @@ const i18nConfig = {
         "Choose a layout": "选择布局",
         "Choose another layout": "选择另一个布局",
         "Current layout": "当前布局",
+        "Waiting for print server": "等待打印服务器",
+        "Please wait while we connect to the print server": "请稍候，我们正在连接到打印服务器",
       },
     },
   },
