@@ -6,10 +6,14 @@ import {usePathname} from "next/navigation";
 import {cn} from "@/lib/utils";
 import {BorderTrail} from "./ui/border-trail";
 import {ROUTES} from "@/constants/routes";
+import {LuClockAlert} from "react-icons/lu";
+import {usePhoto} from "@/context/PhotoContext";
+
 const NavBar = () => {
   const path = usePathname();
   const isActive = path == ROUTES.HOME || path == ROUTES.LAYOUT || path == ROUTES.THEME;
   const hideNavBar = path === ROUTES.CAPTURE;
+  const {timeLeft} = usePhoto();
   return (
     <header className={cn("bg-transparent pt-4 px-5 fixed z-50 w-max left-0 top-0", hideNavBar ? "hidden" : null)}>
       <nav className=" flex w-max justify-between">
@@ -32,6 +36,12 @@ const NavBar = () => {
             />
           </Link>
         </div>
+        {timeLeft !== 60 && (
+          <div className="flex items-center justify-center">
+            <LuClockAlert className="text-red-500" />
+            <p className="text-red-500">{timeLeft}</p>
+          </div>
+        )}
       </nav>
     </header>
   );
