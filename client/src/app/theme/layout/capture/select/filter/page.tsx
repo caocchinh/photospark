@@ -27,7 +27,7 @@ const FilterPage = () => {
   const {photo, setPhoto} = usePhoto();
   const {navigateTo} = usePreventNavigation();
   const filterRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const scaleContainerRef = useViewportScale();
+  const scaleContainerRef = useViewportScale({baseHeight: 710});
 
   const {t} = useTranslation();
 
@@ -211,82 +211,80 @@ const FilterPage = () => {
   }, [photo, qrCodeURL]);
 
   return (
-    <div className={cn(!timeLeft || printed ? "pointer-events-none" : null, "w-full h-full flex items-center justify-center flex-col")}>
+    <div className={cn(!timeLeft || printed ? "pointer-events-none" : null, "w-[95%] flex items-center justify-center flex-col")}>
       {photo && frameImg && (
-        <>
-          <div className="flex items-start justify-evenly gap-3 w-full h-max">
-            <div className="h-full flex items-center justify-center">
-              <div
-                ref={scaleContainerRef}
-                className="transform-gpu scale-[calc(var(--scale-factor,0.75))] origin-center"
+        <div className="flex items-center justify-evenly gap-3 h-max flex-col">
+          <div className="flex items-center justify-center flex-row gap-6">
+            <div
+              ref={scaleContainerRef}
+              className="transform-gpu scale-[calc(var(--scale-factor,0.75))] origin-center"
+            >
+              <Stage
+                ref={stageRef}
+                width={IMAGE_WIDTH}
+                height={IMAGE_HEIGHT}
               >
-                <Stage
-                  ref={stageRef}
-                  width={IMAGE_WIDTH}
-                  height={IMAGE_HEIGHT}
-                >
-                  <Layer>
-                    <Rect
-                      width={IMAGE_WIDTH}
-                      height={IMAGE_HEIGHT}
-                      fill="white"
+                <Layer>
+                  <Rect
+                    width={IMAGE_WIDTH}
+                    height={IMAGE_HEIGHT}
+                    fill="white"
+                  />
+                </Layer>
+                {Array.from({length: photo.frameType == "singular" ? 1 : 2}, (_, _index) => (
+                  <Layer
+                    key={_index}
+                    x={OFFSET_X}
+                    y={OFFSET_Y}
+                  >
+                    {photo.selectedImages.map(({id, data}, index) => {
+                      return (
+                        data && (
+                          <SelectedImage
+                            key={id}
+                            url={data}
+                            y={photo.theme!.frame.slotPositions[index].y}
+                            x={photo.theme!.frame.slotPositions[index].x + (FRAME_WIDTH / 2) * _index}
+                            height={photo.theme!.frame.slotDimensions.height}
+                            width={photo.theme!.frame.slotDimensions.width}
+                            filter={filter}
+                          />
+                        )
+                      );
+                    })}
+                  </Layer>
+                ))}
+
+                {Array.from({length: photo.frameType == "singular" ? 1 : 2}, (_, index) => (
+                  <Layer
+                    key={index}
+                    x={OFFSET_X}
+                    y={OFFSET_Y}
+                  >
+                    <KonvaImage
+                      image={frameImg}
+                      x={(FRAME_WIDTH / 2) * index}
+                      height={FRAME_HEIGHT}
+                      width={FRAME_WIDTH / (photo.frameType == "singular" ? 1 : 2)}
                     />
                   </Layer>
-                  {Array.from({length: photo.frameType == "singular" ? 1 : 2}, (_, _index) => (
-                    <Layer
-                      key={_index}
-                      x={OFFSET_X}
-                      y={OFFSET_Y}
-                    >
-                      {photo.selectedImages.map(({id, data}, index) => {
-                        return (
-                          data && (
-                            <SelectedImage
-                              key={id}
-                              url={data}
-                              y={photo.theme!.frame.slotPositions[index].y}
-                              x={photo.theme!.frame.slotPositions[index].x + (FRAME_WIDTH / 2) * _index}
-                              height={photo.theme!.frame.slotDimensions.height}
-                              width={photo.theme!.frame.slotDimensions.width}
-                              filter={filter}
-                            />
-                          )
-                        );
-                      })}
-                    </Layer>
-                  ))}
+                ))}
 
+                <Layer>
                   {Array.from({length: photo.frameType == "singular" ? 1 : 2}, (_, index) => (
-                    <Layer
+                    <KonvaImage
                       key={index}
-                      x={OFFSET_X}
-                      y={OFFSET_Y}
-                    >
-                      <KonvaImage
-                        image={frameImg}
-                        x={(FRAME_WIDTH / 2) * index}
-                        height={FRAME_HEIGHT}
-                        width={FRAME_WIDTH / (photo.frameType == "singular" ? 1 : 2)}
-                      />
-                    </Layer>
+                      image={qrCodeImage}
+                      x={photo.frameType == "singular" ? FRAME_WIDTH - OFFSET_X - 19 : (FRAME_WIDTH / 2) * index + OFFSET_X + FRAME_WIDTH / 2.6}
+                      y={FRAME_HEIGHT - OFFSET_Y - 7}
+                      height={40}
+                      width={40}
+                    />
                   ))}
-
-                  <Layer>
-                    {Array.from({length: photo.frameType == "singular" ? 1 : 2}, (_, index) => (
-                      <KonvaImage
-                        key={index}
-                        image={qrCodeImage}
-                        x={photo.frameType == "singular" ? FRAME_WIDTH - OFFSET_X - 19 : (FRAME_WIDTH / 2) * index + OFFSET_X + FRAME_WIDTH / 2.6}
-                        y={FRAME_HEIGHT - OFFSET_Y - 7}
-                        height={40}
-                        width={40}
-                      />
-                    ))}
-                  </Layer>
-                </Stage>
-              </div>
+                </Layer>
+              </Stage>
             </div>
-            <div className="flex items-center justify-center flex-col gap-5 h-full">
+            <div className="flex items-center justify-center flex-col gap-5">
               <div className="flex gap-2 items-center justify-center mb-4">
                 <h1 className="text-4xl font-bold  uppercase">{t("Choose a filter")}</h1>
                 <span className="text-rose-500 text-4xl font-bold ">
@@ -334,30 +332,30 @@ const FilterPage = () => {
                   {t("Reset filter")}
                 </Button>
               </div>
+              <div className="relative w-full">
+                <GlowEffect
+                  colors={["#FF5733", "#33FF57", "#3357FF", "#F1C40F"]}
+                  mode="colorShift"
+                  blur="soft"
+                  duration={3}
+                  scale={1}
+                />
+                <Button
+                  className={cn(
+                    "flex text-xl text-center items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-6 hover:opacity-[85%] w-full relative z-10",
+                    printed ? "pointer-events-none opacity-[85%]" : null
+                  )}
+                  onClick={printImage}
+                >
+                  <>
+                    {t("Print")}
+                    <PiPrinter size={15} />
+                  </>
+                </Button>
+              </div>
             </div>
           </div>
-          <div className="relative w-[85%]">
-            <GlowEffect
-              colors={["#FF5733", "#33FF57", "#3357FF", "#F1C40F"]}
-              mode="colorShift"
-              blur="soft"
-              duration={3}
-              scale={1}
-            />
-            <Button
-              className={cn(
-                "flex text-xl text-center items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-6 hover:opacity-[85%] w-full relative z-10",
-                printed ? "pointer-events-none opacity-[85%]" : null
-              )}
-              onClick={printImage}
-            >
-              <>
-                {t("Print")}
-                <PiPrinter size={15} />
-              </>
-            </Button>
-          </div>
-        </>
+        </div>
       )}
     </div>
   );

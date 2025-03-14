@@ -111,7 +111,7 @@ const PrintPage = () => {
     return photo.frameType == "singular" ? 1 : 2;
   }, [photo]);
   const [selected, setSelected] = useState(false);
-  const scaleContainerRef = useViewportScale();
+  const scaleContainerRef = useViewportScale({baseHeight: 650});
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
 
   const [slots, setSlots] = useState<number[]>(() => Array.from({length: photo ? photo.theme!.frame.slotCount : 0}, (_, index) => index));
@@ -403,7 +403,7 @@ const PrintPage = () => {
                       priority
                       className={cn(
                         "pointer-events-none",
-                        `w-[${photo.theme!.frame.slotDimensions.width}px] h-[${photo.theme!.frame.slotDimensions.height}px]`
+                        `w-[${photo.theme!.frame.slotDimensions.width * 1.1}px] h-[${photo.theme!.frame.slotDimensions.height * 1.1}px]`
                       )}
                     />
                   </div>

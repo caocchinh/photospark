@@ -326,7 +326,7 @@ const CapturePage = () => {
                 autoPlay
                 playsInline
                 muted
-                className="h-full object-contain -scale-x-100"
+                className="h-full object-contain -scale-x-100 rounded-sm"
               />
               {isCameraReady && (
                 <>
