@@ -50,7 +50,7 @@ const ReviewPage = () => {
           />
           <div className="flex flex-col gap-5 items-center justify-center">
             <div className="flex gap-2 flex-col items-center justify-center">
-              <h1 className="text-4xl font-bold text-center">{t("Please go outside to take the photo")}</h1>
+              <h1 className="text-4xl font-semibold text-center">{t("Please go outside to take the photo")}</h1>
               <span className="text-rose-500 text-4xl font-bold ">
                 <SlidingNumber
                   value={timeLeft}

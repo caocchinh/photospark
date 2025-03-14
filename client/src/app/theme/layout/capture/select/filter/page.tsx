@@ -286,7 +286,7 @@ const FilterPage = () => {
             </div>
             <div className="flex items-center justify-center flex-col gap-5">
               <div className="flex gap-2 items-center justify-center mb-4">
-                <h1 className="text-4xl font-bold  uppercase">{t("Choose a filter")}</h1>
+                <h1 className="text-4xl font-semibold  uppercase">{t("Choose a filter")}</h1>
                 <span className="text-rose-500 text-4xl font-bold ">
                   <SlidingNumber
                     value={timeLeft}

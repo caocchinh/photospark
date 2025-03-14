@@ -80,7 +80,7 @@ const ThemePage = () => {
   };
 
   return (
-    <div className="w-[80%] min-h-screen flex items-center justify-center flex-col">
+    <div className="w-[90%] h-full flex items-center justify-start flex-col">
       {!photo && <CollabTransition />}
 
       <Popover
@@ -132,8 +132,8 @@ const ThemePage = () => {
         </PopoverContent>
       </Popover>
 
-      <CardTitle className="text-5xl uppercase mb-12">{t("Choose a layout")}</CardTitle>
-      <CardContent className="flex items-center justify-center gap-20 w-[90%]">
+      <CardTitle className="text-5xl uppercase mb-8">{t("Choose a layout")}</CardTitle>
+      <CardContent className="flex items-center justify-center gap-12 w-[90%]">
         <Link
           href={ROUTES.THEME}
           className=" cursor-pointer hover:scale-[1.02] active:scale-[0.99]"

@@ -11,8 +11,8 @@ const NavBar = () => {
   const isActive = path == ROUTES.HOME || path == ROUTES.LAYOUT || path == ROUTES.THEME;
   const hideNavBar = path === ROUTES.CAPTURE;
   return (
-    <header className={cn("bg-transparent pt-4 px-5 fixed w-full top-0", hideNavBar ? "hidden" : null)}>
-      <nav className=" flex w-full justify-between">
+    <header className={cn("bg-transparent pt-4 px-5 fixed z-50 w-max left-0 top-0", hideNavBar ? "hidden" : null)}>
+      <nav className=" flex w-max justify-between">
         <div className="w-max cursor-pointer shadow-lg rounded-md  bg-card text-card-foreground relative">
           <BorderTrail
             style={{

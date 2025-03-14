@@ -130,10 +130,10 @@ const LayoutPage = () => {
     <>
       {photo && photo.theme && (
         <>
-          <div className={cn("flex items-center justify-center gap-24 h-full", chosen ? "pointer-events-none" : null)}>
+          <div className={cn("flex items-center w-[90%] justify-center gap-24 h-full", chosen ? "pointer-events-none" : null)}>
             <div className="flex items-start flex-col justify-center gap-4 w-max">
               <h1 className="text-5xl font-semibold uppercase">{t("Choose a frame")}</h1>
-              <div className="relative rounded border-2 border-gray-500 flex items-center justify-center py-8 px-2 bg-gray-100 w-[40vw]">
+              <div className="relative rounded border-2 border-gray-500 flex items-center justify-center py-8 px-2 bg-gray-100 w-[50vw]">
                 <Spotlight
                   className="from-[#f97316] via-[#f97316] z-10 to-[#fdba74] blur-xl "
                   size={64}
@@ -179,7 +179,7 @@ const LayoutPage = () => {
                   onClick={handleRightClick}
                 />
               </div>
-              <div className="w-[40vw]">
+              <div className="w-[50vw]">
                 <Carousel
                   setApi={setApiPreview}
                   plugins={[WheelGesturesPlugin()]}

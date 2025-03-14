@@ -111,7 +111,7 @@ const PrintPage = () => {
     return photo.frameType == "singular" ? 1 : 2;
   }, [photo]);
   const [selected, setSelected] = useState(false);
-  const scaleContainerRef = useViewportScale({baseHeight: 650});
+  const scaleContainerRef = useViewportScale({baseHeight: photo?.frameType == "singular" ? 670 : 650});
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
 
   const [slots, setSlots] = useState<number[]>(() => Array.from({length: photo ? photo.theme!.frame.slotCount : 0}, (_, index) => index));
@@ -373,7 +373,7 @@ const PrintPage = () => {
         <div className="flex flex-wrap w-[60%] gap-11 items-start justify-center ">
           {photo && (
             <div className="flex gap-2">
-              <h1 className="text-5xl font-bold mb-4 flex gap-2">{t("Choose pictures")} </h1>
+              <h1 className="text-5xl font-semibold mb-4 flex gap-2">{t("Choose pictures")} </h1>
               <span className="text-rose-500 text-5xl font-bold ">
                 <SlidingNumber
                   value={timeLeft}
