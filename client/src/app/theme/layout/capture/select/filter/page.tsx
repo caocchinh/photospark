@@ -64,17 +64,7 @@ const FilterPage = () => {
       }
 
       const dataURL = stageRef.current.toDataURL({pixelRatio: 5});
-      const videoPreload = new Promise((resolve) => {
-        if (photo.video.r2_url) {
-          const video = document.createElement("video");
-          video.src = photo.video.r2_url;
-          video.preload = "auto";
-          video.onloadeddata = () => resolve(true);
-          video.onerror = () => resolve(false);
-        } else {
-          resolve(false);
-        }
-      });
+
       socket.emit(
         "print",
         {
@@ -87,6 +77,18 @@ const FilterPage = () => {
           if (!response.success) {
             console.error("Print failed:", response.message);
           }
+          const videoPreload = new Promise((resolve) => {
+            if (photo.video.r2_url) {
+              const video = document.createElement("video");
+              video.src = photo.video.r2_url;
+              video.preload = "auto";
+              video.onloadeddata = () => resolve(true);
+              video.onerror = () => resolve(false);
+            } else {
+              resolve(false);
+              navigateTo(ROUTES.HOME);
+            }
+          });
           await videoPreload;
           if (isMediaUploaded) {
             navigateTo(ROUTES.REVIEW);
@@ -212,7 +214,7 @@ const FilterPage = () => {
     <div className={cn(!timeLeft || printed ? "pointer-events-none" : null, "w-full h-full flex items-center justify-center flex-col")}>
       {photo && frameImg && (
         <>
-          <div className="flex items-start justify-evenly gap-3 w-full h-full">
+          <div className="flex items-start justify-evenly gap-3 w-full h-max">
             <div className="h-full flex items-center justify-center">
               <div
                 ref={scaleContainerRef}
@@ -284,7 +286,7 @@ const FilterPage = () => {
                 </Stage>
               </div>
             </div>
-            <div className="flex items-center justify-center flex-col gap-5">
+            <div className="flex items-center justify-center flex-col gap-5 h-full">
               <div className="flex gap-2 items-center justify-center mb-4">
                 <h1 className="text-4xl font-bold  uppercase">{t("Choose a filter")}</h1>
                 <span className="text-rose-500 text-4xl font-bold ">
@@ -334,7 +336,7 @@ const FilterPage = () => {
               </div>
             </div>
           </div>
-          <div className="relative w-full">
+          <div className="relative w-[85%]">
             <GlowEffect
               colors={["#FF5733", "#33FF57", "#3357FF", "#F1C40F"]}
               mode="colorShift"

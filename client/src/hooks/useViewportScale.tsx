@@ -14,7 +14,7 @@ interface UseViewportScaleOptions {
  * @returns Reference to attach to the element that needs to be scaled
  */
 export const useViewportScale = ({
-  baseHeight = 715,
+  baseHeight = 650,
   minScale = 0.5,
   maxScale = 1.2,
   baseScale = 0.75,

@@ -370,7 +370,7 @@ const PrintPage = () => {
             </div>
           </div>
         </div>
-        <div className="flex flex-wrap w-[55%] items-start justify-center ">
+        <div className="flex flex-wrap w-[60%] gap-11 items-start justify-center ">
           {photo && (
             <div className="flex gap-2">
               <h1 className="text-5xl font-bold mb-4 flex gap-2">{t("Choose pictures")} </h1>
@@ -401,63 +401,66 @@ const PrintPage = () => {
                       src={item.data}
                       alt="image"
                       priority
-                      className="h-[22vh] pointer-events-none"
+                      className={cn(
+                        "pointer-events-none",
+                        `w-[${photo.theme!.frame.slotDimensions.width}px] h-[${photo.theme!.frame.slotDimensions.height}px]`
+                      )}
                     />
                   </div>
                 ))}
               </>
             )}
           </div>
+          {photo && (
+            <div className="relative w-full h-full">
+              {(photo.theme!.frame.slotCount - filteredSelectedImages.length == 0 || isTimeOver) && (
+                <>
+                  <GlowEffect
+                    colors={["#FF5733", "#33FF57", "#3357FF", "#F1C40F"]}
+                    mode="colorShift"
+                    blur="soft"
+                    duration={3}
+                    scale={1}
+                    className="z-[0]"
+                  />
+                </>
+              )}
+              <Button
+                asChild
+                className="relative"
+                onClick={() => setSelected(true)}
+              >
+                <Link
+                  href="#"
+                  className={cn(
+                    "flex items-center justify-center gap-2 text-2xl px-14 py-6 w-full",
+                    photo
+                      ? photo.theme!.frame.slotCount - filteredSelectedImages.length != 0 || isTimeOver || !lastImageUploaded || !videoProcessed
+                        ? "pointer-events-none opacity-80"
+                        : null
+                      : null,
+                    selected ? "pointer-events-none opacity-[85%]" : null
+                  )}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleContextSelect(filteredSelectedImages);
+                  }}
+                >
+                  {t("Choose a filter")}
+                  {!lastImageUploaded || !videoProcessed ? (
+                    <LoadingSpinner size={15} />
+                  ) : (
+                    <MdOutlineCloudDone
+                      size={15}
+                      color="white"
+                    />
+                  )}
+                </Link>
+              </Button>
+            </div>
+          )}
         </div>
       </div>
-      {photo && (
-        <div className="relative w-full">
-          {(photo.theme!.frame.slotCount - filteredSelectedImages.length == 0 || isTimeOver) && (
-            <>
-              <GlowEffect
-                colors={["#FF5733", "#33FF57", "#3357FF", "#F1C40F"]}
-                mode="colorShift"
-                blur="soft"
-                duration={3}
-                scale={1}
-                className="z-[0]"
-              />
-            </>
-          )}
-          <Button
-            asChild
-            className="relative"
-            onClick={() => setSelected(true)}
-          >
-            <Link
-              href="#"
-              className={cn(
-                "flex items-center justify-center gap-2 text-2xl px-14 py-6 w-full",
-                photo
-                  ? photo.theme!.frame.slotCount - filteredSelectedImages.length != 0 || isTimeOver || !lastImageUploaded || !videoProcessed
-                    ? "pointer-events-none opacity-80"
-                    : null
-                  : null,
-                selected ? "pointer-events-none opacity-[85%]" : null
-              )}
-              onClick={(e) => {
-                e.preventDefault();
-                handleContextSelect(filteredSelectedImages);
-              }}
-            >
-              {t("Choose a filter")}
-              {!lastImageUploaded || !videoProcessed ? (
-                <LoadingSpinner size={15} />
-              ) : (
-                <MdOutlineCloudDone
-                  size={15}
-                  color="white"
-                />
-              )}
-            </Link>
-          </Button>
-        </div>
-      )}
     </div>
   );
 };

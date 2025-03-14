@@ -320,7 +320,7 @@ const CapturePage = () => {
       {photo && (
         <>
           <div className="w-full h-full gap-2 flex items-center justify-evenly">
-            <div className="relative w-max h-full">
+            <div className="relative w-max h-[88vh]">
               <video
                 ref={videoRef}
                 autoPlay

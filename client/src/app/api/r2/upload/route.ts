@@ -1,8 +1,22 @@
-import r2 from "@/lib/r2";
-import {PutObjectCommand} from "@aws-sdk/client-s3";
+import {PutObjectCommand, S3Client} from "@aws-sdk/client-s3";
 import type {NextRequest} from "next/server";
 
 export async function POST(request: NextRequest) {
+  const CLOUDFARE_ACCOUNT_ID = process.env.CLOUDFARE_ACCOUNT_ID;
+  const R2_ACCESS_KEY_ID = process.env.R2_ACCESS_KEY_ID;
+  const R2_SECRET_ACCESS_KEY = process.env.R2_SECRET_ACCESS_KEY;
+
+  if (!CLOUDFARE_ACCOUNT_ID || !R2_ACCESS_KEY_ID || !R2_SECRET_ACCESS_KEY) {
+    throw new Error("R2 credentials are not set");
+  }
+  const r2 = new S3Client({
+    region: "auto",
+    endpoint: `https://${CLOUDFARE_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+    credentials: {
+      accessKeyId: R2_ACCESS_KEY_ID,
+      secretAccessKey: R2_SECRET_ACCESS_KEY,
+    },
+  });
   try {
     const formData = await request.formData();
     const file = formData.get("file") as Blob;
@@ -35,15 +49,8 @@ export async function POST(request: NextRequest) {
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.error("Upload error details:", error);
-      return Response.json({
-        success: false,
-        error: error.message,
-        stack: error.stack,
-      });
+      throw new Error(error.message);
     }
-    return Response.json({
-      success: false,
-      error: "An unknown error occurred",
-    });
+    throw new Error("An unknown error occurred");
   }
 }

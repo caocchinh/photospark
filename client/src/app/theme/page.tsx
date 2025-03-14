@@ -43,7 +43,7 @@ const ThemePage = () => {
         <div className="w-full h-full flex items-center ">
           <div className="flex items-start justify-evenly w-full">
             <div className="flex flex-col w-max items-center justify-center gap-6">
-              <CardTitle className="text-4xl uppercase">{t("Current layout")}</CardTitle>
+              <CardTitle className="text-5xl uppercase">{t("Current layout")}</CardTitle>
               {photo.frameType == "singular" ? <SingularLayout /> : <DoubleLayout />}
               <Link
                 href={ROUTES.HOME}
@@ -54,7 +54,7 @@ const ThemePage = () => {
               </Link>
             </div>
             <div className="flex flex-col items-center justify-center gap-8 w-max">
-              <CardTitle className="text-4xl uppercase">{t("Choose a theme")}</CardTitle>
+              <CardTitle className="text-5xl uppercase">{t("Choose a theme")}</CardTitle>
               <CardContent className="flex items-center justify-center gap-8 flex-wrap w-[90%]">
                 {ThemeSelectButton.map((item, index) => {
                   const hasMatchingFrame = FrameOptions[item.theme].some((frame) => frame.type === photo.frameType);
@@ -65,7 +65,7 @@ const ThemePage = () => {
                       key={index}
                     >
                       <div
-                        className="cursor-pointer w-[200px] h-[200px] hover:scale-[1.02] active:scale-[0.99]"
+                        className="cursor-pointer w-[220px] h-[220px] hover:scale-[1.02] active:scale-[0.99]"
                         title={item.title}
                       >
                         <Image
@@ -73,7 +73,7 @@ const ThemePage = () => {
                           width={220}
                           alt={item.title}
                           src={item.image_src}
-                          className="rounded"
+                          className="rounded w-full h-full"
                           style={item.style}
                         />
                       </div>

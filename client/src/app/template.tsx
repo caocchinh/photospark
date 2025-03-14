@@ -3,7 +3,7 @@
 import {useSocket} from "@/context/SocketContext";
 import {motion} from "motion/react";
 import React from "react";
-import {AlertDialog, AlertDialogContent, AlertDialogDescription} from "@/components/ui/alert-dialog";
+import {AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogTitle} from "@/components/ui/alert-dialog";
 import {useTranslation} from "react-i18next";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import {PiPrinter} from "react-icons/pi";
@@ -17,7 +17,7 @@ export default function Template({children}: {children: React.ReactNode}) {
     <>
       <AlertDialog open={!isConnected}>
         <AlertDialogContent className="flex flex-col items-center justify-center">
-          <div className="relative">
+          <AlertDialogTitle className="relative">
             <TextShimmer
               className=" font-semibold text-3xl uppercase text-center whitespace-nowrap  [--base-color:black] [--base-gradient-color:gray]"
               duration={1.5}
@@ -25,7 +25,7 @@ export default function Template({children}: {children: React.ReactNode}) {
             >
               {t("Waiting for print server")}
             </TextShimmer>
-          </div>
+          </AlertDialogTitle>
           <div className="relative">
             <PiPrinter className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-9 h-9" />
             <LoadingSpinner size={75} />
@@ -55,7 +55,7 @@ export default function Template({children}: {children: React.ReactNode}) {
         animate={{opacity: 1}}
         exit={{opacity: 0}}
         transition={{ease: "easeInOut", duration: 0.75}}
-        className="w-full h-full "
+        className="w-full h-full flex items-center justify-center"
       >
         {children}
       </motion.div>

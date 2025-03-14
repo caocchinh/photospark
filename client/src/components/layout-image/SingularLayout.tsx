@@ -11,7 +11,7 @@ const SingularLayout = () => {
       />
       <Image
         src="/single.jpg"
-        width={300}
+        width={400}
         height={700}
         alt="single"
       />

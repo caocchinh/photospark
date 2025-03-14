@@ -130,9 +130,9 @@ const LayoutPage = () => {
     <>
       {photo && photo.theme && (
         <>
-          <div className={cn("flex items-center justify-center gap-10 h-full", chosen ? "pointer-events-none" : null)}>
+          <div className={cn("flex items-center justify-center gap-24 h-full", chosen ? "pointer-events-none" : null)}>
             <div className="flex items-start flex-col justify-center gap-4 w-max">
-              <h1 className="text-4xl font-bold uppercase">{t("Choose a frame")}</h1>
+              <h1 className="text-5xl font-semibold uppercase">{t("Choose a frame")}</h1>
               <div className="relative rounded border-2 border-gray-500 flex items-center justify-center py-8 px-2 bg-gray-100 w-[40vw]">
                 <Spotlight
                   className="from-[#f97316] via-[#f97316] z-10 to-[#fdba74] blur-xl "
@@ -218,9 +218,9 @@ const LayoutPage = () => {
                 </Carousel>
               </div>
             </div>
-            <div className="flex flex-col items-center justify-center gap-8 h-full">
+            <div className="flex flex-col items-center justify-center gap-8 h-[80vh]">
               <div className="flex flex-col items-center justify-center gap-4">
-                <h1 className="text-4xl font-bold uppercase text-nowrap">{t("Choose number of copies")}</h1>
+                <h1 className="text-5xl font-semibold uppercase text-nowrap">{t("Choose number of copies")}</h1>
                 <div className="flex gap-2 flex-wrap items-center justify-center w-[350px]">
                   <AnimatedBackground
                     defaultValue={photo.quantity?.toString()}
