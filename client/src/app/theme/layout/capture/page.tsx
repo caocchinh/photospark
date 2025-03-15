@@ -375,7 +375,7 @@ const CapturePage = () => {
                 />
               </div>
               <TextShimmer
-                className=" font-bold text-3xl uppercase text-center whitespace-nowrap  [--base-color:black] [--base-gradient-color:gray]"
+                className=" font-semibold text-3xl uppercase text-center whitespace-nowrap  [--base-color:black] [--base-gradient-color:gray]"
                 duration={1.5}
                 spread={4}
               >

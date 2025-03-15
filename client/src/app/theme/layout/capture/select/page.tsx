@@ -10,7 +10,6 @@ import Image from "next/image";
 import SelectedImage from "@/components/SelectedImage";
 import Link from "next/link";
 import {FRAME_HEIGHT, FRAME_WIDTH, IMAGE_HEIGHT, IMAGE_WIDTH, OFFSET_X, OFFSET_Y} from "@/constants/constants";
-import {DragDropContext, Droppable, Draggable, DropResult, DragUpdate} from "react-beautiful-dnd";
 import {uploadImageToR2} from "@/lib/r2";
 import {MdOutlineCloudDone} from "react-icons/md";
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -22,6 +21,7 @@ import {SlidingNumber} from "@/components/ui/sliding-number";
 import {useViewportScale} from "@/hooks/useViewportScale";
 import usePreventNavigation from "@/hooks/usePreventNavigation";
 import {ROUTES} from "@/constants/routes";
+import {Reorder} from "motion/react";
 
 const PrintPage = () => {
   const {photo, setPhoto} = usePhoto();
@@ -112,45 +112,7 @@ const PrintPage = () => {
   }, [photo]);
   const [selected, setSelected] = useState(false);
   const scaleContainerRef = useViewportScale({baseHeight: photo?.frameType == "singular" ? 670 : 650});
-  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
-
-  const [slots, setSlots] = useState<number[]>(() => Array.from({length: photo ? photo.theme!.frame.slotCount : 0}, (_, index) => index));
-
-  const handleDragUpdate = (update: DragUpdate) => {
-    if (!update.destination) {
-      return;
-    }
-
-    const sourceIndex = update.source.index;
-    const destinationIndex = update.destination.index;
-    setSelectedImageIndex(destinationIndex);
-    setSelectedImage((prevImages) => {
-      const reorderedImages = [...prevImages];
-      const [removed] = reorderedImages.splice(selectedImageIndex ? selectedImageIndex : sourceIndex, 1);
-      reorderedImages.splice(destinationIndex, 0, removed);
-      return reorderedImages;
-    });
-  };
-
-  const handleDragEnd = (result: DropResult) => {
-    if (!result.destination) {
-      return;
-    }
-
-    const sourceIndex = result.source.index;
-    const destinationIndex = result.destination.index;
-    const sourceDroppableId = result.source.droppableId;
-    const destinationDroppableId = result.destination.droppableId;
-
-    if (sourceIndex === destinationIndex && sourceDroppableId === destinationDroppableId) {
-      return;
-    }
-    const reorderedSlots = Array.from(slots);
-    const [removed] = reorderedSlots.splice(sourceIndex, 1);
-    reorderedSlots.splice(destinationIndex, 0, removed);
-    setSlots(reorderedSlots);
-    setSelectedImageIndex(null);
-  };
+  const [slots, setSlots] = useState<Array<number>>(Array.from({length: photo ? photo.theme!.frame.slotCount : 0}, (_, index) => index));
 
   const handleContextSelect = useCallback(
     async (images: Array<{id: string; data: string; href: string}>) => {
@@ -262,69 +224,49 @@ const PrintPage = () => {
               ref={scaleContainerRef}
               className="transform-gpu scale-[calc(var(--scale-factor,0.75))] origin-center"
             >
-              <DragDropContext
-                onDragEnd={handleDragEnd}
-                onDragUpdate={handleDragUpdate}
+              <div
+                className="flex absolute flex-col"
+                style={{
+                  top: photo ? photo.theme!.frame.slotPositions[0].y + OFFSET_Y / isSingle : 0,
+                  left: OFFSET_X / isSingle,
+                  gap:
+                    isSingle == 2 && photo
+                      ? (photo.theme!.frame.slotPositions[0].y / isSingle) * 0.7
+                      : photo
+                      ? OFFSET_Y * 2 + photo.theme!.frame.slotPositions[0].y
+                      : 0,
+                }}
               >
-                <Droppable
-                  droppableId="photo-slots"
-                  direction="vertical"
-                  isDropDisabled={false}
-                  isCombineEnabled={false}
-                  ignoreContainerClipping={false}
+                <Reorder.Group
+                  values={slots}
+                  onReorder={setSlots}
                 >
-                  {(provided) => (
-                    <div
-                      className="flex absolute flex-col"
-                      style={{
-                        top: photo ? photo.theme!.frame.slotPositions[0].y + OFFSET_Y / isSingle : 0,
-                        left: OFFSET_X / isSingle,
-                        gap:
-                          isSingle == 2 && photo
-                            ? (photo.theme!.frame.slotPositions[0].y / isSingle) * 0.7
-                            : photo
-                            ? OFFSET_Y * 2 + photo.theme!.frame.slotPositions[0].y
-                            : 0,
+                  {slots.map((_, index) => (
+                    <Reorder.Item
+                      value={index}
+                      key={index}
+                      z={100}
+                      draggable={true}
+                      className="bg-red-500"
+                      onClick={() => {
+                        if (selectedImage[index]) {
+                          handleSelect(selectedImage[index]);
+                        }
                       }}
-                      ref={provided.innerRef}
-                      {...provided.droppableProps}
                     >
-                      {slots.map((slotIndex, index) => (
-                        <Draggable
-                          key={`slot-${slotIndex}`}
-                          draggableId={`slot-${slotIndex}`}
-                          index={index}
-                        >
-                          {(provided) => (
-                            <div
-                              className="z-50"
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                              onClick={() => {
-                                if (selectedImage[index]) {
-                                  handleSelect(selectedImage[index]);
-                                }
-                              }}
-                            >
-                              <div
-                                style={{
-                                  width: FRAME_WIDTH / isSingle,
-                                  height: photo ? photo.theme!.frame.slotDimensions.height : 0,
-                                  backgroundColor: "transparent",
-                                }}
-                                className="hover:cursor-grab active:cursor-grabbing z-50"
-                              ></div>
-                            </div>
-                          )}
-                        </Draggable>
-                      ))}
-                      {provided.placeholder}
-                    </div>
-                  )}
-                </Droppable>
-              </DragDropContext>
-
+                      <div
+                        style={{
+                          width: FRAME_WIDTH / isSingle,
+                          height: photo ? photo.theme!.frame.slotDimensions.height : 0,
+                        }}
+                        className="hover:cursor-grab active:cursor-grabbing z-50"
+                      >
+                        {index}
+                      </div>
+                    </Reorder.Item>
+                  ))}
+                </Reorder.Group>
+              </div>
               {frameImg && photo && (
                 <Stage
                   width={IMAGE_WIDTH / isSingle}

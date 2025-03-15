@@ -69,7 +69,7 @@ export default function RootLayout({
                 {pathName != ROUTES.CAPTURE && (
                   <div className="absolute top-1/2 z-[-1] -translate-y-1/2 h-[400px] w-screen overflow-hidden [mask-image:radial-gradient(100%_50%,white,transparent)] before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_bottom_center,#3273ff,transparent_70%)] before:opacity-20 after:absolute">
                     <Sparkles
-                      density={500}
+                      density={300}
                       speed={1.2}
                       color="#48b6ff"
                       direction="top"
