@@ -15,6 +15,9 @@ export const SocketProvider = ({children}: {children: React.ReactNode}) => {
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
+    // Only run on the client side
+    if (typeof window === "undefined") return;
+
     const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL;
     if (!socketUrl) {
       console.error("Socket URL is not defined");

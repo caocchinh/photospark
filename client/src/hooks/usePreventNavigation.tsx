@@ -1,3 +1,4 @@
+"use client";
 import {useEffect, useRef, useCallback} from "react";
 import {useRouter} from "next/navigation";
 
@@ -42,6 +43,9 @@ const usePreventNavigation = () => {
   );
 
   useEffect(() => {
+    // Check if running in a browser environment
+    if (typeof window === "undefined") return;
+
     // Create a history entry marker to identify our pages
     const historyMarker: ProtectedHistoryState = {isProtectedPage: true};
 
