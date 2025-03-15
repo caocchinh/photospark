@@ -32,6 +32,9 @@ const i18nConfig = {
         "Current layout": "Current layout",
         "Waiting for print server": "Waiting for print server",
         "Please wait while we connect to the print server": "Please wait while we connect to the print server",
+        "Please select a frame before the countdown ends": "Please select a frame before the countdown ends",
+        "You have 30 seconds left to select a frame, or the frame will be selected automatically!":
+          "You have 30 seconds left to select a frame, or the frame will be selected automatically!",
       },
     },
     vi: {
@@ -61,6 +64,9 @@ const i18nConfig = {
         "Current layout": "Layout hiện tại",
         "Waiting for print server": "Đang chờ server in",
         "Please wait while we connect to the print server": "Vui lòng chờ trong khi ứng dụng kết nối với server in",
+        "Please select a frame before the countdown ends": "Vui lòng chọn frame trước khi countdown kết thúc",
+        "You have 30 seconds left to select a frame, or the frame will be selected automatically!":
+          "Bạn còn 30 giây để chọn frame, hoặc frame sẽ được chọn tự động!",
       },
     },
     fr: {
@@ -90,6 +96,9 @@ const i18nConfig = {
         "Current layout": "Layout actuel",
         "Waiting for print server": "En attente du serveur d'impression",
         "Please wait while we connect to the print server": "Veuillez patienter pendant que nous nous connectons au serveur d'impression",
+        "Please select a frame before the countdown ends": "Veuillez sélectionner un cadre avant la fin du countdown",
+        "You have 30 seconds left to select a frame, or the frame will be selected automatically!":
+          "Vous avez 30 secondes pour sélectionner un cadre, ou le cadre sera sélectionné automatiquement!",
       },
     },
     cn: {
@@ -119,6 +128,9 @@ const i18nConfig = {
         "Current layout": "当前布局",
         "Waiting for print server": "等待打印服务器",
         "Please wait while we connect to the print server": "请稍候，我们正在连接到打印服务器",
+        "Please select a frame before the countdown ends": "请在倒计时结束前选择一个框架",
+        "You have 30 seconds left to select a frame, or the frame will be selected automatically!":
+          "您有30秒的时间选择一个框架，或者框架将自动选择！",
       },
     },
   },

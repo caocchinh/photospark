@@ -155,6 +155,10 @@ const FilterPage = () => {
     canvas.height = qrSize;
 
     const container = document.createElement("div");
+    container.style.position = "absolute";
+    container.style.top = "-9999px";
+    container.style.left = "-9999px";
+
     document.body.appendChild(container);
 
     const waitForSVG = new Promise<SVGElement>((resolve) => {

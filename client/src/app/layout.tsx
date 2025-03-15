@@ -14,6 +14,7 @@ import localFont from "next/font/local";
 import {Sparkles} from "@/components/Sparkle";
 import {usePathname} from "next/navigation";
 import {ROUTES} from "@/constants/routes";
+import {Toaster} from "sonner";
 
 const Buffalo = localFont({
   src: "./fonts/BuffaloDemoVersionRegular-axZ1R.ttf",
@@ -62,11 +63,13 @@ export default function RootLayout({
 
                 {children}
               </PageTransitionEffect>
+              <Toaster />
+
               <footer className="w-full h-max fixed bottom-0 flex items-center justify-center bg-black overflow-hidden">
                 {pathName != ROUTES.CAPTURE && (
                   <div className="absolute top-1/2 z-[-1] -translate-y-1/2 h-[400px] w-screen overflow-hidden [mask-image:radial-gradient(100%_50%,white,transparent)] before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_bottom_center,#3273ff,transparent_70%)] before:opacity-20 after:absolute">
                     <Sparkles
-                      density={900}
+                      density={500}
                       speed={1.2}
                       color="#48b6ff"
                       direction="top"

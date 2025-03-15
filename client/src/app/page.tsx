@@ -40,7 +40,7 @@ const language = [
 ];
 
 const ThemePage = () => {
-  const {photo, setPhoto} = usePhoto();
+  const {photo, setPhoto, autoSelectCountdown} = usePhoto();
   const {t, i18n} = useTranslation();
   usePreventNavigation();
 
@@ -80,7 +80,7 @@ const ThemePage = () => {
   };
 
   return (
-    <div className="w-[90%] h-full flex items-center justify-start flex-col">
+    <div className={cn("w-[90%] h-full flex items-center justify-start flex-col", autoSelectCountdown <= 0 ? "pointer-events-none" : null)}>
       {!photo && <CollabTransition />}
 
       <Popover

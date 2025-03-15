@@ -373,7 +373,7 @@ const PrintPage = () => {
         <div className="flex flex-wrap w-[60%] gap-11 items-start justify-center ">
           {photo && (
             <div className="flex gap-2">
-              <h1 className="text-5xl font-semibold mb-4 flex gap-2">{t("Choose pictures")} </h1>
+              <h1 className="text-5xl font-semibold mb-4 flex gap-2 text-uppercase">{t("Choose pictures")} </h1>
               <span className="text-rose-500 text-5xl font-bold ">
                 <SlidingNumber
                   value={timeLeft}

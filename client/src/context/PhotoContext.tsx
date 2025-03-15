@@ -1,5 +1,5 @@
 "use client";
-import {FrameOptions, PhotoOptions, ValidThemeType} from "@/constants/constants";
+import {AUTO_SELECT_COUNTDOWN_DURATION, FrameOptions, PhotoOptions, ValidThemeType} from "@/constants/constants";
 import {createContext, ReactNode, useContext, useEffect, useRef, useState} from "react";
 import {usePathname, useRouter} from "next/navigation";
 import {ROUTES} from "@/constants/routes";
@@ -7,29 +7,34 @@ import {ROUTES} from "@/constants/routes";
 interface PhotoContextType {
   photo: PhotoOptions<ValidThemeType> | undefined;
   setPhoto: React.Dispatch<React.SetStateAction<PhotoOptions<ValidThemeType> | undefined>> | undefined;
-  timeLeft: number;
+  autoSelectCountdown: number;
 }
 
-const PhotoContext = createContext<PhotoContextType>({photo: undefined, setPhoto: undefined, timeLeft: 10});
+const PhotoContext = createContext<PhotoContextType>({photo: undefined, setPhoto: undefined, autoSelectCountdown: AUTO_SELECT_COUNTDOWN_DURATION});
 
 export const PhotoProvider = ({children}: {children: ReactNode}) => {
   const [photo, setPhoto] = useState<PhotoOptions<ValidThemeType> | undefined>(undefined);
   const photoRef = useRef(photo);
 
-  useEffect(() => {
-    photoRef.current = photo;
-  }, [photo]);
-
-  const [timeLeft, setTimeLeft] = useState(10);
+  const [autoSelectCountdown, setAutoSelectCountdown] = useState(AUTO_SELECT_COUNTDOWN_DURATION);
   const pathname = usePathname();
   const router = useRouter();
 
   useEffect(() => {
+    if (autoSelectCountdown >= 0) {
+      photoRef.current = photo;
+    }
+  }, [autoSelectCountdown, photo]);
+
+  useEffect(() => {
     if (photoRef.current && (pathname === ROUTES.HOME || pathname === ROUTES.THEME || pathname === ROUTES.LAYOUT)) {
-      const timer = setTimeout(() => {
-        setTimeLeft(timeLeft - 1);
-      }, 1000);
-      if (timeLeft <= 0) {
+      if (autoSelectCountdown > 0) {
+        const timer = setTimeout(() => {
+          setAutoSelectCountdown(autoSelectCountdown - 1);
+        }, 1000);
+        return () => clearTimeout(timer);
+      }
+      if (autoSelectCountdown <= 0) {
         let themeToUse = photoRef.current.theme;
         const frameType = photoRef.current!.frameType;
 
@@ -44,16 +49,17 @@ export const PhotoProvider = ({children}: {children: ReactNode}) => {
           const randomThemeFrame = themesFrames[Math.floor(Math.random() * themesFrames.length)];
 
           themeToUse = {name: randomThemeName, frame: randomThemeFrame};
+        } else {
+          const filteredFrame = FrameOptions[themeToUse!.name].filter((item) => item.type === frameType);
+          const randomFrame = filteredFrame[Math.floor(Math.random() * filteredFrame.length)];
+          themeToUse = {name: themeToUse!.name, frame: randomFrame};
         }
-
-        const filteredFrame = FrameOptions[themeToUse!.name].filter((item) => item.type === frameType);
-        const randomFrame = filteredFrame[Math.floor(Math.random() * filteredFrame.length)];
 
         setPhoto((prev) => {
           if (prev) {
             return {
               ...prev,
-              theme: prev.theme ? prev.theme : {name: themeToUse!.name, frame: randomFrame},
+              theme: prev.theme ? prev.theme : {name: themeToUse!.name, frame: themeToUse!.frame},
               quantity: prev.quantity ? prev.quantity : 1 * (frameType == "singular" ? 1 : 2),
               images: [],
               selectedImages: [],
@@ -70,15 +76,14 @@ export const PhotoProvider = ({children}: {children: ReactNode}) => {
         });
         router.push(ROUTES.CAPTURE);
       }
-      return () => clearTimeout(timer);
     } else {
-      if (timeLeft !== 10) {
-        setTimeLeft(10);
+      if (autoSelectCountdown !== AUTO_SELECT_COUNTDOWN_DURATION) {
+        setAutoSelectCountdown(AUTO_SELECT_COUNTDOWN_DURATION);
       }
     }
-  }, [pathname, router, timeLeft]);
+  }, [pathname, router, autoSelectCountdown]);
 
-  return <PhotoContext.Provider value={{photo, setPhoto, timeLeft}}>{children}</PhotoContext.Provider>;
+  return <PhotoContext.Provider value={{photo, setPhoto, autoSelectCountdown}}>{children}</PhotoContext.Provider>;
 };
 
 export const usePhoto = () => useContext(PhotoContext);

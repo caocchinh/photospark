@@ -11,9 +11,10 @@ import {useRouter} from "next/navigation";
 import {FaArrowLeftLong} from "react-icons/fa6";
 import SingularLayout from "@/components/layout-image/SingularLayout";
 import DoubleLayout from "@/components/layout-image/DoubleLayout";
+import {cn} from "@/lib/utils";
 
 const ThemePage = () => {
-  const {photo, setPhoto} = usePhoto();
+  const {photo, setPhoto, autoSelectCountdown} = usePhoto();
   const {t} = useTranslation();
   const router = useRouter();
   useEffect(() => {
@@ -40,7 +41,7 @@ const ThemePage = () => {
   return (
     <>
       {photo && (
-        <div className="w-full h-full flex items-center ">
+        <div className={cn("w-full h-full flex items-center", autoSelectCountdown <= 0 ? "pointer-events-none" : null)}>
           <div className="flex items-start justify-evenly w-full">
             <div className="flex flex-col w-max items-center justify-center gap-6">
               <CardTitle className="text-5xl uppercase">{t("Current layout")}</CardTitle>

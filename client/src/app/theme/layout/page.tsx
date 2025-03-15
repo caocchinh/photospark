@@ -19,7 +19,7 @@ import {ROUTES} from "@/constants/routes";
 import {Spotlight} from "@/components/ui/spotlight";
 
 const LayoutPage = () => {
-  const {photo, setPhoto} = usePhoto();
+  const {photo, setPhoto, autoSelectCountdown} = usePhoto();
   const router = useRouter();
   const {t} = useTranslation();
   useEffect(() => {
@@ -130,8 +130,13 @@ const LayoutPage = () => {
     <>
       {photo && photo.theme && (
         <>
-          <div className={cn("flex items-center w-[90%] justify-center gap-24 h-full", chosen ? "pointer-events-none" : null)}>
-            <div className="flex items-start flex-col justify-center gap-4 w-max">
+          <div
+            className={cn(
+              "flex items-center w-[90%] justify-center gap-24 h-full",
+              chosen || autoSelectCountdown <= 0 ? "pointer-events-none" : null
+            )}
+          >
+            <div className="flex items-center flex-col justify-center gap-4 w-max">
               <h1 className="text-5xl font-semibold uppercase">{t("Choose a frame")}</h1>
               <div className="relative rounded border-2 border-gray-500 flex items-center justify-center py-8 px-2 bg-gray-100 w-[50vw]">
                 <Spotlight
@@ -220,7 +225,7 @@ const LayoutPage = () => {
             </div>
             <div className="flex flex-col items-center justify-center gap-8 h-[80vh]">
               <div className="flex flex-col items-center justify-center gap-4">
-                <h1 className="text-5xl font-semibold uppercase text-nowrap">{t("Choose number of copies")}</h1>
+                <h1 className="text-5xl font-semibold uppercase text-wrap w-[100%] text-center">{t("Choose number of copies")}</h1>
                 <div className="flex gap-2 flex-wrap items-center justify-center w-[350px]">
                   <AnimatedBackground
                     defaultValue={photo.quantity?.toString()}
