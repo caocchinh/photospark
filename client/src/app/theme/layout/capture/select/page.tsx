@@ -1,7 +1,7 @@
 "use client";
 import {Button} from "@/components/ui/button";
 import {usePhoto} from "@/context/PhotoContext";
-import {cn} from "@/lib/utils";
+import {cn, findSwappedIndices} from "@/lib/utils";
 import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {Layer, Rect, Stage} from "react-konva";
 import useImage from "use-image";
@@ -224,49 +224,55 @@ const PrintPage = () => {
               ref={scaleContainerRef}
               className="transform-gpu scale-[calc(var(--scale-factor,0.75))] origin-center"
             >
-              <div
-                className="flex absolute flex-col"
+              <Reorder.Group
+                values={slots}
+                onReorder={(newSlotOrder) => {
+                  const swappedIndices = findSwappedIndices(slots, newSlotOrder);
+                  setSlots(newSlotOrder);
+                  setSelectedImage((prevImages) => {
+                    const reorderedImages = [...prevImages];
+                    const [removed] = reorderedImages.splice(swappedIndices.fromIndex, 1);
+                    reorderedImages.splice(swappedIndices.toIndex, 0, removed);
+                    return reorderedImages;
+                  });
+                }}
+                as="div"
+                className="flex absolute flex-col  z-50"
                 style={{
-                  top: photo ? photo.theme!.frame.slotPositions[0].y + OFFSET_Y / isSingle : 0,
-                  left: OFFSET_X / isSingle,
                   gap:
                     isSingle == 2 && photo
                       ? (photo.theme!.frame.slotPositions[0].y / isSingle) * 0.7
                       : photo
                       ? OFFSET_Y * 2 + photo.theme!.frame.slotPositions[0].y
                       : 0,
+                  top: photo ? photo.theme!.frame.slotPositions[0].y + OFFSET_Y / isSingle : 0,
+                  left: OFFSET_X / isSingle,
                 }}
               >
-                <Reorder.Group
-                  values={slots}
-                  onReorder={setSlots}
-                >
-                  {slots.map((_, index) => (
-                    <Reorder.Item
-                      value={index}
-                      key={index}
-                      z={100}
-                      draggable={true}
-                      className="bg-red-500"
-                      onClick={() => {
-                        if (selectedImage[index]) {
-                          handleSelect(selectedImage[index]);
-                        }
+                {slots.map((slotIndex, index) => (
+                  <Reorder.Item
+                    value={slotIndex}
+                    key={slotIndex}
+                    z={100}
+                    as="div"
+                    draggable={true}
+                    onClick={() => {
+                      if (selectedImage[index]) {
+                        handleSelect(selectedImage[index]);
+                      }
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: FRAME_WIDTH / isSingle,
+                        height: photo ? photo.theme!.frame.slotDimensions.height : 0,
                       }}
-                    >
-                      <div
-                        style={{
-                          width: FRAME_WIDTH / isSingle,
-                          height: photo ? photo.theme!.frame.slotDimensions.height : 0,
-                        }}
-                        className="hover:cursor-grab active:cursor-grabbing z-50"
-                      >
-                        {index}
-                      </div>
-                    </Reorder.Item>
-                  ))}
-                </Reorder.Group>
-              </div>
+                      className="hover:cursor-grab active:cursor-grabbing z-50 bg-transparent"
+                    ></div>
+                  </Reorder.Item>
+                ))}
+              </Reorder.Group>
+
               {frameImg && photo && (
                 <Stage
                   width={IMAGE_WIDTH / isSingle}
@@ -283,12 +289,12 @@ const PrintPage = () => {
                     x={OFFSET_X / isSingle}
                     y={OFFSET_Y / isSingle}
                   >
-                    {slots.map((slotIndex) => (
+                    {selectedImage.map((item, index) => (
                       <SelectedImage
-                        key={`image-${slotIndex}`}
-                        url={selectedImage[slotIndex]?.data}
-                        y={photo.theme!.frame.slotPositions[slotIndex].y}
-                        x={photo.theme!.frame.slotPositions[slotIndex].x}
+                        key={index}
+                        url={item?.data}
+                        y={photo.theme!.frame.slotPositions[index].y}
+                        x={photo.theme!.frame.slotPositions[index].x}
                         filter={null}
                         height={photo.theme!.frame.slotDimensions.height}
                         width={photo.theme!.frame.slotDimensions.width}
