@@ -12,6 +12,7 @@ import {AUTO_SELECT_COUNTDOWN_DURATION} from "@/constants/constants";
 import {TbClockRecord} from "react-icons/tb";
 import {toast} from "sonner";
 import {useTranslation} from "react-i18next";
+import {SlidingNumber} from "./ui/sliding-number";
 
 const NavBar = () => {
   const pathname = usePathname();
@@ -97,7 +98,10 @@ const NavBar = () => {
                   "text-2xl"
                 )}
               >
-                {autoSelectCountdown}
+                <SlidingNumber
+                  value={autoSelectCountdown}
+                  padStart={false}
+                />
               </p>
             </div>
           )}

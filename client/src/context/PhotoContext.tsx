@@ -18,7 +18,21 @@ export const PhotoProvider = ({children}: {children: ReactNode}) => {
 
   const [autoSelectCountdown, setAutoSelectCountdown] = useState(AUTO_SELECT_COUNTDOWN_DURATION);
   const pathname = usePathname();
+  const [shouldRunCountdown, setShouldRunCountdown] = useState(false);
   const router = useRouter();
+  const routerRef = useRef(router);
+
+  useEffect(() => {
+    const isValidPage = pathname === ROUTES.HOME || pathname === ROUTES.THEME || pathname === ROUTES.LAYOUT;
+    if (isValidPage && photoRef.current && autoSelectCountdown === AUTO_SELECT_COUNTDOWN_DURATION) {
+      setShouldRunCountdown(true);
+    } else if (!isValidPage) {
+      setShouldRunCountdown(false);
+      if (autoSelectCountdown !== AUTO_SELECT_COUNTDOWN_DURATION) {
+        setAutoSelectCountdown(AUTO_SELECT_COUNTDOWN_DURATION);
+      }
+    }
+  }, [pathname, autoSelectCountdown]);
 
   useEffect(() => {
     if (autoSelectCountdown >= 0) {
@@ -27,7 +41,13 @@ export const PhotoProvider = ({children}: {children: ReactNode}) => {
   }, [autoSelectCountdown, photo]);
 
   useEffect(() => {
-    if (photoRef.current && (pathname === ROUTES.HOME || pathname === ROUTES.THEME || pathname === ROUTES.LAYOUT)) {
+    if (autoSelectCountdown >= 0) {
+      routerRef.current = router;
+    }
+  }, [router, autoSelectCountdown]);
+
+  useEffect(() => {
+    if (shouldRunCountdown && photoRef.current) {
       if (autoSelectCountdown > 0) {
         const timer = setTimeout(() => {
           setAutoSelectCountdown(autoSelectCountdown - 1);
@@ -74,14 +94,10 @@ export const PhotoProvider = ({children}: {children: ReactNode}) => {
           }
           return prev;
         });
-        router.push(ROUTES.CAPTURE);
-      }
-    } else {
-      if (autoSelectCountdown !== AUTO_SELECT_COUNTDOWN_DURATION) {
-        setAutoSelectCountdown(AUTO_SELECT_COUNTDOWN_DURATION);
+        routerRef.current.push(ROUTES.CAPTURE);
       }
     }
-  }, [pathname, router, autoSelectCountdown]);
+  }, [shouldRunCountdown, autoSelectCountdown]);
 
   return <PhotoContext.Provider value={{photo, setPhoto, autoSelectCountdown}}>{children}</PhotoContext.Provider>;
 };
