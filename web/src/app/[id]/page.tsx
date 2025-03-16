@@ -1,5 +1,4 @@
-import {getImage, getProcessedImage, getVideo} from "@/server/actions";
-
+import {getPhotoResources} from "@/server/actions";
 import Preview from "./Preview";
 import ImageNotFoundError from "@/components/ImageNotFoundError";
 
@@ -9,20 +8,22 @@ const PreviewPage = async (props: {params: Params}) => {
   const params = await props.params;
   const id = params.id;
 
-  const processedImage = await getProcessedImage(id);
-  const images = await getImage(id);
-  const video = await getVideo(id);
+  const resources = await getPhotoResources(id);
+
+  if (resources.error || !resources.data) {
+    return <ImageNotFoundError />;
+  }
 
   return (
     <>
-      {processedImage.error || !processedImage.data ? (
+      {resources.error || !resources.data ? (
         <ImageNotFoundError />
       ) : (
         <div className="w-full min-h-screen flex items-center justify-center bg-white bg-no-repeat bg-cover">
           <Preview
-            processedImage={processedImage.data}
-            images={images.data}
-            video={video.data}
+            processedImage={resources.data.processedImage}
+            images={resources.data.images}
+            video={resources.data.video}
           />
         </div>
       )}

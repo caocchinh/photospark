@@ -1,9 +1,9 @@
-import Edit from "./Edit";
 import {getPhotoResources} from "@/server/actions";
 import ImageNotFoundError from "@/components/ImageNotFoundError";
+import Print from "./Print";
 type Params = Promise<{id: string}>;
 
-const EditPage = async (props: {params: Params}) => {
+const PrintPage = async (props: {params: Params}) => {
   const params = await props.params;
   const id = params.id;
 
@@ -15,7 +15,7 @@ const EditPage = async (props: {params: Params}) => {
 
   return (
     <div className="w-full min-h-screen flex items-center justify-center bg-white ">
-      <Edit
+      <Print
         processedImage={resources.data.processedImage}
         images={resources.data.images}
         video={resources.data.video}
@@ -24,4 +24,4 @@ const EditPage = async (props: {params: Params}) => {
   );
 };
 
-export default EditPage;
+export default PrintPage;
