@@ -4,8 +4,8 @@ import {useState} from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot} from "@/components/ui/input-otp";
-import {TextShimmer} from "@/components/text-shimmer";
-import {BorderTrail} from "@/components/border-trail";
+import {TextShimmer} from "@/components/ui/text-shimmer";
+import {BorderTrail} from "@/components/ui/border-trail";
 import {cn, isValidUUID} from "@/lib/utils";
 import {FaArrowUp, FaArrowRight} from "react-icons/fa6";
 

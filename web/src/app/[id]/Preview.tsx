@@ -8,11 +8,18 @@ import {Layer, Stage} from "react-konva";
 import useImage from "use-image";
 import CanvasImage from "@/components/CanvasImage";
 import {generateTimestampFilename} from "@/lib/utils";
-import {Button} from "./ui/button";
+import {Button} from "@/components/ui/button";
 import Link from "next/link";
-import {GlowEffect} from "./ui/glow-effect";
+import {GlowEffect} from "@/components/ui/glow-effect";
 import {MdKeyboardArrowRight} from "react-icons/md";
-import {AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle} from "./ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import {MdWarning} from "react-icons/md";
 import {IoRefresh} from "react-icons/io5";
 

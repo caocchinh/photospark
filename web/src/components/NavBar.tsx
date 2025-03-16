@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import {cn} from "@/lib/utils";
-import {BorderTrail} from "./border-trail";
+import {BorderTrail} from "./ui/border-trail";
 
 const NavBar = () => {
   return (
