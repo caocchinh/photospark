@@ -1,8 +1,7 @@
 "use client";
 import {ProcessedImageTable, ImageTable, VideoTable} from "@/drizzle/schema";
-import {useRef, useEffect, useState} from "react";
+import {useRef, useState} from "react";
 import {Stage as StageElement} from "konva/lib/Stage";
-import useImage from "use-image";
 import {cn, generateTimestampFilename} from "@/lib/utils";
 import {Button} from "@/components/ui/button";
 import Link from "next/link";
@@ -34,24 +33,9 @@ const Preview = ({
   video?: typeof VideoTable.$inferSelect;
 }) => {
   const stageRef = useRef<StageElement | null>(null);
-  const [frameImg, frameImgStatus] = useImage(processedImage?.frameURL || "", "anonymous");
   const [error, setError] = useState(false);
   const {setPhoto} = usePhoto();
-  const [imagesLoaded, setImagesLoaded] = useState(0);
   const [allImagesLoaded, setAllImagesLoaded] = useState(false);
-
-  useEffect(() => {
-    const chosenImageCount = images?.filter((image) => image.slotPositionX != null && image.slotPositionY != null).length || 0;
-    if (frameImgStatus === "loaded" && imagesLoaded === chosenImageCount * (processedImage?.type == "singular" ? 1 : 2)) {
-      setAllImagesLoaded(true);
-    } else {
-      setAllImagesLoaded(false);
-    }
-  }, [frameImgStatus, imagesLoaded, images, processedImage?.type]);
-
-  const handleImageLoaded = () => {
-    setImagesLoaded((prev) => prev + 1);
-  };
 
   if (!processedImage) {
     return null;
@@ -94,9 +78,8 @@ const Preview = ({
         <FrameStage
           processedImage={processedImage}
           images={images}
-          onImageLoaded={handleImageLoaded}
           stageRef={stageRef}
-          frameImg={frameImg}
+          onLoadingComplete={setAllImagesLoaded}
         />
 
         <div className="flex items-center justify-center gap-6 flex-col w-[90%] md:w-[280px]">
