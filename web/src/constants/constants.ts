@@ -519,3 +519,14 @@ export const FILTERS: {
   {name: "Willow", filter: "filter-willow", value: "brightness(1.2) contrast(0.85) saturate(0.05) sepia(0.2)"},
   {name: "X-Pro II", filter: "filter-xpro-ii", value: "sepia(0.45) contrast(1.25) brightness(1.75) saturate(1.3) hue-rotate(-5deg)"},
 ];
+
+export const PRINT_PRICING = [
+  {quantity: 1, price: 20000},
+  {quantity: 2, price: 40000},
+  {quantity: 3, price: 60000},
+  {quantity: 4, price: 80000},
+  {quantity: 5, price: 100000},
+  {quantity: "5+", price: 17000},
+];
+
+export const MAX_PRINT_QUANTITY = 10;
