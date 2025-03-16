@@ -11,6 +11,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.758.0",
     "@neondatabase/serverless": "^0.10.4",
+    "@radix-ui/react-alert-dialog": "^1.1.6",
     "@radix-ui/react-slot": "^1.1.2",
     "babel-plugin-react-compiler": "^19.0.0-beta-bafa41b-20250307",
     "canvas": "^3.1.0",
@@ -21,7 +22,7 @@
     "input-otp": "^1.4.2",
     "konva": "^9.3.18",
     "lucide-react": "^0.477.0",
-    "motion": "^12.4.11",
+    "motion": "^12.5.0",
     "next": "^15.2.2",
     "nextjs-toploader": "^3.7.15",
     "react": "^19.0.0",

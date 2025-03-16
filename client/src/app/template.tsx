@@ -16,7 +16,10 @@ export default function Template({children}: {children: React.ReactNode}) {
   return (
     <>
       <AlertDialog open={!isConnected}>
-        <AlertDialogContent className="flex flex-col items-center justify-center">
+        <AlertDialogContent
+          className="flex flex-col items-center justify-center"
+          aria-description="Waiting for print server"
+        >
           <AlertDialogTitle className="relative">
             <TextShimmer
               className=" font-semibold text-3xl uppercase text-center whitespace-nowrap  [--base-color:black] [--base-gradient-color:gray]"

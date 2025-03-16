@@ -1,9 +1,6 @@
 import {t} from "i18next";
-import {Dialog, DialogDescription, DialogTitle} from "./ui/dialog";
-import {DialogContent} from "./ui/dialog";
-import React from "react";
+import {Dialog, DialogDescription, DialogTitle, DialogContent, DialogHeader} from "./ui/dialog";
 import {MdWarning} from "react-icons/md";
-import {DialogHeader} from "./ui/dialog";
 
 const ErrorDialog = () => {
   return (
