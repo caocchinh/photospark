@@ -37,7 +37,10 @@ export const QueueTable = pgTable("queue", {
 export const ImageTable = pgTable("images", {
   id: uuid("id").primaryKey().defaultRandom().notNull(),
   url: text("url").notNull(),
-  slotPosition: integer("slotPosition"),
+  slotPositionX: integer("slotPositionX"),
+  slotPositionY: integer("slotPositionY"),
+  height: integer("height"),
+  width: integer("width"),
   proccessedImageId: uuid("proccessedImageId")
     .notNull()
     .references(() => ProcessedImageTable.id, {onDelete: "cascade"}),

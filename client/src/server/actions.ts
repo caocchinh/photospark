@@ -56,13 +56,38 @@ export const updateFilter = async (processedImageId: string, filter: string): Pr
   }
 };
 
-export const createImage = async (href: string, processedImageId: string, slotPosition: number): Promise<{error: boolean}> => {
+export const createImage = async (
+  href: string,
+  processedImageId: string,
+  slotPositionX: number,
+  slotPositionY: number,
+  height: number,
+  width: number
+): Promise<{error: boolean}> => {
   if (!processedImageId || !isValidUUID(processedImageId)) {
+    return {error: true};
+  }
+  if (slotPositionX == undefined || slotPositionY == undefined || height == undefined || width == undefined) {
+    return {error: true};
+  }
+
+  if (slotPositionX < 0 || slotPositionY < 0 || height < 0 || width < 0) {
+    return {error: true};
+  }
+
+  if (typeof slotPositionX !== "number" || typeof slotPositionY !== "number" || typeof height !== "number" || typeof width !== "number") {
     return {error: true};
   }
 
   try {
-    await db.insert(ImageTable).values({url: href, proccessedImageId: processedImageId, slotPosition});
+    await db.insert(ImageTable).values({
+      url: href,
+      proccessedImageId: processedImageId,
+      slotPositionX: slotPositionX,
+      slotPositionY: slotPositionY,
+      height: height,
+      width: width,
+    });
     return {error: false};
   } catch (error) {
     console.error("Failed to create image:", error);

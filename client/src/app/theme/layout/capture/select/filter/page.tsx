@@ -103,9 +103,18 @@ const FilterPage = () => {
       if (!photo || !socket) return;
       for (const image of photo.images) {
         const slotPosition = photo.selectedImages.findIndex((selectedImage) => selectedImage.id == image.id);
-        const imageResponse = await createImage(image.href, photo.id!, slotPosition);
+        if (slotPosition == -1) continue;
+        const imageResponse = await createImage(
+          image.href,
+          photo.id!,
+          photo.theme!.frame.slotPositions[slotPosition].x,
+          photo.theme!.frame.slotPositions[slotPosition].y,
+          photo.theme!.frame.slotDimensions.height,
+          photo.theme!.frame.slotDimensions.width
+        );
         if (imageResponse.error) {
           console.error("Failed to upload image to database");
+          socket.emit("upload-image-error", {url: image.href, id: image.id});
         } else {
           console.log("Image uploaded to database successfully");
         }
@@ -113,7 +122,7 @@ const FilterPage = () => {
       if (photo.video.r2_url) {
         const videoResponse = await createVideo(photo.video.r2_url, photo.id!);
         if (videoResponse.error) {
-          socket.emit("upload-video-error", {url: photo.video.r2_url, id: photo.id!});
+          socket.emit("upload-video-error", {url: photo.video.r2_url, id: photo.id});
         } else {
           console.log("Video uploaded to database successfully");
         }

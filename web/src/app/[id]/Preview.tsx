@@ -1,6 +1,6 @@
 "use client";
 import {ProcessedImageTable, ImageTable, VideoTable} from "@/drizzle/schema";
-import {FRAME_WIDTH, FRAME_HEIGHT, FrameOptions} from "@/constants/constants";
+import {FRAME_WIDTH, FRAME_HEIGHT} from "@/constants/constants";
 import {useRef, useEffect, useState} from "react";
 import {Stage as StageElement} from "konva/lib/Stage";
 import {Image as KonvaImage, Rect} from "react-konva";
@@ -123,17 +123,20 @@ const Preview = ({
             </Layer>
             {Array.from({length: processedImage.type == "singular" ? 1 : 2}, (_, _index) => (
               <Layer key={_index}>
-                {images?.map(({id, url, slotPosition}) => {
+                {images?.map(({id, url, slotPositionX, slotPositionY, height, width}) => {
                   return (
                     url &&
-                    slotPosition != -1 && (
+                    slotPositionX != null &&
+                    slotPositionY != null &&
+                    height != null &&
+                    width != null && (
                       <CanvasImage
                         key={id}
                         url={url}
-                        y={FrameOptions[processedImage.theme].slotPositions[slotPosition!].y}
-                        x={FrameOptions[processedImage.theme].slotPositions[slotPosition!].x + (FRAME_WIDTH / 2) * _index}
-                        height={FrameOptions[processedImage.theme].slotDimensions.height}
-                        width={FrameOptions[processedImage.theme].slotDimensions.width}
+                        y={slotPositionY}
+                        x={slotPositionX + (FRAME_WIDTH / 2) * _index}
+                        height={height}
+                        width={width}
                         filter={processedImage.filter!}
                         crossOrigin="anonymous"
                       />
