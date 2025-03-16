@@ -103,12 +103,11 @@ const FilterPage = () => {
       if (!photo || !socket) return;
       for (const image of photo.images) {
         const slotPosition = photo.selectedImages.findIndex((selectedImage) => selectedImage.id == image.id);
-        if (slotPosition == -1) continue;
         const imageResponse = await createImage(
           image.href,
           photo.id!,
-          photo.theme!.frame.slotPositions[slotPosition].x,
-          photo.theme!.frame.slotPositions[slotPosition].y,
+          slotPosition != -1 ? photo.theme!.frame.slotPositions[slotPosition].x : null,
+          slotPosition != -1 ? photo.theme!.frame.slotPositions[slotPosition].y : null,
           photo.theme!.frame.slotDimensions.height,
           photo.theme!.frame.slotDimensions.width
         );

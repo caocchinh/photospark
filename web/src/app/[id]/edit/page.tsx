@@ -14,9 +14,7 @@ const EditPage = async (props: {params: Params}) => {
     return <ImageNotFoundError />;
   }
   const images = await getImage(id);
-  const availableImageCount =
-    images.data?.filter((image) => image.slotPositionX != null && image.slotPositionY != null && image.height != null && image.width != null)
-      .length || 0;
+  const availableImageCount = images.data?.filter((image) => image.slotPositionX != null && image.slotPositionY != null).length || 0;
 
   return (
     <div className="w-full min-h-screen flex items-center justify-center bg-white ">

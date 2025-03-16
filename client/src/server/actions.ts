@@ -4,6 +4,7 @@ import {db} from "@/drizzle/db";
 import {ImageTable, ProcessedImageTable, VideoTable} from "@/drizzle/schema";
 import {ValidThemeType, ValidFrameType} from "@/constants/constants";
 import {eq} from "drizzle-orm";
+import {InferInsertModel} from "drizzle-orm";
 
 const isValidUUID = (id: string): boolean => {
   const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -59,35 +60,43 @@ export const updateFilter = async (processedImageId: string, filter: string): Pr
 export const createImage = async (
   href: string,
   processedImageId: string,
-  slotPositionX: number,
-  slotPositionY: number,
+  slotPositionX: number | null,
+  slotPositionY: number | null,
   height: number,
   width: number
 ): Promise<{error: boolean}> => {
   if (!processedImageId || !isValidUUID(processedImageId)) {
     return {error: true};
   }
-  if (slotPositionX == undefined || slotPositionY == undefined || height == undefined || width == undefined) {
+  if (height == undefined || width == undefined) {
     return {error: true};
   }
 
-  if (slotPositionX < 0 || slotPositionY < 0 || height < 0 || width < 0) {
+  if (height < 0 || width < 0) {
     return {error: true};
   }
 
-  if (typeof slotPositionX !== "number" || typeof slotPositionY !== "number" || typeof height !== "number" || typeof width !== "number") {
+  if (typeof height !== "number" || typeof width !== "number") {
     return {error: true};
   }
 
   try {
-    await db.insert(ImageTable).values({
+    const values: InferInsertModel<typeof ImageTable> = {
       url: href,
       proccessedImageId: processedImageId,
-      slotPositionX: slotPositionX,
-      slotPositionY: slotPositionY,
       height: height,
       width: width,
-    });
+    };
+
+    if (slotPositionX !== null) {
+      values.slotPositionX = slotPositionX;
+    }
+
+    if (slotPositionY !== null) {
+      values.slotPositionY = slotPositionY;
+    }
+
+    await db.insert(ImageTable).values(values);
     return {error: false};
   } catch (error) {
     console.error("Failed to create image:", error);

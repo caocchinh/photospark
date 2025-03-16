@@ -46,12 +46,13 @@ const Preview = ({
   const {setPhoto} = usePhoto();
 
   useEffect(() => {
-    if (frameImgStatus === "loaded" && imagesLoaded === (images?.length || 0)) {
+    const chosenImageCount = images?.filter((image) => image.slotPositionX != null && image.slotPositionY != null).length || 0;
+    if (frameImgStatus === "loaded" && imagesLoaded === chosenImageCount * (processedImage?.type == "singular" ? 1 : 2)) {
       setAllImagesLoaded(true);
     } else {
       setAllImagesLoaded(false);
     }
-  }, [frameImgStatus, imagesLoaded, images?.length]);
+  }, [frameImgStatus, imagesLoaded, images, processedImage?.type]);
 
   const handleImageLoaded = () => {
     setImagesLoaded((prev) => prev + 1);

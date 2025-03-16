@@ -11,6 +11,7 @@ const Print = ({
   return (
     <div>
       {processedImage?.id} {images?.length}
+      {processedImage?.slotCount}
     </div>
   );
 };
