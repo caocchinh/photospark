@@ -10,6 +10,7 @@ const CanvasImage = ({
   width,
   filter,
   crossOrigin,
+  onLoad,
 }: {
   url: string;
   x: number;
@@ -18,6 +19,7 @@ const CanvasImage = ({
   width: number;
   filter: string;
   crossOrigin?: string;
+  onLoad?: () => void;
 }) => {
   const [image, setImage] = useState<HTMLCanvasElement | null>(null);
 
@@ -39,8 +41,9 @@ const CanvasImage = ({
         context.drawImage(img, 0, 0);
       }
       setImage(canvas);
+      if (onLoad) onLoad();
     };
-  }, [filter, url, crossOrigin]);
+  }, [filter, url, crossOrigin, onLoad]);
 
   useEffect(() => {
     loadImage();
