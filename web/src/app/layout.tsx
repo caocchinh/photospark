@@ -4,6 +4,7 @@ import "./globals.css";
 import NextTopLoader from "nextjs-toploader";
 import {TextShimmer} from "@/components/text-shimmer";
 import Image from "next/image";
+import NavBar from "@/components/NavBar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,13 +28,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link
+          rel="shortcut icon"
+          href="/favicon.ico"
+        />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <head>
-          <link
-            rel="shortcut icon"
-            href="/favicon.ico"
-          />
-        </head>
+        <NavBar />
         <NextTopLoader
           color="black"
           zIndex={100000}
