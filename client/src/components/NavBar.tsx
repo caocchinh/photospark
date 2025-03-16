@@ -88,7 +88,7 @@ const NavBar = () => {
                   size={24}
                 />
               )}
-              <p
+              <div
                 className={cn(
                   autoSelectCountdown == AUTO_SELECT_COUNTDOWN_DURATION
                     ? "text-green-700"
@@ -102,7 +102,7 @@ const NavBar = () => {
                   value={autoSelectCountdown}
                   padStart={false}
                 />
-              </p>
+              </div>
             </div>
           )}
         </div>

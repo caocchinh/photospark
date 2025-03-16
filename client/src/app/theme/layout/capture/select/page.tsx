@@ -113,6 +113,7 @@ const PrintPage = () => {
   const [selected, setSelected] = useState(false);
   const scaleContainerRef = useViewportScale({baseHeight: photo?.frameType == "singular" ? 670 : 650});
   const [slots, setSlots] = useState<Array<number>>(Array.from({length: photo ? photo.theme!.frame.slotCount : 0}, (_, index) => index));
+  const [isDragging, setIsDragging] = useState(false);
 
   const handleContextSelect = useCallback(
     async (images: Array<{id: string; data: string; href: string}>) => {
@@ -237,7 +238,7 @@ const PrintPage = () => {
                   });
                 }}
                 as="div"
-                className="flex absolute flex-col  z-50"
+                className="flex absolute flex-col z-50"
                 style={{
                   gap:
                     isSingle == 2 && photo
@@ -256,8 +257,14 @@ const PrintPage = () => {
                     z={100}
                     as="div"
                     draggable={true}
+                    onDragStart={() => {
+                      setIsDragging(true);
+                    }}
+                    onDragEnd={() => {
+                      setIsDragging(false);
+                    }}
                     onClick={() => {
-                      if (selectedImage[index]) {
+                      if (selectedImage[index] && !isDragging) {
                         handleSelect(selectedImage[index]);
                       }
                     }}
@@ -321,7 +328,7 @@ const PrintPage = () => {
         <div className="flex flex-wrap w-[60%] gap-11 items-start justify-center ">
           {photo && (
             <div className="flex gap-2">
-              <h1 className="text-5xl font-semibold mb-4 flex gap-2 text-uppercase">{t("Choose pictures")} </h1>
+              <h1 className="text-5xl font-semibold mb-4 flex gap-2 uppercase">{t("Choose pictures")} </h1>
               <span className="text-rose-500 text-5xl font-bold ">
                 <SlidingNumber
                   value={timeLeft}
