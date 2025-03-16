@@ -456,22 +456,18 @@ export interface PhotoOptions<T extends ValidThemeType> {
   quantity: number | null;
   images: Array<{
     id: string;
-    data: string;
     href: string;
   }>;
   selectedImages: Array<{
     id: string;
-    data: string;
     href: string;
   }>;
   video: {
-    data: Blob;
     r2_url: string | null;
   };
   id: string | null;
-  error: boolean;
-  isTransition: boolean;
-  frameType: ValidFrameType;
+  frameType: ValidFrameType | null;
+  filters: string | null;
 }
 
 export const NUM_OF_IMAGE = 6;

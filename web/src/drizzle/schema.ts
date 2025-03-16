@@ -1,6 +1,6 @@
 import {VALID_THEMES, VALID_FRAME_TYPES} from "@/constants/constants";
 import {relations} from "drizzle-orm";
-import {pgTable, uuid, text, timestamp, pgEnum, integer} from "drizzle-orm/pg-core";
+import {pgTable, uuid, text, timestamp, pgEnum, integer, real} from "drizzle-orm/pg-core";
 
 export const Theme = pgEnum("theme", VALID_THEMES);
 
@@ -37,10 +37,10 @@ export const QueueTable = pgTable("queue", {
 export const ImageTable = pgTable("images", {
   id: uuid("id").primaryKey().defaultRandom().notNull(),
   url: text("url").notNull(),
-  slotPositionX: integer("slotPositionX"),
-  slotPositionY: integer("slotPositionY"),
-  height: integer("height"),
-  width: integer("width"),
+  slotPositionX: real("slotPositionX"),
+  slotPositionY: real("slotPositionY"),
+  height: real("height"),
+  width: real("width"),
   proccessedImageId: uuid("proccessedImageId")
     .notNull()
     .references(() => ProcessedImageTable.id, {onDelete: "cascade"}),

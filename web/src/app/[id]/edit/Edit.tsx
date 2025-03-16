@@ -10,7 +10,11 @@ const Edit = ({
   images?: Array<typeof ImageTable.$inferSelect>;
   video?: typeof VideoTable.$inferSelect;
 }) => {
-  return <div>Edit</div>;
+  return (
+    <div>
+      {processedImage?.id} {images?.length} {video?.url}
+    </div>
+  );
 };
 
 export default Edit;

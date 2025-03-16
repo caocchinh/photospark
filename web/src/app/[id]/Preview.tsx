@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import {MdWarning} from "react-icons/md";
 import {IoRefresh} from "react-icons/io5";
+import {usePhoto} from "@/context/PhotoContext";
 
 const Preview = ({
   processedImage,
@@ -37,6 +38,7 @@ const Preview = ({
   const [scale, setScale] = useState(1);
   const [frameImg] = useImage(processedImage?.frameURL || "", "anonymous");
   const [error, setError] = useState(false);
+  const {setPhoto} = usePhoto();
   useEffect(() => {
     if (!containerRef.current) return;
 
@@ -183,7 +185,27 @@ const Preview = ({
               Download video
             </Button>
           )}
-          <Button className="w-full h-[50px] text-white cursor-pointer text-xl bg-[#f97316] hover:opacity-90 hover:bg-[#f97316] rounded-sm">
+          <Button
+            className="w-full h-[50px] text-white cursor-pointer text-xl bg-[#f97316] hover:opacity-90 hover:bg-[#f97316] rounded-sm"
+            onClick={() =>
+              setPhoto!(() => {
+                if (!setPhoto) return;
+                return {
+                  images: images?.map(({id, url}) => ({id, href: url})) || [],
+                  selectedImages: [],
+                  theme: null,
+                  quantity: null,
+                  video: {
+                    r2_url: video ? video.url : null,
+                  },
+                  isTransition: false,
+                  id: null,
+                  frameType: null,
+                  filters: null,
+                };
+              })
+            }
+          >
             <Link
               href={`/${processedImage.id}/edit`}
               className="flex items-center justify-center gap-2 h-full w-full"
