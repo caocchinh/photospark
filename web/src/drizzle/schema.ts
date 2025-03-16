@@ -14,24 +14,26 @@ export const ProcessedImageTable = pgTable("processedImage", {
   frameURL: text("frameURL").notNull(),
   type: FrameType("type").notNull(),
   slotCount: integer("slotCount").notNull(),
-  quantity: integer("quantity"),
   filter: text("filter").default("Original"),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
   updatedAt: timestamp("updatedAt")
     .notNull()
     .defaultNow()
     .$onUpdate(() => new Date()),
-  queueId: uuid("queueId").references(() => QueueTable.id, {onDelete: "cascade"}),
 });
 
 export const QueueTable = pgTable("queue", {
   id: uuid("id").primaryKey().defaultRandom().notNull(),
+  quantity: integer("quantity"),
   status: QueueStatus("status").default("pending").notNull(),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
   updatedAt: timestamp("updatedAt")
     .notNull()
     .defaultNow()
     .$onUpdate(() => new Date()),
+  processedImageId: uuid("processedImageId")
+    .notNull()
+    .references(() => ProcessedImageTable.id, {onDelete: "cascade"}),
 });
 
 export const ImageTable = pgTable("images", {
@@ -55,7 +57,7 @@ export const VideoTable = pgTable("videos", {
 });
 
 export const ImageRelation = relations(ImageTable, ({one}) => ({
-  frame: one(ProcessedImageTable, {
+  processedImage: one(ProcessedImageTable, {
     fields: [ImageTable.proccessedImageId],
     references: [ProcessedImageTable.id],
   }),
@@ -64,19 +66,19 @@ export const ImageRelation = relations(ImageTable, ({one}) => ({
 export const ProcessedImageRelation = relations(ProcessedImageTable, ({many, one}) => ({
   images: many(ImageTable),
   video: one(VideoTable),
-  queue: one(QueueTable, {
-    fields: [ProcessedImageTable.queueId],
-    references: [QueueTable.id],
-  }),
+  queue: one(QueueTable),
 }));
 
 export const VideoRelation = relations(VideoTable, ({one}) => ({
-  frame: one(ProcessedImageTable, {
+  processedImage: one(ProcessedImageTable, {
     fields: [VideoTable.proccessedImageId],
     references: [ProcessedImageTable.id],
   }),
 }));
 
-export const QueueRelation = relations(QueueTable, ({many}) => ({
-  processedImages: many(ProcessedImageTable),
+export const QueueRelation = relations(QueueTable, ({one}) => ({
+  processedImage: one(ProcessedImageTable, {
+    fields: [QueueTable.processedImageId],
+    references: [ProcessedImageTable.id],
+  }),
 }));

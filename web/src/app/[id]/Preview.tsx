@@ -244,27 +244,7 @@ const Preview = ({
             </Link>
           </div>
 
-          <div
-            className="w-full h-[50px] text-white cursor-pointer text-xl bg-[#f97316] hover:opacity-90 hover:bg-[#f97316] rounded-sm flex items-center justify-center gap-3"
-            onClick={() =>
-              setPhoto!(() => {
-                if (!setPhoto) return;
-                return {
-                  images: images?.map(({id, url}) => ({id, href: url})) || [],
-                  selectedImages: [],
-                  theme: null,
-                  quantity: null,
-                  video: {
-                    r2_url: video ? video.url : null,
-                  },
-                  isTransition: false,
-                  id: null,
-                  frameType: null,
-                  filters: null,
-                };
-              })
-            }
-          >
+          <div className="w-full h-[50px] text-white cursor-pointer text-xl bg-[#f97316] hover:opacity-90 hover:bg-[#f97316] rounded-sm flex items-center justify-center gap-3">
             <Link
               href={`/${processedImage.id}/print`}
               className="flex items-center justify-center gap-2 h-full w-full"

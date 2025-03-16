@@ -12,6 +12,7 @@
     "@aws-sdk/client-s3": "^3.758.0",
     "@neondatabase/serverless": "^0.10.4",
     "@radix-ui/react-alert-dialog": "^1.1.6",
+    "@radix-ui/react-dialog": "^1.1.6",
     "@radix-ui/react-slot": "^1.1.2",
     "babel-plugin-react-compiler": "^19.0.0-beta-bafa41b-20250307",
     "canvas": "^3.1.0",

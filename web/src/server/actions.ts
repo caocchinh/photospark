@@ -4,33 +4,36 @@ import {cache} from "react";
 import {db} from "@/drizzle/db";
 import {isValidUUID} from "@/lib/utils";
 
-export const getPhotoResources = cache(async (id: string) => {
+export const getProcessedImage = cache(async (id: string) => {
   if (!id || !isValidUUID(id)) {
     return {error: true};
   }
+  const image = await db.query.ProcessedImageTable.findFirst({
+    where: (image, {eq}) => eq(image.id, id),
+  });
+  return {error: false, data: image};
+});
 
-  const [processedImage, images, video] = await Promise.all([
-    db.query.ProcessedImageTable.findFirst({
-      where: (image, {eq}) => eq(image.id, id),
-    }),
-    db.query.ImageTable.findMany({
-      where: (image, {eq}) => eq(image.proccessedImageId, id),
-    }),
-    db.query.VideoTable.findFirst({
-      where: (video, {eq}) => eq(video.proccessedImageId, id),
-    }),
-  ]);
-
-  if (!processedImage) {
+export const getVideo = cache(async (id: string) => {
+  if (!id || !isValidUUID(id)) {
     return {error: true};
   }
+  const video = await db.query.VideoTable.findFirst({
+    where: (video, {eq}) => eq(video.proccessedImageId, id),
+  });
+  if (!video) {
+    return {error: true};
+  }
+  return {error: false, data: video};
+});
 
-  return {
-    error: false,
-    data: {
-      processedImage,
-      images,
-      video,
-    },
-  };
+export const getImage = cache(async (id: string) => {
+  if (!id || !isValidUUID(id)) {
+    return {error: true};
+  }
+  const images = await db.query.ImageTable.findMany({
+    where: (image, {eq}) => eq(image.proccessedImageId, id),
+  });
+
+  return {error: false, data: images};
 });
