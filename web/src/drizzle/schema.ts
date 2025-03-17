@@ -41,8 +41,8 @@ export const ImageTable = pgTable("images", {
   url: text("url").notNull(),
   slotPositionX: real("slotPositionX"),
   slotPositionY: real("slotPositionY"),
-  height: real("height"),
-  width: real("width"),
+  height: real("height").notNull(),
+  width: real("width").notNull(),
   proccessedImageId: uuid("proccessedImageId")
     .notNull()
     .references(() => ProcessedImageTable.id, {onDelete: "cascade"}),
@@ -66,7 +66,7 @@ export const ImageRelation = relations(ImageTable, ({one}) => ({
 export const ProcessedImageRelation = relations(ProcessedImageTable, ({many, one}) => ({
   images: many(ImageTable),
   video: one(VideoTable),
-  queue: one(QueueTable),
+  queue: many(QueueTable),
 }));
 
 export const VideoRelation = relations(VideoTable, ({one}) => ({

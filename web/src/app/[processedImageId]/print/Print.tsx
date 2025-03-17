@@ -14,6 +14,8 @@ import {MAX_PRINT_QUANTITY, PRINT_PRICING} from "@/constants/constants";
 import Image from "next/image";
 import {Slider} from "@/components/ui/slider";
 import {SlidingNumber} from "@/components/ui/sliding-number";
+import {createQueue} from "@/server/actions";
+import {useRouter} from "next/navigation";
 
 const Print = ({
   processedImage,
@@ -25,25 +27,27 @@ const Print = ({
   const stageRef = useRef<StageElement | null>(null);
   const [activeTab, setActiveTab] = useState<"price" | "order">("price");
   const [printQuantity, setPrintQuantity] = useState(processedImage?.type === "double" ? 2 : 1);
+  const [error, setError] = useState(false);
+  const router = useRouter();
 
-  const calculatePrice = (quantity: number, imageType: string | undefined) => {
-    if (!quantity || !imageType) return 0;
-
+  const calculatePrice = (quantity: number) => {
     const priceTier = PRINT_PRICING.find((item) => {
       if (typeof item.quantity === "number") {
-        return quantity <= item.quantity * (imageType === "double" ? 2 : 1);
+        return quantity <= item.quantity;
       } else if (typeof item.quantity === "string" && item.quantity.endsWith("+")) {
-        const minQuantity = parseInt(item.quantity) * (imageType === "double" ? 2 : 1);
+        const minQuantity = parseInt(item.quantity);
         return quantity >= minQuantity;
       }
       return false;
     });
-    if (!priceTier) return 0;
+    if (!priceTier) {
+      throw new Error("Price tier not found");
+    }
 
     const price = priceTier.price;
 
     if (typeof priceTier.quantity === "string" && priceTier.quantity.endsWith("+")) {
-      return price * (quantity / (imageType === "double" ? 2 : 1));
+      return price * quantity;
     }
 
     return price;
@@ -51,6 +55,20 @@ const Print = ({
 
   const handleTabChange = (tab: "price" | "order") => {
     setActiveTab(tab);
+  };
+
+  const handleCreateQueue = async () => {
+    if (!processedImage) return;
+
+    const normalizedQuantity = processedImage.type === "double" ? printQuantity / 2 : printQuantity;
+    const queuId = crypto.randomUUID();
+    const result = await createQueue(processedImage.id, queuId, normalizedQuantity);
+
+    if (!result.error) {
+      router.push(`/${processedImage.id}/print/${queuId}`);
+    } else {
+      setError(true);
+    }
   };
 
   if (!processedImage) {
@@ -163,11 +181,14 @@ const Print = ({
                   onValueChange={(values) => setPrintQuantity(values[0])}
                 />
                 <div className="w-full h-[50px] text-[#f97316] font-semibold text-3xl flex items-center justify-center">
-                  GIÁ: <SlidingNumber value={calculatePrice(printQuantity, processedImage.type)} /> VNĐ
+                  GIÁ: <SlidingNumber value={calculatePrice(printQuantity / (processedImage.type === "double" ? 2 : 1))} /> VNĐ
                 </div>
               </CardContent>
               <CardFooter className="w-full">
-                <Button className="w-full flex items-center justify-center gap-2 cursor-pointer">
+                <Button
+                  className="w-full flex items-center justify-center gap-2 cursor-pointer"
+                  onClick={handleCreateQueue}
+                >
                   Đặt in <FaArrowRight />
                 </Button>
               </CardFooter>
@@ -178,7 +199,7 @@ const Print = ({
           href={`/${processedImage.id}`}
           className="w-full cursor-pointer"
         >
-          <Button className="w-full  cursor-pointer">
+          <Button className="w-full cursor-pointer">
             <FaArrowLeft />
             Quay lại
           </Button>

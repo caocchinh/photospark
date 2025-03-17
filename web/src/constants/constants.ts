@@ -526,7 +526,7 @@ export const PRINT_PRICING = [
   {quantity: 3, price: 60000},
   {quantity: 4, price: 80000},
   {quantity: 5, price: 100000},
-  {quantity: "5+", price: 17000},
+  {quantity: "5+", price: 15000},
 ];
 
 export const MAX_PRINT_QUANTITY = 10;

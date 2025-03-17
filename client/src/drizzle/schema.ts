@@ -66,7 +66,7 @@ export const ImageRelation = relations(ImageTable, ({one}) => ({
 export const ProcessedImageRelation = relations(ProcessedImageTable, ({many, one}) => ({
   images: many(ImageTable),
   video: one(VideoTable),
-  queue: one(QueueTable),
+  queue: many(QueueTable),
 }));
 
 export const VideoRelation = relations(VideoTable, ({one}) => ({

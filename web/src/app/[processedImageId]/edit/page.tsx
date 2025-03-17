@@ -2,18 +2,18 @@ import Edit from "./Edit";
 import {getProcessedImage, getImage} from "@/server/actions";
 import ImageNotFoundError from "@/components/ImageNotFoundError";
 import ImageFetchError from "@/components/ImageFetchError";
-type Params = Promise<{id: string}>;
+type Params = Promise<{processedImageId: string}>;
 
 const EditPage = async (props: {params: Params}) => {
   const params = await props.params;
-  const id = params.id;
+  const processedImageId = params.processedImageId;
 
-  const processedImage = await getProcessedImage(id);
+  const processedImage = await getProcessedImage(processedImageId);
 
   if (processedImage.error || !processedImage.data) {
     return <ImageNotFoundError />;
   }
-  const images = await getImage(id);
+  const images = await getImage(processedImageId);
   const availableImageCount = images.data?.filter((image) => image.slotPositionX != null && image.slotPositionY != null).length || 0;
 
   return (
