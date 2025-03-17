@@ -3,8 +3,8 @@
     "concurrently": "^9.1.2"
   },
   "scripts": {
-    "dev": "concurrently \"cd server && npm run dev\" \"cd client && npm run dev\" \"cd web && npm run dev\"",
-    "start": "concurrently \"cd server && npm run dev\" \"cd client && npm run start\" \"cd web && npm run start\"",
-    "build": "concurrently \"cd client && npm run build\" \"cd web && npm run build\""
+    "dev": "concurrently \"cd server && npm run dev\" \"cd client && npm run dev\" \"cd web && npm run dev\" \"cd extras && npm run dev\"",
+    "start": "concurrently \"cd server && npm run dev\" \"cd client && npm run start\" \"cd web && npm run start\" \"cd extras && npm run start\"",
+    "build": "concurrently \"cd client && npm run build\" \"cd web && npm run build\" \"cd extras && npm run build\""
   }
 }

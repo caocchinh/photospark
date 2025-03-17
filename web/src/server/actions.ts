@@ -5,6 +5,7 @@ import {db} from "@/drizzle/db";
 import {isValidUUID} from "@/lib/utils";
 import {QueueTable} from "@/drizzle/schema";
 import {MAX_PRINT_QUANTITY} from "@/constants/constants";
+import {eq} from "drizzle-orm";
 
 export const getProcessedImage = cache(async (processedImageId: string) => {
   if (!processedImageId || !isValidUUID(processedImageId)) {
@@ -80,4 +81,20 @@ export const getQueue = async (processedImageId: string, queueId: string) => {
     where: (queue, {eq}) => eq(queue.id, queueId),
   });
   return {error: false, data: queue};
+};
+
+export const getQueueStatus = async (queueId: string) => {
+  if (!queueId || !isValidUUID(queueId)) {
+    return {error: true};
+  }
+
+  const queueStatus = await db
+    .select({
+      status: QueueTable.status,
+    })
+    .from(QueueTable)
+    .where(eq(QueueTable.id, queueId))
+    .execute();
+
+  return {error: false, data: queueStatus[0]?.status};
 };
