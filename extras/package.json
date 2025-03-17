@@ -12,14 +12,20 @@
     "@neondatabase/serverless": "^0.10.4",
     "babel-plugin-react-compiler": "^19.0.0-beta-bafa41b-20250307",
     "babel-plugin-transform-remove-console": "^6.9.4",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "drizzle-orm": "^0.40.0",
     "konva": "^9.3.19",
+    "lucide-react": "^0.482.0",
+    "motion": "^12.5.0",
     "next": "15.2.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-konva": "^19.0.3",
     "react-qr-code": "^2.0.15",
-    "socket.io-client": "^4.8.1"
+    "socket.io-client": "^4.8.1",
+    "tailwind-merge": "^3.0.2",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

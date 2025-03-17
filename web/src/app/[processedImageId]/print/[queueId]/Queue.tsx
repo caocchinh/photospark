@@ -69,88 +69,89 @@ const Queue = ({
           <CardDescription>Chi tiết về đơn hàng in ảnh của bạn</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="border rounded-md p-4">
-            <div className="flex justify-between items-center mb-2">
+          <div className="border rounded-md p-4 flex flex-col gap-2">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className="w-full flex justify-end">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={refreshQueue}
+                      disabled={isRefreshing || !refreshable}
+                      className={cn(
+                        "p-1 h-8 w-full bg-black text-white hover:bg-black self-end hover:text-white",
+                        isRefreshing || !refreshable ? "opacity-50 cursor-not-allowed" : "cursor-pointer flex items-center gap-2 justify-center"
+                      )}
+                    >
+                      <FaSync className={cn(isRefreshing && "animate-spin")} />
+                      {isRefreshing || !refreshable ? (
+                        <h4 className="text-xs flex items-center gap-1 justify-center">
+                          Đợi
+                          <span>
+                            <SlidingNumber
+                              value={timeLeft}
+                              padStart={true}
+                            />
+                          </span>
+                          giây để làm mới
+                        </h4>
+                      ) : (
+                        <h4 className="text-xs">Làm mới trạng thái</h4>
+                      )}
+                    </Button>
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>{!refreshable ? `Đợi ${timeLeft} giây để làm mới` : "Làm mới trạng thái"}</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <div className="flex justify-between items-center mb-2 flex-col gap-3 md:gap-0 md:flex-row">
               <h3 className="font-medium">Trạng thái đơn hàng</h3>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={refreshQueue}
-                        disabled={isRefreshing || !refreshable}
-                        className={cn(
-                          "p-1 h-8 w-max bg-black text-white hover:bg-black hover:text-white",
-                          isRefreshing || !refreshable ? "opacity-50 cursor-not-allowed" : "cursor-pointer flex items-center gap-2 justify-center"
-                        )}
-                      >
-                        <FaSync className={cn(isRefreshing && "animate-spin")} />
-                        {isRefreshing || !refreshable ? (
-                          <h4 className="text-xs flex items-center gap-1 justify-center">
-                            Đợi
-                            <span>
-                              <SlidingNumber
-                                value={timeLeft}
-                                padStart={true}
-                              />
-                            </span>
-                            giây để làm mới
-                          </h4>
-                        ) : (
-                          <h4 className="text-xs">Làm mới trạng thái</h4>
-                        )}
-                      </Button>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>{!refreshable ? `Đợi ${timeLeft} giây để làm mới` : "Làm mới trạng thái"}</TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <div className="flex items-center gap-2 justify-center md:justify-start">
+                <div
+                  className={`w-3 h-3 rounded-full ${
+                    queueStatus === "pending"
+                      ? "bg-yellow-500"
+                      : queueStatus === "processing"
+                      ? "bg-blue-500"
+                      : queueStatus === "completed"
+                      ? "bg-green-500"
+                      : "bg-red-500"
+                  }`}
+                ></div>
+                <span>
+                  {queueStatus === "pending" && "Chờ in"}
+                  {queueStatus === "processing" && "Đang in"}
+                  {queueStatus === "completed" && "Đã in xong"}
+                  {queueStatus === "failed" && "Thất bại"}
+                </span>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <div
-                className={`w-3 h-3 rounded-full ${
-                  queueStatus === "pending"
-                    ? "bg-yellow-500"
-                    : queueStatus === "processing"
-                    ? "bg-blue-500"
-                    : queueStatus === "completed"
-                    ? "bg-green-500"
-                    : "bg-red-500"
-                }`}
-              ></div>
-              <span>
-                {queueStatus === "pending" && "Chờ in"}
-                {queueStatus === "processing" && "Đang in"}
-                {queueStatus === "completed" && "Đã in xong"}
-                {queueStatus === "failed" && "Thất bại"}
-              </span>
-            </div>
-            <div className="flex items-center gap-2 justify-start">
+
+            <div className="flex items-center gap-2 justify-center md:justify-start sm:flex-row flex-col">
               <h3 className="font-medium">Mã đơn hàng: </h3>
-              <span className="font-medium">{queue.id}</span>
+              <span className="font-medium text-center text-rose-500">{queue.id}</span>
             </div>
           </div>
 
           <div className="border rounded-md p-4">
             <h3 className="font-medium mb-2">Chi tiết đơn hàng</h3>
-            <div className="space-y-2">
-              <div className="flex justify-between">
+            <div className="flex flex-col gap-2 items-center justify-center md:justify-start w-full">
+              <div className="flex justify-between w-full">
                 <span>Loại ảnh:</span>
-                <span className="font-medium">{processedImage.type === "double" ? "Ảnh đôi" : "Ảnh đơn"}</span>
+                <span className="font-medium text-right">{processedImage.type === "double" ? "Ảnh đôi" : "Ảnh đơn"}</span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between w-full">
                 <span>Số lượng:</span>
-                <span className="font-medium">{queue.quantity * (processedImage.type === "double" ? 2 : 1)} ảnh</span>
+                <span className="font-medium text-right">{queue.quantity * (processedImage.type === "double" ? 2 : 1)} ảnh</span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between w-full">
                 <span>Giá</span>
-                <span className="font-medium">{queue.price} VNĐ</span>
+                <span className="font-medium text-right">{queue.price} VNĐ</span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between w-full">
                 <span>Thời gian đặt:</span>
-                <span className="font-medium">{new Date(queue.createdAt).toLocaleString("vi-VN")}</span>
+                <span className="font-medium text-right">{new Date(queue.createdAt).toLocaleString("vi-VN")}</span>
               </div>
             </div>
           </div>
