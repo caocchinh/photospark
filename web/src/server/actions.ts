@@ -75,6 +75,9 @@ export const getQueue = async (processedImageId: string, queueId: string) => {
   if (!queueId || !isValidUUID(queueId)) {
     return {error: true};
   }
-  const queue = await db.query.QueueTable.findFirst({where: (queue, {eq}) => eq(queue.id, queueId) && eq(queue.processedImageId, processedImageId)});
+
+  const queue = await db.query.QueueTable.findFirst({
+    where: (queue, {eq}) => eq(queue.id, queueId),
+  });
   return {error: false, data: queue};
 };

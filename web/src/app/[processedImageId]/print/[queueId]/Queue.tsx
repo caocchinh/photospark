@@ -1,24 +1,27 @@
 "use client";
 
-import {ProcessedImageTable, QueueTable} from "@/drizzle/schema";
+import {ImageTable, ProcessedImageTable, QueueTable} from "@/drizzle/schema";
 import {Button} from "@/components/ui/button";
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import Link from "next/link";
 import {FaArrowLeft} from "react-icons/fa6";
-import {useState} from "react";
+import {useRef} from "react";
+import FrameStage from "@/components/FrameStage";
+import {Stage as StageElement} from "konva/lib/Stage";
 
-const QueueDetails = ({
+const Queue = ({
   processedImage,
-  queues,
+  queue,
+  images,
 }: {
   processedImage: typeof ProcessedImageTable.$inferSelect;
-  queues: Array<typeof QueueTable.$inferSelect>;
+  queue: typeof QueueTable.$inferSelect;
+  images?: (typeof ImageTable.$inferSelect)[];
 }) => {
-  const [latestQueue] = useState(queues[queues.length - 1]);
-
+  const stageRef = useRef<StageElement | null>(null);
   return (
-    <div className="w-full flex flex-col items-center justify-center gap-5 p-4 max-w-lg">
-      <Card className="w-full">
+    <div className="w-full flex items-center justify-center gap-8  m-8 mt-20 flex-wrap">
+      <Card className=" w-[90%] lg:w-[40%]">
         <CardHeader>
           <CardTitle>Thông tin in ảnh</CardTitle>
           <CardDescription>Chi tiết về đơn hàng in ảnh của bạn</CardDescription>
@@ -29,21 +32,25 @@ const QueueDetails = ({
             <div className="flex items-center gap-2">
               <div
                 className={`w-3 h-3 rounded-full ${
-                  latestQueue.status === "pending"
+                  queue.status === "pending"
                     ? "bg-yellow-500"
-                    : latestQueue.status === "processing"
+                    : queue.status === "processing"
                     ? "bg-blue-500"
-                    : latestQueue.status === "completed"
+                    : queue.status === "completed"
                     ? "bg-green-500"
                     : "bg-red-500"
                 }`}
               ></div>
               <span>
-                {latestQueue.status === "pending" && "Chờ in"}
-                {latestQueue.status === "processing" && "Đang in"}
-                {latestQueue.status === "completed" && "Đã in xong"}
-                {latestQueue.status === "failed" && "Thất bại"}
+                {queue.status === "pending" && "Chờ in"}
+                {queue.status === "processing" && "Đang in"}
+                {queue.status === "completed" && "Đã in xong"}
+                {queue.status === "failed" && "Thất bại"}
               </span>
+            </div>
+            <div className="flex items-center gap-2 justify-start">
+              <h3 className="font-medium">Mã đơn hàng: </h3>
+              <span className="font-medium">{queue.id}</span>
             </div>
           </div>
 
@@ -56,35 +63,44 @@ const QueueDetails = ({
               </div>
               <div className="flex justify-between">
                 <span>Số lượng:</span>
-                <span className="font-medium">{latestQueue.quantity}</span>
+                <span className="font-medium">{queue.quantity * (processedImage.type === "double" ? 2 : 1)} ảnh</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Giá</span>
+                <span className="font-medium">{queue.price} VNĐ</span>
               </div>
               <div className="flex justify-between">
                 <span>Thời gian đặt:</span>
-                <span className="font-medium">{new Date(latestQueue.createdAt).toLocaleString()}</span>
+                <span className="font-medium">{new Date(queue.createdAt).toLocaleString("vi-VN")}</span>
               </div>
             </div>
           </div>
 
           <div className="border rounded-md p-4 bg-yellow-50">
-            <p className="text-center text-sm">Vui lòng đợi nhân viên VTEAM gọi tên hoặc số đơn hàng của bạn</p>
+            <p className="text-center text-sm">Vui lòng gặp staff VTEAM để được hỗ trợ!</p>
           </div>
         </CardContent>
         <CardFooter className="flex flex-col gap-2 w-full">
           <Link
-            href={`/${processedImage.id}`}
+            href={`/${processedImage.id}/print`}
             className="w-full"
           >
             <Button
               variant="outline"
-              className="w-full gap-2"
+              className="w-full gap-2 cursor-pointer"
             >
               <FaArrowLeft /> Quay lại
             </Button>
           </Link>
         </CardFooter>
       </Card>
+      <FrameStage
+        processedImage={processedImage}
+        images={images}
+        stageRef={stageRef}
+      />
     </div>
   );
 };
 
-export default QueueDetails;
+export default Queue;

@@ -15,7 +15,6 @@ import Image from "next/image";
 import {Slider} from "@/components/ui/slider";
 import {SlidingNumber} from "@/components/ui/sliding-number";
 import {createQueue} from "@/server/actions";
-import {useRouter} from "next/navigation";
 import GeneralError from "@/components/GeneralError";
 
 const Print = ({
@@ -29,7 +28,9 @@ const Print = ({
   const [activeTab, setActiveTab] = useState<"price" | "order">("price");
   const [printQuantity, setPrintQuantity] = useState(processedImage?.type === "double" ? 2 : 1);
   const [error, setError] = useState(false);
-  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const dummyLinkRef = useRef<HTMLAnchorElement>(null);
+  const [uuid, setUuid] = useState<string | null>(null);
 
   const calculatePrice = (quantity: number) => {
     const priceTier = PRINT_PRICING.find((item) => {
@@ -61,14 +62,25 @@ const Print = ({
   const handleCreateQueue = async () => {
     if (!processedImage) return;
 
-    const normalizedQuantity = processedImage.type === "double" ? printQuantity / 2 : printQuantity;
-    const queuId = crypto.randomUUID();
-    const result = await createQueue(processedImage.id, queuId, printQuantity, calculatePrice(normalizedQuantity));
+    setIsLoading(true);
 
-    if (!result.error) {
-      router.push(`/${processedImage.id}/print/${queuId}`);
-    } else {
+    try {
+      const normalizedQuantity = processedImage.type === "double" ? printQuantity / 2 : printQuantity;
+      const queuId = crypto.randomUUID();
+      setUuid(queuId);
+      const result = await createQueue(processedImage.id, queuId, normalizedQuantity, calculatePrice(normalizedQuantity));
+
+      if (!result.error) {
+        if (dummyLinkRef.current) {
+          dummyLinkRef.current.click();
+        }
+      } else {
+        setError(true);
+        setIsLoading(false);
+      }
+    } catch {
       setError(true);
+      setIsLoading(false);
     }
   };
 
@@ -78,6 +90,12 @@ const Print = ({
 
   return (
     <>
+      <Link
+        ref={dummyLinkRef}
+        style={{display: "none"}}
+        href={`/${processedImage.id}/print/${uuid}`}
+      />
+
       <div className="w-full h-full flex items-center justify-center gap-10 flex-wrap m-8 mt-20">
         <div className="flex flex-col items-center justify-center gap-5 w-[90%] md:w-[50%] lg:w-[40%] h-full">
           <Tabs
@@ -190,8 +208,18 @@ const Print = ({
                   <Button
                     className="w-full flex items-center justify-center gap-2 cursor-pointer"
                     onClick={handleCreateQueue}
+                    disabled={isLoading}
                   >
-                    Đặt in <FaArrowRight />
+                    {isLoading ? (
+                      <div className="flex items-center gap-2">
+                        <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"></span>
+                        Đang xử lý...
+                      </div>
+                    ) : (
+                      <>
+                        Đặt in <FaArrowRight />
+                      </>
+                    )}
                   </Button>
                 </CardFooter>
               </Card>
