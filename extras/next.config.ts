@@ -8,7 +8,6 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     esmExternals: "loose",
-    reactCompiler: true,
   },
   serverRuntimeConfig: {
     api: {

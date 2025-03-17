@@ -130,7 +130,7 @@ const Queue = ({
 
             <div className="flex items-center gap-2 justify-center md:justify-start sm:flex-row flex-col">
               <h3 className="font-medium">Mã đơn hàng: </h3>
-              <span className="font-medium text-center text-rose-500">{queue.id}</span>
+              <span className="font-medium text-center text-rose-500 hover:underline">{queue.id}</span>
             </div>
           </div>
 
