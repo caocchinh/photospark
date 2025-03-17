@@ -1,7 +1,7 @@
 import Edit from "./Edit";
 import {getProcessedImage, getImage} from "@/server/actions";
 import ImageNotFoundError from "@/components/ImageNotFoundError";
-import ImageFetchError from "@/components/ImageFetchError";
+import FetchError from "@/components/FetchError";
 type Params = Promise<{processedImageId: string}>;
 
 const EditPage = async (props: {params: Params}) => {
@@ -22,7 +22,7 @@ const EditPage = async (props: {params: Params}) => {
         processedImage={processedImage.data}
         images={images.data}
       />
-      {availableImageCount < processedImage.data.slotCount && <ImageFetchError />}
+      {availableImageCount < processedImage.data.slotCount && <FetchError type="image" />}
     </div>
   );
 };

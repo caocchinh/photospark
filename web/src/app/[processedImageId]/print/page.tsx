@@ -1,7 +1,7 @@
 import ImageNotFoundError from "@/components/ImageNotFoundError";
 import Print from "./Print";
 import {getProcessedImage, getImage} from "@/server/actions";
-import ImageFetchError from "@/components/ImageFetchError";
+import FetchError from "@/components/FetchError";
 type Params = Promise<{processedImageId: string}>;
 
 const PrintPage = async (props: {params: Params}) => {
@@ -25,7 +25,7 @@ const PrintPage = async (props: {params: Params}) => {
         processedImage={processedImage.data}
         images={images.data}
       />
-      {availableImageCount < processedImage.data.slotCount && <ImageFetchError />}
+      {availableImageCount < processedImage.data.slotCount && <FetchError type="image" />}
     </div>
   );
 };

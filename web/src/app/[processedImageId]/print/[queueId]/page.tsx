@@ -1,24 +1,20 @@
-import {db} from "@/drizzle/db";
-import ImageFetchError from "@/components/ImageFetchError";
+import {getQueue} from "@/server/actions";
+import FetchError from "@/components/FetchError";
 
-type Params = Promise<{id: string; queueId: string}>;
+type Params = Promise<{processedImageId: string; queueId: string}>;
 
 const QueuePage = async (props: {params: Params}) => {
   const params = await props.params;
   const queueId = params.queueId;
+  const processedImageId = params.processedImageId;
 
-  console.log("Queue ID from params:", queueId);
+  const queue = await getQueue(processedImageId, queueId);
 
-  const queue = await db.query.QueueTable.findFirst({
-    where: (queue, {eq}) => eq(queue.id, queueId),
-  });
-
-  if (!queue) {
-    console.log("Queue not found for ID:", queueId);
-    return <ImageFetchError />;
+  if (queue.error || !queue.data) {
+    return <FetchError type="queue" />;
   }
 
-  return <div className="w-full min-h-screen flex items-center justify-center bg-white">{queue.id}</div>;
+  return <div className="w-full min-h-screen flex items-center justify-center bg-white">{queue.data?.price}</div>;
 };
 
 export default QueuePage;

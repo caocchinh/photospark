@@ -24,13 +24,14 @@ export const ProcessedImageTable = pgTable("processedImage", {
 
 export const QueueTable = pgTable("queue", {
   id: uuid("id").primaryKey().defaultRandom().notNull(),
-  quantity: integer("quantity"),
+  quantity: integer("quantity").notNull(),
   status: QueueStatus("status").default("pending").notNull(),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
   updatedAt: timestamp("updatedAt")
     .notNull()
     .defaultNow()
     .$onUpdate(() => new Date()),
+  price: real("price").notNull(),
   processedImageId: uuid("processedImageId")
     .notNull()
     .references(() => ProcessedImageTable.id, {onDelete: "cascade"}),

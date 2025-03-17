@@ -1,16 +1,21 @@
 "use client";
 import {Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle} from "@/components/ui/dialog";
 import {IoRefresh} from "react-icons/io5";
-import {PiVideoCameraSlash} from "react-icons/pi";
+import {MdOutlineHideImage} from "react-icons/md";
+import {PiPrinter, PiVideoCameraSlash} from "react-icons/pi";
 import {Button} from "./ui/button";
 
-const VideoFetchError = () => {
+const FetchError = ({type}: {type: "image" | "video" | "queue"}) => {
   return (
     <Dialog defaultOpen={true}>
       <DialogContent className="flex flex-col items-center justify-center gap-4 border border-red-500 min-h-[330px]">
         <div className="flex flex-col items-center justify-center gap-4">
-          <DialogTitle className="text-red-500 text-3xl font-semibold text-center uppercase">Lỗi khi load video</DialogTitle>
-          <PiVideoCameraSlash size={90} />
+          <DialogTitle className="text-red-500 text-3xl font-semibold text-center uppercase">
+            Lỗi khi load {type === "image" ? "ảnh" : type === "video" ? "video" : "order in"}
+          </DialogTitle>
+          {type === "image" && <MdOutlineHideImage size={100} />}
+          {type === "video" && <PiVideoCameraSlash size={100} />}
+          {type === "queue" && <PiPrinter size={100} />}
           <DialogDescription className="text-xl text-center w-[90%]">Vui lòng thử lại sau, hoặc liên hệ VTEAM để được hỗ trợ!</DialogDescription>
         </div>
         <div className="flex items-center justify-center gap-4 w-full">
@@ -30,4 +35,4 @@ const VideoFetchError = () => {
   );
 };
 
-export default VideoFetchError;
+export default FetchError;

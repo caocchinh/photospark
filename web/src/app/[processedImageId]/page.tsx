@@ -1,8 +1,7 @@
 import {getImage, getProcessedImage, getVideo} from "@/server/actions";
 import Preview from "./Preview";
 import ImageNotFoundError from "@/components/ImageNotFoundError";
-import ImageFetchError from "@/components/ImageFetchError";
-import VideoFetchError from "@/components/VideoFetchError";
+import FetchError from "@/components/FetchError";
 
 type Params = Promise<{processedImageId: string}>;
 
@@ -25,8 +24,8 @@ const PreviewPage = async (props: {params: Params}) => {
         images={images.data}
         video={video.data!}
       />
-      {availableImageCount < processedImage.data.slotCount && <ImageFetchError />}
-      {(video.error || !video.data) && <VideoFetchError />}
+      {availableImageCount < processedImage.data.slotCount && <FetchError type="image" />}
+      {(video.error || !video.data) && <FetchError type="video" />}
     </div>
   );
 };

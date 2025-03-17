@@ -3,26 +3,16 @@ import {ProcessedImageTable, ImageTable, VideoTable} from "@/drizzle/schema";
 import {useRef, useState} from "react";
 import {Stage as StageElement} from "konva/lib/Stage";
 import {cn, generateTimestampFilename} from "@/lib/utils";
-import {Button} from "@/components/ui/button";
 import Link from "next/link";
 import {GlowEffect} from "@/components/ui/glow-effect";
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import {MdWarning} from "react-icons/md";
-import {IoRefresh} from "react-icons/io5";
+
 import {usePhoto} from "@/context/PhotoContext";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import {AiOutlineDownload} from "react-icons/ai";
 import {MdModeEdit} from "react-icons/md";
 import {IoCopySharp} from "react-icons/io5";
 import FrameStage from "@/components/FrameStage";
-
+import GeneralError from "@/components/GeneralError";
 const Preview = ({
   processedImage,
   images,
@@ -160,34 +150,11 @@ const Preview = ({
           </div>
         </div>
       </div>
-      <DownloadError error={error} />
+      <GeneralError
+        error={error}
+        message="Có lỗi trong khi download ảnh!"
+      />
     </>
   );
 };
 export default Preview;
-
-const DownloadError = ({error}: {error: boolean}) => {
-  return (
-    <AlertDialog open={error}>
-      <AlertDialogContent className="flex flex-col items-center justify-center gap-4 border border-red-500">
-        <AlertDialogHeader>
-          <AlertDialogTitle className="text-red-600 text-4xl font-bold">OOPS</AlertDialogTitle>
-        </AlertDialogHeader>
-        <MdWarning
-          className="text-red-500"
-          size={100}
-        />
-        <AlertDialogDescription className="text-2xl">Có lỗi trong khi download ảnh!</AlertDialogDescription>
-        <AlertDialogFooter>
-          <Button
-            onClick={() => window.location.reload()}
-            className="flex items-center justify-center gap-2 cursor-pointer"
-          >
-            Refresh lại trang
-            <IoRefresh />
-          </Button>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
-  );
-};
