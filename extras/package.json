@@ -10,6 +10,9 @@
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.10.4",
+    "@radix-ui/react-checkbox": "^1.1.4",
+    "@radix-ui/react-dropdown-menu": "^2.1.6",
+    "@radix-ui/react-slot": "^1.1.2",
     "@tanstack/react-table": "^8.21.2",
     "@tsparticles/react": "^3.0.0",
     "@tsparticles/slim": "^3.8.1",
