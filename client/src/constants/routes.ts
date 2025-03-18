@@ -1,5 +1,6 @@
 export const ROUTES = {
   HOME: "/",
+  SETTING: "/setting",
   THEME: "/theme",
   LAYOUT: "/theme/layout",
   CAPTURE: "/theme/layout/capture",

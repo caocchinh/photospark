@@ -18,73 +18,44 @@ import {IoMdCheckmark} from "react-icons/io";
 
 const CameraSetting = () => {
   const {t} = useTranslation();
-  const [isOpen, setIsOpen] = useState(false);
-  const {camera, setCamera} = usePhoto();
-  const [videoDevices, setVideoDevices] = useState<MediaDeviceInfo[]>([]);
+  const {camera, setCamera, availableCameras, startCamera, stopCamera, cameraStream} = usePhoto();
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
   const [videoReady, setVideoReady] = useState(false);
 
   const setVideoRef = useCallback((node: HTMLVideoElement | null) => {
     if (node !== null) {
+      console.log("Setting video ref");
       videoRef.current = node;
       setVideoReady(true);
     }
   }, []);
 
   useEffect(() => {
-    if (isOpen) {
-      const getVideoDevices = async () => {
-        await navigator.mediaDevices.getUserMedia({video: true}).then((stream) => {
-          stream.getTracks().forEach((track) => track.stop());
-        });
-        const deviceInfos = await navigator.mediaDevices.enumerateDevices();
-        const availableVideoDevices = deviceInfos.filter((device) => device.kind === "videoinput");
-        setVideoDevices(availableVideoDevices);
-      };
+    const currentVideoRef = videoRef.current;
 
-      if (videoDevices.length === 0) {
-        getVideoDevices();
-      }
-    }
-  }, [isOpen, videoDevices.length]);
-
-  useEffect(() => {
-    if (isOpen && videoReady) {
-      const currentVideoRef = videoRef.current;
-      const getVideo = async () => {
+    const getVideo = async () => {
+      if (camera && currentVideoRef && videoReady && cameraStream) {
         try {
-          const stream = await navigator.mediaDevices.getUserMedia({
-            video: {
-              deviceId: camera?.deviceId,
-              width: {ideal: 1280, max: 1920},
-              height: {ideal: 720, max: 1080},
-              aspectRatio: {ideal: 16 / 9},
-            },
-          });
-
-          if (currentVideoRef) {
-            currentVideoRef.srcObject = stream;
-          }
+          console.log("Asigning stream to video ref");
+          currentVideoRef.srcObject = cameraStream;
         } catch (err) {
           console.error("Error accessing the camera: ", err);
         }
-      };
-
-      if (camera && currentVideoRef) {
-        getVideo();
+      } else {
+        await startCamera();
       }
+    };
 
-      return () => {
-        if (currentVideoRef) {
-          const stream = currentVideoRef.srcObject as MediaStream;
-          if (stream) {
-            stream.getTracks().forEach((track) => track.stop());
-            currentVideoRef.srcObject = null;
-          }
-        }
-      };
+    if (isOpen) {
+      getVideo();
     }
-  }, [camera, isOpen, videoReady]);
+
+    return () => {
+      console.log("Stopping camera skibidi rizz");
+      stopCamera();
+    };
+  }, [camera, startCamera, stopCamera, isOpen, videoReady, cameraStream]);
 
   return (
     <AlertDialog
@@ -106,7 +77,7 @@ const CameraSetting = () => {
             autoPlay
             playsInline
             muted
-            className="h-[80%] w-[80%] object-contain -scale-x-100 rounded-sm overflow-hidden"
+            className="h-[80%] w-[80%] object-contain -scale-x-100 rounded-sm"
           />
           <div className="flex items-center justify-center flex-col gap-3">
             <AlertDialogHeader>
@@ -116,7 +87,7 @@ const CameraSetting = () => {
             <Select
               value={camera?.deviceId}
               onValueChange={(value) => {
-                const device = videoDevices.find((d) => d.deviceId === value);
+                const device = availableCameras.find((d) => d.deviceId === value);
                 if (device) {
                   console.log("Setting camera to", device);
                   setCamera!({deviceId: device.deviceId, label: device.label});
@@ -129,7 +100,7 @@ const CameraSetting = () => {
               <SelectContent>
                 <SelectGroup>
                   <SelectLabel>Avaiable cameras</SelectLabel>
-                  {videoDevices.map((device) => (
+                  {availableCameras.map((device) => (
                     <SelectItem
                       key={device.deviceId}
                       value={device.deviceId}

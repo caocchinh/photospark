@@ -340,7 +340,9 @@ const LayoutPage = () => {
                       "flex text-center items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-2 hover:opacity-[85%] w-full bg-green-700 z-10 relative"
                     )}
                     onClick={handleCaptureClick}
-                  ></Link>
+                  >
+                    {t("Capture")}
+                  </Link>
                 </div>
               </div>
             </div>
