@@ -15,6 +15,10 @@ import {useTranslation} from "react-i18next";
 import {PiVideoCameraFill} from "react-icons/pi";
 import {Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {IoMdCheckmark} from "react-icons/io";
+import {cn} from "@/lib/utils";
+import LoadingSpinner from "./LoadingSpinner";
+import {ImCamera} from "react-icons/im";
+import {TextShimmer} from "./ui/text-shimmer";
 
 const CameraSetting = () => {
   const {t} = useTranslation();
@@ -52,7 +56,6 @@ const CameraSetting = () => {
     }
 
     return () => {
-      console.log("Stopping camera skibidi rizz");
       stopCamera();
     };
   }, [camera, startCamera, stopCamera, isOpen, videoReady, cameraStream]);
@@ -70,15 +73,39 @@ const CameraSetting = () => {
           <p> {t("Camera settings")}</p> <PiVideoCameraFill />
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent className="min-w-[90vw] min-h-[90vh] flex flex-col items-center justify-center">
-        <div className="flex gap-4 w-full items-center justify-around">
+      <AlertDialogContent className="min-w-[90vw] min-h-[90vh] flex flex-col items-center justify-between">
+        <div className="flex gap-4 w-full items-center justify-around h-full flex-1">
           <video
             ref={setVideoRef}
             autoPlay
             playsInline
             muted
-            className="h-[80%] w-[80%] object-contain -scale-x-100 rounded-sm"
+            className={cn(
+              "h-[80%] w-[80%] object-contain -scale-x-100 rounded-sm",
+              camera && videoReady && cameraStream ? "opacity-100 block" : "opacity-0 absolute"
+            )}
           />
+          {!(camera && videoReady && cameraStream) && (
+            <div className="flex items-center justify-center gap-8 flex-col w-full">
+              <div className="relative">
+                <LoadingSpinner
+                  size={200}
+                  color="black"
+                />
+                <ImCamera
+                  className="text-4xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                  size={80}
+                />
+              </div>
+              <TextShimmer
+                className=" font-semibold text-3xl uppercase text-center whitespace-nowrap  [--base-color:black] [--base-gradient-color:gray]"
+                duration={1.5}
+                spread={4}
+              >
+                {t("Waiting for camera...")}
+              </TextShimmer>
+            </div>
+          )}
           <div className="flex items-center justify-center flex-col gap-3">
             <AlertDialogHeader>
               <AlertDialogTitle className="text-center text-2xl font-semibold">{t("Choose camera source")}</AlertDialogTitle>
