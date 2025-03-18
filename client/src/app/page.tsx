@@ -19,7 +19,7 @@ import {MdSettings} from "react-icons/md";
 import {useState} from "react";
 import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
-import Setting from "@/components/Setting";
+import CameraSetting from "@/components/CameraSetting";
 
 const language = [
   {
@@ -173,7 +173,7 @@ const ThemePage = () => {
           style={{marginRight: "77px"}}
         >
           {isPasswordCorrect ? (
-            <Setting />
+            <CameraSetting />
           ) : (
             <form
               className="flex flex-col gap-4"

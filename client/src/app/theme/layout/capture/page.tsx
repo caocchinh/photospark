@@ -16,7 +16,7 @@ import {ROUTES} from "@/constants/routes";
 
 const CapturePage = () => {
   const duration = Infinity;
-  const {setPhoto, photo, preloadedCamera, clearPreloadedCamera} = usePhoto();
+  const {setPhoto, photo} = usePhoto();
   const [count, setCount] = useState(duration);
   const [isCountingDown, setIsCountingDown] = useState(false);
   const [cycles, setCycles] = useState(1);
@@ -339,7 +339,7 @@ const CapturePage = () => {
     if (!isCameraReady && selectedDevice && cameraConstraints && (!preloadedCamera || (preloadedCamera && !videoRef.current?.srcObject))) {
       getVideo();
     }
-  }, [handleRecording, selectedDevice, isCameraReady, cameraConstraints, preloadedCamera]);
+  }, [handleRecording, selectedDevice, isCameraReady, cameraConstraints]);
 
   useEffect(() => {
     if (cycles < maxCycles + 1) {

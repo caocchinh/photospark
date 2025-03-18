@@ -36,7 +36,10 @@ const i18nConfig = {
         "You have 30 seconds left to select a frame, or the frame will be selected automatically!":
           "You have 30 seconds left to select a frame, or the frame will be selected automatically!",
         "Enter password to access settings": "Enter password to access settings",
+        "Camera settings": "Camera settings",
         Submit: "Submit",
+        Save: "Save",
+        "Choose camera source": "Choose camera source",
       },
     },
     vi: {
@@ -71,6 +74,9 @@ const i18nConfig = {
           "Bạn còn 30 giây để chọn frame, hoặc frame sẽ được chọn tự động!",
         "Enter password to access settings": "Nhập mật khẩu để truy cập cài đặt",
         Submit: "Gửi",
+        "Camera settings": "Cài đặt camera",
+        Save: "Lưu",
+        "Choose camera source": "Chọn nguồn camera",
       },
     },
     fr: {
@@ -105,6 +111,9 @@ const i18nConfig = {
           "Vous avez 30 secondes pour sélectionner un cadre, ou le cadre sera sélectionné automatiquement!",
         "Enter password to access settings": "Entrez le mot de passe pour accéder aux paramètres",
         Submit: "Envoyer",
+        "Camera settings": "Paramètres de la caméra",
+        Save: "Enregistrer",
+        "Choose camera source": "Choisir la source de la caméra",
       },
     },
     cn: {
@@ -139,6 +148,9 @@ const i18nConfig = {
           "您有30秒的时间选择一个框架，或者框架将自动选择！",
         "Enter password to access settings": "输入密码以访问设置",
         Submit: "提交",
+        "Camera settings": "相机设置",
+        Save: "保存",
+        "Choose camera source": "选择相机源",
       },
     },
   },
