@@ -1,12 +1,6 @@
 import {z} from "zod";
 const envVariables = z.object({
-  CLOUDFARE_ACCOUNT_ID: z.string(),
-  R2_ACCESS_KEY_ID: z.string(),
-  R2_SECRET_ACCESS_KEY: z.string(),
   NEON_DATABASE_URL: z.string(),
-  NEXT_PUBLIC_QR_DOMAIN: z.string(),
-  NEXT_PUBLIC_SOCKET_URL: z.string(),
-  NEXT_PUBLIC_ADMIN_PASSWORD: z.string(),
 });
 
 envVariables.parse(process.env);

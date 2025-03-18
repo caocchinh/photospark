@@ -1,16 +1,33 @@
 "use client";
 import {AUTO_SELECT_COUNTDOWN_DURATION, FrameOptions, PhotoOptions, ValidThemeType} from "@/constants/constants";
-import {createContext, ReactNode, useContext, useEffect, useRef, useState} from "react";
+import {createContext, ReactNode, useContext, useEffect, useRef, useState, useCallback} from "react";
 import {usePathname, useRouter} from "next/navigation";
 import {ROUTES} from "@/constants/routes";
 
-interface PhotoContextType {
+interface PreloadedCamera {
+  stream: MediaStream;
+  dimensions: {width: number; height: number};
+  deviceId: string;
+  constraints: MediaTrackConstraints;
+}
+
+export interface PhotoContextType {
   photo: PhotoOptions<ValidThemeType> | undefined;
   setPhoto: React.Dispatch<React.SetStateAction<PhotoOptions<ValidThemeType> | undefined>> | undefined;
   autoSelectCountdown: number;
+  preloadedCamera: PreloadedCamera | null;
+  preloadCamera: (deviceId: string, constraints: MediaTrackConstraints) => Promise<boolean>;
+  clearPreloadedCamera: () => void;
 }
 
-const PhotoContext = createContext<PhotoContextType>({photo: undefined, setPhoto: undefined, autoSelectCountdown: AUTO_SELECT_COUNTDOWN_DURATION});
+const PhotoContext = createContext<PhotoContextType>({
+  photo: undefined,
+  setPhoto: undefined,
+  autoSelectCountdown: AUTO_SELECT_COUNTDOWN_DURATION,
+  preloadedCamera: null,
+  preloadCamera: async () => false,
+  clearPreloadedCamera: () => {},
+});
 
 export const PhotoProvider = ({children}: {children: ReactNode}) => {
   const [photo, setPhoto] = useState<PhotoOptions<ValidThemeType> | undefined>(undefined);
@@ -21,6 +38,8 @@ export const PhotoProvider = ({children}: {children: ReactNode}) => {
   const [shouldRunCountdown, setShouldRunCountdown] = useState(false);
   const router = useRouter();
   const routerRef = useRef(router);
+
+  const [preloadedCamera, setPreloadedCamera] = useState<PreloadedCamera | null>(null);
 
   useEffect(() => {
     const isValidPage = pathname === ROUTES.HOME || pathname === ROUTES.THEME || pathname === ROUTES.LAYOUT;
@@ -99,7 +118,69 @@ export const PhotoProvider = ({children}: {children: ReactNode}) => {
     }
   }, [shouldRunCountdown, autoSelectCountdown]);
 
-  return <PhotoContext.Provider value={{photo, setPhoto, autoSelectCountdown}}>{children}</PhotoContext.Provider>;
+  const preloadCamera = useCallback(
+    async (deviceId: string, constraints: MediaTrackConstraints): Promise<boolean> => {
+      try {
+        if (preloadedCamera?.stream) {
+          preloadedCamera.stream.getTracks().forEach((track) => track.stop());
+        }
+
+        console.log("Preloading camera with constraints:", constraints);
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            ...constraints,
+            deviceId: {exact: deviceId},
+          },
+        });
+
+        const videoTrack = stream.getVideoTracks()[0];
+        const settings = videoTrack.getSettings();
+
+        setPreloadedCamera({
+          stream,
+          dimensions: {width: settings.width || 0, height: settings.height || 0},
+          deviceId,
+          constraints,
+        });
+
+        console.log("Camera preloaded successfully");
+        return true;
+      } catch (error) {
+        console.error("Failed to preload camera:", error);
+        return false;
+      }
+    },
+    [preloadedCamera]
+  );
+
+  const clearPreloadedCamera = useCallback(() => {
+    setPreloadedCamera((prev) => {
+      if (prev?.stream) {
+        prev.stream.getTracks().forEach((track) => {
+          track.stop();
+          console.log("Prel oaded camera track stopped");
+        });
+      }
+      return null;
+    });
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (preloadedCamera?.stream) {
+        preloadedCamera.stream.getTracks().forEach((track) => {
+          track.stop();
+          console.log("Preloaded camera track stopped on unmount");
+        });
+      }
+    };
+  }, [preloadedCamera]);
+
+  return (
+    <PhotoContext.Provider value={{photo, setPhoto, autoSelectCountdown, preloadedCamera, preloadCamera, clearPreloadedCamera}}>
+      {children}
+    </PhotoContext.Provider>
+  );
 };
 
 export const usePhoto = () => useContext(PhotoContext);

@@ -35,6 +35,8 @@ const i18nConfig = {
         "Please select a frame before the countdown ends": "Please select a frame before the countdown ends",
         "You have 30 seconds left to select a frame, or the frame will be selected automatically!":
           "You have 30 seconds left to select a frame, or the frame will be selected automatically!",
+        "Enter password to access settings": "Enter password to access settings",
+        Submit: "Submit",
       },
     },
     vi: {
@@ -67,6 +69,8 @@ const i18nConfig = {
         "Please select a frame before the countdown ends": "Vui lòng chọn frame trước khi countdown kết thúc",
         "You have 30 seconds left to select a frame, or the frame will be selected automatically!":
           "Bạn còn 30 giây để chọn frame, hoặc frame sẽ được chọn tự động!",
+        "Enter password to access settings": "Nhập mật khẩu để truy cập cài đặt",
+        Submit: "Gửi",
       },
     },
     fr: {
@@ -99,6 +103,8 @@ const i18nConfig = {
         "Please select a frame before the countdown ends": "Veuillez sélectionner un cadre avant la fin du countdown",
         "You have 30 seconds left to select a frame, or the frame will be selected automatically!":
           "Vous avez 30 secondes pour sélectionner un cadre, ou le cadre sera sélectionné automatiquement!",
+        "Enter password to access settings": "Entrez le mot de passe pour accéder aux paramètres",
+        Submit: "Envoyer",
       },
     },
     cn: {
@@ -131,6 +137,8 @@ const i18nConfig = {
         "Please select a frame before the countdown ends": "请在倒计时结束前选择一个框架",
         "You have 30 seconds left to select a frame, or the frame will be selected automatically!":
           "您有30秒的时间选择一个框架，或者框架将自动选择！",
+        "Enter password to access settings": "输入密码以访问设置",
+        Submit: "提交",
       },
     },
   },

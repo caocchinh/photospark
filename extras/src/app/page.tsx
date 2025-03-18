@@ -2,7 +2,7 @@
 import * as React from "react";
 import {DataTable} from "@/components/ui/data-table";
 import {Search} from "lucide-react";
-import {columns, initialData, Payment} from "@/components/ui/columns";
+import {columns, initialData, Payment, PaymentActionHandlers} from "@/components/ui/columns";
 import {useState} from "react";
 
 export default function Home() {
@@ -13,10 +13,26 @@ export default function Home() {
     setSelectedFilterColumn(e.target.value);
   };
 
+  // Define action handlers here
+  const actionHandlers: PaymentActionHandlers = {
+    onDelete: (id) => {
+      setData(data.filter((item) => item.id !== id));
+    },
+    onCopy: (id) => {
+      navigator.clipboard.writeText(id);
+    },
+    onViewCustomer: (payment) => {
+      window.alert(`View customer: ${payment.name}`);
+    },
+    onViewDetails: (payment) => {
+      window.alert(`View payment details for $${payment.amount}`);
+    },
+  };
+
   return (
-    <div className="container mx-auto py-10">
-      <h1 className="text-2xl font-bold mb-4">TanStack Table Demo</h1>
-      <p className="text-muted-foreground mb-6">A fully-featured table component with sorting, filtering, pagination, and row selection</p>
+    <div className="w-[50vw] mx-auto py-10 ">
+      <h1 className="text-2xl font-bold mb-4">Order in thêm</h1>
+      <p className="text-muted-foreground mb-6">Hãy chắc chắn khách hàng đã trả tiền trước khi in ảnh!</p>
 
       <div className="mb-4 flex items-center">
         <div className="flex items-center space-x-2 mr-4">
@@ -35,7 +51,7 @@ export default function Home() {
       </div>
 
       <DataTable
-        columns={columns(data, setData)}
+        columns={columns(actionHandlers)}
         data={data}
         filterColumn={selectedFilterColumn}
         filterPlaceholder={`Filter by ${selectedFilterColumn}...`}

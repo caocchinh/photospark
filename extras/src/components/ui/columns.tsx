@@ -98,7 +98,16 @@ export type Payment = {
   name: string;
 };
 
-export const columns = (data: Payment[], setData: React.Dispatch<React.SetStateAction<Payment[]>>): ColumnDef<Payment>[] => [
+// Create a type for the action handlers
+export type PaymentActionHandlers = {
+  onDelete?: (id: string) => void;
+  onCopy?: (id: string) => void;
+  onViewCustomer?: (payment: Payment) => void;
+  onViewDetails?: (payment: Payment) => void;
+};
+
+// Define columns with action handlers instead of direct data manipulation
+export const columns = (actionHandlers?: PaymentActionHandlers): ColumnDef<Payment>[] => [
   {
     id: "select",
     header: ({table}) => (
@@ -203,10 +212,6 @@ export const columns = (data: Payment[], setData: React.Dispatch<React.SetStateA
     cell: ({row}) => {
       const payment = row.original;
 
-      const handleDelete = () => {
-        setData(data.filter((item) => item.id !== payment.id));
-      };
-
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -221,13 +226,13 @@ export const columns = (data: Payment[], setData: React.Dispatch<React.SetStateA
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>Copy payment ID</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => actionHandlers?.onCopy?.(payment.id)}>Copy payment ID</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => window.alert(`View customer: ${payment.name}`)}>View customer</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => window.alert(`View payment details for $${payment.amount}`)}>View payment details</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => actionHandlers?.onViewCustomer?.(payment)}>View customer</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => actionHandlers?.onViewDetails?.(payment)}>View payment details</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={handleDelete}
+              onClick={() => actionHandlers?.onDelete?.(payment.id)}
               className="text-red-600 focus:text-red-600"
             >
               Delete payment

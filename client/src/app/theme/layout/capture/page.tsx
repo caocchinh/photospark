@@ -15,8 +15,8 @@ import {createProcessedImage} from "@/server/actions";
 import {ROUTES} from "@/constants/routes";
 
 const CapturePage = () => {
-  const duration = 2;
-  const {setPhoto, photo} = usePhoto();
+  const duration = Infinity;
+  const {setPhoto, photo, preloadedCamera, clearPreloadedCamera} = usePhoto();
   const [count, setCount] = useState(duration);
   const [isCountingDown, setIsCountingDown] = useState(false);
   const [cycles, setCycles] = useState(1);
@@ -30,6 +30,8 @@ const CapturePage = () => {
   const [playCameraShutterSound] = useSound("/shutter.mp3", {volume: 1});
   const [uploadedImages, setUploadedImages] = useState<Array<{id: string; href: string}>>([]);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
+  const [videoDevices, setVideoDevices] = useState<MediaDeviceInfo[]>([]);
+  const [cameraConstraints, setCameraConstraints] = useState<MediaTrackConstraints | null>(null);
   const {t} = useTranslation();
   const {navigateTo} = usePreventNavigation();
 
@@ -76,15 +78,35 @@ const CapturePage = () => {
   useEffect(() => {
     const getVideoDevices = async () => {
       try {
+        if (preloadedCamera) {
+          setSelectedDevice(preloadedCamera.deviceId);
+          setVideoDevices((prev) => {
+            if (prev.length > 0) return prev;
+
+            navigator.mediaDevices
+              .enumerateDevices()
+              .then((deviceInfos) => {
+                const availableVideoDevices = deviceInfos.filter((device) => device.kind === "videoinput");
+                setVideoDevices(availableVideoDevices);
+              })
+              .catch((error) => console.error("Error enumerating devices:", error));
+
+            return prev;
+          });
+          return;
+        }
+
         await navigator.mediaDevices.getUserMedia({video: true}).then((stream) => {
           stream.getTracks().forEach((track) => track.stop());
         });
         const deviceInfos = await navigator.mediaDevices.enumerateDevices();
-        const videoDevices = deviceInfos.filter((device) => device.kind === "videoinput");
-        if (videoDevices.length > 0) {
-          setSelectedDevice(videoDevices[0].deviceId);
+        const availableVideoDevices = deviceInfos.filter((device) => device.kind === "videoinput");
+        setVideoDevices(availableVideoDevices);
+
+        if (availableVideoDevices.length > 0) {
+          setSelectedDevice(availableVideoDevices[0].deviceId);
         }
-        console.log("Available video devices:", videoDevices);
+        console.log("Available video devices:", availableVideoDevices);
       } catch (error) {
         console.error("Error enumerating devices:", error);
       }
@@ -93,7 +115,16 @@ const CapturePage = () => {
     if (!selectedDevice) {
       getVideoDevices();
     }
-  }, [selectedDevice]);
+  }, [selectedDevice, preloadedCamera]);
+
+  const handleCameraChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setIsCameraReady(false);
+    if (videoRef.current?.srcObject instanceof MediaStream) {
+      const tracks = (videoRef.current.srcObject as MediaStream).getTracks();
+      tracks.forEach((track) => track.stop());
+    }
+    setSelectedDevice(event.target.value);
+  };
 
   const handleCapture = useCallback(async () => {
     if (!photo) return;
@@ -193,21 +224,89 @@ const CapturePage = () => {
   }, [setPhoto]);
 
   useEffect(() => {
+    if (preloadedCamera) {
+      setCameraConstraints(preloadedCamera.constraints);
+      return;
+    }
+
+    if (!photo?.theme?.frame.slotDimensions) return;
+
+    const {width: frameWidth, height: frameHeight} = photo.theme.frame.slotDimensions;
+    const aspectRatio = frameWidth / frameHeight;
+
+    let idealWidth = Math.round(1280);
+    let idealHeight = Math.round(idealWidth / aspectRatio);
+
+    idealHeight = Math.ceil(idealHeight / 16) * 16;
+    idealWidth = Math.round(idealHeight * aspectRatio);
+
+    const maxWidth = window.innerWidth * 0.9;
+    const maxHeight = window.innerHeight * 0.8;
+
+    if (idealWidth > maxWidth || idealHeight > maxHeight) {
+      const scaleFactor = Math.min(maxWidth / idealWidth, maxHeight / idealHeight);
+      idealWidth = Math.floor(idealWidth * scaleFactor);
+      idealHeight = Math.floor(idealHeight * scaleFactor);
+    }
+
+    const constraints: MediaTrackConstraints = {
+      width: {ideal: idealWidth},
+      height: {ideal: idealHeight},
+      aspectRatio: {exact: aspectRatio},
+    };
+
+    if (selectedDevice) {
+      constraints.deviceId = {exact: selectedDevice};
+    }
+
+    console.log("Calculated camera constraints:", constraints);
+    setCameraConstraints(constraints);
+  }, [photo?.theme?.frame.slotDimensions, selectedDevice, preloadedCamera]);
+
+  useEffect(() => {
+    if (preloadedCamera && videoRef.current && !isCameraReady) {
+      console.log("Using preloaded camera");
+      try {
+        videoRef.current.srcObject = preloadedCamera.stream;
+
+        setCameraSize(preloadedCamera.dimensions);
+
+        videoRef.current.onloadedmetadata = () => {
+          videoRef.current
+            ?.play()
+            .then(() => {
+              console.log("Video playback started from preloaded camera");
+              setIsCameraReady(true);
+              setIsCountingDown(true);
+              handleRecording();
+              clearPreloadedCamera();
+            })
+            .catch((e) => {
+              console.error("Video playback failed from preloaded camera:", e);
+              if (videoRef.current?.srcObject instanceof MediaStream) {
+                const tracks = (videoRef.current.srcObject as MediaStream).getTracks();
+                tracks.forEach((track) => track.stop());
+                videoRef.current.srcObject = null;
+              }
+              clearPreloadedCamera();
+            });
+        };
+      } catch (error) {
+        console.error("Error using preloaded camera:", error);
+        clearPreloadedCamera();
+      }
+    }
+  }, [preloadedCamera, isCameraReady, clearPreloadedCamera, handleRecording]);
+
+  useEffect(() => {
     const getVideo = async () => {
-      if (!photoRef.current?.theme!.frame.slotDimensions) return;
-      const multiplier = Math.min(
-        window.innerWidth / photoRef.current?.theme.frame.slotDimensions.width,
-        window.innerHeight / photoRef.current?.theme.frame.slotDimensions.height
-      );
+      if (!photoRef.current?.theme!.frame.slotDimensions || !cameraConstraints) return;
+      if (preloadedCamera && !isCameraReady) return;
 
       try {
-        console.log("Attempting to access camera...");
+        console.log("Attempting to access camera with constraints:", cameraConstraints);
         const stream = await navigator.mediaDevices.getUserMedia({
-          video: {
-            deviceId: {exact: selectedDevice},
-            width: {ideal: photoRef.current?.theme.frame.slotDimensions.width * multiplier},
-            height: {ideal: photoRef.current?.theme.frame.slotDimensions.height * multiplier},
-          },
+          video: cameraConstraints,
         });
 
         if (videoRef.current) {
@@ -236,10 +335,11 @@ const CapturePage = () => {
         console.error("Error accessing the camera: ", err);
       }
     };
-    if (!isCameraReady && selectedDevice) {
+
+    if (!isCameraReady && selectedDevice && cameraConstraints && (!preloadedCamera || (preloadedCamera && !videoRef.current?.srcObject))) {
       getVideo();
     }
-  }, [handleRecording, selectedDevice, isCameraReady]);
+  }, [handleRecording, selectedDevice, isCameraReady, cameraConstraints, preloadedCamera]);
 
   useEffect(() => {
     if (cycles < maxCycles + 1) {
@@ -320,6 +420,26 @@ const CapturePage = () => {
       {photo && (
         <>
           <div className="w-full h-full gap-2 flex items-center justify-evenly">
+            {videoDevices.length > 1 && (
+              <div className="absolute top-4 right-4 z-10 bg-white/80 p-2 rounded-md shadow-md">
+                <select
+                  value={selectedDevice}
+                  onChange={handleCameraChange}
+                  className="p-2 border rounded-md"
+                  disabled={isCountingDown}
+                >
+                  {videoDevices.map((device, index) => (
+                    <option
+                      key={device.deviceId}
+                      value={device.deviceId}
+                    >
+                      {device.label || `Camera ${index + 1}`}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
             <div className="relative w-max h-[88vh]">
               <video
                 ref={videoRef}

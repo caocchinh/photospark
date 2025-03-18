@@ -1,7 +1,6 @@
 "use client";
 import {ValidFrameType} from "@/constants/constants";
 import {usePhoto} from "@/context/PhotoContext";
-import React from "react";
 import usePreventNavigation from "@/hooks/usePreventNavigation";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import CollabTransition from "@/components/CollabTransition";
@@ -16,6 +15,12 @@ import Link from "next/link";
 import {ROUTES} from "@/constants/routes";
 import SingularLayout from "@/components/layout-image/SingularLayout";
 import DoubleLayout from "@/components/layout-image/DoubleLayout";
+import {MdSettings} from "react-icons/md";
+import {useState} from "react";
+import {Input} from "@/components/ui/input";
+import {Label} from "@/components/ui/label";
+import Setting from "@/components/Setting";
+
 const language = [
   {
     value: "vi",
@@ -43,9 +48,10 @@ const ThemePage = () => {
   const {photo, setPhoto, autoSelectCountdown} = usePhoto();
   const {t, i18n} = useTranslation();
   usePreventNavigation();
-
-  const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState(() => {
+  const [isPasswordCorrect, setIsPasswordCorrect] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [password, setPassword] = useState("");
+  const [value, setValue] = useState(() => {
     const defaultLang = language.find((lang) => lang.value === i18n.language);
     return defaultLang?.label ?? "English";
   });
@@ -80,7 +86,7 @@ const ThemePage = () => {
   };
 
   return (
-    <div className={cn("w-[90%] h-full flex items-center justify-start flex-col", autoSelectCountdown <= 0 ? "pointer-events-none" : null)}>
+    <div className={cn("w-[90%] h-full flex items-center justify-start flex-col relative", autoSelectCountdown <= 0 ? "pointer-events-none" : null)}>
       {!photo && <CollabTransition />}
 
       <Popover
@@ -151,6 +157,43 @@ const ThemePage = () => {
           <DoubleLayout />
         </Link>
       </CardContent>
+
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            className="absolute top-0 right-0 z-50"
+          >
+            <MdSettings />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent
+          className="w-max"
+          sideOffset={10}
+          style={{marginRight: "77px"}}
+        >
+          {isPasswordCorrect ? (
+            <Setting />
+          ) : (
+            <form
+              className="flex flex-col gap-4"
+              onSubmit={(e) => {
+                e.preventDefault();
+                setIsPasswordCorrect(password === process.env.NEXT_PUBLIC_ADMIN_PASSWORD);
+              }}
+            >
+              <Label htmlFor="password">{t("Enter password to access settings")}</Label>
+              <Input
+                type="password"
+                value={password}
+                id="password"
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <Button type="submit">{t("Submit")}</Button>
+            </form>
+          )}
+        </PopoverContent>
+      </Popover>
     </div>
   );
 };
