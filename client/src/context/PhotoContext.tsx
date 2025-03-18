@@ -3,6 +3,7 @@ import {AUTO_SELECT_COUNTDOWN_DURATION, FrameOptions, PhotoOptions, ValidThemeTy
 import {createContext, ReactNode, useContext, useEffect, useRef, useState} from "react";
 import {usePathname, useRouter} from "next/navigation";
 import {ROUTES} from "@/constants/routes";
+import {getCameraConstraints} from "@/lib/utils";
 
 interface CameraSetting {
   deviceId: string;
@@ -32,6 +33,7 @@ export const PhotoProvider = ({children}: {children: ReactNode}) => {
   const [autoSelectCountdown, setAutoSelectCountdown] = useState(AUTO_SELECT_COUNTDOWN_DURATION);
   const pathname = usePathname();
   const [shouldRunCountdown, setShouldRunCountdown] = useState(false);
+  const [cameraConstraints, setCameraConstraints] = useState<MediaStreamConstraints | null>(null);
   const router = useRouter();
   const routerRef = useRef(router);
 
@@ -128,6 +130,26 @@ export const PhotoProvider = ({children}: {children: ReactNode}) => {
       getVideoDevices();
     }
   }, [camera]);
+
+  useEffect(() => {
+    if (!photo?.theme?.frame.slotDimensions) return;
+
+    setCameraConstraints({
+      video: getCameraConstraints(photo.theme.frame.slotDimensions.width, photo.theme.frame.slotDimensions.height, camera?.deviceId),
+    });
+  }, [photo?.theme?.frame.slotDimensions, camera]);
+
+  useEffect(() => {
+    if ((pathname === ROUTES.LAYOUT || autoSelectCountdown <= 7) && camera) {
+      const startVideoDevice = async () => {
+        await navigator.mediaDevices.getUserMedia({
+          video: cameraConstraints?.video,
+        });
+      };
+      startVideoDevice();
+    }
+  }, [autoSelectCountdown, camera, cameraConstraints?.video, pathname]);
+
   return <PhotoContext.Provider value={{photo, setPhoto, autoSelectCountdown, camera, setCamera}}>{children}</PhotoContext.Provider>;
 };
 

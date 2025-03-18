@@ -20,3 +20,31 @@ export function findSwappedIndices(arr1: number[], arr2: number[]) {
     toIndex: idx2,
   };
 }
+
+export function getCameraConstraints(frameWidth: number, frameHeight: number, deviceId?: string) {
+  const aspectRatio = frameWidth / frameHeight;
+
+  let idealWidth = Math.round(1280);
+  let idealHeight = Math.round(idealWidth / aspectRatio);
+
+  idealHeight = Math.ceil(idealHeight / 16) * 16;
+  idealWidth = Math.round(idealHeight * aspectRatio);
+
+  const maxWidth = window.innerWidth * 0.9;
+  const maxHeight = window.innerHeight * 0.8;
+
+  if (idealWidth > maxWidth || idealHeight > maxHeight) {
+    const scaleFactor = Math.min(maxWidth / idealWidth, maxHeight / idealHeight);
+    idealWidth = Math.floor(idealWidth * scaleFactor);
+    idealHeight = Math.floor(idealHeight * scaleFactor);
+  }
+
+  const constraints: MediaTrackConstraints = {
+    width: {ideal: idealWidth},
+    height: {ideal: idealHeight},
+    aspectRatio: {exact: aspectRatio},
+    deviceId: deviceId ? {exact: deviceId} : undefined,
+  };
+
+  return constraints;
+}

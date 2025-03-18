@@ -224,46 +224,6 @@ const CapturePage = () => {
   }, [setPhoto]);
 
   useEffect(() => {
-    if (preloadedCamera) {
-      setCameraConstraints(preloadedCamera.constraints);
-      return;
-    }
-
-    if (!photo?.theme?.frame.slotDimensions) return;
-
-    const {width: frameWidth, height: frameHeight} = photo.theme.frame.slotDimensions;
-    const aspectRatio = frameWidth / frameHeight;
-
-    let idealWidth = Math.round(1280);
-    let idealHeight = Math.round(idealWidth / aspectRatio);
-
-    idealHeight = Math.ceil(idealHeight / 16) * 16;
-    idealWidth = Math.round(idealHeight * aspectRatio);
-
-    const maxWidth = window.innerWidth * 0.9;
-    const maxHeight = window.innerHeight * 0.8;
-
-    if (idealWidth > maxWidth || idealHeight > maxHeight) {
-      const scaleFactor = Math.min(maxWidth / idealWidth, maxHeight / idealHeight);
-      idealWidth = Math.floor(idealWidth * scaleFactor);
-      idealHeight = Math.floor(idealHeight * scaleFactor);
-    }
-
-    const constraints: MediaTrackConstraints = {
-      width: {ideal: idealWidth},
-      height: {ideal: idealHeight},
-      aspectRatio: {exact: aspectRatio},
-    };
-
-    if (selectedDevice) {
-      constraints.deviceId = {exact: selectedDevice};
-    }
-
-    console.log("Calculated camera constraints:", constraints);
-    setCameraConstraints(constraints);
-  }, [photo?.theme?.frame.slotDimensions, selectedDevice, preloadedCamera]);
-
-  useEffect(() => {
     if (preloadedCamera && videoRef.current && !isCameraReady) {
       console.log("Using preloaded camera");
       try {

@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import {Button} from "@/components/ui/button";
 import {usePhoto} from "@/context/PhotoContext";
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useRef, useState, useCallback} from "react";
 import {useTranslation} from "react-i18next";
 import {PiVideoCameraFill} from "react-icons/pi";
 import {Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue} from "@/components/ui/select";
@@ -22,47 +22,69 @@ const CameraSetting = () => {
   const {camera, setCamera} = usePhoto();
   const [videoDevices, setVideoDevices] = useState<MediaDeviceInfo[]>([]);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [videoReady, setVideoReady] = useState(false);
 
-  useEffect(() => {
-    const getVideoDevices = async () => {
-      await navigator.mediaDevices.getUserMedia({video: true}).then((stream) => {
-        stream.getTracks().forEach((track) => track.stop());
-      });
-      const deviceInfos = await navigator.mediaDevices.enumerateDevices();
-      const availableVideoDevices = deviceInfos.filter((device) => device.kind === "videoinput");
-      setVideoDevices(availableVideoDevices);
-    };
-
-    getVideoDevices();
+  const setVideoRef = useCallback((node: HTMLVideoElement | null) => {
+    if (node !== null) {
+      videoRef.current = node;
+      setVideoReady(true);
+    }
   }, []);
 
   useEffect(() => {
-    const getVideo = async () => {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: {
-            deviceId: camera?.deviceId,
-            width: {ideal: 1280, max: 1920},
-            height: {ideal: 720, max: 1080},
-            aspectRatio: {ideal: 16 / 9},
-          },
+    if (isOpen) {
+      const getVideoDevices = async () => {
+        await navigator.mediaDevices.getUserMedia({video: true}).then((stream) => {
+          stream.getTracks().forEach((track) => track.stop());
         });
+        const deviceInfos = await navigator.mediaDevices.enumerateDevices();
+        const availableVideoDevices = deviceInfos.filter((device) => device.kind === "videoinput");
+        setVideoDevices(availableVideoDevices);
+      };
 
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-        } else {
-          console.error("Video ref is not available");
-        }
-      } catch (err) {
-        console.error("Error accessing the camera: ", err);
+      if (videoDevices.length === 0) {
+        getVideoDevices();
       }
-    };
-
-    if (camera && isOpen) {
-      console.log("Camera and isOpen", camera, isOpen);
-      getVideo();
     }
-  }, [camera, isOpen]);
+  }, [isOpen, videoDevices.length]);
+
+  useEffect(() => {
+    if (isOpen && videoReady) {
+      const currentVideoRef = videoRef.current;
+      const getVideo = async () => {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({
+            video: {
+              deviceId: camera?.deviceId,
+              width: {ideal: 1280, max: 1920},
+              height: {ideal: 720, max: 1080},
+              aspectRatio: {ideal: 16 / 9},
+            },
+          });
+
+          if (currentVideoRef) {
+            currentVideoRef.srcObject = stream;
+          }
+        } catch (err) {
+          console.error("Error accessing the camera: ", err);
+        }
+      };
+
+      if (camera && currentVideoRef) {
+        getVideo();
+      }
+
+      return () => {
+        if (currentVideoRef) {
+          const stream = currentVideoRef.srcObject as MediaStream;
+          if (stream) {
+            stream.getTracks().forEach((track) => track.stop());
+            currentVideoRef.srcObject = null;
+          }
+        }
+      };
+    }
+  }, [camera, isOpen, videoReady]);
 
   return (
     <AlertDialog
@@ -80,7 +102,7 @@ const CameraSetting = () => {
       <AlertDialogContent className="min-w-[90vw] min-h-[90vh] flex flex-col items-center justify-center">
         <div className="flex gap-4 w-full items-center justify-around">
           <video
-            ref={videoRef}
+            ref={setVideoRef}
             autoPlay
             playsInline
             muted
