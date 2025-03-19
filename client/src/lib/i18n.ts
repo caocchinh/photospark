@@ -40,6 +40,8 @@ const i18nConfig = {
         Submit: "Submit",
         Save: "Save",
         "Choose camera source": "Choose camera source",
+        "Error loading camera": "Error loading camera",
+        "Wrong password": "Wrong password",
       },
     },
     vi: {
@@ -77,6 +79,8 @@ const i18nConfig = {
         "Camera settings": "Cài đặt camera",
         Save: "Lưu",
         "Choose camera source": "Chọn nguồn camera",
+        "Error loading camera": "Lỗi tải camera",
+        "Wrong password": "Sai mật khẩu",
       },
     },
     fr: {
@@ -114,6 +118,8 @@ const i18nConfig = {
         "Camera settings": "Paramètres de la caméra",
         Save: "Enregistrer",
         "Choose camera source": "Choisir la source de la caméra",
+        "Error loading camera": "Erreur de chargement de la caméra",
+        "Wrong password": "Mot de passe incorrect",
       },
     },
     cn: {
@@ -151,6 +157,8 @@ const i18nConfig = {
         "Camera settings": "相机设置",
         Save: "保存",
         "Choose camera source": "选择相机源",
+        "Error loading camera": "加载相机错误",
+        "Wrong password": "密码错误",
       },
     },
   },

@@ -19,6 +19,7 @@ import {cn} from "@/lib/utils";
 import LoadingSpinner from "./LoadingSpinner";
 import {ImCamera} from "react-icons/im";
 import {TextShimmer} from "./ui/text-shimmer";
+import {MdWarning} from "react-icons/md";
 
 const CameraSetting = () => {
   const {t} = useTranslation();
@@ -26,6 +27,7 @@ const CameraSetting = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [videoReady, setVideoReady] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   const setVideoRef = useCallback((node: HTMLVideoElement | null) => {
     if (node !== null) {
@@ -39,15 +41,17 @@ const CameraSetting = () => {
     const currentVideoRef = videoRef.current;
 
     const getVideo = async () => {
-      if (camera && currentVideoRef && videoReady && cameraStream) {
+      if (camera && currentVideoRef && videoReady) {
         try {
+          if (!cameraStream) {
+            await startCamera();
+            return;
+          }
           console.log("Asigning stream to video ref");
           currentVideoRef.srcObject = cameraStream;
-        } catch (err) {
-          console.error("Error accessing the camera: ", err);
+        } catch {
+          setIsError(true);
         }
-      } else {
-        await startCamera();
       }
     };
 
@@ -56,7 +60,9 @@ const CameraSetting = () => {
     }
 
     return () => {
-      stopCamera();
+      if (cameraStream) {
+        stopCamera();
+      }
     };
   }, [camera, startCamera, stopCamera, isOpen, videoReady, cameraStream]);
 
@@ -68,7 +74,7 @@ const CameraSetting = () => {
       <AlertDialogTrigger asChild>
         <Button
           variant="outline"
-          className="flex items-center justify-center gap-1"
+          className="flex items-center justify-center gap-1 w-full"
         >
           <p> {t("Camera settings")}</p> <PiVideoCameraFill />
         </Button>
@@ -82,10 +88,10 @@ const CameraSetting = () => {
             muted
             className={cn(
               "h-[80%] w-[80%] object-contain -scale-x-100 rounded-sm",
-              camera && videoReady && cameraStream ? "opacity-100 block" : "opacity-0 absolute"
+              camera && videoReady && cameraStream && !isError ? "opacity-100 block" : "opacity-0 absolute"
             )}
           />
-          {!(camera && videoReady && cameraStream) && (
+          {!(camera && videoReady && cameraStream && !isError) && isOpen && (
             <div className="flex items-center justify-center gap-8 flex-col w-full">
               <div className="relative">
                 <LoadingSpinner
@@ -106,17 +112,28 @@ const CameraSetting = () => {
               </TextShimmer>
             </div>
           )}
+          {isError && (
+            <div className="flex items-center justify-center flex-col gap-3">
+              <MdWarning
+                className="text-red-500"
+                size={130}
+              />
+              <p className="text-red-500 text-4xl uppercase font-semibold">{t("Error loading camera")}!</p>
+            </div>
+          )}
+
           <div className="flex items-center justify-center flex-col gap-3">
             <AlertDialogHeader>
               <AlertDialogTitle className="text-center text-2xl font-semibold">{t("Choose camera source")}</AlertDialogTitle>
             </AlertDialogHeader>
 
             <Select
+              disabled={!(camera && videoReady && cameraStream)}
               value={camera?.deviceId}
               onValueChange={(value) => {
                 const device = availableCameras.find((d) => d.deviceId === value);
                 if (device) {
-                  console.log("Setting camera to", device);
+                  stopCamera();
                   setCamera!({deviceId: device.deviceId, label: device.label});
                 }
               }}

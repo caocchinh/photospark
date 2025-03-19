@@ -10,7 +10,7 @@ import {Check, ChevronsUpDown} from "lucide-react";
 import {cn} from "@/lib/utils";
 import Image from "next/image";
 import {Command, CommandGroup, CommandItem, CommandList} from "@/components/ui/command";
-import {CardContent, CardTitle} from "@/components/ui/card";
+import {Card, CardContent, CardTitle} from "@/components/ui/card";
 import Link from "next/link";
 import {ROUTES} from "@/constants/routes";
 import SingularLayout from "@/components/layout-image/SingularLayout";
@@ -20,6 +20,8 @@ import {useState} from "react";
 import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
 import CameraSetting from "@/components/CameraSetting";
+import {RxCross1} from "react-icons/rx";
+
 const language = [
   {
     value: "vi",
@@ -50,6 +52,7 @@ const ThemePage = () => {
   const [isPasswordCorrect, setIsPasswordCorrect] = useState(false);
   const [open, setOpen] = useState(false);
   const [password, setPassword] = useState("");
+  const [isWrongPassword, setIsWrongPassword] = useState(false);
   const [value, setValue] = useState(() => {
     const defaultLang = language.find((lang) => lang.value === i18n.language);
     return defaultLang?.label ?? "English";
@@ -167,7 +170,7 @@ const ThemePage = () => {
           </Button>
         </PopoverTrigger>
         <PopoverContent
-          className="w-max"
+          className="w-[250px]"
           sideOffset={10}
           style={{marginRight: "77px"}}
         >
@@ -175,20 +178,61 @@ const ThemePage = () => {
             <CameraSetting />
           ) : (
             <form
-              className="flex flex-col gap-4"
+              className="flex flex-col gap-4 w-full h-full"
               onSubmit={(e) => {
                 e.preventDefault();
                 setIsPasswordCorrect(password === process.env.NEXT_PUBLIC_ADMIN_PASSWORD);
+                setIsWrongPassword(password !== process.env.NEXT_PUBLIC_ADMIN_PASSWORD);
               }}
             >
-              <Label htmlFor="password">{t("Enter password to access settings")}</Label>
-              <Input
-                type="password"
-                value={password}
-                id="password"
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <Button type="submit">{t("Submit")}</Button>
+              <Label
+                htmlFor="password"
+                className={cn(isWrongPassword ? "text-red-500" : "", "text-center")}
+              >
+                {t("Enter password to access settings")}
+              </Label>
+              <div className="relative">
+                <Input
+                  type="password"
+                  value={password}
+                  id="password"
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setIsWrongPassword(false);
+                  }}
+                  className={cn(isWrongPassword ? "border-red-500" : "")}
+                />
+                {password.length > 0 && (
+                  <RxCross1
+                    className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer text-red-500"
+                    onClick={() => {
+                      setPassword("");
+                      setIsWrongPassword(false);
+                    }}
+                  />
+                )}
+              </div>
+              <Card className="flex items-center justify-center border w-full h-full flex-wrap p-2 gap-2">
+                {Array.from({length: 9}).map((_, index) => (
+                  <div
+                    onClick={() => {
+                      setPassword(password + (index + 1));
+                      setIsWrongPassword(false);
+                    }}
+                    key={index}
+                    className="w-[25%] h-10 bg-gray-200 hover:bg-gray-300 rounded-lg flex items-center justify-center cursor-pointer "
+                  >
+                    {index + 1}
+                  </div>
+                ))}
+              </Card>
+
+              <Button
+                type="submit"
+                className={cn(isWrongPassword ? "bg-red-500 hover:bg-red-600" : "")}
+              >
+                {isWrongPassword ? t("Wrong password") : t("Submit")}
+              </Button>
             </form>
           )}
         </PopoverContent>

@@ -146,29 +146,6 @@ export const PhotoProvider = ({children}: {children: ReactNode}) => {
     });
   }, [photo?.theme?.frame.slotDimensions, camera]);
 
-  const startCamera = useCallback(async () => {
-    try {
-      console.log("Creating new stream");
-      if (!cameraStream) {
-        setCameraStream(
-          await navigator.mediaDevices.getUserMedia({
-            video: cameraConstraints
-              ? cameraConstraints.video
-              : {
-                  width: {ideal: 1280},
-                  height: {ideal: 720},
-                  aspectRatio: {exact: 16 / 9},
-                  deviceId: camera?.deviceId ? {exact: camera.deviceId} : undefined,
-                },
-          })
-        );
-      }
-      console.log("Camera started successfully");
-    } catch (err) {
-      console.error("Error accessing the camera: ", err);
-    }
-  }, [camera?.deviceId, cameraConstraints, cameraStream]);
-
   const stopCamera = useCallback(() => {
     if (cameraStream) {
       console.log("Stopping stream");
@@ -177,16 +154,40 @@ export const PhotoProvider = ({children}: {children: ReactNode}) => {
     }
   }, [cameraStream]);
 
-  // useEffect(() => {
-  //   if ((pathname === ROUTES.LAYOUT || pathname === ROUTES.CAPTURE || autoSelectCountdown <= 7) && camera && cameraConstraints) {
-  //     console.log("skibidi");
-  //     startCamera();
-  //   }
+  const startCamera = useCallback(async () => {
+    try {
+      console.log("Creating new stream");
+      if (!cameraStream) {
+        const cameraPromise = await navigator.mediaDevices.getUserMedia({
+          video: cameraConstraints
+            ? cameraConstraints.video
+            : {
+                width: {ideal: 1280},
+                height: {ideal: 720},
+                aspectRatio: {exact: 16 / 9},
+                deviceId: camera?.deviceId ? {exact: camera.deviceId} : undefined,
+              },
+        });
 
-  //   return () => {
-  //     stopCamera();
-  //   };
-  // }, [autoSelectCountdown, camera, cameraConstraints, pathname, startCamera, stopCamera]);
+        setCameraStream(cameraPromise);
+      }
+      console.log("Camera started successfully");
+    } catch (err) {
+      console.error("Error accessing the camera: ", err);
+      setCameraStream(null);
+      throw err;
+    }
+  }, [camera?.deviceId, cameraConstraints, cameraStream]);
+
+  useEffect(() => {
+    if ((pathname === ROUTES.LAYOUT || pathname === ROUTES.CAPTURE || autoSelectCountdown <= 7) && camera && cameraConstraints) {
+      startCamera();
+    }
+
+    return () => {
+      stopCamera();
+    };
+  }, [autoSelectCountdown, camera, cameraConstraints, pathname, startCamera, stopCamera]);
 
   return (
     <PhotoContext.Provider value={{photo, setPhoto, autoSelectCountdown, camera, setCamera, availableCameras, startCamera, stopCamera, cameraStream}}>
