@@ -9,8 +9,8 @@ import {SlidingNumber} from "@/components/ui/sliding-number";
 import usePreventNavigation from "@/hooks/usePreventNavigation";
 import {createProcessedImage} from "@/server/actions";
 import {ROUTES} from "@/constants/routes";
-import CameraLoading from "@/components/CameraLoading";
 import {useSocket} from "@/context/SocketContext";
+import CameraLoading from "@/components/CameraLoading";
 const CapturePage = () => {
   const duration = 2;
   const {setPhoto, photo, cameraStream, startCamera, stopCamera} = usePhoto();
@@ -57,16 +57,21 @@ const CapturePage = () => {
         return prevStyle;
       });
 
-      const response = await createProcessedImage(
-        processedImageId,
-        photoRef.current.theme!.name,
-        photoRef.current.theme!.frame.src,
-        photoRef.current.frameType,
-        photoRef.current.theme!.frame.slotCount
-      );
+      try {
+        const response = await createProcessedImage(
+          processedImageId,
+          photoRef.current.theme!.name,
+          photoRef.current.theme!.frame.src,
+          photoRef.current.frameType,
+          photoRef.current.theme!.frame.slotCount
+        );
 
-      if (response.error) {
-        console.log("Error creating processed image: ", response.error);
+        if (response?.error) {
+          throw new Error("Error creating processed image");
+        }
+        console.log("Processed image created successfully: ", processedImageId);
+      } catch (error) {
+        console.error("Error creating processed image:", error);
         stopCamera();
         setPhoto!((prevStyle) => {
           if (prevStyle) {
@@ -74,16 +79,18 @@ const CapturePage = () => {
           }
           return prevStyle;
         });
+        if (mediaRecorder && mediaRecorder.state === "recording") {
+          mediaRecorder.stop();
+        }
+
         navigateTo(ROUTES.LAYOUT);
-        return;
       }
-      console.log("Processed image created successfully: ", processedImageId);
     };
 
-    if (photoRef.current && !initializationDoneRef.current) {
+    if (photoRef.current && !initializationDoneRef.current && isConnected && isCountingDown) {
       initializeProcessedImage();
     }
-  }, [navigateTo, setPhoto, stopCamera]);
+  }, [cameraStream, isConnected, isCountingDown, mediaRecorder, navigateTo, setPhoto, stopCamera]);
 
   const handleCapture = useCallback(async () => {
     if (!photo) return;
@@ -111,12 +118,15 @@ const CapturePage = () => {
         } else {
           setPhoto!((prevStyle) => prevStyle && {...prevStyle, error: true});
           stopCamera();
+          if (mediaRecorder && mediaRecorder.state === "recording") {
+            mediaRecorder.stop();
+          }
           setUploadedImages([]);
           navigateTo(ROUTES.LAYOUT);
         }
       }
     }
-  }, [cycles, maxCycles, navigateTo, photo, setPhoto, stopCamera, videoIntrinsicSize]);
+  }, [cycles, maxCycles, mediaRecorder, navigateTo, photo, setPhoto, stopCamera, videoIntrinsicSize]);
 
   const handleRecording = useCallback(() => {
     if (!videoRef.current?.srcObject) return;

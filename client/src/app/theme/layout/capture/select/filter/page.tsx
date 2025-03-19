@@ -54,11 +54,15 @@ const FilterPage = () => {
       }
       if (printed) return;
       setPrinted(true);
-      const filterReponse = await updateFilter(photo.id, filter ? filter : "Original");
-      if (filterReponse.error) {
-        console.error("Failed to update filter");
-      } else {
-        console.log("Filter updated sucessfully to database!");
+      try {
+        const filterReponse = await updateFilter(photo.id, filter ? filter : "Original");
+        if (filterReponse.error) {
+          throw new Error("Failed to update filter");
+        } else {
+          console.log("Filter updated sucessfully to database!");
+        }
+      } catch (error) {
+        console.error("Error updating filter:", error);
       }
 
       const dataURL = stageRef.current.toDataURL({pixelRatio: 5});
@@ -101,27 +105,36 @@ const FilterPage = () => {
       if (!photo || !socket || !isConnected) return;
       for (const image of photo.images) {
         const slotPosition = photo.selectedImages.findIndex((selectedImage) => selectedImage.id == image.id);
-        const imageResponse = await createImage(
-          image.href,
-          photo.id!,
-          slotPosition != -1 ? photo.theme!.frame.slotPositions[slotPosition].x : null,
-          slotPosition != -1 ? photo.theme!.frame.slotPositions[slotPosition].y : null,
-          photo.theme!.frame.slotDimensions.height,
-          photo.theme!.frame.slotDimensions.width
-        );
-        if (imageResponse.error) {
-          console.error("Failed to upload image to database");
+        try {
+          const imageResponse = await createImage(
+            image.href,
+            photo.id!,
+            slotPosition != -1 ? photo.theme!.frame.slotPositions[slotPosition].x : null,
+            slotPosition != -1 ? photo.theme!.frame.slotPositions[slotPosition].y : null,
+            photo.theme!.frame.slotDimensions.height,
+            photo.theme!.frame.slotDimensions.width
+          );
+          if (imageResponse.error) {
+            throw new Error("Failed to upload image to database");
+          } else {
+            console.log("Image uploaded to database successfully");
+          }
+        } catch (error) {
+          console.error("Error uploading image to database:", error);
           socket.emit("upload-image-error", {url: image.href, id: image.id});
-        } else {
-          console.log("Image uploaded to database successfully");
         }
       }
       if (photo.video.r2_url) {
-        const videoResponse = await createVideo(photo.video.r2_url, photo.id!);
-        if (videoResponse.error) {
+        try {
+          const videoResponse = await createVideo(photo.video.r2_url, photo.id!);
+          if (videoResponse.error) {
+            throw new Error("Failed to upload video to database");
+          } else {
+            console.log("Video uploaded to database successfully");
+          }
+        } catch (error) {
+          console.error("Error uploading video to database:", error);
           socket.emit("upload-video-error", {url: photo.video.r2_url, id: photo.id});
-        } else {
-          console.log("Video uploaded to database successfully");
         }
       }
       setIsMediaUploaded(true);
