@@ -20,6 +20,7 @@ export interface PhotoContextType {
   startCamera: () => Promise<void>;
   stopCamera: () => void;
   cameraStream: MediaStream | null;
+  setShouldRunCountdown: React.Dispatch<React.SetStateAction<boolean>> | undefined;
 }
 
 const PhotoContext = createContext<PhotoContextType>({
@@ -32,6 +33,7 @@ const PhotoContext = createContext<PhotoContextType>({
   startCamera: () => Promise.resolve(),
   stopCamera: () => {},
   cameraStream: null,
+  setShouldRunCountdown: undefined,
 });
 
 export const PhotoProvider = ({children}: {children: ReactNode}) => {
@@ -181,7 +183,20 @@ export const PhotoProvider = ({children}: {children: ReactNode}) => {
   }, [camera?.deviceId, cameraConstraints, cameraStream, pathname]);
 
   return (
-    <PhotoContext.Provider value={{photo, setPhoto, autoSelectCountdown, camera, setCamera, availableCameras, startCamera, stopCamera, cameraStream}}>
+    <PhotoContext.Provider
+      value={{
+        photo,
+        setPhoto,
+        autoSelectCountdown,
+        camera,
+        setCamera,
+        availableCameras,
+        startCamera,
+        stopCamera,
+        cameraStream,
+        setShouldRunCountdown,
+      }}
+    >
       {children}
     </PhotoContext.Provider>
   );

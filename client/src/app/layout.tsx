@@ -15,7 +15,7 @@ import {Sparkles} from "@/components/Sparkle";
 import {usePathname} from "next/navigation";
 import {ROUTES} from "@/constants/routes";
 import {Toaster} from "sonner";
-
+import CameraLabel from "@/components/CameraLabel";
 const Buffalo = localFont({
   src: "./fonts/BuffaloDemoVersionRegular-axZ1R.ttf",
   variable: "--font-buffalo",
@@ -56,8 +56,9 @@ export default function RootLayout({
                 bg-white 
                 bg-no-repeat bg-cover min-h-screen flex items-center justify-center flex-col w-full`}
             >
-              <CollabTransitionOverlay />
+              {pathName == ROUTES.HOME && <CameraLabel />}
 
+              <CollabTransitionOverlay />
               <PageTransitionEffect>
                 <title>VTEAM Photobooth</title>
 

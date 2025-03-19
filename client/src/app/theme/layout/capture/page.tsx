@@ -10,14 +10,15 @@ import usePreventNavigation from "@/hooks/usePreventNavigation";
 import {createProcessedImage} from "@/server/actions";
 import {ROUTES} from "@/constants/routes";
 import CameraLoading from "@/components/CameraLoading";
-import {TextScramble} from "@/components/ui/text-scramble";
 import {useTranslation} from "react-i18next";
+import {TextShimmer} from "@/components/ui/text-shimmer";
 const CapturePage = () => {
   const duration = 2;
   const {setPhoto, photo, cameraStream, startCamera, stopCamera} = usePhoto();
   const [count, setCount] = useState(duration);
   const [isCountingDown, setIsCountingDown] = useState(false);
   const [cycles, setCycles] = useState(1);
+  const [videoIntrinsicSize, setVideoIntrinsicSize] = useState<{width: number; height: number} | null>(null);
   const maxCycles = NUM_OF_IMAGE;
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isVideoRefReady, setIsVideoRefReady] = useState(false);
@@ -32,6 +33,7 @@ const CapturePage = () => {
   const [uploadedImages, setUploadedImages] = useState<Array<{id: string; href: string}>>([]);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
   const {navigateTo} = usePreventNavigation();
+  const photoRef = useRef(photo);
   const {t} = useTranslation();
 
   useEffect(() => {
@@ -41,8 +43,7 @@ const CapturePage = () => {
 
   useEffect(() => {
     const initializeProcessedImage = async () => {
-      if (photo) {
-        if (photo.id) return;
+      if (photoRef.current) {
         const processedImageId = crypto.randomUUID();
         setPhoto!((prevStyle) => {
           if (prevStyle) {
@@ -52,10 +53,10 @@ const CapturePage = () => {
         });
         const response = await createProcessedImage(
           processedImageId,
-          photo.theme!.name,
-          photo.theme!.frame.src,
-          photo.frameType,
-          photo.theme!.frame.slotCount
+          photoRef.current.theme!.name,
+          photoRef.current.theme!.frame.src,
+          photoRef.current.frameType,
+          photoRef.current.theme!.frame.slotCount
         );
         if (response.error) {
           console.log("Error creating processed image: ", response.error);
@@ -71,8 +72,12 @@ const CapturePage = () => {
         console.log("Processed image created successfully: ", processedImageId);
       }
     };
-    if (!photo?.id) initializeProcessedImage();
-  }, [navigateTo, photo, setPhoto]);
+    if (photoRef.current) {
+      if (!photo?.id) {
+        initializeProcessedImage();
+      }
+    }
+  }, [navigateTo, photo?.id, setPhoto]);
 
   const handleCapture = useCallback(async () => {
     if (!photo) return;
@@ -81,8 +86,8 @@ const CapturePage = () => {
       const context = canvas.getContext("2d", {colorSpace: "display-p3", willReadFrequently: true});
 
       if (context) {
-        canvas.width = photo.theme!.frame.slotDimensions.width;
-        canvas.height = photo.theme!.frame.slotDimensions.height;
+        canvas.width = videoIntrinsicSize!.width || photo.theme!.frame.slotDimensions.width;
+        canvas.height = videoIntrinsicSize!.height || photo.theme!.frame.slotDimensions.height;
         context.scale(-1, 1);
         context.translate(-canvas.width, 0);
         context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
@@ -104,7 +109,7 @@ const CapturePage = () => {
         }
       }
     }
-  }, [cycles, maxCycles, navigateTo, photo, setPhoto]);
+  }, [cycles, maxCycles, navigateTo, photo, setPhoto, videoIntrinsicSize]);
 
   const handleRecording = useCallback(() => {
     if (!videoRef.current?.srcObject) return;
@@ -182,73 +187,67 @@ const CapturePage = () => {
           videoRef.current.srcObject = cameraStream;
 
           videoRef.current.onloadedmetadata = () => {
-            videoRef.current
-              ?.play()
-              .then(() => {
-                console.log("Video playback started from preloaded camera");
+            setVideoIntrinsicSize({
+              width: videoRef.current!.videoWidth,
+              height: videoRef.current!.videoHeight,
+            });
+            videoRef.current?.play().then(() => {
+              console.log("Video playback started from camera");
+              setTimeout(() => {
                 setIsCountingDown(true);
                 handleRecording();
-              })
-              .catch((e) => {
-                console.error("Video playback failed from preloaded camera:", e);
-                if (videoRef.current?.srcObject instanceof MediaStream) {
-                  const tracks = (videoRef.current.srcObject as MediaStream).getTracks();
-                  tracks.forEach((track) => track.stop());
-                  videoRef.current.srcObject = null;
-                }
-              });
+              }, 2000);
+            });
           };
         } catch (error) {
           console.error("Error :", error);
         }
       }
     };
-    if (!isCountingDown) {
+    if (!isCountingDown && cycles != maxCycles) {
       getVideo();
     }
-  }, [isCountingDown, handleRecording, cameraStream, isVideoRefReady, startCamera]);
+  }, [isCountingDown, handleRecording, cameraStream, isVideoRefReady, startCamera, cycles, maxCycles]);
 
   useEffect(() => {
-    if (cycles < maxCycles + 1) {
-      const timer = setInterval(async () => {
-        if (isCountingDown) {
-          if (count > 0 && cycles <= maxCycles) {
-            setCount((prevCount) => prevCount - 1);
-            if (count == 1) {
-              handleCapture();
-              playCameraShutterSound();
-            }
-          }
-          if (count <= 0 && cycles < maxCycles && photo?.id) {
-            setCycles((prevCycle) => prevCycle + 1);
-            setCount(duration);
-          }
-          if (cycles == maxCycles && count <= 0 && uploadedImages.length == maxCycles - 1) {
-            if (mediaRecorder) {
-              mediaRecorder.stop();
-            }
-            setPhoto!((prevStyle) => {
-              if (prevStyle) {
-                return {
-                  ...prevStyle,
-                  images: image.map((item) => ({...item, href: uploadedImages.find((image) => image.id == item.id)?.href || ""})),
-                };
-              }
-              return prevStyle;
-            });
-            setIsCountingDown(false);
-            if (mediaRecorder && mediaRecorder.state === "recording") {
-              mediaRecorder.stop();
-            }
-            stopCamera();
-
-            navigateTo(ROUTES.SELECT);
+    const timer = setInterval(async () => {
+      if (isCountingDown) {
+        if (count > 0 && cycles <= maxCycles) {
+          setCount((prevCount) => prevCount - 1);
+          if (count == 1) {
+            handleCapture();
+            playCameraShutterSound();
           }
         }
-      }, 1000);
+        if (count <= 0 && cycles < maxCycles && photo?.id) {
+          setCycles((prevCycle) => prevCycle + 1);
+          setCount(duration);
+        }
+        if (cycles == maxCycles && count <= 0 && uploadedImages.length == maxCycles - 1) {
+          if (mediaRecorder) {
+            mediaRecorder.stop();
+          }
+          setPhoto!((prevStyle) => {
+            if (prevStyle) {
+              return {
+                ...prevStyle,
+                images: image.map((item) => ({...item, href: uploadedImages.find((image) => image.id == item.id)?.href || ""})),
+              };
+            }
+            return prevStyle;
+          });
+          setIsCountingDown(false);
+          if (mediaRecorder && mediaRecorder.state === "recording") {
+            mediaRecorder.stop();
+          }
+          stopCamera();
 
-      return () => clearInterval(timer);
-    }
+          navigateTo(ROUTES.SELECT);
+        }
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
   }, [
     count,
     cycles,
@@ -305,15 +304,14 @@ const CapturePage = () => {
                 </div>
               )}
               {!isCountingDown && cycles == maxCycles && (
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                  <TextScramble
-                    className="font-mono text-3xl"
-                    duration={0.7}
-                    characterSet=". "
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full flex items-center justify-center">
+                  <TextShimmer
+                    className=" font-semibold text-3xl uppercase text-center whitespace-nowrap  [--base-color:black] [--base-gradient-color:gray]"
+                    duration={1.5}
+                    spread={4}
                   >
                     {t("Processing images...")}
-                  </TextScramble>
-                  Đang xử lý ảnh
+                  </TextShimmer>
                 </div>
               )}
             </div>

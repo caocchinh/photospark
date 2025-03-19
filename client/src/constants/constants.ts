@@ -6,7 +6,7 @@ export const VALID_FRAME_TYPES = ["singular", "double"] as const;
 
 export type ValidFrameType = (typeof VALID_FRAME_TYPES)[number];
 
-export const AUTO_SELECT_COUNTDOWN_DURATION = Infinity;
+export const AUTO_SELECT_COUNTDOWN_DURATION = 65;
 
 export const ThemeSelectButton: {
   title: string;

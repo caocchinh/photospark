@@ -21,7 +21,7 @@ import {MdWarning} from "react-icons/md";
 import CameraLoading from "./CameraLoading";
 const CameraSetting = () => {
   const {t} = useTranslation();
-  const {camera, setCamera, availableCameras, startCamera, stopCamera, cameraStream} = usePhoto();
+  const {camera, photo, setCamera, availableCameras, startCamera, stopCamera, cameraStream, setShouldRunCountdown, autoSelectCountdown} = usePhoto();
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [videoRefReady, setVideoRefReady] = useState(false);
@@ -62,15 +62,29 @@ const CameraSetting = () => {
     };
   }, [camera, startCamera, stopCamera, isOpen, videoRefReady, cameraStream]);
 
+  useEffect(() => {
+    if (setShouldRunCountdown) {
+      if (isOpen) {
+        console.log("Count down stopped");
+        setShouldRunCountdown(false);
+      } else {
+        if (photo) {
+          setShouldRunCountdown(true);
+        }
+      }
+    }
+  }, [isOpen, setShouldRunCountdown, photo]);
+
   return (
     <AlertDialog
-      open={isOpen}
+      open={isOpen && autoSelectCountdown > 0}
       onOpenChange={setIsOpen}
     >
       <AlertDialogTrigger asChild>
         <Button
           variant="outline"
           className="flex items-center justify-center gap-1 w-full"
+          disabled={autoSelectCountdown <= 0}
         >
           <p> {t("Camera settings")}</p> <PiVideoCameraFill />
         </Button>
