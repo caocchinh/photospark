@@ -98,7 +98,7 @@ const FilterPage = () => {
 
   useEffect(() => {
     async function uploadImageToDatabase() {
-      if (!photo || !socket) return;
+      if (!photo || !socket || !isConnected) return;
       for (const image of photo.images) {
         const slotPosition = photo.selectedImages.findIndex((selectedImage) => selectedImage.id == image.id);
         const imageResponse = await createImage(
@@ -129,18 +129,20 @@ const FilterPage = () => {
     if (!isMediaUploaded) {
       uploadImageToDatabase();
     }
-  }, [isMediaUploaded, photo, socket]);
+  }, [isConnected, isMediaUploaded, photo, socket]);
 
   useEffect(() => {
-    if (timeLeft > 0) {
-      const timerId = setInterval(() => {
-        setTimeLeft((prevTime) => prevTime - 1);
-      }, 1000);
-      return () => clearInterval(timerId);
-    } else {
-      printImage();
+    if (isConnected) {
+      if (timeLeft > 0) {
+        const timerId = setInterval(() => {
+          setTimeLeft((prevTime) => prevTime - 1);
+        }, 1000);
+        return () => clearInterval(timerId);
+      } else {
+        printImage();
+      }
     }
-  }, [printImage, navigateTo, setPhoto, timeLeft]);
+  }, [printImage, timeLeft, isConnected]);
 
   const selectRandomFilter = useCallback(() => {
     const randomIndex = Math.floor(Math.random() * FILTERS.length);

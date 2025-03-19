@@ -115,33 +115,31 @@ const PrintPage = () => {
 
   const handleContextSelect = useCallback(
     async (images: Array<{id: string; data: string; href: string}>) => {
-      try {
-        setPhoto!((prevStyle) => {
-          if (prevStyle) {
-            return {
-              ...prevStyle,
-              selectedImages: images,
-            };
-          }
-        });
-        navigateTo(ROUTES.FILTER);
-      } catch (error) {
-        console.error("Failed to upload images:", error);
-      }
+      setPhoto!((prevStyle) => {
+        if (prevStyle) {
+          return {
+            ...prevStyle,
+            selectedImages: images,
+          };
+        }
+      });
+      navigateTo(ROUTES.FILTER);
     },
     [navigateTo, setPhoto]
   );
 
   useEffect(() => {
-    if (timeLeft > 0) {
-      const timerId = setInterval(() => {
-        setTimeLeft((prevTime) => prevTime - 1);
-      }, 1000);
-      return () => clearInterval(timerId);
-    } else {
-      setIsTimeOver(true);
+    if (isConnected) {
+      if (timeLeft > 0) {
+        const timerId = setInterval(() => {
+          setTimeLeft((prevTime) => prevTime - 1);
+        }, 1000);
+        return () => clearInterval(timerId);
+      } else {
+        setIsTimeOver(true);
+      }
     }
-  }, [timeLeft]);
+  }, [timeLeft, isConnected]);
 
   const handleSelect = useCallback(
     (image: {id: string; data: string; href: string} | null) => {

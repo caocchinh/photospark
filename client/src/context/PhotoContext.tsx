@@ -1,9 +1,11 @@
 "use client";
-import {AUTO_SELECT_COUNTDOWN_DURATION, FrameOptions, PhotoOptions, ValidThemeType} from "@/constants/constants";
+import {AUTO_SELECT_COUNTDOWN_DURATION, FrameOptions} from "@/constants/constants";
+import {PhotoOptions, ValidThemeType} from "@/constants/types";
 import {createContext, ReactNode, useContext, useEffect, useRef, useState, useCallback} from "react";
 import {usePathname, useRouter} from "next/navigation";
 import {ROUTES} from "@/constants/routes";
 import {getCameraConstraints} from "@/lib/utils";
+import {useSocket} from "./SocketContext";
 
 interface Camera {
   deviceId: string;
@@ -46,13 +48,13 @@ export const PhotoProvider = ({children}: {children: ReactNode}) => {
   const [cameraStream, setCameraStream] = useState<MediaStream | null>(null);
   const router = useRouter();
   const routerRef = useRef(router);
-
+  const {isConnected} = useSocket();
   const [camera, setCamera] = useState<Camera | null>(null);
   const [availableCameras, setAvailableCameras] = useState<Array<{deviceId: string; label: string}>>([]);
 
   useEffect(() => {
     const isValidPage = pathname === ROUTES.HOME || pathname === ROUTES.THEME || pathname === ROUTES.LAYOUT;
-    if (isValidPage && photoRef.current && autoSelectCountdown === AUTO_SELECT_COUNTDOWN_DURATION) {
+    if (isValidPage && photoRef.current && autoSelectCountdown === AUTO_SELECT_COUNTDOWN_DURATION && isConnected) {
       setShouldRunCountdown(true);
     } else if (!isValidPage) {
       setShouldRunCountdown(false);
@@ -60,7 +62,7 @@ export const PhotoProvider = ({children}: {children: ReactNode}) => {
         setAutoSelectCountdown(AUTO_SELECT_COUNTDOWN_DURATION);
       }
     }
-  }, [pathname, autoSelectCountdown]);
+  }, [pathname, autoSelectCountdown, isConnected]);
 
   useEffect(() => {
     if (autoSelectCountdown >= 0) {
@@ -75,7 +77,7 @@ export const PhotoProvider = ({children}: {children: ReactNode}) => {
   }, [router, autoSelectCountdown]);
 
   useEffect(() => {
-    if (shouldRunCountdown && photoRef.current) {
+    if (shouldRunCountdown && photoRef.current && isConnected) {
       if (autoSelectCountdown > 0) {
         const timer = setTimeout(() => {
           setAutoSelectCountdown(autoSelectCountdown - 1);
@@ -125,7 +127,7 @@ export const PhotoProvider = ({children}: {children: ReactNode}) => {
         routerRef.current.push(ROUTES.CAPTURE);
       }
     }
-  }, [shouldRunCountdown, autoSelectCountdown]);
+  }, [shouldRunCountdown, autoSelectCountdown, isConnected]);
 
   useEffect(() => {
     const getVideoDevices = async () => {

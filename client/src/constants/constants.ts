@@ -1,19 +1,12 @@
-export const VALID_THEMES = ["prom", "usagyuun"] as const;
+import {ValidThemeType, ThemeSelectButtonType, FrameOptionType, FilterType} from "./types";
 
-export type ValidThemeType = (typeof VALID_THEMES)[number];
+export const VALID_THEMES = ["prom", "usagyuun"] as const;
 
 export const VALID_FRAME_TYPES = ["singular", "double"] as const;
 
-export type ValidFrameType = (typeof VALID_FRAME_TYPES)[number];
-
 export const AUTO_SELECT_COUNTDOWN_DURATION = 65;
 
-export const ThemeSelectButton: {
-  title: string;
-  image_src: string;
-  theme: ValidThemeType;
-  style?: {[key: string]: string};
-}[] = [
+export const ThemeSelectButton: ThemeSelectButtonType[] = [
   {
     title: "PROM",
     image_src: "/prom.jpg",
@@ -54,20 +47,7 @@ const PROM_Y_SLOT_SEPERATION = (index: number) => {
 };
 
 export const FrameOptions: {
-  [key in ValidThemeType]: Array<{
-    type: ValidFrameType;
-    src: `/frame/${key}/${key}_${number}.png`;
-    thumbnail?: `/frame/${key}/thumbnail/${key}_${number}.${string}`;
-    slotCount: number;
-    slotDimensions: {
-      width: number;
-      height: number;
-    };
-    slotPositions: {
-      x: number;
-      y: number;
-    }[];
-  }>;
+  [key in ValidThemeType]: Array<FrameOptionType<key>>;
 } = {
   prom: [
     {
@@ -450,39 +430,9 @@ export const FrameOptions: {
   ],
 };
 
-export interface PhotoOptions<T extends ValidThemeType> {
-  theme: {
-    name: T;
-    frame: (typeof FrameOptions)[T][number];
-  } | null;
-  quantity: number | null;
-  images: Array<{
-    id: string;
-    data: string;
-    href: string;
-  }>;
-  selectedImages: Array<{
-    id: string;
-    data: string;
-    href: string;
-  }>;
-  video: {
-    data: Blob;
-    r2_url: string | null;
-  };
-  id: string | null;
-  error: boolean;
-  isTransition: boolean;
-  frameType: ValidFrameType;
-}
-
 export const NUM_OF_IMAGE = 6;
 
-export const FILTERS: {
-  name: string;
-  filter: string | null;
-  value: string | null;
-}[] = [
+export const FILTERS: FilterType[] = [
   {name: "Original", filter: null, value: null},
   {name: "1977", filter: "filter-1977", value: "sepia(0.5) hue-rotate(-30deg) saturate(1.4)"},
   {name: "Aden", filter: "filter-aden", value: "sepia(0.2) brightness(1.15) saturate(1.4)"},

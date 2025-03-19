@@ -1,6 +1,6 @@
 "use client";
 import {Carousel, CarouselContent, CarouselItem, type CarouselApi} from "@/components/ui/carousel";
-import {FrameOptions, ValidThemeType} from "@/constants/constants";
+import {FrameOptions} from "@/constants/constants";
 import {usePhoto} from "@/context/PhotoContext";
 import {cn} from "@/lib/utils";
 import {WheelGesturesPlugin} from "embla-carousel-wheel-gestures";
@@ -17,6 +17,7 @@ import {AnimatedBackground} from "@/components/ui/animated-background";
 import ErrorDialog from "@/components/ErrorDialog";
 import {ROUTES} from "@/constants/routes";
 import {Spotlight} from "@/components/ui/spotlight";
+import {ValidThemeType} from "@/constants/types";
 
 const LayoutPage = () => {
   const {photo, setPhoto, autoSelectCountdown} = usePhoto();

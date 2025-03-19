@@ -1,6 +1,6 @@
 "use client";
 import {CardContent, CardTitle} from "@/components/ui/card";
-import {FrameOptions, ThemeSelectButton, ValidThemeType} from "@/constants/constants";
+import {FrameOptions, ThemeSelectButton} from "@/constants/constants";
 import {usePhoto} from "@/context/PhotoContext";
 import Image from "next/image";
 import React, {useEffect} from "react";
@@ -12,6 +12,7 @@ import {FaArrowLeftLong} from "react-icons/fa6";
 import SingularLayout from "@/components/layout-image/SingularLayout";
 import DoubleLayout from "@/components/layout-image/DoubleLayout";
 import {cn} from "@/lib/utils";
+import {ValidThemeType} from "@/constants/types";
 
 const ThemePage = () => {
   const {photo, setPhoto, autoSelectCountdown} = usePhoto();

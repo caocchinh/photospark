@@ -1,8 +1,8 @@
 "use server";
 
+import {ValidFrameType, ValidThemeType} from "@/constants/types";
 import {db} from "@/drizzle/db";
 import {ImageTable, ProcessedImageTable, VideoTable} from "@/drizzle/schema";
-import {ValidThemeType, ValidFrameType} from "@/constants/constants";
 import {eq} from "drizzle-orm";
 import {InferInsertModel} from "drizzle-orm";
 

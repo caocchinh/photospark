@@ -9,10 +9,8 @@ import {SlidingNumber} from "@/components/ui/sliding-number";
 import usePreventNavigation from "@/hooks/usePreventNavigation";
 import {createProcessedImage} from "@/server/actions";
 import {ROUTES} from "@/constants/routes";
-import {useTranslation} from "react-i18next";
-import {TextShimmer} from "@/components/ui/text-shimmer";
 import CameraLoading from "@/components/CameraLoading";
-
+import {useSocket} from "@/context/SocketContext";
 const CapturePage = () => {
   const duration = 2;
   const {setPhoto, photo, cameraStream, startCamera, stopCamera} = usePhoto();
@@ -22,6 +20,7 @@ const CapturePage = () => {
   const [videoIntrinsicSize, setVideoIntrinsicSize] = useState<{width: number; height: number} | null>(null);
   const maxCycles = NUM_OF_IMAGE;
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const {isConnected} = useSocket();
   const [isVideoRefReady, setIsVideoRefReady] = useState(false);
   const setVideoRef = useCallback((node: HTMLVideoElement | null) => {
     if (node !== null) {
@@ -36,7 +35,6 @@ const CapturePage = () => {
   const {navigateTo} = usePreventNavigation();
   const photoRef = useRef(photo);
   const initializationDoneRef = useRef(false);
-  const {t} = useTranslation();
 
   useEffect(() => {
     if (!photo) return navigateTo(ROUTES.HOME);
@@ -218,7 +216,7 @@ const CapturePage = () => {
 
   useEffect(() => {
     const timer = setInterval(async () => {
-      if (isCountingDown) {
+      if (isCountingDown && isConnected) {
         if (count > 0 && cycles <= maxCycles) {
           setCount((prevCount) => prevCount - 1);
           if (count == 1) {
@@ -270,6 +268,7 @@ const CapturePage = () => {
     uploadedImages,
     photo?.id,
     stopCamera,
+    isConnected,
   ]);
 
   return (
@@ -308,17 +307,6 @@ const CapturePage = () => {
               {!isCountingDown && cycles == 1 && (
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
                   <CameraLoading />
-                </div>
-              )}
-              {!isCountingDown && cycles == maxCycles && (
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full flex items-center justify-center gap-6">
-                  <TextShimmer
-                    className=" font-semibold text-3xl uppercase text-center whitespace-nowrap  [--base-color:black] [--base-gradient-color:gray]"
-                    duration={1.5}
-                    spread={4}
-                  >
-                    {t("Processing images...")}
-                  </TextShimmer>
                 </div>
               )}
             </div>

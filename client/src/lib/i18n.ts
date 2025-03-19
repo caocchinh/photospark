@@ -42,7 +42,6 @@ const i18nConfig = {
         "Choose camera source": "Choose camera source",
         "Error loading camera": "Error loading camera",
         "Wrong password": "Wrong password",
-        "Processing images...": "Processing images...",
       },
     },
     vi: {
@@ -82,7 +81,6 @@ const i18nConfig = {
         "Choose camera source": "Chọn nguồn camera",
         "Error loading camera": "Lỗi tải camera",
         "Wrong password": "Sai mật khẩu",
-        "Processing images...": "Đang xử lý ảnh...",
       },
     },
     fr: {
@@ -122,7 +120,6 @@ const i18nConfig = {
         "Choose camera source": "Choisir la source de la caméra",
         "Error loading camera": "Erreur de chargement de la caméra",
         "Wrong password": "Mot de passe incorrect",
-        "Processing images...": "Traitement des images...",
       },
     },
     cn: {
@@ -162,7 +159,6 @@ const i18nConfig = {
         "Choose camera source": "选择相机源",
         "Error loading camera": "加载相机错误",
         "Wrong password": "密码错误",
-        "Processing images...": "正在处理图像...",
       },
     },
   },

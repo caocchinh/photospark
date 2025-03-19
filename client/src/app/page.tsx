@@ -1,5 +1,4 @@
 "use client";
-import {ValidFrameType} from "@/constants/constants";
 import {usePhoto} from "@/context/PhotoContext";
 import usePreventNavigation from "@/hooks/usePreventNavigation";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
@@ -21,6 +20,7 @@ import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
 import CameraSetting from "@/components/CameraSetting";
 import {RxCross1} from "react-icons/rx";
+import {ValidFrameType} from "@/constants/types";
 
 const language = [
   {
