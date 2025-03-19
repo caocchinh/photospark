@@ -13,14 +13,14 @@ import {useSocket} from "@/context/SocketContext";
 import CameraLoading from "@/components/CameraLoading";
 const CapturePage = () => {
   const duration = 2;
-  const {setPhoto, photo, cameraStream, startCamera, stopCamera} = usePhoto();
+  const {setPhoto, photo, cameraStream, startCamera, stopCamera, isOnline} = usePhoto();
   const [count, setCount] = useState(duration);
   const [isCountingDown, setIsCountingDown] = useState(false);
   const [cycles, setCycles] = useState(1);
   const [videoIntrinsicSize, setVideoIntrinsicSize] = useState<{width: number; height: number} | null>(null);
   const maxCycles = NUM_OF_IMAGE;
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const {isConnected} = useSocket();
+  const {isSocketConnected} = useSocket();
   const [isVideoRefReady, setIsVideoRefReady] = useState(false);
   const setVideoRef = useCallback((node: HTMLVideoElement | null) => {
     if (node !== null) {
@@ -87,10 +87,10 @@ const CapturePage = () => {
       }
     };
 
-    if (photoRef.current && !initializationDoneRef.current && isConnected && isCountingDown) {
+    if (photoRef.current && !initializationDoneRef.current && isSocketConnected && isCountingDown && isOnline) {
       initializeProcessedImage();
     }
-  }, [cameraStream, isConnected, isCountingDown, mediaRecorder, navigateTo, setPhoto, stopCamera]);
+  }, [cameraStream, isSocketConnected, isCountingDown, mediaRecorder, navigateTo, setPhoto, stopCamera, isOnline]);
 
   const handleCapture = useCallback(async () => {
     if (!photo) return;
@@ -166,7 +166,7 @@ const CapturePage = () => {
     let chunks: Blob[] = [];
 
     recorder.ondataavailable = (event) => {
-      if (event.data && event.data.size > 0) {
+      if (event.data && event.data.size > 0 && isOnline && isSocketConnected) {
         chunks.push(event.data);
       }
     };
@@ -191,7 +191,7 @@ const CapturePage = () => {
 
     setMediaRecorder(recorder);
     recorder.start(100);
-  }, [setPhoto]);
+  }, [isOnline, isSocketConnected, setPhoto]);
 
   useEffect(() => {
     const getVideo = async () => {
@@ -228,7 +228,7 @@ const CapturePage = () => {
 
   useEffect(() => {
     const timer = setInterval(async () => {
-      if (isCountingDown && isConnected) {
+      if (isCountingDown && isSocketConnected && isOnline) {
         if (count > 0 && cycles <= maxCycles) {
           setCount((prevCount) => prevCount - 1);
           if (count == 1) {
@@ -280,7 +280,8 @@ const CapturePage = () => {
     uploadedImages,
     photo?.id,
     stopCamera,
-    isConnected,
+    isSocketConnected,
+    isOnline,
   ]);
 
   return (

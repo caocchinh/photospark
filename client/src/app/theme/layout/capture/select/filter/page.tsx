@@ -23,7 +23,7 @@ import ReactDOM from "react-dom/client";
 import {ROUTES} from "@/constants/routes";
 
 const FilterPage = () => {
-  const {photo, setPhoto} = usePhoto();
+  const {photo, setPhoto, isOnline} = usePhoto();
   const {navigateTo} = usePreventNavigation();
   const filterRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -41,14 +41,14 @@ const FilterPage = () => {
 
   const [filter, setFilter] = useState<string | null>(null);
   const stageRef = useRef<StageElement | null>(null);
-  const {socket, isConnected} = useSocket();
+  const {socket, isSocketConnected} = useSocket();
   const [isMediaUploaded, setIsMediaUploaded] = useState(false);
   const [timeLeft, setTimeLeft] = useState(99999);
   const [printed, setPrinted] = useState(false);
 
   const printImage = useCallback(async () => {
     if (stageRef.current && photo && socket && photo.id) {
-      if (!isConnected) {
+      if (!isSocketConnected) {
         console.error("Socket not connected. Cannot print.");
         return;
       }
@@ -98,11 +98,11 @@ const FilterPage = () => {
         }
       );
     }
-  }, [photo, socket, isConnected, printed, filter, isMediaUploaded, navigateTo]);
+  }, [photo, socket, isSocketConnected, printed, filter, isMediaUploaded, navigateTo]);
 
   useEffect(() => {
     async function uploadImageToDatabase() {
-      if (!photo || !socket || !isConnected) return;
+      if (!photo || !socket || !isSocketConnected || !isOnline) return;
       for (const image of photo.images) {
         const slotPosition = photo.selectedImages.findIndex((selectedImage) => selectedImage.id == image.id);
         try {
@@ -142,10 +142,10 @@ const FilterPage = () => {
     if (!isMediaUploaded) {
       uploadImageToDatabase();
     }
-  }, [isConnected, isMediaUploaded, photo, socket]);
+  }, [isSocketConnected, isMediaUploaded, photo, socket, isOnline]);
 
   useEffect(() => {
-    if (isConnected) {
+    if (isSocketConnected && isOnline) {
       if (timeLeft > 0) {
         const timerId = setInterval(() => {
           setTimeLeft((prevTime) => prevTime - 1);
@@ -155,7 +155,7 @@ const FilterPage = () => {
         printImage();
       }
     }
-  }, [printImage, timeLeft, isConnected]);
+  }, [printImage, timeLeft, isSocketConnected, isOnline]);
 
   const selectRandomFilter = useCallback(() => {
     const randomIndex = Math.floor(Math.random() * FILTERS.length);

@@ -5,14 +5,14 @@ import {io, Socket} from "socket.io-client";
 
 interface SocketContextType {
   socket: Socket | null;
-  isConnected: boolean;
+  isSocketConnected: boolean;
 }
 
-const SocketContext = createContext<SocketContextType>({socket: null, isConnected: false});
+const SocketContext = createContext<SocketContextType>({socket: null, isSocketConnected: false});
 
 export const SocketProvider = ({children}: {children: React.ReactNode}) => {
   const [socket, setSocket] = useState<Socket | null>(null);
-  const [isConnected, setIsConnected] = useState(false);
+  const [isSocketConnected, setIsSocketConnected] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -20,7 +20,7 @@ export const SocketProvider = ({children}: {children: React.ReactNode}) => {
     const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL;
     if (!socketUrl) {
       console.error("Socket URL is not defined");
-      setIsConnected(false);
+      setIsSocketConnected(false);
       return;
     }
     const newSocket = io(socketUrl, {
@@ -34,12 +34,12 @@ export const SocketProvider = ({children}: {children: React.ReactNode}) => {
 
     newSocket.on("connect", () => {
       console.log("Connected to server.");
-      setIsConnected(true);
+      setIsSocketConnected(true);
     });
 
     newSocket.on("disconnect", () => {
       console.log("Disconnected from server.");
-      setIsConnected(false);
+      setIsSocketConnected(false);
     });
 
     newSocket.on("error", (error) => {
@@ -54,7 +54,7 @@ export const SocketProvider = ({children}: {children: React.ReactNode}) => {
     };
   }, []);
 
-  return <SocketContext.Provider value={{socket, isConnected}}>{children}</SocketContext.Provider>;
+  return <SocketContext.Provider value={{socket, isSocketConnected}}>{children}</SocketContext.Provider>;
 };
 
 export const useSocket = () => useContext(SocketContext);

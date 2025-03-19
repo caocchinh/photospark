@@ -23,9 +23,9 @@ import {ROUTES} from "@/constants/routes";
 import {Reorder} from "motion/react";
 
 const PrintPage = () => {
-  const {photo, setPhoto} = usePhoto();
+  const {photo, setPhoto, isOnline} = usePhoto();
   const {navigateTo} = usePreventNavigation();
-  const {socket, isConnected} = useSocket();
+  const {socket, isSocketConnected} = useSocket();
   const [videoProcessed, setVideoProcessed] = useState(false);
   const {t} = useTranslation();
 
@@ -40,7 +40,7 @@ const PrintPage = () => {
   const videoRequestSent = useRef(false);
 
   useEffect(() => {
-    if (socket && isConnected && photo && !videoRequestSent.current) {
+    if (socket && isSocketConnected && photo && !videoRequestSent.current && isOnline) {
       videoRequestSent.current = true;
       socket.emit(
         "process-video",
@@ -64,7 +64,7 @@ const PrintPage = () => {
         }
       );
     }
-  }, [isConnected, photo, setPhoto, socket]);
+  }, [isOnline, isSocketConnected, photo, setPhoto, socket]);
 
   useEffect(() => {
     if (!photo) return navigateTo(ROUTES.HOME);
@@ -129,7 +129,7 @@ const PrintPage = () => {
   );
 
   useEffect(() => {
-    if (isConnected) {
+    if (isSocketConnected && isOnline) {
       if (timeLeft > 0) {
         const timerId = setInterval(() => {
           setTimeLeft((prevTime) => prevTime - 1);
@@ -139,7 +139,7 @@ const PrintPage = () => {
         setIsTimeOver(true);
       }
     }
-  }, [timeLeft, isConnected]);
+  }, [timeLeft, isSocketConnected, isOnline]);
 
   const handleSelect = useCallback(
     (image: {id: string; data: string; href: string} | null) => {

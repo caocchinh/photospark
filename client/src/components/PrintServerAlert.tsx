@@ -10,9 +10,9 @@ import {useSocket} from "@/context/SocketContext";
 
 const PrintServerAlert = () => {
   const {t} = useTranslation();
-  const {isConnected} = useSocket();
+  const {isSocketConnected} = useSocket();
   return (
-    <AlertDialog open={!isConnected}>
+    <AlertDialog open={!isSocketConnected}>
       <AlertDialogContent
         className="flex flex-col items-center justify-center"
         aria-description="Waiting for print server"

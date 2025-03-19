@@ -1,7 +1,7 @@
 "use client";
 import {AUTO_SELECT_COUNTDOWN_DURATION, FrameOptions} from "@/constants/constants";
 import {PhotoOptions, ValidThemeType} from "@/constants/types";
-import {createContext, ReactNode, useContext, useEffect, useRef, useState, useCallback} from "react";
+import {createContext, ReactNode, useContext, useEffect, useRef, useState, useCallback, useMemo} from "react";
 import {usePathname, useRouter} from "next/navigation";
 import {ROUTES} from "@/constants/routes";
 import {getCameraConstraints} from "@/lib/utils";
@@ -23,6 +23,7 @@ export interface PhotoContextType {
   stopCamera: () => void;
   cameraStream: MediaStream | null;
   setShouldRunCountdown: React.Dispatch<React.SetStateAction<boolean>> | undefined;
+  isOnline: boolean;
 }
 
 const PhotoContext = createContext<PhotoContextType>({
@@ -35,6 +36,7 @@ const PhotoContext = createContext<PhotoContextType>({
   startCamera: () => Promise.resolve(),
   stopCamera: () => {},
   cameraStream: null,
+  isOnline: true,
   setShouldRunCountdown: undefined,
 });
 
@@ -48,21 +50,43 @@ export const PhotoProvider = ({children}: {children: ReactNode}) => {
   const [cameraStream, setCameraStream] = useState<MediaStream | null>(null);
   const router = useRouter();
   const routerRef = useRef(router);
-  const {isConnected} = useSocket();
+  const {isSocketConnected} = useSocket();
   const [camera, setCamera] = useState<Camera | null>(null);
   const [availableCameras, setAvailableCameras] = useState<Array<{deviceId: string; label: string}>>([]);
+  const [isOnline, setIsOnline] = useState(true);
+  const isValidPageForCountdown = useMemo(() => pathname === ROUTES.HOME || pathname === ROUTES.THEME || pathname === ROUTES.LAYOUT, [pathname]);
 
   useEffect(() => {
-    const isValidPage = pathname === ROUTES.HOME || pathname === ROUTES.THEME || pathname === ROUTES.LAYOUT;
-    if (isValidPage && photoRef.current && autoSelectCountdown === AUTO_SELECT_COUNTDOWN_DURATION && isConnected) {
-      setShouldRunCountdown(true);
-    } else if (!isValidPage) {
+    const handleOnline = () => {
+      setIsOnline(true);
+    };
+    const handleOffline = () => {
+      setIsOnline(false);
+    };
+
+    setIsOnline(navigator.onLine);
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, [isSocketConnected, isValidPageForCountdown, setShouldRunCountdown]);
+
+  useEffect(() => {
+    if (autoSelectCountdown === AUTO_SELECT_COUNTDOWN_DURATION) {
+      if (isValidPageForCountdown && photoRef.current && isSocketConnected && isOnline) {
+        setShouldRunCountdown(true);
+      }
+    } else if (!isValidPageForCountdown) {
       setShouldRunCountdown(false);
       if (autoSelectCountdown !== AUTO_SELECT_COUNTDOWN_DURATION) {
         setAutoSelectCountdown(AUTO_SELECT_COUNTDOWN_DURATION);
       }
     }
-  }, [pathname, autoSelectCountdown, isConnected]);
+  }, [autoSelectCountdown, isSocketConnected, isOnline, isValidPageForCountdown, pathname]);
 
   useEffect(() => {
     if (autoSelectCountdown >= 0) {
@@ -77,7 +101,7 @@ export const PhotoProvider = ({children}: {children: ReactNode}) => {
   }, [router, autoSelectCountdown]);
 
   useEffect(() => {
-    if (shouldRunCountdown && photoRef.current && isConnected) {
+    if (shouldRunCountdown && photoRef.current && isSocketConnected && isOnline) {
       if (autoSelectCountdown > 0) {
         const timer = setTimeout(() => {
           setAutoSelectCountdown(autoSelectCountdown - 1);
@@ -127,7 +151,7 @@ export const PhotoProvider = ({children}: {children: ReactNode}) => {
         routerRef.current.push(ROUTES.CAPTURE);
       }
     }
-  }, [shouldRunCountdown, autoSelectCountdown, isConnected]);
+  }, [shouldRunCountdown, autoSelectCountdown, isSocketConnected, isOnline]);
 
   useEffect(() => {
     const getVideoDevices = async () => {
@@ -202,6 +226,7 @@ export const PhotoProvider = ({children}: {children: ReactNode}) => {
         camera,
         setCamera,
         availableCameras,
+        isOnline,
         startCamera,
         stopCamera,
         cameraStream,

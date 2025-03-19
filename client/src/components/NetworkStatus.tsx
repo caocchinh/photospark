@@ -1,30 +1,15 @@
 "use client";
 
-import {useEffect, useState} from "react";
 import {AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogTitle} from "@/components/ui/alert-dialog";
 import {useTranslation} from "react-i18next";
 import {MdWifiOff} from "react-icons/md";
 import {IoRefresh} from "react-icons/io5";
 import {Button} from "@/components/ui/button";
+import {usePhoto} from "@/context/PhotoContext";
 
 const NetworkStatus = () => {
-  const [isOnline, setIsOnline] = useState(true);
   const {t} = useTranslation();
-
-  useEffect(() => {
-    const handleOnline = () => setIsOnline(true);
-    const handleOffline = () => setIsOnline(false);
-
-    setIsOnline(navigator.onLine);
-
-    window.addEventListener("online", handleOnline);
-    window.addEventListener("offline", handleOffline);
-
-    return () => {
-      window.removeEventListener("online", handleOnline);
-      window.removeEventListener("offline", handleOffline);
-    };
-  }, []);
+  const {isOnline} = usePhoto();
 
   return (
     <AlertDialog open={!isOnline}>

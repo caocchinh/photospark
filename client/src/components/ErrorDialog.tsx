@@ -13,7 +13,7 @@ const ErrorDialog = () => {
           className="text-red-500"
           size={100}
         />
-        <DialogDescription className="text-2xl">{t("Please try again")}</DialogDescription>
+        <DialogDescription className="text-2xl">{t("Please try again")}!</DialogDescription>
       </DialogContent>
     </Dialog>
   );
