@@ -220,7 +220,7 @@ const ThemePage = () => {
                       setIsWrongPassword(false);
                     }}
                     key={index}
-                    className="w-[25%] h-10 bg-gray-200 hover:bg-gray-300 rounded-lg flex items-center justify-center cursor-pointer "
+                    className="w-[25%] h-12 bg-gray-200 hover:bg-gray-300 rounded-lg flex items-center justify-center cursor-pointer "
                   >
                     {index + 1}
                   </div>

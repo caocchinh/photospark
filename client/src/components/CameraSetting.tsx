@@ -16,24 +16,21 @@ import {PiVideoCameraFill} from "react-icons/pi";
 import {Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {IoMdCheckmark} from "react-icons/io";
 import {cn} from "@/lib/utils";
-import LoadingSpinner from "./LoadingSpinner";
-import {ImCamera} from "react-icons/im";
-import {TextShimmer} from "./ui/text-shimmer";
-import {MdWarning} from "react-icons/md";
 
+import {MdWarning} from "react-icons/md";
+import CameraLoading from "./CameraLoading";
 const CameraSetting = () => {
   const {t} = useTranslation();
   const {camera, setCamera, availableCameras, startCamera, stopCamera, cameraStream} = usePhoto();
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [videoReady, setVideoReady] = useState(false);
+  const [videoRefReady, setVideoRefReady] = useState(false);
   const [isError, setIsError] = useState(false);
 
   const setVideoRef = useCallback((node: HTMLVideoElement | null) => {
     if (node !== null) {
-      console.log("Setting video ref");
       videoRef.current = node;
-      setVideoReady(true);
+      setVideoRefReady(true);
     }
   }, []);
 
@@ -41,13 +38,12 @@ const CameraSetting = () => {
     const currentVideoRef = videoRef.current;
 
     const getVideo = async () => {
-      if (camera && currentVideoRef && videoReady) {
+      if (camera && currentVideoRef && videoRefReady) {
         try {
           if (!cameraStream) {
             await startCamera();
             return;
           }
-          console.log("Asigning stream to video ref");
           currentVideoRef.srcObject = cameraStream;
         } catch {
           setIsError(true);
@@ -64,7 +60,7 @@ const CameraSetting = () => {
         stopCamera();
       }
     };
-  }, [camera, startCamera, stopCamera, isOpen, videoReady, cameraStream]);
+  }, [camera, startCamera, stopCamera, isOpen, videoRefReady, cameraStream]);
 
   return (
     <AlertDialog
@@ -88,30 +84,10 @@ const CameraSetting = () => {
             muted
             className={cn(
               "h-[80%] w-[80%] object-contain -scale-x-100 rounded-sm",
-              camera && videoReady && cameraStream && !isError ? "opacity-100 block" : "opacity-0 absolute"
+              camera && videoRefReady && cameraStream && !isError ? "opacity-100 block" : "opacity-0 absolute"
             )}
           />
-          {!(camera && videoReady && cameraStream && !isError) && isOpen && (
-            <div className="flex items-center justify-center gap-8 flex-col w-full">
-              <div className="relative">
-                <LoadingSpinner
-                  size={200}
-                  color="black"
-                />
-                <ImCamera
-                  className="text-4xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-                  size={80}
-                />
-              </div>
-              <TextShimmer
-                className=" font-semibold text-3xl uppercase text-center whitespace-nowrap  [--base-color:black] [--base-gradient-color:gray]"
-                duration={1.5}
-                spread={4}
-              >
-                {t("Waiting for camera...")}
-              </TextShimmer>
-            </div>
-          )}
+          {!(camera && videoRefReady && cameraStream && !isError) && isOpen && <CameraLoading />}
           {isError && (
             <div className="flex items-center justify-center flex-col gap-3">
               <MdWarning
@@ -128,7 +104,7 @@ const CameraSetting = () => {
             </AlertDialogHeader>
 
             <Select
-              disabled={!(camera && videoReady && cameraStream)}
+              disabled={!(camera && videoRefReady && cameraStream)}
               value={camera?.deviceId}
               onValueChange={(value) => {
                 const device = availableCameras.find((d) => d.deviceId === value);
@@ -159,7 +135,14 @@ const CameraSetting = () => {
         </div>
 
         <AlertDialogFooter className="w-full">
-          <AlertDialogAction className="bg-green-700 hover:bg-green-800 w-full">
+          <AlertDialogAction
+            disabled={!(camera && videoRefReady && cameraStream)}
+            className="bg-green-700 hover:bg-green-800 w-full"
+            onClick={() => {
+              stopCamera();
+              setIsOpen(false);
+            }}
+          >
             {t("Save")} <IoMdCheckmark color="white" />
           </AlertDialogAction>
         </AlertDialogFooter>

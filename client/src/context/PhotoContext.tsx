@@ -159,14 +159,15 @@ export const PhotoProvider = ({children}: {children: ReactNode}) => {
       console.log("Creating new stream");
       if (!cameraStream) {
         const cameraPromise = await navigator.mediaDevices.getUserMedia({
-          video: cameraConstraints
-            ? cameraConstraints.video
-            : {
-                width: {ideal: 1280},
-                height: {ideal: 720},
-                aspectRatio: {exact: 16 / 9},
-                deviceId: camera?.deviceId ? {exact: camera.deviceId} : undefined,
-              },
+          video:
+            cameraConstraints && pathname != ROUTES.HOME
+              ? cameraConstraints.video
+              : {
+                  width: {ideal: 1280},
+                  height: {ideal: 720},
+                  aspectRatio: {exact: 16 / 9},
+                  deviceId: camera?.deviceId ? {exact: camera.deviceId} : undefined,
+                },
         });
 
         setCameraStream(cameraPromise);
@@ -177,17 +178,7 @@ export const PhotoProvider = ({children}: {children: ReactNode}) => {
       setCameraStream(null);
       throw err;
     }
-  }, [camera?.deviceId, cameraConstraints, cameraStream]);
-
-  useEffect(() => {
-    if ((pathname === ROUTES.LAYOUT || pathname === ROUTES.CAPTURE || autoSelectCountdown <= 7) && camera && cameraConstraints) {
-      startCamera();
-    }
-
-    return () => {
-      stopCamera();
-    };
-  }, [autoSelectCountdown, camera, cameraConstraints, pathname, startCamera, stopCamera]);
+  }, [camera?.deviceId, cameraConstraints, cameraStream, pathname]);
 
   return (
     <PhotoContext.Provider value={{photo, setPhoto, autoSelectCountdown, camera, setCamera, availableCameras, startCamera, stopCamera, cameraStream}}>
