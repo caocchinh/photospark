@@ -76,8 +76,8 @@ const PrintPage = () => {
         const latestImage = photo.images[photo.images.length - 1];
         const r2Response = await uploadImageToR2(latestImage.data);
 
-        if (r2Response.ok) {
-          const data = await r2Response.json();
+        if (!r2Response.error && r2Response.response) {
+          const data = await r2Response.response?.json();
           const imageUrl = data.url;
           console.log("Image URL:", imageUrl);
           setPhoto(
@@ -96,7 +96,7 @@ const PrintPage = () => {
 
     uploadImage();
   }, [photo, navigateTo, setPhoto, lastImageUploaded]);
-  const [frameImg] = useImage(photo ? photo.theme!.frame.src : "");
+  const [frameImg, frameImgStatus] = useImage(photo ? photo.theme!.frame.src : "");
 
   const [selectedImage, setSelectedImage] = useState<Array<{id: string; data: string; href: string} | null>>(
     Array.from({length: photo ? photo.theme!.frame.slotCount : 0}, () => null)
@@ -214,7 +214,12 @@ const PrintPage = () => {
 
   return (
     <div className="w-full h-full flex items-center justify-center gap-3 flex-col">
-      <div className={cn("flex items-center justify-evenly w-full h-full", isTimeOver || selected ? "pointer-events-none" : null)}>
+      <div
+        className={cn(
+          "flex items-center justify-evenly w-full h-full",
+          isTimeOver || frameImgStatus != "loaded" || selected ? "pointer-events-none" : null
+        )}
+      >
         <div className="flex flex-col items-center justify-center h-full">
           <div className="relative h-full flex items-center justify-center">
             <div className="frame-container">

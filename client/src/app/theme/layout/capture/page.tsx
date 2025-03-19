@@ -67,6 +67,7 @@ const CapturePage = () => {
 
       if (response.error) {
         console.log("Error creating processed image: ", response.error);
+        stopCamera();
         setPhoto!((prevStyle) => {
           if (prevStyle) {
             return {...prevStyle, error: true, id: null};
@@ -82,7 +83,7 @@ const CapturePage = () => {
     if (photoRef.current && !initializationDoneRef.current) {
       initializeProcessedImage();
     }
-  }, [navigateTo, setPhoto]);
+  }, [navigateTo, setPhoto, stopCamera]);
 
   const handleCapture = useCallback(async () => {
     if (!photo) return;
@@ -102,19 +103,20 @@ const CapturePage = () => {
 
         const r2Response = await uploadImageToR2(dataURL);
 
-        if (r2Response.ok) {
-          const data = await r2Response.json();
+        if (!r2Response.error && r2Response.response) {
+          const data = await r2Response.response?.json();
           const imageUrl = data.url;
           console.log("Image URL:", imageUrl);
           setUploadedImages((prevItems) => [...prevItems, {id: cycles.toString(), href: imageUrl}]);
         } else {
           setPhoto!((prevStyle) => prevStyle && {...prevStyle, error: true});
+          stopCamera();
           setUploadedImages([]);
           navigateTo(ROUTES.LAYOUT);
         }
       }
     }
-  }, [cycles, maxCycles, navigateTo, photo, setPhoto, videoIntrinsicSize]);
+  }, [cycles, maxCycles, navigateTo, photo, setPhoto, stopCamera, videoIntrinsicSize]);
 
   const handleRecording = useCallback(() => {
     if (!videoRef.current?.srcObject) return;

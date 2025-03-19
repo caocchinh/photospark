@@ -2,7 +2,7 @@ export const uploadImageToR2 = async (image: string) => {
   try {
     if (!image || !image.includes("data:")) {
       console.error("Invalid image data provided");
-      throw new Error("Invalid image data");
+      return {error: true};
     }
 
     const imageData = image;
@@ -10,7 +10,7 @@ export const uploadImageToR2 = async (image: string) => {
     const contentType = imageData.split(";")[0].split(":")[1];
     if (!contentType) {
       console.error("Could not determine content type from image data");
-      throw new Error("Invalid image format");
+      return {error: true};
     }
 
     const fileName = `${crypto.randomUUID()}.${contentType.split("/")[1]}`;
@@ -18,7 +18,7 @@ export const uploadImageToR2 = async (image: string) => {
     const base64Data = imageData.split(",")[1];
     if (!base64Data) {
       console.error("Could not extract base64 data from image");
-      throw new Error("Invalid image data format");
+      return {error: true};
     }
 
     const blobData = new Blob([Buffer.from(base64Data, "base64")], {type: contentType});
@@ -35,11 +35,11 @@ export const uploadImageToR2 = async (image: string) => {
 
     if (!response.ok) {
       console.error("R2 upload failed:", response.statusText || "Unknown error");
-      throw new Error(response.statusText || "Unknown error");
+      return {error: true};
     }
-    return response;
+    return {error: false, response: response};
   } catch (error) {
     console.error("Upload error:", error);
-    throw new Error("Unknown error");
+    return {error: true};
   }
 };
