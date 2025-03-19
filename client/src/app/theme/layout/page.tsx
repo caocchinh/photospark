@@ -25,8 +25,14 @@ const LayoutPage = () => {
   const {t} = useTranslation();
   const maxQuantity = 5;
   const [api, setApi] = useState<CarouselApi>();
+  const filteredFrames = useMemo(() => {
+    if (!photo || !photo.theme) return [];
+    return FrameOptions[photo.theme.name].filter((item) => item.type == photo.frameType);
+  }, [photo]);
+
   const [apiPreview, setApiPreview] = useState<CarouselApi>();
   const [current, setCurrent] = useState(1);
+  const initializationDoneRef = useRef(false);
   const thumbnailRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [chosen, setChosen] = useState<boolean>(false);
 
@@ -85,10 +91,27 @@ const LayoutPage = () => {
     [api, apiPreview]
   );
 
-  const filteredFrames = useMemo(() => {
-    if (!photo || !photo.theme) return [];
-    return FrameOptions[photo.theme.name].filter((item) => item.type == photo.frameType);
-  }, [photo]);
+  useEffect(() => {
+    if (initializationDoneRef.current || !photo || !api || !apiPreview) return;
+
+    const initIndex = filteredFrames.findIndex((item) => item.thumbnail === photo?.theme!.frame.thumbnail);
+
+    if (initIndex !== -1) {
+      api.scrollTo(initIndex);
+      apiPreview.scrollTo(initIndex);
+      setCurrent(initIndex + 1);
+
+      const currentThumbnail = thumbnailRefs.current[initIndex];
+      if (currentThumbnail) {
+        currentThumbnail.scrollIntoView({
+          behavior: "instant",
+          block: "center",
+        });
+      }
+    }
+
+    initializationDoneRef.current = true;
+  }, [api, apiPreview, filteredFrames, photo]);
 
   useEffect(() => {
     if (!api || !apiPreview || !photo) {
@@ -229,7 +252,7 @@ const LayoutPage = () => {
                         <div
                           className={cn(
                             "bg-gray-100 p-3 rounded border border-gray-300",
-                            current === index + 1 ? "scale-[1.05] border-4 border-rose-500" : null
+                            current - 1 === index ? "scale-[1.05] border-4 border-rose-500" : null
                           )}
                         >
                           <Image
@@ -252,6 +275,9 @@ const LayoutPage = () => {
                 <div className="flex gap-2 flex-wrap items-center justify-center w-[350px]">
                   <AnimatedBackground
                     defaultValue={photo.quantity?.toString()}
+                    onValueChange={(value) => {
+                      handleQuantityChange(parseInt(value!));
+                    }}
                     className="rounded-lg bg-green-700"
                     transition={{
                       ease: "easeInOut",
@@ -267,7 +293,6 @@ const LayoutPage = () => {
                           )}
                           key={index}
                           data-id={quantiy.toString()}
-                          onClick={() => handleQuantityChange(quantiy)}
                         >
                           {quantiy}
                         </div>

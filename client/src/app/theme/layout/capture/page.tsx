@@ -75,7 +75,7 @@ const CapturePage = () => {
         stopCamera();
         setPhoto!((prevStyle) => {
           if (prevStyle) {
-            return {...prevStyle, error: true, id: null};
+            return {...prevStyle, error: true, id: null, images: []};
           }
           return prevStyle;
         });
@@ -116,7 +116,7 @@ const CapturePage = () => {
           console.log("Image URL:", imageUrl);
           setUploadedImages((prevItems) => [...prevItems, {id: cycles.toString(), href: imageUrl}]);
         } else {
-          setPhoto!((prevStyle) => prevStyle && {...prevStyle, error: true});
+          setPhoto!((prevStyle) => prevStyle && {...prevStyle, error: true, id: null, images: []});
           stopCamera();
           if (mediaRecorder && mediaRecorder.state === "recording") {
             mediaRecorder.stop();
