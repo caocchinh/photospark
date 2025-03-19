@@ -133,7 +133,7 @@ const CameraSetting = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  <SelectLabel>Avaiable cameras</SelectLabel>
+                  <SelectLabel>{t("Available cameras")}</SelectLabel>
                   {availableCameras.map((device) => (
                     <SelectItem
                       key={device.deviceId}
