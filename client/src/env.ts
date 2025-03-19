@@ -7,6 +7,7 @@ const envVariables = z.object({
   NEXT_PUBLIC_QR_DOMAIN: z.string(),
   NEXT_PUBLIC_SOCKET_URL: z.string(),
   NEXT_PUBLIC_ADMIN_PASSWORD: z.string(),
+  NEXT_PUBLIC_DEFAULT_CAMERA: z.string(),
 });
 
 envVariables.parse(process.env);

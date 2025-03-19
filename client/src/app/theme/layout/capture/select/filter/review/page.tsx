@@ -61,14 +61,14 @@ const ReviewPage = () => {
             <div className="flex items-center justify-center">
               <Image
                 src="/dance.gif"
-                alt="logo"
+                alt="dance"
                 unoptimized
                 width={160}
                 height={160}
               />
               <Image
                 src="/heart.gif"
-                alt="logo"
+                alt="heart"
                 unoptimized
                 width={160}
                 height={160}

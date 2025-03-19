@@ -9,9 +9,10 @@ import {SlidingNumber} from "@/components/ui/sliding-number";
 import usePreventNavigation from "@/hooks/usePreventNavigation";
 import {createProcessedImage} from "@/server/actions";
 import {ROUTES} from "@/constants/routes";
-import CameraLoading from "@/components/CameraLoading";
 import {useTranslation} from "react-i18next";
 import {TextShimmer} from "@/components/ui/text-shimmer";
+import CameraLoading from "@/components/CameraLoading";
+
 const CapturePage = () => {
   const duration = 2;
   const {setPhoto, photo, cameraStream, startCamera, stopCamera} = usePhoto();
@@ -34,6 +35,7 @@ const CapturePage = () => {
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
   const {navigateTo} = usePreventNavigation();
   const photoRef = useRef(photo);
+  const initializationDoneRef = useRef(false);
   const {t} = useTranslation();
 
   useEffect(() => {
@@ -43,41 +45,46 @@ const CapturePage = () => {
 
   useEffect(() => {
     const initializeProcessedImage = async () => {
-      if (photoRef.current) {
-        const processedImageId = crypto.randomUUID();
+      if (initializationDoneRef.current || !photoRef.current) {
+        return;
+      }
+
+      initializationDoneRef.current = true;
+
+      const processedImageId = crypto.randomUUID();
+      setPhoto!((prevStyle) => {
+        if (prevStyle) {
+          return {...prevStyle, id: processedImageId};
+        }
+        return prevStyle;
+      });
+
+      const response = await createProcessedImage(
+        processedImageId,
+        photoRef.current.theme!.name,
+        photoRef.current.theme!.frame.src,
+        photoRef.current.frameType,
+        photoRef.current.theme!.frame.slotCount
+      );
+
+      if (response.error) {
+        console.log("Error creating processed image: ", response.error);
         setPhoto!((prevStyle) => {
           if (prevStyle) {
-            return {...prevStyle, id: processedImageId};
+            return {...prevStyle, error: true, id: null};
           }
           return prevStyle;
         });
-        const response = await createProcessedImage(
-          processedImageId,
-          photoRef.current.theme!.name,
-          photoRef.current.theme!.frame.src,
-          photoRef.current.frameType,
-          photoRef.current.theme!.frame.slotCount
-        );
-        if (response.error) {
-          console.log("Error creating processed image: ", response.error);
-          setPhoto!((prevStyle) => {
-            if (prevStyle) {
-              return {...prevStyle, error: true, id: null};
-            }
-            return prevStyle;
-          });
-          navigateTo(ROUTES.LAYOUT);
-          return;
-        }
-        console.log("Processed image created successfully: ", processedImageId);
+        navigateTo(ROUTES.LAYOUT);
+        return;
       }
+      console.log("Processed image created successfully: ", processedImageId);
     };
-    if (photoRef.current) {
-      if (!photo?.id) {
-        initializeProcessedImage();
-      }
+
+    if (photoRef.current && !initializationDoneRef.current) {
+      initializeProcessedImage();
     }
-  }, [navigateTo, photo?.id, setPhoto]);
+  }, [navigateTo, setPhoto]);
 
   const handleCapture = useCallback(async () => {
     if (!photo) return;
@@ -304,7 +311,7 @@ const CapturePage = () => {
                 </div>
               )}
               {!isCountingDown && cycles == maxCycles && (
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full flex items-center justify-center">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full flex items-center justify-center gap-6">
                   <TextShimmer
                     className=" font-semibold text-3xl uppercase text-center whitespace-nowrap  [--base-color:black] [--base-gradient-color:gray]"
                     duration={1.5}

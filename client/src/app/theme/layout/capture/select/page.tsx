@@ -18,7 +18,6 @@ import {useSocket} from "@/context/SocketContext";
 import {useTranslation} from "react-i18next";
 import {GlowEffect} from "@/components/ui/glow-effect";
 import {SlidingNumber} from "@/components/ui/sliding-number";
-import {useViewportScale} from "@/hooks/useViewportScale";
 import usePreventNavigation from "@/hooks/usePreventNavigation";
 import {ROUTES} from "@/constants/routes";
 import {Reorder} from "motion/react";
@@ -111,7 +110,6 @@ const PrintPage = () => {
     return photo.frameType == "singular" ? 1 : 2;
   }, [photo]);
   const [selected, setSelected] = useState(false);
-  const scaleContainerRef = useViewportScale({baseHeight: photo?.frameType == "singular" ? 670 : 650});
   const [slots, setSlots] = useState<Array<number>>(Array.from({length: photo ? photo.theme!.frame.slotCount : 0}, (_, index) => index));
   const [isDragging, setIsDragging] = useState(false);
 
@@ -221,10 +219,7 @@ const PrintPage = () => {
       <div className={cn("flex items-center justify-evenly w-full h-full", isTimeOver || selected ? "pointer-events-none" : null)}>
         <div className="flex flex-col items-center justify-center h-full">
           <div className="relative h-full flex items-center justify-center">
-            <div
-              ref={scaleContainerRef}
-              className="transform-gpu scale-[calc(var(--scale-factor,0.75))] origin-center"
-            >
+            <div className="frame-container">
               <Reorder.Group
                 values={slots}
                 onReorder={(newSlotOrder) => {

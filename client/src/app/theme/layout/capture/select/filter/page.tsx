@@ -16,7 +16,6 @@ import {PiPrinter} from "react-icons/pi";
 import {useTranslation} from "react-i18next";
 import {GlowEffect} from "@/components/ui/glow-effect";
 import {SlidingNumber} from "@/components/ui/sliding-number";
-import {useViewportScale} from "@/hooks/useViewportScale";
 import usePreventNavigation from "@/hooks/usePreventNavigation";
 import {createImage, createVideo, updateFilter} from "@/server/actions";
 import QRCode from "react-qr-code";
@@ -27,7 +26,6 @@ const FilterPage = () => {
   const {photo, setPhoto} = usePhoto();
   const {navigateTo} = usePreventNavigation();
   const filterRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const scaleContainerRef = useViewportScale({baseHeight: 710});
 
   const {t} = useTranslation();
 
@@ -227,10 +225,7 @@ const FilterPage = () => {
       {photo && frameImg && (
         <div className="flex items-center justify-evenly gap-3 h-max flex-col">
           <div className="flex items-center justify-center flex-row gap-6">
-            <div
-              ref={scaleContainerRef}
-              className="transform-gpu scale-[calc(var(--scale-factor,0.75))] origin-center"
-            >
+            <div className="frame-container">
               <Stage
                 ref={stageRef}
                 width={IMAGE_WIDTH}

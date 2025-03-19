@@ -131,7 +131,16 @@ export const PhotoProvider = ({children}: {children: ReactNode}) => {
     const getVideoDevices = async () => {
       const deviceInfos = await navigator.mediaDevices.enumerateDevices();
       const availableVideoDevices = deviceInfos.filter((device) => device.kind === "videoinput");
-      setCamera({deviceId: availableVideoDevices[0].deviceId, label: availableVideoDevices[0].label});
+      const defaultCamera = availableVideoDevices.find(
+        (device) =>
+          device.label &&
+          process.env.NEXT_PUBLIC_DEFAULT_CAMERA &&
+          device.label.toLowerCase().includes(process.env.NEXT_PUBLIC_DEFAULT_CAMERA.toLowerCase())
+      );
+      setCamera({
+        deviceId: defaultCamera?.deviceId || availableVideoDevices[0].deviceId,
+        label: defaultCamera?.label || availableVideoDevices[0].label,
+      });
       setAvailableCameras(availableVideoDevices);
     };
 
