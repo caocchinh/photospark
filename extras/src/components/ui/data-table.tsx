@@ -16,8 +16,6 @@ import {
   PaginationState,
 } from "@tanstack/react-table";
 
-import {ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger} from "@/components/ui/context-menu";
-
 import {ChevronDown, ChevronLeft, ChevronRight} from "lucide-react";
 
 import {Button} from "./button";
@@ -25,13 +23,14 @@ import {DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMen
 import {Input} from "./input";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "./table";
 import {QUEUE_TITLE_MAPING} from "@/constants/constants";
-
+import {cn} from "@/lib/utils";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   filterColumn?: string;
   filterPlaceholder?: string;
   setProcessedImageId: (id: string) => void;
+  processedImageId: string;
 }
 
 export function DataTable<TData, TValue>({
@@ -40,11 +39,12 @@ export function DataTable<TData, TValue>({
   filterColumn = "id",
   filterPlaceholder = `Lọc bằng ${QUEUE_TITLE_MAPING[filterColumn as keyof typeof QUEUE_TITLE_MAPING].toLowerCase()}`,
   setProcessedImageId,
+  processedImageId,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
+  const [selectedRowId, setSelectedRowId] = React.useState<string | null>(null);
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -56,7 +56,6 @@ export function DataTable<TData, TValue>({
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
     onPaginationChange: setPagination,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -66,9 +65,9 @@ export function DataTable<TData, TValue>({
       sorting,
       columnFilters,
       columnVisibility,
-      rowSelection,
       pagination,
     },
+    autoResetPageIndex: false,
   });
 
   return (
@@ -101,8 +100,6 @@ export function DataTable<TData, TValue>({
                   <DropdownMenuCheckboxItem
                     key={column.id}
                     className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) => column.toggleVisibility(!!value)}
                   >
                     {QUEUE_TITLE_MAPING[column.id as keyof typeof QUEUE_TITLE_MAPING]}
                   </DropdownMenuCheckboxItem>
@@ -132,26 +129,23 @@ export function DataTable<TData, TValue>({
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <ContextMenu key={row.id}>
-                  <ContextMenuTrigger asChild>
-                    <TableRow
-                      data-state={row.getIsSelected() && "selected"}
-                      onClick={(e) => {
-                        if (!(e.target as HTMLElement).closest("button, input, a")) {
-                          row.toggleSelected(!row.getIsSelected());
-                        }
-                      }}
-                      className="hover:bg-muted/50 cursor-pointer"
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
-                      ))}
-                    </TableRow>
-                  </ContextMenuTrigger>
-                  <ContextMenuContent className="w-64">
-                    <ContextMenuItem onClick={() => setProcessedImageId(row.getValue("processedImageId") as string)}>Preview hình</ContextMenuItem>
-                  </ContextMenuContent>
-                </ContextMenu>
+                <TableRow
+                  key={row.id}
+                  data-state={row.id === selectedRowId && "selected"}
+                  onClick={(e) => {
+                    if (!(e.target as HTMLElement).closest("button, input, a")) {
+                      setSelectedRowId(row.id === selectedRowId ? null : row.id);
+                      if ((row.getValue("processedImageId") as string) !== processedImageId) {
+                        setProcessedImageId(row.getValue("processedImageId") as string);
+                      }
+                    }
+                  }}
+                  className={cn("hover:bg-muted/50 cursor-pointer", row.id === selectedRowId && "!bg-black text-white")}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                  ))}
+                </TableRow>
               ))
             ) : (
               <TableRow>
@@ -166,31 +160,28 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-between space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} trên {table.getFilteredRowModel().rows.length} dòng đã chọn.
+      <div className="flex items-center justify-between py-4 w-full">
+        <div className="flex items-center space-x-2">
+          <p className="text-sm font-medium">Số dòng trên trang</p>
+          <select
+            value={table.getState().pagination.pageSize}
+            onChange={(e) => {
+              table.setPageSize(Number(e.target.value));
+            }}
+            className="h-8 rounded-md border border-input px-2"
+          >
+            {[5, 10, 20, 30, 40, 50].map((pageSize) => (
+              <option
+                key={pageSize}
+                value={pageSize}
+              >
+                {pageSize}
+              </option>
+            ))}
+          </select>
         </div>
-        <div className="flex items-center space-x-6">
-          <div className="flex items-center space-x-2">
-            <p className="text-sm font-medium">Số dòng trên trang</p>
-            <select
-              value={table.getState().pagination.pageSize}
-              onChange={(e) => {
-                table.setPageSize(Number(e.target.value));
-              }}
-              className="h-8 rounded-md border border-input px-2"
-            >
-              {[5, 10, 20, 30, 40, 50].map((pageSize) => (
-                <option
-                  key={pageSize}
-                  value={pageSize}
-                >
-                  {pageSize}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="flex w-[100px] items-center justify-center text-sm font-medium">
+        <div className="flex items-center justify-center gap-4">
+          <div className="flex w-max items-center justify-center text-sm font-medium">
             Trang {table.getState().pagination.pageIndex + 1} trên {table.getPageCount()}
           </div>
           <div className="flex items-center space-x-2">

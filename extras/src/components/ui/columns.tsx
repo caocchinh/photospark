@@ -3,7 +3,6 @@
 import {ColumnDef, FilterFn} from "@tanstack/react-table";
 
 import {Button} from "@/components/ui/button";
-import {Checkbox} from "@/components/ui/checkbox";
 
 import {ChevronDown} from "lucide-react";
 
@@ -31,26 +30,6 @@ const exactNumberFilter: FilterFn<QueueEntry> = (row, columnId, value) => {
 };
 
 export const columns = (): ColumnDef<QueueEntry>[] => [
-  {
-    id: "select",
-    header: ({table}) => (
-      <Checkbox
-        checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({row}) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-        onClick={(e) => e.stopPropagation()}
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
   {
     accessorKey: "id",
     header: ({column}) => {

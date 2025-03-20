@@ -13,6 +13,7 @@ import {LuRefreshCcw} from "react-icons/lu";
 import {getAllQueues, getProcessedImage, getImages} from "@/server/actions";
 import FrameStage from "@/components/FrameStage";
 import {Stage as StageElement} from "konva/lib/Stage";
+import Image from "next/image";
 
 const Table = ({avaialbleQueues}: {avaialbleQueues: (typeof QueueTable.$inferSelect)[]}) => {
   const [selectedFilterColumn, setSelectedFilterColumn] = useState<string>("id");
@@ -22,6 +23,7 @@ const Table = ({avaialbleQueues}: {avaialbleQueues: (typeof QueueTable.$inferSel
   const [queues, setQueues] = useState<(typeof QueueTable.$inferSelect)[]>(avaialbleQueues);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const stageRef = useRef<StageElement | null>(null);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const refreshQueues = async () => {
     setIsRefreshing(true);
@@ -43,7 +45,7 @@ const Table = ({avaialbleQueues}: {avaialbleQueues: (typeof QueueTable.$inferSel
   }, [processedImageId]);
 
   return (
-    <div className="w-[100%] items-center justify-center flex gap-8">
+    <div className="w-[100%] items-start justify-center flex gap-8">
       <div className="flex items-start justify-between flex-col w-[50%]">
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-2">
@@ -86,6 +88,7 @@ const Table = ({avaialbleQueues}: {avaialbleQueues: (typeof QueueTable.$inferSel
 
         <DataTable
           columns={columns()}
+          processedImageId={processedImageId || ""}
           data={queues.map((item) => transformQueueData(item))}
           filterColumn={selectedFilterColumn}
           filterPlaceholder={`Lọc bằng ${QUEUE_TITLE_MAPING[selectedFilterColumn as keyof typeof QUEUE_TITLE_MAPING].toLowerCase()}...`}
@@ -93,12 +96,25 @@ const Table = ({avaialbleQueues}: {avaialbleQueues: (typeof QueueTable.$inferSel
         />
       </div>
 
-      {processedImage && images && (
-        <FrameStage
-          processedImage={processedImage}
-          images={images}
-          stageRef={stageRef}
-        />
+      {processedImage && images ? (
+        <div className="flex flex-col items-start relative">
+          <FrameStage
+            processedImage={processedImage}
+            onLoadingComplete={setImageLoaded}
+            images={images}
+            stageRef={stageRef}
+          />
+        </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center relative min-w-[500px] min-h-[500px]">
+          <h1 className="text-2xl font-semibold uppercase">Hãy chọn hình để bắt đầu</h1>
+          <Image
+            src="/ass.gif"
+            alt="twerk"
+            width={100}
+            height={100}
+          />
+        </div>
       )}
     </div>
   );
