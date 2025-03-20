@@ -16,6 +16,8 @@ import {
   PaginationState,
 } from "@tanstack/react-table";
 
+import {ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger} from "@/components/ui/context-menu";
+
 import {ChevronDown, ChevronLeft, ChevronRight} from "lucide-react";
 
 import {Button} from "./button";
@@ -128,20 +130,26 @@ export function DataTable<TData, TValue>({
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                  onClick={(e) => {
-                    if (!(e.target as HTMLElement).closest("button, input, a")) {
-                      row.toggleSelected(!row.getIsSelected());
-                    }
-                  }}
-                  className="hover:bg-muted/50 cursor-pointer"
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
-                  ))}
-                </TableRow>
+                <ContextMenu key={row.id}>
+                  <ContextMenuTrigger asChild>
+                    <TableRow
+                      data-state={row.getIsSelected() && "selected"}
+                      onClick={(e) => {
+                        if (!(e.target as HTMLElement).closest("button, input, a")) {
+                          row.toggleSelected(!row.getIsSelected());
+                        }
+                      }}
+                      className="hover:bg-muted/50 cursor-pointer"
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                      ))}
+                    </TableRow>
+                  </ContextMenuTrigger>
+                  <ContextMenuContent className="w-64">
+                    <ContextMenuItem>Preview hình</ContextMenuItem>
+                  </ContextMenuContent>
+                </ContextMenu>
               ))
             ) : (
               <TableRow>
