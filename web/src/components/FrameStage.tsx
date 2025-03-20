@@ -28,8 +28,10 @@ const FrameStage = ({processedImage, images, stageRef, onLoadingComplete}: Frame
   useEffect(() => {
     const chosenImageCount = images?.filter((image) => image.slotPositionX != null && image.slotPositionY != null).length || 0;
     if (frameImgStatus === "loaded" && imagesLoaded === chosenImageCount * (processedImage?.type == "singular" ? 1 : 2)) {
+      console.log("imagesLoaded");
       onLoadingComplete?.(true);
     } else {
+      console.log("imagesNotLoaded");
       onLoadingComplete?.(false);
     }
   }, [frameImgStatus, imagesLoaded, images, processedImage?.type, onLoadingComplete]);

@@ -2,7 +2,7 @@
 import {Image as KonvaImage} from "react-konva";
 import {useState, useCallback, useEffect} from "react";
 
-const CanvasImage = ({
+const FrameImage = ({
   url,
   x,
   y,
@@ -41,13 +41,16 @@ const CanvasImage = ({
         context.drawImage(img, 0, 0);
       }
       setImage(canvas);
-      if (onLoad) onLoad();
     };
-  }, [filter, url, crossOrigin, onLoad]);
+  }, [filter, url, crossOrigin]);
 
   useEffect(() => {
     loadImage();
   }, [loadImage, url, filter, crossOrigin]);
+
+  useEffect(() => {
+    if (onLoad) onLoad();
+  }, [onLoad]);
 
   return (
     <KonvaImage
@@ -60,4 +63,4 @@ const CanvasImage = ({
   );
 };
 
-export default CanvasImage;
+export default FrameImage;

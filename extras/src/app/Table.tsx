@@ -97,14 +97,22 @@ const Table = ({avaialbleQueues}: {avaialbleQueues: (typeof QueueTable.$inferSel
       </div>
 
       {processedImage && images ? (
-        <div className="flex flex-col items-start relative">
-          <FrameStage
-            processedImage={processedImage}
-            onLoadingComplete={setImageLoaded}
-            images={images}
-            stageRef={stageRef}
-          />
-        </div>
+        <>
+          <div className={cn(!imageLoaded ? "opacity-0 !absolute" : "opacity-100", "flex flex-col items-start relative max-h-[500px]")}>
+            <FrameStage
+              processedImage={processedImage}
+              images={images}
+              stageRef={stageRef}
+              onLoadingComplete={setImageLoaded}
+            />
+          </div>
+
+          {!imageLoaded && (
+            <div className="flex flex-col items-center justify-center relative min-w-[500px] min-h-[500px]">
+              <h1 className="text-2xl font-semibold uppercase">Đang tải hình ảnh...</h1>
+            </div>
+          )}
+        </>
       ) : (
         <div className="flex flex-col items-center justify-center relative min-w-[500px] min-h-[500px]">
           <h1 className="text-2xl font-semibold uppercase">Hãy chọn hình để bắt đầu</h1>

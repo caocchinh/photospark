@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useEffect, useState, useCallback, useRef} from "react";
 import {Stage as StageElement} from "konva/lib/Stage";
 import {Image as KonvaImage, Rect} from "react-konva";
 import {Layer, Stage} from "react-konva";
@@ -21,10 +21,11 @@ const FrameStage = ({processedImage, images, stageRef, onLoadingComplete}: Frame
   const [qrCodeURL, setQrCodeURL] = useState<string>("");
   const [qrCodeImage] = useImage(qrCodeURL);
   const [imagesLoaded, setImagesLoaded] = useState(0);
+  const isInitialRender = useRef("skibidi");
 
-  const handleImageLoaded = () => {
+  const handleImageLoaded = useCallback(() => {
     setImagesLoaded((prev) => prev + 1);
-  };
+  }, []);
 
   useEffect(() => {
     if (!processedImage?.id || qrCodeURL != "") return;
@@ -95,8 +96,15 @@ const FrameStage = ({processedImage, images, stageRef, onLoadingComplete}: Frame
   }, [processedImage, qrCodeURL]);
 
   useEffect(() => {
+    if (processedImage && isInitialRender.current != "skibidi") {
+      setImagesLoaded(0);
+    }
+  }, [processedImage]);
+
+  useEffect(() => {
     const chosenImageCount = images?.filter((image) => image.slotPositionX != null && image.slotPositionY != null).length || 0;
-    if (frameImgStatus === "loaded" && imagesLoaded === chosenImageCount * (processedImage?.type == "singular" ? 1 : 2)) {
+    if (frameImgStatus === "loaded" && imagesLoaded == chosenImageCount * (processedImage?.type == "singular" ? 1 : 2)) {
+      isInitialRender.current = "sigma";
       onLoadingComplete?.(true);
     } else {
       onLoadingComplete?.(false);
