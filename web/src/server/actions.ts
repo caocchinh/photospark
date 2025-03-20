@@ -56,7 +56,6 @@ export const createQueue = async (processedImageId: string, queueId: string, qua
       id: queueId,
       processedImageId: processedImageId,
       createdAt: new Date(),
-      updatedAt: new Date(),
       status: "pending",
       quantity: quantity,
       price: price,

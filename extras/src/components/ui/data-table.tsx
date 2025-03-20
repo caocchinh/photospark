@@ -23,6 +23,7 @@ import {DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMen
 import {Input} from "./input";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "./table";
 import {QUEUE_TITLE_MAPING} from "@/constants/constants";
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -34,7 +35,7 @@ export function DataTable<TData, TValue>({
   columns,
   data,
   filterColumn = "id",
-  filterPlaceholder = `Lọc bằng ${QUEUE_TITLE_MAPING[filterColumn as keyof typeof QUEUE_TITLE_MAPING]}`,
+  filterPlaceholder = `Lọc bằng ${QUEUE_TITLE_MAPING[filterColumn as keyof typeof QUEUE_TITLE_MAPING].toLowerCase()}`,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -73,9 +74,9 @@ export function DataTable<TData, TValue>({
           <Input
             placeholder={filterPlaceholder}
             value={(table.getColumn(filterColumn)?.getFilterValue() as string) ?? ""}
-            onChange={(event) => table.getColumn(filterColumn)?.setFilterValue(event.target.value)}
+            onChange={(event) => table.getColumn(filterColumn)?.setFilterValue(event.target.value.toString())}
             className="max-w-sm"
-            aria-label={`Lọc bằng ${QUEUE_TITLE_MAPING[filterColumn as keyof typeof QUEUE_TITLE_MAPING]}`}
+            aria-label={`Lọc bằng ${QUEUE_TITLE_MAPING[filterColumn as keyof typeof QUEUE_TITLE_MAPING].toLowerCase()}`}
           />
         ) : null}
         <DropdownMenu>
@@ -157,11 +158,11 @@ export function DataTable<TData, TValue>({
       </div>
       <div className="flex items-center justify-between space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of {table.getFilteredRowModel().rows.length} row(s) selected.
+          {table.getFilteredSelectedRowModel().rows.length} trên {table.getFilteredRowModel().rows.length} dòng đã chọn.
         </div>
         <div className="flex items-center space-x-6">
           <div className="flex items-center space-x-2">
-            <p className="text-sm font-medium">Rows per page</p>
+            <p className="text-sm font-medium">Số dòng trên trang</p>
             <select
               value={table.getState().pagination.pageSize}
               onChange={(e) => {
@@ -180,7 +181,7 @@ export function DataTable<TData, TValue>({
             </select>
           </div>
           <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-            Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+            Trang {table.getState().pagination.pageIndex + 1} trên {table.getPageCount()}
           </div>
           <div className="flex items-center space-x-2">
             <Button
@@ -189,7 +190,6 @@ export function DataTable<TData, TValue>({
               onClick={() => table.setPageIndex(0)}
               disabled={!table.getCanPreviousPage()}
             >
-              <span className="sr-only">Go to first page</span>
               <ChevronLeft className="h-4 w-4" />|
             </Button>
             <Button
@@ -198,7 +198,6 @@ export function DataTable<TData, TValue>({
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
             >
-              <span className="sr-only">Go to previous page</span>
               <ChevronLeft className="h-4 w-4" />
             </Button>
             <Button
@@ -207,7 +206,6 @@ export function DataTable<TData, TValue>({
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
             >
-              <span className="sr-only">Go to next page</span>
               <ChevronRight className="h-4 w-4" />
             </Button>
             <Button
@@ -216,7 +214,6 @@ export function DataTable<TData, TValue>({
               onClick={() => table.setPageIndex(table.getPageCount() - 1)}
               disabled={!table.getCanNextPage()}
             >
-              <span className="sr-only">Go to last page</span>
               |<ChevronRight className="h-4 w-4" />
             </Button>
           </div>

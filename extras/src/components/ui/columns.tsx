@@ -1,6 +1,6 @@
 "use client";
 
-import {ColumnDef} from "@tanstack/react-table";
+import {ColumnDef, FilterFn} from "@tanstack/react-table";
 
 import {Button} from "@/components/ui/button";
 import {Checkbox} from "@/components/ui/checkbox";
@@ -34,18 +34,17 @@ export type QueueActionHandlers = {
   onViewProcessedImage?: (processedImageId: string) => void;
 };
 
-/**
- * Example of how to use transformQueueData function to prepare data for display:
- *
- * // In your component or data fetching logic:
- * const transformedData = initialData.map(queue => transformQueueData(queue));
- *
- * // Then use transformedData with DataTable component
- * <DataTable columns={columns(actionHandlers)} data={transformedData} />
- *
- * // For direct access to formatted values in the columns:
- * // cell: ({row}) => <div>{row.original.dateDisplay}</div>
- */
+const exactNumberFilter: FilterFn<QueueEntry> = (row, columnId, value) => {
+  if (!value) return true;
+
+  if (columnId === "quantity") {
+    const rowValue = row.getValue(columnId) as number;
+    return rowValue === parseInt(value as string);
+  }
+
+  return true;
+};
+
 export const columns = (actionHandlers?: QueueActionHandlers): ColumnDef<QueueEntry>[] => [
   {
     id: "select",
@@ -83,6 +82,21 @@ export const columns = (actionHandlers?: QueueActionHandlers): ColumnDef<QueueEn
     cell: ({row}) => <div className="font-medium truncate max-w-[150px]">{row.getValue("id")}</div>,
   },
   {
+    accessorKey: "processedImageId",
+    header: ({column}) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          {QUEUE_TITLE_MAPING.processedImageId}
+          <ChevronDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({row}) => <div className="font-medium truncate max-w-[150px]">{row.getValue("processedImageId")}</div>,
+  },
+  {
     accessorKey: "quantity",
     header: ({column}) => {
       return (
@@ -96,6 +110,7 @@ export const columns = (actionHandlers?: QueueActionHandlers): ColumnDef<QueueEn
       );
     },
     cell: ({row}) => <div className="text-center">{row.getValue("quantity")}</div>,
+    filterFn: exactNumberFilter,
   },
   {
     accessorKey: "createdAt",

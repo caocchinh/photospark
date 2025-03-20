@@ -1,7 +1,7 @@
 import {clsx, type ClassValue} from "clsx";
 import {twMerge} from "tailwind-merge";
 import {QueueEntry} from "@/components/ui/columns";
-
+import {QueueTable} from "@/drizzle/schema";
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -70,14 +70,7 @@ export const formatVietnameseDateUTC7 = (date: Date): string => {
   return date.toLocaleString("vi-VN", options);
 };
 
-export const transformQueueData = (queue: {
-  id: string;
-  quantity: number;
-  status: "pending" | "processing" | "completed" | "failed";
-  createdAt: Date;
-  price: number;
-  processedImageId: string;
-}): QueueEntry => {
+export const transformQueueData = (queue: typeof QueueTable.$inferSelect): QueueEntry => {
   return {
     ...queue,
     status: getVietnameseStatus(queue.status),

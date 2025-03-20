@@ -480,9 +480,9 @@ export const FILTERS: FilterType[] = [
 
 export const QUEUE_TITLE_MAPING = {
   id: "Mã đơn hàng",
+  processedImageId: "Mã ảnh",
   quantity: "Số lượng",
   status: "Trạng thái",
   createdAt: "Thời gian đặt",
   price: "Giá",
-  processedImageId: "Mã ảnh",
 };
