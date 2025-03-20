@@ -16,7 +16,7 @@ if (!fs.existsSync(logsDir)) {
 
 const io = new Server(6969, {
   cors: {
-    origin: ["http://localhost:8080"],
+    origin: ["http://localhost:8080", "http://localhost:5050"],
   },
   maxHttpBufferSize: Infinity,
 });

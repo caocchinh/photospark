@@ -72,13 +72,13 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="w-full">
-      <div className="flex items-center justify-between py-4">
+      <div className="flex items-center justify-between py-4 gap-2">
         {table.getColumn(filterColumn) ? (
           <Input
             placeholder={filterPlaceholder}
             value={(table.getColumn(filterColumn)?.getFilterValue() as string) ?? ""}
             onChange={(event) => table.getColumn(filterColumn)?.setFilterValue(event.target.value.toString())}
-            className="max-w-sm"
+            className="flex-1"
             aria-label={`Lọc bằng ${QUEUE_TITLE_MAPING[filterColumn as keyof typeof QUEUE_TITLE_MAPING].toLowerCase()}`}
           />
         ) : null}
@@ -99,6 +99,8 @@ export function DataTable<TData, TValue>({
                 return (
                   <DropdownMenuCheckboxItem
                     key={column.id}
+                    checked={column.getIsVisible()}
+                    onCheckedChange={(value) => column.toggleVisibility(!!value)}
                     className="capitalize"
                   >
                     {QUEUE_TITLE_MAPING[column.id as keyof typeof QUEUE_TITLE_MAPING]}
