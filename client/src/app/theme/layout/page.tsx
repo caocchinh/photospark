@@ -276,7 +276,7 @@ const LayoutPage = () => {
                   <AnimatedBackground
                     defaultValue={photo.quantity?.toString()}
                     onValueChange={(value) => {
-                      handleQuantityChange(parseInt(value!));
+                      handleQuantityChange(parseInt(value!) / (photo.frameType == "singular" ? 1 : 2));
                     }}
                     className="rounded-lg bg-green-700"
                     transition={{

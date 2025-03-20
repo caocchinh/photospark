@@ -70,7 +70,7 @@ const FilterPage = () => {
       socket.emit(
         "print",
         {
-          quantity: photo.frameType == "singular" ? photo.quantity : photo.quantity! / 2,
+          quantity: photo.quantity,
           dataURL: dataURL,
           theme: photo.theme!.name,
         },

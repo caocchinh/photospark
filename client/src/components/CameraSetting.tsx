@@ -77,14 +77,14 @@ const CameraSetting = () => {
 
   return (
     <AlertDialog
-      open={isOpen && autoSelectCountdown > 0}
+      open={isOpen && autoSelectCountdown > 2}
       onOpenChange={setIsOpen}
     >
       <AlertDialogTrigger asChild>
         <Button
           variant="outline"
           className="flex items-center justify-center gap-1 w-full"
-          disabled={autoSelectCountdown <= 0}
+          disabled={autoSelectCountdown <= 1}
         >
           <p> {t("Camera settings")}</p> <PiVideoCameraFill />
         </Button>
