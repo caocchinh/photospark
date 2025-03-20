@@ -32,7 +32,7 @@ const ThemePage = () => {
             name: name,
             frame: FrameOptions[name].filter((item) => item.type == photo.frameType)[0],
           },
-          quantity: 1 * (photo.frameType == "singular" ? 1 : 2),
+          quantity: 1,
         };
       }
       return prev;
