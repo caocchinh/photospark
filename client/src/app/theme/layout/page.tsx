@@ -274,7 +274,7 @@ const LayoutPage = () => {
                 <h1 className="text-5xl font-semibold uppercase text-wrap w-[100%] text-center">{t("Choose number of copies")}</h1>
                 <div className="flex gap-2 flex-wrap items-center justify-center w-[350px]">
                   <AnimatedBackground
-                    defaultValue={photo.quantity?.toString()}
+                    defaultValue={photo.frameType == "singular" ? photo.quantity?.toString() : (photo.quantity! * 2).toString()}
                     onValueChange={(value) => {
                       handleQuantityChange(parseInt(value!) / (photo.frameType == "singular" ? 1 : 2));
                     }}

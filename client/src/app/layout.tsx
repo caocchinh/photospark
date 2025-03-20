@@ -16,6 +16,7 @@ import {usePathname} from "next/navigation";
 import {ROUTES} from "@/constants/routes";
 import {Toaster} from "sonner";
 import CameraLabel from "@/components/CameraLabel";
+import AutoSelectCountDownSlider from "@/components/AutoSelectCountDownSlider";
 const Buffalo = localFont({
   src: "./fonts/BuffaloDemoVersionRegular-axZ1R.ttf",
   variable: "--font-buffalo",
@@ -57,6 +58,7 @@ export default function RootLayout({
                 bg-no-repeat bg-cover min-h-screen flex items-center justify-center flex-col w-full`}
             >
               {pathName == ROUTES.HOME && <CameraLabel />}
+              {(pathName === ROUTES.HOME || pathName === ROUTES.THEME || pathName === ROUTES.LAYOUT) && <AutoSelectCountDownSlider />}
 
               <CollabTransitionOverlay />
               <PageTransitionEffect>

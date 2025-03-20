@@ -10,8 +10,8 @@ import usePreventNavigation from "@/hooks/usePreventNavigation";
 import {createProcessedImage} from "@/server/actions";
 import {ROUTES} from "@/constants/routes";
 import {useSocket} from "@/context/SocketContext";
-import CameraLoading from "@/components/CameraLoading";
 import {CountdownCircleTimer} from "react-countdown-circle-timer";
+import CameraLoading from "@/components/CameraLoading";
 
 const CapturePage = () => {
   const {setPhoto, photo, cameraStream, startCamera, stopCamera, isOnline} = usePhoto();
@@ -321,15 +321,32 @@ const CapturePage = () => {
                 </div>
               )}
             </div>
+
             {isCountingDown && (
-              <div className="mt-3 flex items-center justify-center">
-                <span className="font-bold text-5xl">
-                  <SlidingNumber
-                    value={cycles}
-                    padStart={false}
-                  />
-                </span>
-                <h1 className="font-bold text-5xl text-center">/{NUM_OF_CAPTURE_IMAGE}</h1>
+              <div className="mt-3 relative">
+                <div className="flex items-center justify-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                  <span className="font-bold text-4xl">
+                    <SlidingNumber
+                      value={cycles}
+                      padStart={false}
+                    />
+                  </span>
+                  <h1 className="font-bold text-4xl text-center">/{NUM_OF_CAPTURE_IMAGE}</h1>
+                </div>
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                  <CountdownCircleTimer
+                    isPlaying={isCountingDown && isSocketConnected && isOnline && cycles < NUM_OF_CAPTURE_IMAGE}
+                    strokeWidth={9}
+                    trailStrokeWidth={9}
+                    updateInterval={1}
+                    size={135}
+                    strokeLinecap="square"
+                    key={`${cycles}-${count}`}
+                    initialRemainingTime={count}
+                    duration={CAPTURE_DURATION}
+                    colors="#000000"
+                  ></CountdownCircleTimer>
+                </div>
               </div>
             )}
           </div>

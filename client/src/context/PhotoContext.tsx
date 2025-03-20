@@ -44,7 +44,7 @@ export const PhotoProvider = ({children}: {children: ReactNode}) => {
   const [photo, setPhoto] = useState<PhotoOptions<ValidThemeType> | undefined>(undefined);
   const photoRef = useRef(photo);
   const [autoSelectCountdown, setAutoSelectCountdown] = useState(AUTO_SELECT_COUNTDOWN_DURATION);
-  const pathname = usePathname();
+  const pathName = usePathname();
   const [shouldRunCountdown, setShouldRunCountdown] = useState(false);
   const [cameraConstraints, setCameraConstraints] = useState<MediaStreamConstraints | null>(null);
   const [cameraStream, setCameraStream] = useState<MediaStream | null>(null);
@@ -54,7 +54,7 @@ export const PhotoProvider = ({children}: {children: ReactNode}) => {
   const [camera, setCamera] = useState<Camera | null>(null);
   const [availableCameras, setAvailableCameras] = useState<Array<{deviceId: string; label: string}>>([]);
   const [isOnline, setIsOnline] = useState(true);
-  const isValidPageForCountdown = useMemo(() => pathname === ROUTES.HOME || pathname === ROUTES.THEME || pathname === ROUTES.LAYOUT, [pathname]);
+  const isValidPageForCountdown = useMemo(() => pathName === ROUTES.HOME || pathName === ROUTES.THEME || pathName === ROUTES.LAYOUT, [pathName]);
 
   useEffect(() => {
     const handleOnline = () => {
@@ -86,7 +86,7 @@ export const PhotoProvider = ({children}: {children: ReactNode}) => {
         setAutoSelectCountdown(AUTO_SELECT_COUNTDOWN_DURATION);
       }
     }
-  }, [autoSelectCountdown, isSocketConnected, isOnline, isValidPageForCountdown, pathname]);
+  }, [autoSelectCountdown, isSocketConnected, isOnline, isValidPageForCountdown, pathName]);
 
   useEffect(() => {
     if (autoSelectCountdown >= 0) {
@@ -197,7 +197,7 @@ export const PhotoProvider = ({children}: {children: ReactNode}) => {
       if (!cameraStream) {
         const cameraPromise = await navigator.mediaDevices.getUserMedia({
           video:
-            cameraConstraints && pathname != ROUTES.HOME
+            cameraConstraints && pathName != ROUTES.HOME
               ? cameraConstraints.video
               : {
                   width: {ideal: 1280},
@@ -215,7 +215,7 @@ export const PhotoProvider = ({children}: {children: ReactNode}) => {
       setCameraStream(null);
       throw err;
     }
-  }, [camera?.deviceId, cameraConstraints, cameraStream, pathname]);
+  }, [camera?.deviceId, cameraConstraints, cameraStream, pathName]);
 
   return (
     <PhotoContext.Provider
