@@ -15,99 +15,38 @@ import {
 
 import {ChevronDown, MoreHorizontal} from "lucide-react";
 
-import {getStatusColorDot, getStatusColor} from "@/lib/utils";
+import {getStatusColorDot, getStatusColor, getVietnameseStatus} from "@/lib/utils";
+import {QUEUE_TITLE_MAPING} from "@/constants/constants";
 
-export const initialData: Payment[] = [
-  {
-    id: "m5gr84i9",
-    amount: 316,
-    status: "success",
-    email: "ken99@yahoo.com",
-    name: "Ken Smith",
-  },
-  {
-    id: "3u1reuv4",
-    amount: 242,
-    status: "success",
-    email: "zoey22@gmail.com",
-    name: "Zoey Taylor",
-  },
-  {
-    id: "derv1ws0",
-    amount: 837,
-    status: "processing",
-    email: "marion5@yahoo.com",
-    name: "Marion Rodriguez",
-  },
-  {
-    id: "5kma53ae",
-    amount: 874,
-    status: "success",
-    email: "emma.johnson@example.com",
-    name: "Emma Johnson",
-  },
-  {
-    id: "bhqecj4p",
-    amount: 721,
-    status: "failed",
-    email: "thomas.davis@example.com",
-    name: "Thomas Davis",
-  },
-  {
-    id: "akoi3d3i",
-    amount: 603,
-    status: "pending",
-    email: "olivia.wilson@example.com",
-    name: "Olivia Wilson",
-  },
-  {
-    id: "dn7scsi5",
-    amount: 928,
-    status: "processing",
-    email: "william.martinez@example.com",
-    name: "William Martinez",
-  },
-  {
-    id: "fcj6r3ak",
-    amount: 512,
-    status: "success",
-    email: "sophia.brown@example.com",
-    name: "Sophia Brown",
-  },
-  {
-    id: "9plef23r",
-    amount: 429,
-    status: "failed",
-    email: "james.garcia@example.com",
-    name: "James Garcia",
-  },
-  {
-    id: "q7hw9rnh",
-    amount: 756,
-    status: "pending",
-    email: "ava.miller@example.com",
-    name: "Ava Miller",
-  },
-];
-
-export type Payment = {
+export type QueueEntry = {
   id: string;
-  amount: number;
-  status: "pending" | "processing" | "success" | "failed";
-  email: string;
-  name: string;
+  quantity: number;
+  status: "Chờ xử lý" | "Đang xử lý" | "Hoàn thành" | "Thất bại";
+  createdAt: string;
+  price: string;
+  processedImageId: string;
 };
 
-// Create a type for the action handlers
-export type PaymentActionHandlers = {
+export type QueueActionHandlers = {
   onDelete?: (id: string) => void;
   onCopy?: (id: string) => void;
-  onViewCustomer?: (payment: Payment) => void;
-  onViewDetails?: (payment: Payment) => void;
+  onViewDetails?: (queue: QueueEntry) => void;
+  onViewProcessedImage?: (processedImageId: string) => void;
 };
 
-// Define columns with action handlers instead of direct data manipulation
-export const columns = (actionHandlers?: PaymentActionHandlers): ColumnDef<Payment>[] => [
+/**
+ * Example of how to use transformQueueData function to prepare data for display:
+ *
+ * // In your component or data fetching logic:
+ * const transformedData = initialData.map(queue => transformQueueData(queue));
+ *
+ * // Then use transformedData with DataTable component
+ * <DataTable columns={columns(actionHandlers)} data={transformedData} />
+ *
+ * // For direct access to formatted values in the columns:
+ * // cell: ({row}) => <div>{row.original.dateDisplay}</div>
+ */
+export const columns = (actionHandlers?: QueueActionHandlers): ColumnDef<QueueEntry>[] => [
   {
     id: "select",
     header: ({table}) => (
@@ -129,38 +68,55 @@ export const columns = (actionHandlers?: PaymentActionHandlers): ColumnDef<Payme
     enableHiding: false,
   },
   {
-    accessorKey: "name",
+    accessorKey: "id",
     header: ({column}) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Name
+          {QUEUE_TITLE_MAPING.id}
           <ChevronDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
-    cell: ({row}) => <div className="font-medium">{row.getValue("name")}</div>,
+    cell: ({row}) => <div className="font-medium truncate max-w-[150px]">{row.getValue("id")}</div>,
   },
   {
-    accessorKey: "email",
+    accessorKey: "quantity",
     header: ({column}) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Email
+          {QUEUE_TITLE_MAPING.quantity}
           <ChevronDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
-    cell: ({row}) => <div className="lowercase">{row.getValue("email")}</div>,
-    filterFn: "includesString",
+    cell: ({row}) => <div className="text-center">{row.getValue("quantity")}</div>,
   },
   {
-    accessorKey: "amount",
+    accessorKey: "createdAt",
+    header: ({column}) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          {QUEUE_TITLE_MAPING.createdAt}
+          <ChevronDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({row}) => {
+      const date = row.getValue("createdAt") as string;
+      return <div>{date}</div>;
+    },
+  },
+  {
+    accessorKey: "price",
     header: ({column}) => {
       return (
         <div className="text-right flex items-center justify-end">
@@ -168,20 +124,14 @@ export const columns = (actionHandlers?: PaymentActionHandlers): ColumnDef<Payme
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
-            Amount
+            {QUEUE_TITLE_MAPING.price}
             <ChevronDown className="ml-2 h-4 w-4" />
           </Button>
         </div>
       );
     },
     cell: ({row}) => {
-      const amount = parseFloat(row.getValue("amount"));
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount);
-
-      return <div className="text-right font-medium">{formatted}</div>;
+      return <div className="text-right font-medium">{row.getValue("price")}</div>;
     },
   },
   {
@@ -192,7 +142,7 @@ export const columns = (actionHandlers?: PaymentActionHandlers): ColumnDef<Payme
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Status
+          {QUEUE_TITLE_MAPING.status}
           <ChevronDown className="ml-2 h-4 w-4" />
         </Button>
       );
@@ -202,7 +152,7 @@ export const columns = (actionHandlers?: PaymentActionHandlers): ColumnDef<Payme
       return (
         <div className="flex items-center">
           <div className={`w-2 h-2 rounded-full mr-2 ${getStatusColorDot(status)}`}></div>
-          <div className={`capitalize ${getStatusColor(status)}`}>{status}</div>
+          <div className={`${getStatusColor(status)}`}>{getVietnameseStatus(status)}</div>
         </div>
       );
     },
@@ -210,7 +160,7 @@ export const columns = (actionHandlers?: PaymentActionHandlers): ColumnDef<Payme
   {
     id: "actions",
     cell: ({row}) => {
-      const payment = row.original;
+      const queue = row.original;
 
       return (
         <DropdownMenu>
@@ -226,16 +176,16 @@ export const columns = (actionHandlers?: PaymentActionHandlers): ColumnDef<Payme
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => actionHandlers?.onCopy?.(payment.id)}>Copy payment ID</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => actionHandlers?.onCopy?.(queue.id)}>Copy queue ID</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => actionHandlers?.onViewCustomer?.(payment)}>View customer</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => actionHandlers?.onViewDetails?.(payment)}>View payment details</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => actionHandlers?.onViewDetails?.(queue)}>View queue details</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => actionHandlers?.onViewProcessedImage?.(queue.processedImageId)}>View processed image</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={() => actionHandlers?.onDelete?.(payment.id)}
+              onClick={() => actionHandlers?.onDelete?.(queue.id)}
               className="text-red-600 focus:text-red-600"
             >
-              Delete payment
+              Delete queue
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -6,7 +6,10 @@
     "dev": "next dev -p 5050",
     "build": "next build",
     "start": "next start -p 5050",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.10.4",

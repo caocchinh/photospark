@@ -22,7 +22,7 @@ import {Button} from "./button";
 import {DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger} from "./dropdown-menu";
 import {Input} from "./input";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "./table";
-
+import {QUEUE_TITLE_MAPING} from "@/constants/constants";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -33,8 +33,8 @@ interface DataTableProps<TData, TValue> {
 export function DataTable<TData, TValue>({
   columns,
   data,
-  filterColumn = "name",
-  filterPlaceholder = "Filter by name...",
+  filterColumn = "id",
+  filterPlaceholder = `Lọc bằng ${QUEUE_TITLE_MAPING[filterColumn as keyof typeof QUEUE_TITLE_MAPING]}`,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -75,7 +75,7 @@ export function DataTable<TData, TValue>({
             value={(table.getColumn(filterColumn)?.getFilterValue() as string) ?? ""}
             onChange={(event) => table.getColumn(filterColumn)?.setFilterValue(event.target.value)}
             className="max-w-sm"
-            aria-label={`Filter by ${filterColumn}`}
+            aria-label={`Lọc bằng ${QUEUE_TITLE_MAPING[filterColumn as keyof typeof QUEUE_TITLE_MAPING]}`}
           />
         ) : null}
         <DropdownMenu>
@@ -84,13 +84,13 @@ export function DataTable<TData, TValue>({
               variant="outline"
               className="ml-auto"
             >
-              Columns <ChevronDown className="ml-2 h-4 w-4" />
+              Cột <ChevronDown className="ml-2 h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             {table
               .getAllColumns()
-              .filter((column) => column.getCanHide())
+              .filter((column) => column.getCanHide() && column.id !== "actions")
               .map((column) => {
                 return (
                   <DropdownMenuCheckboxItem
@@ -99,7 +99,7 @@ export function DataTable<TData, TValue>({
                     checked={column.getIsVisible()}
                     onCheckedChange={(value) => column.toggleVisibility(!!value)}
                   >
-                    {column.id}
+                    {QUEUE_TITLE_MAPING[column.id as keyof typeof QUEUE_TITLE_MAPING]}
                   </DropdownMenuCheckboxItem>
                 );
               })}
@@ -148,7 +148,7 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  Không có kết quả nào
                 </TableCell>
               </TableRow>
             )}

@@ -16,10 +16,6 @@ export const ProcessedImageTable = pgTable("processedImage", {
   slotCount: integer("slotCount").notNull(),
   filter: text("filter").default("Original"),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
-  updatedAt: timestamp("updatedAt")
-    .notNull()
-    .defaultNow()
-    .$onUpdate(() => new Date()),
 });
 
 export const QueueTable = pgTable("queue", {
@@ -27,10 +23,6 @@ export const QueueTable = pgTable("queue", {
   quantity: integer("quantity").notNull(),
   status: QueueStatus("status").default("pending").notNull(),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
-  updatedAt: timestamp("updatedAt")
-    .notNull()
-    .defaultNow()
-    .$onUpdate(() => new Date()),
   price: real("price").notNull(),
   processedImageId: uuid("processedImageId")
     .notNull()
