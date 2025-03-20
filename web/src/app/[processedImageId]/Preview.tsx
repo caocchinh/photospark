@@ -5,7 +5,6 @@ import {Stage as StageElement} from "konva/lib/Stage";
 import {cn, generateTimestampFilename} from "@/lib/utils";
 import Link from "next/link";
 import {GlowEffect} from "@/components/ui/glow-effect";
-
 import {usePhoto} from "@/context/PhotoContext";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import {AiOutlineDownload} from "react-icons/ai";
@@ -13,6 +12,7 @@ import {MdModeEdit} from "react-icons/md";
 import {IoCopySharp} from "react-icons/io5";
 import FrameStage from "@/components/FrameStage";
 import GeneralError from "@/components/GeneralError";
+
 const Preview = ({
   processedImage,
   images,

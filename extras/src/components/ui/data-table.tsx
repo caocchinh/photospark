@@ -31,6 +31,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
   filterColumn?: string;
   filterPlaceholder?: string;
+  setProcessedImageId: (id: string) => void;
 }
 
 export function DataTable<TData, TValue>({
@@ -38,6 +39,7 @@ export function DataTable<TData, TValue>({
   data,
   filterColumn = "id",
   filterPlaceholder = `Lọc bằng ${QUEUE_TITLE_MAPING[filterColumn as keyof typeof QUEUE_TITLE_MAPING].toLowerCase()}`,
+  setProcessedImageId,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -147,7 +149,7 @@ export function DataTable<TData, TValue>({
                     </TableRow>
                   </ContextMenuTrigger>
                   <ContextMenuContent className="w-64">
-                    <ContextMenuItem>Preview hình</ContextMenuItem>
+                    <ContextMenuItem onClick={() => setProcessedImageId(row.getValue("processedImageId") as string)}>Preview hình</ContextMenuItem>
                   </ContextMenuContent>
                 </ContextMenu>
               ))
