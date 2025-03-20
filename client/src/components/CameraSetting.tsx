@@ -77,7 +77,7 @@ const CameraSetting = () => {
 
   return (
     <AlertDialog
-      open={isOpen && autoSelectCountdown > 2}
+      open={isOpen && autoSelectCountdown > 1}
       onOpenChange={setIsOpen}
     >
       <AlertDialogTrigger asChild>

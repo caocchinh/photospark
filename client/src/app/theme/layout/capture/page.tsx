@@ -3,7 +3,7 @@ import {usePhoto} from "@/context/PhotoContext";
 import {cn} from "@/lib/utils";
 import {useState, useEffect, useRef, useCallback} from "react";
 import useSound from "use-sound";
-import {NUM_OF_IMAGE} from "@/constants/constants";
+import {NUM_OF_CAPTURE_IMAGE, CAPTURE_DURATION} from "@/constants/constants";
 import {uploadImageToR2} from "@/lib/r2";
 import {SlidingNumber} from "@/components/ui/sliding-number";
 import usePreventNavigation from "@/hooks/usePreventNavigation";
@@ -11,14 +11,14 @@ import {createProcessedImage} from "@/server/actions";
 import {ROUTES} from "@/constants/routes";
 import {useSocket} from "@/context/SocketContext";
 import CameraLoading from "@/components/CameraLoading";
+import {CountdownCircleTimer} from "react-countdown-circle-timer";
+
 const CapturePage = () => {
-  const duration = 2;
   const {setPhoto, photo, cameraStream, startCamera, stopCamera, isOnline} = usePhoto();
-  const [count, setCount] = useState(duration);
+  const [count, setCount] = useState(CAPTURE_DURATION);
   const [isCountingDown, setIsCountingDown] = useState(false);
   const [cycles, setCycles] = useState(1);
   const [videoIntrinsicSize, setVideoIntrinsicSize] = useState<{width: number; height: number} | null>(null);
-  const maxCycles = NUM_OF_IMAGE;
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const {isSocketConnected} = useSocket();
   const [isVideoRefReady, setIsVideoRefReady] = useState(false);
@@ -38,8 +38,8 @@ const CapturePage = () => {
 
   useEffect(() => {
     if (!photo) return navigateTo(ROUTES.HOME);
-    if (photo!.images!.length == maxCycles) return navigateTo(ROUTES.SELECT);
-  }, [photo, navigateTo, maxCycles]);
+    if (photo!.images!.length == NUM_OF_CAPTURE_IMAGE) return navigateTo(ROUTES.SELECT);
+  }, [photo, navigateTo]);
 
   useEffect(() => {
     const initializeProcessedImage = async () => {
@@ -106,7 +106,7 @@ const CapturePage = () => {
         context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
         const dataURL = canvas.toDataURL("image/jpeg", 1.0);
         setImage((prevItems) => [...prevItems, {id: cycles.toString(), data: dataURL}]);
-        if (cycles == maxCycles) return;
+        if (cycles == NUM_OF_CAPTURE_IMAGE) return;
 
         const r2Response = await uploadImageToR2(dataURL);
 
@@ -126,7 +126,7 @@ const CapturePage = () => {
         }
       }
     }
-  }, [cycles, maxCycles, mediaRecorder, navigateTo, photo, setPhoto, stopCamera, videoIntrinsicSize]);
+  }, [cycles, mediaRecorder, navigateTo, photo, setPhoto, stopCamera, videoIntrinsicSize]);
 
   const handleRecording = useCallback(() => {
     if (!videoRef.current?.srcObject) return;
@@ -221,26 +221,26 @@ const CapturePage = () => {
         }
       }
     };
-    if (!isCountingDown && cycles != maxCycles) {
+    if (!isCountingDown && cycles != NUM_OF_CAPTURE_IMAGE) {
       getVideo();
     }
-  }, [isCountingDown, handleRecording, cameraStream, isVideoRefReady, startCamera, cycles, maxCycles]);
+  }, [isCountingDown, handleRecording, cameraStream, isVideoRefReady, startCamera, cycles]);
 
   useEffect(() => {
     const timer = setInterval(async () => {
       if (isCountingDown && isSocketConnected && isOnline) {
-        if (count > 0 && cycles <= maxCycles) {
+        if (count > 0 && cycles <= NUM_OF_CAPTURE_IMAGE) {
           setCount((prevCount) => prevCount - 1);
           if (count == 1) {
             handleCapture();
             playCameraShutterSound();
           }
         }
-        if (count <= 0 && cycles < maxCycles && photo?.id) {
+        if (count <= 0 && cycles < NUM_OF_CAPTURE_IMAGE && photo?.id) {
           setCycles((prevCycle) => prevCycle + 1);
-          setCount(duration);
+          setCount(CAPTURE_DURATION);
         }
-        if (cycles == maxCycles && count <= 0 && uploadedImages.length == maxCycles - 1) {
+        if (cycles == NUM_OF_CAPTURE_IMAGE && count <= 0 && uploadedImages.length == NUM_OF_CAPTURE_IMAGE - 1) {
           if (mediaRecorder) {
             mediaRecorder.stop();
           }
@@ -268,11 +268,9 @@ const CapturePage = () => {
   }, [
     count,
     cycles,
-    duration,
     handleCapture,
     image,
     isCountingDown,
-    maxCycles,
     mediaRecorder,
     playCameraShutterSound,
     navigateTo,
@@ -302,7 +300,7 @@ const CapturePage = () => {
                   <div
                     className={cn(
                       "absolute top-1/2  left-1/2 text-8xl text-white text-center w-full",
-                      !isCountingDown || cycles > maxCycles || count === 0 ? "hidden" : null
+                      !isCountingDown || cycles > NUM_OF_CAPTURE_IMAGE || count === 0 ? "hidden" : null
                     )}
                     style={{
                       fontFamily: "var(--font-buffalo)",
@@ -331,7 +329,7 @@ const CapturePage = () => {
                     padStart={false}
                   />
                 </span>
-                <h1 className="font-bold text-5xl text-center">/{maxCycles}</h1>
+                <h1 className="font-bold text-5xl text-center">/{NUM_OF_CAPTURE_IMAGE}</h1>
               </div>
             )}
           </div>

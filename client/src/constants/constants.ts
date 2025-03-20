@@ -6,6 +6,10 @@ export const VALID_FRAME_TYPES = ["singular", "double"] as const;
 
 export const AUTO_SELECT_COUNTDOWN_DURATION = 65;
 
+export const NUM_OF_CAPTURE_IMAGE = 6;
+
+export const CAPTURE_DURATION = 2;
+
 export const ThemeSelectButton: ThemeSelectButtonType[] = [
   {
     title: "PROM",
@@ -429,8 +433,6 @@ export const FrameOptions: {
     },
   ],
 };
-
-export const NUM_OF_IMAGE = 6;
 
 export const FILTERS: FilterType[] = [
   {name: "Original", filter: null, value: null},
