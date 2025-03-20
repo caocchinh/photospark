@@ -2,7 +2,7 @@
 import * as React from "react";
 import {DataTable} from "@/components/ui/data-table";
 import {Search, ChevronDown} from "lucide-react";
-import {columns, QueueEntry, QueueActionHandlers} from "@/components/ui/columns";
+import {columns} from "@/components/ui/columns";
 import {useState} from "react";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
 import {Button} from "@/components/ui/button";
@@ -12,31 +12,10 @@ import {QueueTable} from "@/drizzle/schema";
 
 const Table = ({avaialbleQueues}: {avaialbleQueues: (typeof QueueTable.$inferSelect)[]}) => {
   const [selectedFilterColumn, setSelectedFilterColumn] = useState<string>("id");
-  const [data, setData] = useState<QueueEntry[]>(avaialbleQueues.map((item) => transformQueueData(item)));
-
-  const actionHandlers: QueueActionHandlers = {
-    onDelete: (id: string) => {
-      setData(data.filter((item) => item.id !== id));
-    },
-    onCopy: (id: string) => {
-      navigator.clipboard.writeText(id);
-    },
-    onViewDetails: (queue: QueueEntry) => {
-      const formattedPrice = new Intl.NumberFormat("vi-VN", {
-        style: "currency",
-        currency: "VND",
-        maximumFractionDigits: 0,
-      }).format(Number(queue.price));
-      window.alert(`View queue details: Quantity: ${queue.quantity}, Price: ${formattedPrice}`);
-    },
-    onViewProcessedImage: (processedImageId: string) => {
-      window.alert(`View processed image with ID: ${processedImageId}`);
-    },
-  };
 
   return (
-    <>
-      <div className="mb-4 flex items-center">
+    <div className="w-[50%]">
+      <div className="flex items-center">
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-2">
             <Search className="h-4 w-4 text-muted-foreground" />
@@ -67,12 +46,12 @@ const Table = ({avaialbleQueues}: {avaialbleQueues: (typeof QueueTable.$inferSel
       </div>
 
       <DataTable
-        columns={columns(actionHandlers)}
-        data={data}
+        columns={columns()}
+        data={avaialbleQueues.map((item) => transformQueueData(item))}
         filterColumn={selectedFilterColumn}
         filterPlaceholder={`Lọc bằng ${QUEUE_TITLE_MAPING[selectedFilterColumn as keyof typeof QUEUE_TITLE_MAPING].toLowerCase()}...`}
       />
-    </>
+    </div>
   );
 };
 

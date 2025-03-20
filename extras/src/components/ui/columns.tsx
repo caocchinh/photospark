@@ -4,16 +4,8 @@ import {ColumnDef, FilterFn} from "@tanstack/react-table";
 
 import {Button} from "@/components/ui/button";
 import {Checkbox} from "@/components/ui/checkbox";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
-import {ChevronDown, MoreHorizontal} from "lucide-react";
+import {ChevronDown} from "lucide-react";
 
 import {getStatusColorDot, getStatusColor, getVietnameseStatus} from "@/lib/utils";
 import {QUEUE_TITLE_MAPING} from "@/constants/constants";
@@ -27,13 +19,6 @@ export type QueueEntry = {
   processedImageId: string;
 };
 
-export type QueueActionHandlers = {
-  onDelete?: (id: string) => void;
-  onCopy?: (id: string) => void;
-  onViewDetails?: (queue: QueueEntry) => void;
-  onViewProcessedImage?: (processedImageId: string) => void;
-};
-
 const exactNumberFilter: FilterFn<QueueEntry> = (row, columnId, value) => {
   if (!value) return true;
 
@@ -45,7 +30,7 @@ const exactNumberFilter: FilterFn<QueueEntry> = (row, columnId, value) => {
   return true;
 };
 
-export const columns = (actionHandlers?: QueueActionHandlers): ColumnDef<QueueEntry>[] => [
+export const columns = (): ColumnDef<QueueEntry>[] => [
   {
     id: "select",
     header: ({table}) => (
@@ -169,41 +154,6 @@ export const columns = (actionHandlers?: QueueActionHandlers): ColumnDef<QueueEn
           <div className={`w-2 h-2 rounded-full mr-2 ${getStatusColorDot(status)}`}></div>
           <div className={`${getStatusColor(status)}`}>{getVietnameseStatus(status)}</div>
         </div>
-      );
-    },
-  },
-  {
-    id: "actions",
-    cell: ({row}) => {
-      const queue = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              className="h-8 w-8 p-0"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => actionHandlers?.onCopy?.(queue.id)}>Copy queue ID</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => actionHandlers?.onViewDetails?.(queue)}>View queue details</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => actionHandlers?.onViewProcessedImage?.(queue.processedImageId)}>View processed image</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => actionHandlers?.onDelete?.(queue.id)}
-              className="text-red-600 focus:text-red-600"
-            >
-              Delete queue
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
       );
     },
   },
