@@ -17,6 +17,7 @@ import Image from "next/image";
 import {GrPrint} from "react-icons/gr";
 import PrintServerAlert from "@/components/PrintServerAlert";
 import NetworkStatus from "@/components/NetworkStatus";
+import {useSocket} from "@/context/SocketContext";
 const Table = ({avaialbleQueues}: {avaialbleQueues: (typeof QueueTable.$inferSelect)[]}) => {
   const [selectedFilterColumn, setSelectedFilterColumn] = useState<string>("id");
   const [processedImageId, setProcessedImageId] = useState<string | null>(null);
@@ -26,6 +27,7 @@ const Table = ({avaialbleQueues}: {avaialbleQueues: (typeof QueueTable.$inferSel
   const [isRefreshing, setIsRefreshing] = useState(false);
   const stageRef = useRef<StageElement | null>(null);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const {isSocketConnected} = useSocket();
 
   const refreshQueues = async () => {
     setIsRefreshing(true);
@@ -62,7 +64,7 @@ const Table = ({avaialbleQueues}: {avaialbleQueues: (typeof QueueTable.$inferSel
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="ghost"
-                    className="border border-slate-300"
+                    className="border border-slate-300 cursor-pointer"
                   >
                     {QUEUE_TITLE_MAPING[selectedFilterColumn as keyof typeof QUEUE_TITLE_MAPING]}
                     <ChevronDown className="ml-2 h-4 w-4" />
@@ -91,7 +93,7 @@ const Table = ({avaialbleQueues}: {avaialbleQueues: (typeof QueueTable.$inferSel
             </Button>
             <Button
               className="border border-slate-300 flex-1 cursor-pointer"
-              disabled={!processedImage || !images || !imageLoaded}
+              disabled={!processedImage || !images || !imageLoaded || !isSocketConnected}
             >
               In
               <GrPrint
@@ -130,7 +132,7 @@ const Table = ({avaialbleQueues}: {avaialbleQueues: (typeof QueueTable.$inferSel
           </>
         ) : (
           <div className="flex flex-col items-center justify-center relative min-w-[500px] min-h-[500px]">
-            <h1 className="text-2xl font-semibold uppercase">Hãy chọn hình để bắt đầu</h1>
+            <h1 className="text-2xl font-semibold uppercase">Hãy chọn đơn hàng bắt đầu</h1>
             <Image
               src="/ass.gif"
               alt="twerk"
