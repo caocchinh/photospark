@@ -6,6 +6,8 @@ import {TextShimmer} from "@/components/ui/text-shimmer";
 import NavBar from "@/components/NavBar";
 import {SocketProvider} from "@/context/SocketContext";
 import {Sparkles} from "@/components/Sparkle";
+import {Toaster} from "@/components/ui/sonner";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -35,6 +37,7 @@ export default function RootLayout({
           />
         </head>
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+          <Toaster />
           {children}
           <NavBar />
           <footer className="w-full h-max fixed bottom-0 flex items-center justify-center bg-black overflow-hidden">

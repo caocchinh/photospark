@@ -19,6 +19,8 @@ import NetworkStatus from "@/components/NetworkStatus";
 import {useSocket} from "@/context/SocketContext";
 import ErrorDialog from "@/components/ErrorDialog";
 import Print from "@/components/Print";
+import {Label} from "@/components/ui/label";
+import {toast} from "sonner";
 const Table = ({availableQueues}: {availableQueues: (typeof QueueTable.$inferSelect)[]}) => {
   const placeholderImages = [
     {src: "/ass.gif", alt: "twerk", width: 100, height: 100},
@@ -39,6 +41,7 @@ const Table = ({availableQueues}: {availableQueues: (typeof QueueTable.$inferSel
   const [imageLoaded, setImageLoaded] = useState(false);
   const {isSocketConnected} = useSocket();
   const [isError, setIsError] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const refreshQueues = async () => {
     setIsRefreshing(true);
@@ -48,9 +51,53 @@ const Table = ({availableQueues}: {availableQueues: (typeof QueueTable.$inferSel
         throw new Error("Error fetching queues");
       } else {
         setQueues(newQueues.response!);
+        toast.success("Đã làm mới danh sách đơn hàng!", {
+          duration: 3000,
+          style: {
+            backgroundColor: "#5cb85c",
+            color: "white",
+          },
+          descriptionClassName: "!text-white font-medium",
+          className: "flex items-center justify-start flex-col gap-5 w-[300px]",
+          actionButtonStyle: {
+            backgroundColor: "white",
+            color: "black",
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            cursor: "pointer",
+          },
+          action: {
+            label: "Đóng",
+            onClick: () => toast.dismiss(),
+          },
+        });
       }
     } catch {
       setIsError(true);
+      toast.error("Đã làm mới danh sách đơn hàng thất bại!", {
+        duration: 3000,
+        style: {
+          backgroundColor: "#ef4444",
+          color: "white",
+        },
+        descriptionClassName: "!text-white font-medium",
+        className: "flex items-center justify-start flex-col gap-5 w-[300px]",
+        actionButtonStyle: {
+          backgroundColor: "white",
+          color: "black",
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          cursor: "pointer",
+        },
+        action: {
+          label: "Đóng",
+          onClick: () => toast.dismiss(),
+        },
+      });
     }
     setIsRefreshing(false);
   };
@@ -85,11 +132,17 @@ const Table = ({availableQueues}: {availableQueues: (typeof QueueTable.$inferSel
         <div className="flex items-start justify-between flex-col w-[50%]">
           <div className="flex items-center gap-2 w-full">
             <div className="flex items-center gap-2 ">
-              <div className="flex items-center gap-2">
-                <Search className="h-4 w-4 text-muted-foreground" />
-                <h3 className="text-sm font-medium">Lọc theo:</h3>
+              <div
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              >
+                <Search className="h-4 w-4 text-muted-foreground cursor-pointer" />
+                <Label className="text-sm font-medium cursor-pointer">Lọc theo:</Label>
               </div>
-              <DropdownMenu>
+              <DropdownMenu
+                open={isDropdownOpen}
+                onOpenChange={setIsDropdownOpen}
+              >
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="ghost"
@@ -103,7 +156,10 @@ const Table = ({availableQueues}: {availableQueues: (typeof QueueTable.$inferSel
                   {Object.keys(availableQueues[0]).map((columnName) => (
                     <DropdownMenuItem
                       key={columnName}
-                      onClick={() => setSelectedFilterColumn(columnName)}
+                      onClick={() => {
+                        setSelectedFilterColumn(columnName);
+                        setIsDropdownOpen(false);
+                      }}
                     >
                       {QUEUE_TITLE_MAPING[columnName as keyof typeof QUEUE_TITLE_MAPING]}
                     </DropdownMenuItem>

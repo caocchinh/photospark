@@ -19,10 +19,13 @@ import {Stage as StageElement} from "konva/lib/Stage";
 import {Card, CardContent, CardHeader, CardTitle} from "./ui/card";
 import {PiCubeLight} from "react-icons/pi";
 import {TextShimmer} from "./ui/text-shimmer";
-import {formatVietnameseDateUTC7} from "@/lib/utils";
+import {cn, formatVietnameseDateUTC7} from "@/lib/utils";
 import {useSocket} from "@/context/SocketContext";
 import {updateQueueStatus} from "@/server/actions";
 import LoadingSpinner from "./LoadingSpinner";
+import {RxCross2} from "react-icons/rx";
+import {toast} from "sonner";
+
 interface PrintProps {
   processedImage: typeof ProcessedImageTable.$inferSelect;
   images: (typeof ImageTable.$inferSelect)[];
@@ -33,7 +36,9 @@ interface PrintProps {
 const Print = ({processedImage, images, queue, refreshQueues}: PrintProps) => {
   const [isPrinting, setIsPrinting] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [isPrinted, setIsPrinted] = useState(false);
+  const [isAlreadyPrintedDialogOpen, setIsAlreadyPrintedDialogOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [countdown, setCountdown] = useState(4);
   const stageRef = useRef<StageElement | null>(null);
   const {socket, isSocketConnected} = useSocket();
@@ -51,6 +56,13 @@ const Print = ({processedImage, images, queue, refreshQueues}: PrintProps) => {
       if (timer) clearTimeout(timer);
     };
   }, [countdown]);
+
+  useEffect(() => {
+    if (queue?.status === "completed" && !isPrinted && isDialogOpen) {
+      console.log("fuck off");
+      setIsAlreadyPrintedDialogOpen(true);
+    }
+  }, [queue, isPrinted, isDialogOpen]);
 
   const printImage = useCallback(async () => {
     if (stageRef.current && imageLoaded && processedImage && socket && processedImage.id) {
@@ -72,21 +84,68 @@ const Print = ({processedImage, images, queue, refreshQueues}: PrintProps) => {
         },
         async (response: {success: boolean; message?: string}) => {
           console.log("Print event emitted:", response);
-          setIsPrinting(false);
           if (response.success) {
+            setIsPrinting(false);
+            setIsPrinted(true);
+            toast.success("Đã đặt in thành công!", {
+              description: `Đơn hàng ${queue.id} đã được đặt in thành công!`,
+              duration: 5000,
+              style: {
+                backgroundColor: "#5cb85c",
+                color: "white",
+              },
+              descriptionClassName: "!text-white font-medium",
+              className: "flex items-center justify-start flex-col gap-5 w-[300px]",
+              actionButtonStyle: {
+                backgroundColor: "white",
+                color: "black",
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer",
+              },
+              action: {
+                label: "Đóng",
+                onClick: () => toast.dismiss(),
+              },
+            });
             try {
               const updateStatus = await updateQueueStatus(queue.id, "completed");
               if (updateStatus.error) {
                 throw new Error("Failed to print");
               } else {
                 console.log("Printed sucessfully to database!");
-                setDialogOpen(false);
+                setIsDialogOpen(false);
                 await refreshQueues();
               }
             } catch (error) {
               console.error("Error printing:", error);
             }
           } else {
+            toast.error("Đã in thất bại!", {
+              description: `Đơn hàng ${queue.id} đã in thất bại!`,
+              duration: 5000,
+              style: {
+                backgroundColor: "#ef4444",
+                color: "white",
+              },
+              descriptionClassName: "!text-white font-medium",
+              className: "flex items-center justify-start flex-col gap-5 w-[300px]",
+              actionButtonStyle: {
+                backgroundColor: "white",
+                color: "black",
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer",
+              },
+              action: {
+                label: "Đóng",
+                onClick: () => toast.dismiss(),
+              },
+            });
             try {
               const updateStatus = await updateQueueStatus(queue.id, "failed");
               if (updateStatus.error) {
@@ -104,19 +163,20 @@ const Print = ({processedImage, images, queue, refreshQueues}: PrintProps) => {
   }, [imageLoaded, isPrinting, isSocketConnected, processedImage, queue, socket, refreshQueues]);
 
   const handleDialogChange = (open: boolean) => {
-    setDialogOpen(open);
+    setIsPrinted(false);
+    setIsDialogOpen(open);
     setCountdown(4);
   };
 
   return (
     <AlertDialog
-      open={dialogOpen}
+      open={isDialogOpen}
       onOpenChange={handleDialogChange}
     >
       <AlertDialogTrigger asChild>
         <Button
           className="border border-slate-300 flex-1 cursor-pointer w-full"
-          onClick={() => setDialogOpen(true)}
+          onClick={() => setIsDialogOpen(true)}
         >
           In
           <GrPrint
@@ -127,6 +187,11 @@ const Print = ({processedImage, images, queue, refreshQueues}: PrintProps) => {
       </AlertDialogTrigger>
       {processedImage && images && queue && (
         <AlertDialogContent className="min-w-[90vw] min-h-[90vh] flex flex-col items-center justify-between">
+          <RxCross2
+            className={cn("absolute top-[20px] right-[20px] cursor-pointer", isPrinting && "pointer-events-none")}
+            size={25}
+            onClick={() => setIsDialogOpen(false)}
+          />
           <AlertDialogHeader className="text-center flex items-center justify-center">
             <AlertDialogTitle className="">
               <TextShimmer
@@ -134,10 +199,10 @@ const Print = ({processedImage, images, queue, refreshQueues}: PrintProps) => {
                 duration={5}
                 spread={4}
               >
-                Hãy kiểm tra lại thông tin kỹ trước khi in
+                Hãy kiểm tra lại kỹ thông tin trước khi in
               </TextShimmer>
             </AlertDialogTitle>
-            <AlertDialogDescription className="text-center text-red-500 text-xl">Khi đã in, không thể hủy bỏ được!</AlertDialogDescription>
+            <AlertDialogDescription className="text-center text-red-500 text-xl">Khi đã in, không thể hủy được!</AlertDialogDescription>
           </AlertDialogHeader>
           <div className="flex flex-row items-center justify-center">
             <div className="relative h-[550px] bottom-[75px]">
@@ -179,7 +244,7 @@ const Print = ({processedImage, images, queue, refreshQueues}: PrintProps) => {
                 <div className="border rounded-md p-4 bg-yellow-50 flex-1 w-full flex items-center justify-center">
                   <p className="text-center text-lg">Sau khi in, vui lòng kiểm tra lại số lượng.</p>
                 </div>
-                <AlertDialog defaultOpen={queue.status === "completed"}>
+                <AlertDialog open={isAlreadyPrintedDialogOpen}>
                   <AlertDialogTrigger asChild>
                     <Button
                       onClick={printImage}
@@ -193,16 +258,24 @@ const Print = ({processedImage, images, queue, refreshQueues}: PrintProps) => {
                   <AlertDialogContent>
                     <AlertDialogHeader>
                       <AlertDialogTitle>Đơn này đã được in thành công!</AlertDialogTitle>
-                      <AlertDialogDescription>Bạn có chắc chắn muốn in lại? </AlertDialogDescription>
+                      <AlertDialogDescription>Bạn có chắc chắn muốn in lại?</AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogCancel
-                        onClick={() => setDialogOpen(false)}
-                        className="cursor-pointer"
+                        onClick={() => {
+                          setIsDialogOpen(false);
+                          setIsAlreadyPrintedDialogOpen(false);
+                        }}
+                        className="cursor-pointer bg-red-500 hover:bg-red-600 hover:text-white text-white"
                       >
                         Hủy
                       </AlertDialogCancel>
-                      <AlertDialogAction className="cursor-pointer">Chắc chắn</AlertDialogAction>
+                      <AlertDialogAction
+                        className="cursor-pointer"
+                        onClick={() => setIsAlreadyPrintedDialogOpen(false)}
+                      >
+                        Chắc chắn
+                      </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
@@ -211,7 +284,7 @@ const Print = ({processedImage, images, queue, refreshQueues}: PrintProps) => {
           </div>
           <AlertDialogFooter className="w-full">
             <AlertDialogCancel
-              className="w-full cursor-pointer"
+              className="w-full cursor-pointer bg-red-500 hover:bg-red-600 hover:text-white text-white"
               disabled={isPrinting}
             >
               Hủy

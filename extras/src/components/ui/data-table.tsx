@@ -14,9 +14,8 @@ import {
   useReactTable,
   PaginationState,
 } from "@tanstack/react-table";
-
 import {ChevronDown, ChevronLeft, ChevronRight, Check} from "lucide-react";
-
+import {RxCross2} from "react-icons/rx";
 import {Button} from "./button";
 import {DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuItem} from "./dropdown-menu";
 import {Input} from "./input";
@@ -56,6 +55,7 @@ export function DataTable<TData, TValue>({
     pageIndex: 0,
     pageSize: 10,
   });
+  const [isPageSizeDropdownOpen, setIsPageSizeDropdownOpen] = useState(false);
 
   const table = useReactTable({
     data,
@@ -97,13 +97,20 @@ export function DataTable<TData, TValue>({
     <div className="w-full">
       <div className="flex items-center justify-between py-4 gap-2">
         {table.getColumn(filterColumn) ? (
-          <Input
-            placeholder={filterPlaceholder}
-            value={(table.getColumn(filterColumn)?.getFilterValue() as string) ?? ""}
-            onChange={(event) => table.getColumn(filterColumn)?.setFilterValue(event.target.value.toString())}
-            className="flex-1"
-            aria-label={`Lọc bằng ${QUEUE_TITLE_MAPING[filterColumn as keyof typeof QUEUE_TITLE_MAPING].toLowerCase()}`}
-          />
+          <div className="flex-1 relative ">
+            <Input
+              placeholder={filterPlaceholder}
+              value={(table.getColumn(filterColumn)?.getFilterValue() as string) ?? ""}
+              onChange={(event) => table.getColumn(filterColumn)?.setFilterValue(event.target.value.toString())}
+              className="w-full"
+              aria-label={`Lọc bằng ${QUEUE_TITLE_MAPING[filterColumn as keyof typeof QUEUE_TITLE_MAPING].toLowerCase()}`}
+            />
+            <RxCross2
+              className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer text-red-500"
+              size={20}
+              onClick={() => table.getColumn(filterColumn)?.setFilterValue("")}
+            />
+          </div>
         ) : null}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -191,8 +198,16 @@ export function DataTable<TData, TValue>({
         <div className="text-sm text-muted-foreground">Tổng {table.getFilteredRowModel().rows.length} đơn hàng</div>
 
         <div className="flex items-center space-x-2">
-          <p className="text-sm font-medium">Số dòng trên trang:</p>
-          <DropdownMenu>
+          <p
+            className="text-sm font-medium cursor-pointer"
+            onClick={() => setIsPageSizeDropdownOpen(!isPageSizeDropdownOpen)}
+          >
+            Số dòng trên trang:
+          </p>
+          <DropdownMenu
+            open={isPageSizeDropdownOpen}
+            onOpenChange={setIsPageSizeDropdownOpen}
+          >
             <DropdownMenuTrigger asChild>
               <Button
                 variant="outline"
@@ -208,7 +223,10 @@ export function DataTable<TData, TValue>({
               {PAGE_SIZE_OPTIONS.map((size) => (
                 <DropdownMenuItem
                   key={size}
-                  onClick={() => handlePageSizeChange(size)}
+                  onClick={() => {
+                    handlePageSizeChange(size);
+                    setIsPageSizeDropdownOpen(false);
+                  }}
                 >
                   {size}
                   {pagination.pageSize === size && <Check className="ml-2 h-4 w-4" />}
