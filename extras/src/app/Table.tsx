@@ -130,6 +130,7 @@ const Table = ({availableQueues}: {availableQueues: (typeof QueueTable.$inferSel
                 processedImage={processedImage!}
                 images={images!}
                 queue={queues.find((queue) => queue.id === queueId)!}
+                refreshQueues={refreshQueues}
               />
             </div>
           </div>

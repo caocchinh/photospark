@@ -213,7 +213,7 @@ const CapturePage = () => {
               setTimeout(() => {
                 setIsCountingDown(true);
                 handleRecording();
-              }, 2000);
+              }, 2500);
             });
           };
         } catch (error) {

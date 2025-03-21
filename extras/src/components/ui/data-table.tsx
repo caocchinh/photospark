@@ -179,6 +179,8 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
       <div className="flex items-center justify-between py-4 w-full">
+        <div className="text-sm text-muted-foreground">Tổng {table.getFilteredRowModel().rows.length} đơn hàng</div>
+
         <div className="flex items-center space-x-2">
           <p className="text-sm font-medium">Số dòng trên trang:</p>
           <DropdownMenu>
@@ -206,6 +208,7 @@ export function DataTable<TData, TValue>({
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
+
         <div className="flex items-center justify-center gap-4">
           <div className="flex w-max items-center justify-center text-sm font-medium">
             Trang {table.getState().pagination.pageIndex + 1} trên {table.getPageCount()}

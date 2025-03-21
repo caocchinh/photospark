@@ -7,7 +7,7 @@ import {Image as KonvaImage, Rect} from "react-konva";
 import {Layer, Stage} from "react-konva";
 import SelectedImage from "@/components/SelectedImage";
 import {Button} from "@/components/ui/button";
-import {FILTERS, FRAME_HEIGHT, FRAME_WIDTH, IMAGE_HEIGHT, IMAGE_WIDTH, OFFSET_X, OFFSET_Y} from "@/constants/constants";
+import {FILTER_SELECT_DURATION, FILTERS, FRAME_HEIGHT, FRAME_WIDTH, IMAGE_HEIGHT, IMAGE_WIDTH, OFFSET_X, OFFSET_Y} from "@/constants/constants";
 import {cn} from "@/lib/utils";
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {Stage as StageElement} from "konva/lib/Stage";
@@ -43,7 +43,7 @@ const FilterPage = () => {
   const stageRef = useRef<StageElement | null>(null);
   const {socket, isSocketConnected} = useSocket();
   const [isMediaUploaded, setIsMediaUploaded] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(99999);
+  const [timeLeft, setTimeLeft] = useState(FILTER_SELECT_DURATION);
   const [printed, setPrinted] = useState(false);
 
   const printImage = useCallback(async () => {

@@ -8,7 +8,11 @@ export const AUTO_SELECT_COUNTDOWN_DURATION = 65;
 
 export const NUM_OF_CAPTURE_IMAGE = 6;
 
-export const CAPTURE_DURATION = 10;
+export const CAPTURE_DURATION = 3;
+
+export const FILTER_SELECT_DURATION = 25;
+
+export const IMAGE_SELECT_DURATION = 30;
 
 export const ThemeSelectButton: ThemeSelectButtonType[] = [
   {

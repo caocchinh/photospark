@@ -1,6 +1,8 @@
 "use server";
 
 import {db} from "@/drizzle/db";
+import {QueueTable} from "@/drizzle/schema";
+import {eq} from "drizzle-orm";
 
 export async function getAllQueues() {
   const queues = await db.query.QueueTable.findMany();
@@ -28,4 +30,12 @@ export async function getImages(processedImageId: string) {
     return {error: true};
   }
   return {error: false, response: images};
+}
+
+export async function updateQueueStatus(queueId: string, status: "pending" | "processing" | "completed" | "failed") {
+  const queue = await db.update(QueueTable).set({status}).where(eq(QueueTable.id, queueId));
+  if (!queue) {
+    return {error: true};
+  }
+  return {error: false};
 }

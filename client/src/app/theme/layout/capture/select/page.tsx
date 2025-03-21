@@ -9,7 +9,7 @@ import {Image as KonvaImage} from "react-konva";
 import Image from "next/image";
 import SelectedImage from "@/components/SelectedImage";
 import Link from "next/link";
-import {FRAME_HEIGHT, FRAME_WIDTH, IMAGE_HEIGHT, IMAGE_WIDTH, OFFSET_X, OFFSET_Y} from "@/constants/constants";
+import {FRAME_HEIGHT, FRAME_WIDTH, IMAGE_HEIGHT, IMAGE_WIDTH, OFFSET_X, OFFSET_Y, IMAGE_SELECT_DURATION} from "@/constants/constants";
 import {uploadImageToR2} from "@/lib/r2";
 import {MdOutlineCloudDone} from "react-icons/md";
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -101,7 +101,7 @@ const PrintPage = () => {
   const [selectedImage, setSelectedImage] = useState<Array<{id: string; data: string; href: string} | null>>(
     Array.from({length: photo ? photo.theme!.frame.slotCount : 0}, () => null)
   );
-  const [timeLeft, setTimeLeft] = useState(99999);
+  const [timeLeft, setTimeLeft] = useState(IMAGE_SELECT_DURATION);
   const [isTimeOver, setIsTimeOver] = useState(false);
   const photoRef = useRef(photo);
   const [lastRemovedImage, setLastRemovedImage] = useState<number>(photo ? photo.theme!.frame.slotCount - 1 : 0);
