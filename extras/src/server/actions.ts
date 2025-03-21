@@ -11,14 +11,18 @@ export async function getProcessedImage(processedImageId: string) {
   const image = await db.query.ProcessedImageTable.findFirst({
     where: (image, {eq}) => eq(image.id, processedImageId),
   });
-  console.log(image);
-  return image;
+  if (!image) {
+    return {error: true};
+  }
+  return {error: false, response: image};
 }
 
 export async function getImages(processedImageId: string) {
   const images = await db.query.ImageTable.findMany({
     where: (image, {eq}) => eq(image.proccessedImageId, processedImageId),
   });
-  console.log(images);
-  return images;
+  if (!images) {
+    return {error: true};
+  }
+  return {error: false, response: images};
 }

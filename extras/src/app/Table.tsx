@@ -18,6 +18,8 @@ import {GrPrint} from "react-icons/gr";
 import PrintServerAlert from "@/components/PrintServerAlert";
 import NetworkStatus from "@/components/NetworkStatus";
 import {useSocket} from "@/context/SocketContext";
+import ErrorDialog from "@/components/ErrorDialog";
+
 const Table = ({avaialbleQueues}: {avaialbleQueues: (typeof QueueTable.$inferSelect)[]}) => {
   const [selectedFilterColumn, setSelectedFilterColumn] = useState<string>("id");
   const [processedImageId, setProcessedImageId] = useState<string | null>(null);
@@ -28,6 +30,7 @@ const Table = ({avaialbleQueues}: {avaialbleQueues: (typeof QueueTable.$inferSel
   const stageRef = useRef<StageElement | null>(null);
   const [imageLoaded, setImageLoaded] = useState(false);
   const {isSocketConnected} = useSocket();
+  const [isError, setIsError] = useState(false);
 
   const refreshQueues = async () => {
     setIsRefreshing(true);
@@ -39,12 +42,22 @@ const Table = ({avaialbleQueues}: {avaialbleQueues: (typeof QueueTable.$inferSel
   useEffect(() => {
     const fetchProcessedImage = async () => {
       if (processedImageId) {
-        const processedImage = await getProcessedImage(processedImageId);
-        setProcessedImage(processedImage || null);
-        const images = await getImages(processedImageId);
-        setImages(images);
+        try {
+          const processedImage = await getProcessedImage(processedImageId);
+          const images = await getImages(processedImageId);
+          if (processedImage.error || images.error) {
+            throw new Error("Processed image or images not found");
+          } else {
+            setProcessedImage(processedImage.response || null);
+            setImages(images.response || null);
+          }
+          setIsError(false);
+        } catch {
+          setIsError(true);
+        }
       }
     };
+
     fetchProcessedImage();
   }, [processedImageId]);
 
@@ -110,6 +123,7 @@ const Table = ({avaialbleQueues}: {avaialbleQueues: (typeof QueueTable.$inferSel
             filterColumn={selectedFilterColumn}
             filterPlaceholder={`Lọc bằng ${QUEUE_TITLE_MAPING[selectedFilterColumn as keyof typeof QUEUE_TITLE_MAPING].toLowerCase()}...`}
             setProcessedImageId={setProcessedImageId}
+            setIsError={setIsError}
           />
         </div>
 
@@ -132,7 +146,7 @@ const Table = ({avaialbleQueues}: {avaialbleQueues: (typeof QueueTable.$inferSel
           </>
         ) : (
           <div className="flex flex-col items-center justify-center relative min-w-[500px] min-h-[500px]">
-            <h1 className="text-2xl font-semibold uppercase">Hãy chọn đơn hàng bắt đầu</h1>
+            <h1 className="text-2xl font-semibold uppercase">Hãy chọn đơn hàng để bắt đầu</h1>
             <Image
               src="/ass.gif"
               alt="twerk"
@@ -142,6 +156,7 @@ const Table = ({avaialbleQueues}: {avaialbleQueues: (typeof QueueTable.$inferSel
           </div>
         )}
       </div>
+      {isError && <ErrorDialog />}
     </>
   );
 };

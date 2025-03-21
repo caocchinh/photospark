@@ -7,7 +7,7 @@ import {MdOutlinePermMedia} from "react-icons/md";
 export default async function Home() {
   const avaialbleQueues = await getAllQueues();
   return (
-    <div className="w-full min-h-screen mx-auto p-10 pt-4 flex flex-col gap-8 items-center justify-center">
+    <div className="w-full min-h-screen mx-auto p-10 pt-0 flex flex-col gap-8 items-center justify-center">
       <div className="flex flex-col items-center justify-center">
         <div className="flex items-center justify-center gap-2">
           <TextShimmer
@@ -30,6 +30,7 @@ export default async function Home() {
           <Image
             src="/ass.gif"
             alt="twerk"
+            unoptimized
             width={100}
             height={100}
           />

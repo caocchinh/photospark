@@ -34,6 +34,7 @@ interface DataTableProps<TData, TValue> {
   filterPlaceholder?: string;
   setProcessedImageId: (id: string) => void;
   processedImageId: string;
+  setIsError: (isError: boolean) => void;
 }
 
 export function DataTable<TData, TValue>({
@@ -43,6 +44,7 @@ export function DataTable<TData, TValue>({
   filterPlaceholder = `Lọc bằng ${QUEUE_TITLE_MAPING[filterColumn as keyof typeof QUEUE_TITLE_MAPING].toLowerCase()}`,
   setProcessedImageId,
   processedImageId,
+  setIsError,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -146,7 +148,8 @@ export function DataTable<TData, TValue>({
                   data-state={row.id === selectedRowId && "selected"}
                   onClick={(e) => {
                     if (!(e.target as HTMLElement).closest("button, input, a")) {
-                      setSelectedRowId(row.id === selectedRowId ? null : row.id);
+                      setSelectedRowId(row.id);
+                      setIsError(false);
                       if ((row.getValue("processedImageId") as string) !== processedImageId) {
                         setProcessedImageId(row.getValue("processedImageId") as string);
                       }
