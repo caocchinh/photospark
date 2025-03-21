@@ -2,6 +2,7 @@
 import {GrPrint} from "react-icons/gr";
 import {
   AlertDialog,
+  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -12,7 +13,7 @@ import {
 } from "./ui/alert-dialog";
 import {Button} from "./ui/button";
 import {ProcessedImageTable, ImageTable, QueueTable} from "@/drizzle/schema";
-import {useCallback, useRef, useState} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 import FrameStage from "./FrameStage";
 import {Stage as StageElement} from "konva/lib/Stage";
 import {Card, CardContent, CardHeader, CardTitle} from "./ui/card";
@@ -33,8 +34,23 @@ const Print = ({processedImage, images, queue, refreshQueues}: PrintProps) => {
   const [isPrinting, setIsPrinting] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [countdown, setCountdown] = useState(4);
   const stageRef = useRef<StageElement | null>(null);
   const {socket, isSocketConnected} = useSocket();
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+
+    if (countdown > 0) {
+      timer = setTimeout(() => {
+        setCountdown(countdown - 1);
+      }, 1000);
+    }
+
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [countdown]);
 
   const printImage = useCallback(async () => {
     if (stageRef.current && imageLoaded && processedImage && socket && processedImage.id) {
@@ -87,10 +103,15 @@ const Print = ({processedImage, images, queue, refreshQueues}: PrintProps) => {
     }
   }, [imageLoaded, isPrinting, isSocketConnected, processedImage, queue, socket, refreshQueues]);
 
+  const handleDialogChange = (open: boolean) => {
+    setDialogOpen(open);
+    setCountdown(4);
+  };
+
   return (
     <AlertDialog
       open={dialogOpen}
-      onOpenChange={setDialogOpen}
+      onOpenChange={handleDialogChange}
     >
       <AlertDialogTrigger asChild>
         <Button
@@ -158,14 +179,33 @@ const Print = ({processedImage, images, queue, refreshQueues}: PrintProps) => {
                 <div className="border rounded-md p-4 bg-yellow-50 flex-1 w-full flex items-center justify-center">
                   <p className="text-center text-lg">Sau khi in, vui lòng kiểm tra lại số lượng.</p>
                 </div>
-                <Button
-                  onClick={printImage}
-                  disabled={!imageLoaded || isPrinting}
-                  className="w-full cursor-pointer"
-                >
-                  {isPrinting ? "Đang in..." : "In"}
-                  {isPrinting && <LoadingSpinner size={20} />}
-                </Button>
+                <AlertDialog defaultOpen={queue.status === "completed"}>
+                  <AlertDialogTrigger asChild>
+                    <Button
+                      onClick={printImage}
+                      disabled={!imageLoaded || isPrinting || countdown > 0}
+                      className="w-full cursor-pointer"
+                    >
+                      {isPrinting ? "Đang in..." : countdown > 0 ? `In (${countdown}s)` : "In"}
+                      {isPrinting && <LoadingSpinner size={20} />}
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Đơn này đã được in thành công!</AlertDialogTitle>
+                      <AlertDialogDescription>Bạn có chắc chắn muốn in lại? </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel
+                        onClick={() => setDialogOpen(false)}
+                        className="cursor-pointer"
+                      >
+                        Hủy
+                      </AlertDialogCancel>
+                      <AlertDialogAction className="cursor-pointer">Chắc chắn</AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </CardContent>
             </Card>
           </div>

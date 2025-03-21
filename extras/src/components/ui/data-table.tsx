@@ -23,7 +23,7 @@ import {Input} from "./input";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "./table";
 import {QUEUE_TITLE_MAPING} from "@/constants/constants";
 import {cn} from "@/lib/utils";
-import {useCallback, useState} from "react";
+import {useCallback, useState, useEffect} from "react";
 
 const PAGE_SIZE_OPTIONS = [5, 10, 20, 30, 40, 50] as const;
 
@@ -76,6 +76,15 @@ export function DataTable<TData, TValue>({
     },
     autoResetPageIndex: false,
   });
+
+  useEffect(() => {
+    const filteredRows = table.getFilteredRowModel().rows;
+    const currentPageStart = pagination.pageIndex * pagination.pageSize;
+
+    if (filteredRows.length > 0 && currentPageStart >= filteredRows.length) {
+      table.setPageIndex(0);
+    }
+  }, [columnFilters, table, pagination.pageIndex, pagination.pageSize]);
 
   const handlePageSizeChange = useCallback(
     (newSize: number) => {
