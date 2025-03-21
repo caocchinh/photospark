@@ -12,17 +12,22 @@ import {
   AlertDialogTrigger,
 } from "./ui/alert-dialog";
 import {Button} from "./ui/button";
-import {ProcessedImageTable, ImageTable} from "@/drizzle/schema";
+import {ProcessedImageTable, ImageTable, QueueTable} from "@/drizzle/schema";
 import {useRef, useState} from "react";
 import FrameStage from "./FrameStage";
 import {Stage as StageElement} from "konva/lib/Stage";
+import {Card, CardContent, CardHeader, CardTitle} from "./ui/card";
+import {PiCubeLight} from "react-icons/pi";
+import {TextShimmer} from "./ui/text-shimmer";
+import {formatVietnameseDateUTC7} from "@/lib/utils";
 
 interface PrintProps {
   processedImage: typeof ProcessedImageTable.$inferSelect;
   images: (typeof ImageTable.$inferSelect)[];
+  queue: typeof QueueTable.$inferSelect;
 }
 
-const Print = ({processedImage, images}: PrintProps) => {
+const Print = ({processedImage, images, queue}: PrintProps) => {
   const [isPrinting, setIsPrinting] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const stageRef = useRef<StageElement | null>(null);
@@ -38,29 +43,71 @@ const Print = ({processedImage, images}: PrintProps) => {
           />
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent className="min-w-[90vw] min-h-[90vh] flex flex-col items-center justify-between">
-        <AlertDialogHeader className="text-center flex items-center justify-center">
-          <AlertDialogTitle className="text-center uppercase">Hãy kiểm tra lại thông tin kỹ trước khi in!</AlertDialogTitle>
-          <AlertDialogDescription className="text-center text-red-500">1 khi đã in, bạn không thể hủy bỏ được!</AlertDialogDescription>
-        </AlertDialogHeader>
-        <div className="relative h-[550px] bottom-[71px]">
-          <FrameStage
-            processedImage={processedImage}
-            images={images}
-            stageRef={stageRef}
-            onLoadingComplete={setImageLoaded}
-          />
-        </div>
-        <AlertDialogFooter className="w-full">
-          <AlertDialogCancel className="w-1/2">Hủy</AlertDialogCancel>
-          <AlertDialogAction
-            disabled={!imageLoaded}
-            className="w-1/2"
-          >
-            In
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
+      {processedImage && images && queue && (
+        <AlertDialogContent className="min-w-[90vw] min-h-[90vh] flex flex-col items-center justify-between">
+          <AlertDialogHeader className="text-center flex items-center justify-center">
+            <AlertDialogTitle className="">
+              <TextShimmer
+                className=" text-center uppercase text-2xl  [--base-color:black] [--base-gradient-color:gray]"
+                duration={5}
+                spread={4}
+              >
+                Hãy kiểm tra lại thông tin kỹ trước khi in
+              </TextShimmer>
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-center text-red-500 text-xl">1 khi đã in, không thể hủy bỏ được!</AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="flex flex-row items-center justify-center">
+            <div className="relative h-[550px] bottom-[75px]">
+              <FrameStage
+                processedImage={processedImage}
+                images={images}
+                stageRef={stageRef}
+                onLoadingComplete={setImageLoaded}
+              />
+            </div>
+            <Card className="w-[500px] h-[545px] rounded-sm">
+              <CardHeader className="flex flex-row items-center justify-center gap-1">
+                <CardTitle className="text-center uppercase text-xl">Thông tin đơn hàng</CardTitle>
+                <PiCubeLight size={25} />
+              </CardHeader>
+              <CardContent className="flex flex-col items-center justify-between h-full w-full gap-5">
+                <div className="flex flex-col items-center justify-center w-full gap-5">
+                  <div className="flex justify-between w-full">
+                    <p className="font-bold text-xl">Mã hàng:</p>
+                    <p className="text-lg">{queue.id}</p>
+                  </div>
+                  <div className="flex justify-between w-full">
+                    <p className="font-bold text-xl">Mã hình:</p>
+                    <p className="text-lg">{processedImage.id}</p>
+                  </div>
+                  <div className="flex justify-between w-full">
+                    <p className="font-bold text-xl">Số lượng:</p>
+                    <p className="text-lg">{queue.quantity}</p>
+                  </div>
+                  <div className="flex justify-between w-full">
+                    <p className="font-bold text-xl">Ngày đặt:</p>
+                    <p className="text-lg">{formatVietnameseDateUTC7(queue.createdAt)}</p>
+                  </div>
+                  <div className="flex justify-between w-full">
+                    <p className="font-bold text-xl">Giá:</p>
+                    <p className="text-lg">{queue.price} VNĐ</p>
+                  </div>
+                </div>
+                <AlertDialogAction
+                  disabled={!imageLoaded}
+                  className="w-full cursor-pointer"
+                >
+                  In
+                </AlertDialogAction>
+              </CardContent>
+            </Card>
+          </div>
+          <AlertDialogFooter className="w-full">
+            <AlertDialogCancel className="w-full cursor-pointer">Hủy</AlertDialogCancel>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      )}
     </AlertDialog>
   );
 };

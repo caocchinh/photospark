@@ -29,6 +29,7 @@ const Table = ({availableQueues}: {availableQueues: (typeof QueueTable.$inferSel
   const [processedImageId, setProcessedImageId] = useState<string | null>(null);
   const [processedImage, setProcessedImage] = useState<typeof ProcessedImageTable.$inferSelect | null>(null);
   const [images, setImages] = useState<(typeof ImageTable.$inferSelect)[] | null>(null);
+  const [queueId, setQueueId] = useState<string | null>(null);
   const [queues, setQueues] = useState<(typeof QueueTable.$inferSelect)[]>(availableQueues);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [randomImageIndex] = useState(() => {
@@ -122,12 +123,13 @@ const Table = ({availableQueues}: {availableQueues: (typeof QueueTable.$inferSel
             <div
               className={cn(
                 "flex-1",
-                !processedImage || !images || !imageLoaded || !isSocketConnected || isRefreshing ? "pointer-events-none opacity-70" : null
+                !processedImage || !images || !imageLoaded || !isSocketConnected || isRefreshing || !queueId ? "pointer-events-none opacity-70" : null
               )}
             >
               <Print
                 processedImage={processedImage!}
                 images={images!}
+                queue={queues.find((queue) => queue.id === queueId)!}
               />
             </div>
           </div>
@@ -140,6 +142,7 @@ const Table = ({availableQueues}: {availableQueues: (typeof QueueTable.$inferSel
             filterPlaceholder={`Lọc bằng ${QUEUE_TITLE_MAPING[selectedFilterColumn as keyof typeof QUEUE_TITLE_MAPING].toLowerCase()}...`}
             setProcessedImageId={setProcessedImageId}
             setIsError={setIsError}
+            setQueueId={setQueueId}
           />
         </div>
 
