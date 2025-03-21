@@ -4,7 +4,10 @@ import {db} from "@/drizzle/db";
 
 export async function getAllQueues() {
   const queues = await db.query.QueueTable.findMany();
-  return queues;
+  if (!queues) {
+    return {error: true};
+  }
+  return {error: false, response: queues};
 }
 
 export async function getProcessedImage(processedImageId: string) {

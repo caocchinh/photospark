@@ -20,13 +20,21 @@ import NetworkStatus from "@/components/NetworkStatus";
 import {useSocket} from "@/context/SocketContext";
 import ErrorDialog from "@/components/ErrorDialog";
 
-const Table = ({avaialbleQueues}: {avaialbleQueues: (typeof QueueTable.$inferSelect)[]}) => {
+const Table = ({availableQueues}: {availableQueues: (typeof QueueTable.$inferSelect)[]}) => {
+  const placeholderImages = [
+    {src: "/ass.gif", alt: "twerk", width: 100, height: 100},
+    {src: "/cute.gif", alt: "awww", width: 150, height: 150},
+  ];
+
   const [selectedFilterColumn, setSelectedFilterColumn] = useState<string>("id");
   const [processedImageId, setProcessedImageId] = useState<string | null>(null);
   const [processedImage, setProcessedImage] = useState<typeof ProcessedImageTable.$inferSelect | null>(null);
   const [images, setImages] = useState<(typeof ImageTable.$inferSelect)[] | null>(null);
-  const [queues, setQueues] = useState<(typeof QueueTable.$inferSelect)[]>(avaialbleQueues);
+  const [queues, setQueues] = useState<(typeof QueueTable.$inferSelect)[]>(availableQueues);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [randomImageIndex] = useState(() => {
+    return Math.floor(Math.random() * placeholderImages.length);
+  });
   const stageRef = useRef<StageElement | null>(null);
   const [imageLoaded, setImageLoaded] = useState(false);
   const {isSocketConnected} = useSocket();
@@ -34,8 +42,16 @@ const Table = ({avaialbleQueues}: {avaialbleQueues: (typeof QueueTable.$inferSel
 
   const refreshQueues = async () => {
     setIsRefreshing(true);
-    const newQueues = await getAllQueues();
-    setQueues(newQueues);
+    try {
+      const newQueues = await getAllQueues();
+      if (newQueues.error) {
+        throw new Error("Error fetching queues");
+      } else {
+        setQueues(newQueues.response!);
+      }
+    } catch {
+      setIsError(true);
+    }
     setIsRefreshing(false);
   };
 
@@ -48,8 +64,8 @@ const Table = ({avaialbleQueues}: {avaialbleQueues: (typeof QueueTable.$inferSel
           if (processedImage.error || images.error) {
             throw new Error("Processed image or images not found");
           } else {
-            setProcessedImage(processedImage.response || null);
-            setImages(images.response || null);
+            setProcessedImage(processedImage.response!);
+            setImages(images.response!);
           }
           setIsError(false);
         } catch {
@@ -84,7 +100,7 @@ const Table = ({avaialbleQueues}: {avaialbleQueues: (typeof QueueTable.$inferSel
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  {Object.keys(avaialbleQueues[0]).map((columnName) => (
+                  {Object.keys(availableQueues[0]).map((columnName) => (
                     <DropdownMenuItem
                       key={columnName}
                       onClick={() => setSelectedFilterColumn(columnName)}
@@ -106,7 +122,7 @@ const Table = ({avaialbleQueues}: {avaialbleQueues: (typeof QueueTable.$inferSel
             </Button>
             <Button
               className="border border-slate-300 flex-1 cursor-pointer"
-              disabled={!processedImage || !images || !imageLoaded || !isSocketConnected}
+              disabled={!processedImage || !images || !imageLoaded || !isSocketConnected || isRefreshing}
             >
               In
               <GrPrint
@@ -148,10 +164,11 @@ const Table = ({avaialbleQueues}: {avaialbleQueues: (typeof QueueTable.$inferSel
           <div className="flex flex-col items-center justify-center relative min-w-[500px] min-h-[500px]">
             <h1 className="text-2xl font-semibold uppercase">Hãy chọn đơn hàng để bắt đầu</h1>
             <Image
-              src="/ass.gif"
-              alt="twerk"
-              width={100}
-              height={100}
+              src={placeholderImages[randomImageIndex].src}
+              alt={placeholderImages[randomImageIndex].alt}
+              unoptimized
+              width={placeholderImages[randomImageIndex].width}
+              height={placeholderImages[randomImageIndex].height}
             />
           </div>
         )}

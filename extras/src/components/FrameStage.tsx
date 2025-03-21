@@ -24,7 +24,12 @@ const FrameStage = ({processedImage, images, stageRef, onLoadingComplete}: Frame
   const isInitialRender = useRef("skibidi");
 
   const handleImageLoaded = useCallback(() => {
-    setImagesLoaded((prev) => prev + 1);
+    if (isInitialRender.current == "skibidi") {
+      setImagesLoaded((prev) => prev + 1);
+    } else {
+      setImagesLoaded(1);
+      isInitialRender.current = "skibidi";
+    }
   }, []);
 
   useEffect(() => {
@@ -94,12 +99,6 @@ const FrameStage = ({processedImage, images, stageRef, onLoadingComplete}: Frame
       }
     };
   }, [processedImage, qrCodeURL]);
-
-  useEffect(() => {
-    if (processedImage && isInitialRender.current != "skibidi") {
-      setImagesLoaded(0);
-    }
-  }, [processedImage]);
 
   useEffect(() => {
     const chosenImageCount = images?.filter((image) => image.slotPositionX != null && image.slotPositionY != null).length || 0;
