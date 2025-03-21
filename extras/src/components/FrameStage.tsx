@@ -111,7 +111,7 @@ const FrameStage = ({processedImage, images, stageRef, onLoadingComplete}: Frame
   }, [frameImgStatus, imagesLoaded, images, processedImage?.type, onLoadingComplete]);
 
   return (
-    <div className="w-max lg:w-max h-full flex items-start relative bottom-[90px] justify-center transform scale-[0.8]">
+    <div className="w-max lg:w-max h-full flex items-start relative justify-center transform scale-[0.8]">
       <Stage
         ref={stageRef}
         width={IMAGE_WIDTH}

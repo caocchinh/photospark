@@ -14,12 +14,11 @@ import {getAllQueues, getProcessedImage, getImages} from "@/server/actions";
 import FrameStage from "@/components/FrameStage";
 import {Stage as StageElement} from "konva/lib/Stage";
 import Image from "next/image";
-import {GrPrint} from "react-icons/gr";
 import PrintServerAlert from "@/components/PrintServerAlert";
 import NetworkStatus from "@/components/NetworkStatus";
 import {useSocket} from "@/context/SocketContext";
 import ErrorDialog from "@/components/ErrorDialog";
-
+import Print from "@/components/Print";
 const Table = ({availableQueues}: {availableQueues: (typeof QueueTable.$inferSelect)[]}) => {
   const placeholderImages = [
     {src: "/ass.gif", alt: "twerk", width: 100, height: 100},
@@ -115,21 +114,22 @@ const Table = ({availableQueues}: {availableQueues: (typeof QueueTable.$inferSel
               className="cursor-pointer flex items-center gap-2"
               variant="outline"
               onClick={refreshQueues}
-              disabled={isRefreshing}
+              disabled={isRefreshing || !isSocketConnected}
             >
               Refresh
               <LuRefreshCcw className={cn(isRefreshing && "animate-spin")} />
             </Button>
-            <Button
-              className="border border-slate-300 flex-1 cursor-pointer"
-              disabled={!processedImage || !images || !imageLoaded || !isSocketConnected || isRefreshing}
+            <div
+              className={cn(
+                "flex-1",
+                !processedImage || !images || !imageLoaded || !isSocketConnected || isRefreshing ? "pointer-events-none opacity-70" : null
+              )}
             >
-              In
-              <GrPrint
-                size={25}
-                color="white"
+              <Print
+                processedImage={processedImage!}
+                images={images!}
               />
-            </Button>
+            </div>
           </div>
 
           <DataTable
@@ -145,7 +145,9 @@ const Table = ({availableQueues}: {availableQueues: (typeof QueueTable.$inferSel
 
         {processedImage && images ? (
           <>
-            <div className={cn(!imageLoaded ? "opacity-0 !absolute" : "opacity-100", "flex flex-col items-start relative max-h-[500px]")}>
+            <div
+              className={cn(!imageLoaded ? "opacity-0 !absolute" : "opacity-100", "flex flex-col items-start relative max-h-[500px] bottom-[95px]")}
+            >
               <FrameStage
                 processedImage={processedImage}
                 images={images}

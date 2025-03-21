@@ -21,6 +21,8 @@
     "@radix-ui/react-scroll-area": "^1.2.3",
     "@radix-ui/react-slot": "^1.1.2",
     "@tanstack/react-table": "^8.21.2",
+    "@tsparticles/react": "^3.0.0",
+    "@tsparticles/slim": "^3.8.1",
     "babel-plugin-transform-remove-console": "^6.9.4",
     "canvas": "^3.1.0",
     "class-variance-authority": "^0.7.1",
