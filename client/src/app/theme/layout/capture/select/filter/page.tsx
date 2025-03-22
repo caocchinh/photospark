@@ -27,6 +27,7 @@ const FilterPage = () => {
   const {photo, setPhoto, isOnline} = usePhoto();
   const {navigateTo} = usePreventNavigation();
   const filterRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const uploadAttemptedRef = useRef(false);
 
   const {t} = useTranslation();
 
@@ -103,7 +104,10 @@ const FilterPage = () => {
 
   useEffect(() => {
     async function uploadImageToDatabase() {
-      if (!photo || !socket || !isSocketConnected || !isOnline) return;
+      if (!photo || !socket || !isSocketConnected || !isOnline || uploadAttemptedRef.current) return;
+
+      uploadAttemptedRef.current = true;
+
       for (const image of photo.images) {
         const slotPosition = photo.selectedImages.findIndex((selectedImage) => selectedImage.id == image.id);
         try {
@@ -125,6 +129,7 @@ const FilterPage = () => {
           socket.emit("upload-image-error", {url: image.href, id: image.id});
         }
       }
+
       if (photo.video.r2_url) {
         try {
           const videoResponse = await createVideo(photo.video.r2_url, photo.id!);
@@ -138,15 +143,17 @@ const FilterPage = () => {
           socket.emit("upload-video-error", {url: photo.video.r2_url, id: photo.id});
         }
       }
+
       setIsMediaUploaded(true);
     }
+
     if (!isMediaUploaded) {
       uploadImageToDatabase();
     }
   }, [isSocketConnected, isMediaUploaded, photo, socket, isOnline]);
 
   useEffect(() => {
-    if (isSocketConnected && isOnline) {
+    if (isSocketConnected && isOnline && isMediaUploaded && !printed) {
       if (timeLeft > 0) {
         const timerId = setInterval(() => {
           setTimeLeft((prevTime) => prevTime - 1);
@@ -156,7 +163,7 @@ const FilterPage = () => {
         printImage();
       }
     }
-  }, [printImage, timeLeft, isSocketConnected, isOnline]);
+  }, [printImage, timeLeft, isSocketConnected, isOnline, isMediaUploaded, printed]);
 
   const selectRandomFilter = useCallback(() => {
     const randomIndex = Math.floor(Math.random() * FILTERS.length);
@@ -372,7 +379,7 @@ const FilterPage = () => {
                 <Button
                   className={cn(
                     "flex text-xl text-center items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-6 hover:opacity-[85%] w-full relative z-10",
-                    printed ? "pointer-events-none opacity-[85%]" : null
+                    printed || !isMediaUploaded ? "pointer-events-none opacity-[85%]" : null
                   )}
                   onClick={printImage}
                 >

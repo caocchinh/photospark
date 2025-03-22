@@ -22,7 +22,6 @@ const FrameStage = ({processedImage, images, stageRef, onLoadingComplete}: Frame
   const [imagesLoaded, setImagesLoaded] = useState(0);
 
   const handleImageLoaded = useCallback(() => {
-    console.log("imageLoaded");
     setImagesLoaded((prev) => prev + 1);
   }, []);
 

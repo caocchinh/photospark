@@ -128,7 +128,7 @@ const PrintPage = () => {
   );
 
   useEffect(() => {
-    if (isSocketConnected && isOnline) {
+    if (isSocketConnected && isOnline && !selected) {
       if (timeLeft > 0) {
         const timerId = setInterval(() => {
           setTimeLeft((prevTime) => prevTime - 1);
@@ -138,7 +138,7 @@ const PrintPage = () => {
         setIsTimeOver(true);
       }
     }
-  }, [timeLeft, isSocketConnected, isOnline]);
+  }, [timeLeft, isSocketConnected, isOnline, selected]);
 
   const handleSelect = useCallback(
     (image: {id: string; data: string; href: string} | null) => {
