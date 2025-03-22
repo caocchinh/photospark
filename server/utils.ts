@@ -93,8 +93,12 @@ export const logger = winston.createLogger({
   ],
 });
 
+export function getProjectPath(...pathSegments: string[]): string {
+  return path.join(process.cwd(), ".", ...pathSegments);
+}
+
 export function logFailedFileUpload(id: string, url: string, error?: string) {
-  const failedUploadsDir = path.join(process.cwd(), "logs/failed-uploads");
+  const failedUploadsDir = getProjectPath("logs", "failed-uploads");
   if (!fs.existsSync(failedUploadsDir)) {
     fs.mkdirSync(failedUploadsDir, {recursive: true});
   }

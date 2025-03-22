@@ -125,6 +125,7 @@ const FilterPage = () => {
             photo.theme!.frame.slotDimensions.height,
             photo.theme!.frame.slotDimensions.width
           );
+
           if (imageResponse.error) {
             throw new Error("Failed to upload image to database");
           } else {
@@ -132,7 +133,14 @@ const FilterPage = () => {
           }
         } catch (error) {
           console.error("Error uploading image to database:", error);
-          socket.emit("upload-image-error", {url: image.href, id: image.id});
+          socket.emit("upload-image-error", {
+            url: image.href,
+            proccessedImageId: photo.id!,
+            width: photo.theme!.frame.slotDimensions.width,
+            height: photo.theme!.frame.slotDimensions.height,
+            slotPositionX: slotPosition != -1 ? photo.theme!.frame.slotPositions[slotPosition].x : null,
+            slotPositionY: slotPosition != -1 ? photo.theme!.frame.slotPositions[slotPosition].y : null,
+          });
         }
       }
 
@@ -146,7 +154,7 @@ const FilterPage = () => {
           }
         } catch (error) {
           console.error("Error uploading video to database:", error);
-          socket.emit("upload-video-error", {url: photo.video.r2_url, id: photo.id});
+          socket.emit("upload-video-error", {url: photo.video.r2_url, proccessedImageId: photo.id});
         }
       }
 

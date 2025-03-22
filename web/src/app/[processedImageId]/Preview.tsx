@@ -5,7 +5,6 @@ import {Stage as StageElement} from "konva/lib/Stage";
 import {cn, generateTimestampFilename} from "@/lib/utils";
 import Link from "next/link";
 import {GlowEffect} from "@/components/ui/glow-effect";
-import {usePhoto} from "@/context/PhotoContext";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import {AiOutlineDownload} from "react-icons/ai";
 import {MdModeEdit} from "react-icons/md";
@@ -24,7 +23,6 @@ const Preview = ({
 }) => {
   const stageRef = useRef<StageElement | null>(null);
   const [error, setError] = useState(false);
-  const {setPhoto} = usePhoto();
   const [allImagesLoaded, setAllImagesLoaded] = useState(false);
 
   if (!processedImage) {
@@ -103,25 +101,7 @@ const Preview = ({
               <AiOutlineDownload size={27} />
             </div>
           )}
-          <div
-            className="w-full h-[50px] text-white cursor-pointer text-xl bg-[#f97316] hover:opacity-90 hover:bg-[#f97316] rounded-sm flex items-center justify-center gap-3"
-            onClick={() =>
-              setPhoto!(() => {
-                if (!setPhoto) return;
-                return {
-                  images: images?.map(({id, url}) => ({id, href: url})) || [],
-                  selectedImages: [],
-                  theme: null,
-                  video: {
-                    r2_url: video ? video.url : null,
-                  },
-                  id: null,
-                  frameType: null,
-                  filters: null,
-                };
-              })
-            }
-          >
+          <div className="w-full h-[50px] text-white cursor-pointer text-xl bg-[#f97316] hover:opacity-90 hover:bg-[#f97316] rounded-sm flex items-center justify-center gap-3">
             <Link
               href={`/${processedImage.id}/edit`}
               className="flex items-center justify-center gap-2 h-full w-full"
