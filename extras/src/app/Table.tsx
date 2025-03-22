@@ -21,6 +21,7 @@ import ErrorDialog from "@/components/ErrorDialog";
 import Print from "@/components/Print";
 import {Label} from "@/components/ui/label";
 import {toast} from "sonner";
+import LoadingSpinner from "@/components/LoadingSpinner";
 const Table = ({availableQueues}: {availableQueues: (typeof QueueTable.$inferSelect)[]}) => {
   const placeholderImages = [
     {src: "/ass.gif", alt: "twerk", width: 100, height: 100},
@@ -218,7 +219,7 @@ const Table = ({availableQueues}: {availableQueues: (typeof QueueTable.$inferSel
 
             {!imageLoaded && (
               <div className="flex flex-col items-center justify-center relative min-w-[500px] min-h-[500px]">
-                <h1 className="text-2xl font-semibold uppercase">Đang tải hình...</h1>
+                <LoadingSpinner size={100} />
               </div>
             )}
           </>

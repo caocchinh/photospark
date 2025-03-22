@@ -25,6 +25,7 @@ import {updateQueueStatus} from "@/server/actions";
 import LoadingSpinner from "./LoadingSpinner";
 import {RxCross2} from "react-icons/rx";
 import {toast} from "sonner";
+import {SlidingNumber} from "./ui/sliding-number";
 
 interface PrintProps {
   processedImage: typeof ProcessedImageTable.$inferSelect;
@@ -39,6 +40,7 @@ const Print = ({processedImage, images, queue, refreshQueues}: PrintProps) => {
   const [isPrinted, setIsPrinted] = useState(false);
   const [isAlreadyPrintedDialogOpen, setIsAlreadyPrintedDialogOpen] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [countdown, setCountdown] = useState(4);
   const stageRef = useRef<StageElement | null>(null);
   const {socket, isSocketConnected} = useSocket();
@@ -58,11 +60,10 @@ const Print = ({processedImage, images, queue, refreshQueues}: PrintProps) => {
   }, [countdown]);
 
   useEffect(() => {
-    if (queue?.status === "completed" && !isPrinted && isDialogOpen) {
-      console.log("fuck off");
+    if (queue?.status === "completed" && !isPrinted && isDialogOpen && !isRefreshing) {
       setIsAlreadyPrintedDialogOpen(true);
     }
-  }, [queue, isPrinted, isDialogOpen]);
+  }, [queue, isPrinted, isDialogOpen, isRefreshing]);
 
   const showToast = (success: boolean, message: string, description: string) => {
     toast[success ? "success" : "error"](message, {
@@ -94,6 +95,7 @@ const Print = ({processedImage, images, queue, refreshQueues}: PrintProps) => {
     if (stageRef.current && imageLoaded && processedImage && socket && processedImage.id) {
       if (!isSocketConnected) {
         console.error("Socket not connected. Cannot print.");
+        showToast(false, "Lỗi!", "Không thể in hình!");
         return;
       }
       if (isPrinting) return;
@@ -115,36 +117,38 @@ const Print = ({processedImage, images, queue, refreshQueues}: PrintProps) => {
             setIsPrinted(true);
             showToast(true, "Đã đặt in thành công!", `Đơn hàng ${queue.id} đã được đặt in thành công!`);
             try {
+              setIsRefreshing(true);
               const updateStatus = await updateQueueStatus(queue.id, "completed");
               if (updateStatus.error) {
                 throw new Error("Failed to print");
               } else {
                 console.log("Printed sucessfully to database!");
-                setIsDialogOpen(false);
-                await refreshQueues();
               }
-            } catch (error) {
-              console.error("Error printing:", error);
+            } catch {
               showToast(false, "Cập nhật thất bại!", `Đơn hàng ${queue.id} không thể cập nhật trạng thái!`);
-              setIsDialogOpen(false);
+            } finally {
               await refreshQueues();
+              setIsRefreshing(false);
+              setIsDialogOpen(false);
+              setIsAlreadyPrintedDialogOpen(false);
             }
           } else {
             showToast(false, "Đã in thất bại!", `Đơn hàng ${queue.id} đã in thất bại!`);
             try {
+              setIsRefreshing(true);
               const updateStatus = await updateQueueStatus(queue.id, "failed");
               if (updateStatus.error) {
                 throw new Error("Failed to update status");
               } else {
-                setIsDialogOpen(false);
-                await refreshQueues();
                 console.log("Status updated sucessfully to database!");
               }
-            } catch (error) {
-              console.error("Error updating status:", error);
+            } catch {
               showToast(false, "Cập nhật thất bại!", `Đơn hàng ${queue.id} không thể cập nhật trạng thái!`);
-              setIsDialogOpen(false);
+            } finally {
               await refreshQueues();
+              setIsAlreadyPrintedDialogOpen(false);
+              setIsDialogOpen(false);
+              setIsRefreshing(false);
             }
           }
         }
@@ -241,11 +245,27 @@ const Print = ({processedImage, images, queue, refreshQueues}: PrintProps) => {
                       disabled={!imageLoaded || isPrinting || countdown > 0}
                       className="w-full cursor-pointer"
                     >
-                      {isPrinting ? "Đang in..." : countdown > 0 ? `In (${countdown}s)` : "In"}
+                      {isPrinting ? (
+                        "Đang in..."
+                      ) : countdown > 0 ? (
+                        <div className="flex items-center justify-center gap-1">
+                          In <SlidingNumber value={countdown} />
+                        </div>
+                      ) : (
+                        "In"
+                      )}
                       {isPrinting && <LoadingSpinner size={20} />}
                     </Button>
                   </AlertDialogTrigger>
                   <AlertDialogContent>
+                    <RxCross2
+                      className={cn("absolute top-[20px] right-[20px] cursor-pointer", isPrinting && "pointer-events-none")}
+                      size={25}
+                      onClick={() => {
+                        setIsDialogOpen(false);
+                        setIsAlreadyPrintedDialogOpen(false);
+                      }}
+                    />
                     <AlertDialogHeader>
                       <AlertDialogTitle>Đơn này đã được in thành công!</AlertDialogTitle>
                       <AlertDialogDescription>Bạn có chắc chắn muốn in lại?</AlertDialogDescription>
