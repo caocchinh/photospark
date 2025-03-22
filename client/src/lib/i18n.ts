@@ -45,7 +45,7 @@ const i18nConfig = {
         "No Internet Connection": "No Internet Connection",
         "Please check your internet connection and try again": "Please check your internet connection and try again",
         "Refresh the application": "Refresh the application",
-
+        Printing: "Printing",
         "Available cameras": "Available cameras",
       },
     },
@@ -89,7 +89,7 @@ const i18nConfig = {
         "No Internet Connection": "Không có kết nối Internet",
         "Please check your internet connection and try again": "Vui lòng kiểm tra kết nối Internet và thử lại",
         "Refresh the application": "Refresh ứng dụng",
-
+        Printing: "Đang in",
         "Available cameras": "Camera có sẵn",
       },
     },
@@ -133,7 +133,7 @@ const i18nConfig = {
         "No Internet Connection": "Pas de connexion Internet",
         "Please check your internet connection and try again": "Veuillez vérifier votre connexion Internet et réessayer",
         "Refresh the application": "Actualiser l'application",
-
+        Printing: "Impression",
         "Available cameras": "Cameras disponibles",
       },
     },
@@ -177,7 +177,7 @@ const i18nConfig = {
         "No Internet Connection": "没有互联网连接",
         "Please check your internet connection and try again": "请检查您的互联网连接并重试",
         "Refresh the application": "刷新应用程序",
-
+        Printing: "打印",
         "Available cameras": "可用的相机",
       },
     },

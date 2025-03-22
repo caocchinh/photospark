@@ -21,6 +21,7 @@ import {createImage, createVideo, updateFilter} from "@/server/actions";
 import QRCode from "react-qr-code";
 import ReactDOM from "react-dom/client";
 import {ROUTES} from "@/constants/routes";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 const FilterPage = () => {
   const {photo, setPhoto, isOnline} = usePhoto();
@@ -34,7 +35,7 @@ const FilterPage = () => {
     if (photo.selectedImages.length == 0) return navigateTo(ROUTES.SELECT);
   }, [photo, navigateTo, setPhoto]);
 
-  const [frameImg] = useImage(photo ? photo.theme!.frame.src : "");
+  const [frameImg, frameImgStatus] = useImage(photo ? photo.theme!.frame.src : "");
 
   const [qrCodeURL, setQrCodeURL] = useState<string>("");
   const [qrCodeImage] = useImage(qrCodeURL);
@@ -236,7 +237,13 @@ const FilterPage = () => {
   }, [photo, qrCodeURL]);
 
   return (
-    <div className={cn(!timeLeft || printed ? "pointer-events-none" : null, "w-[95%] flex items-center justify-center flex-col")}>
+    <div
+      className={cn(
+        !timeLeft || printed ? "pointer-events-none" : null,
+        "w-[95%] flex items-center justify-center flex-col transition duration-300",
+        frameImgStatus != "loaded" ? "opacity-0 pointer-events-none" : "opacity-100"
+      )}
+    >
       {photo && frameImg && (
         <div className="flex items-center justify-evenly gap-3 h-max flex-col">
           <div className="flex items-center justify-center flex-row gap-6">
@@ -369,10 +376,16 @@ const FilterPage = () => {
                   )}
                   onClick={printImage}
                 >
-                  <>
-                    {t("Print")}
-                    <PiPrinter size={15} />
-                  </>
+                  {printed ? (
+                    <>
+                      {t("Printing")} <LoadingSpinner size={20} />
+                    </>
+                  ) : (
+                    <>
+                      {t("Print")}
+                      <PiPrinter size={15} />
+                    </>
+                  )}
                 </Button>
               </div>
             </div>

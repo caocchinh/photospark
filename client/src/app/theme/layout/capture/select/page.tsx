@@ -13,7 +13,6 @@ import {FRAME_HEIGHT, FRAME_WIDTH, IMAGE_HEIGHT, IMAGE_WIDTH, OFFSET_X, OFFSET_Y
 import {uploadImageToR2} from "@/lib/r2";
 import {MdOutlineCloudDone} from "react-icons/md";
 import LoadingSpinner from "@/components/LoadingSpinner";
-import SelectInstruction from "@/components/SelectInstruction";
 import {useSocket} from "@/context/SocketContext";
 import {useTranslation} from "react-i18next";
 import {GlowEffect} from "@/components/ui/glow-effect";
@@ -213,13 +212,13 @@ const PrintPage = () => {
   }, [isTimeOver, filteredSelectedImages, handleContextSelect, lastImageUploaded, videoProcessed]);
 
   return (
-    <div className="w-full h-full flex items-center justify-center gap-3 flex-col">
-      <div
-        className={cn(
-          "flex items-center justify-evenly w-full h-full",
-          isTimeOver || frameImgStatus != "loaded" || selected ? "pointer-events-none" : null
-        )}
-      >
+    <div
+      className={cn(
+        "w-full h-full flex items-center justify-center gap-3 flex-col transition duration-300",
+        frameImgStatus != "loaded" ? "opacity-0 pointer-events-none" : "opacity-100"
+      )}
+    >
+      <div className={cn("flex items-center justify-evenly w-full h-full", isTimeOver || selected ? "pointer-events-none" : null)}>
         <div className="flex flex-col items-center justify-center h-full">
           <div className="relative h-full flex items-center justify-center">
             <div className="frame-container">
@@ -318,14 +317,12 @@ const PrintPage = () => {
                   </Layer>
                 </Stage>
               )}
-
-              <SelectInstruction open={isTimeOver} />
             </div>
           </div>
         </div>
-        <div className="flex flex-wrap w-[60%] gap-11 items-start justify-center ">
+        <div className="flex flex-col w-[60%] gap-11 items-start justify-center ">
           {photo && (
-            <div className="flex gap-2">
+            <div className="flex gap-2 w-full item-center justify-center ">
               <h1 className="text-5xl font-semibold mb-4 flex gap-2 uppercase">{t("Choose pictures")} </h1>
               <span className="text-rose-500 text-5xl font-bold ">
                 <SlidingNumber
@@ -336,7 +333,7 @@ const PrintPage = () => {
             </div>
           )}
 
-          <div className="flex gap-4 items-center justify-center flex-wrap ">
+          <div className="grid grid-cols-3 gap-2 items-center justify-center justify-items-center w-full">
             {photo && (
               <>
                 {photo.images.map((item, index) => (

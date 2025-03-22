@@ -286,14 +286,24 @@ const CapturePage = () => {
     <div className="relative w-full h-full flex items-center justify-center">
       {photo && (
         <>
-          <div className="w-full h-full gap-2 flex items-center justify-evenly">
+          {!isCountingDown && cycles == 1 && (
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full flex items-center justify-center">
+              <CameraLoading />
+            </div>
+          )}
+          <div
+            className={cn(
+              "w-full h-full gap-2 flex items-center justify-evenly transition duration-300",
+              isCountingDown ? "opacity-100" : "opacity-0 pointer-events-none"
+            )}
+          >
             <div className="relative w-max h-[88vh]">
               <video
                 ref={setVideoRef}
                 autoPlay
                 playsInline
                 muted
-                className={cn("h-full object-contain -scale-x-100 rounded-sm", isCountingDown ? "opacity-100 block" : "opacity-0 absolute")}
+                className={cn("h-full object-contain -scale-x-100 rounded-sm ")}
               />
               {isCountingDown && (
                 <>
@@ -315,40 +325,42 @@ const CapturePage = () => {
                   <div className={cn("absolute w-full h-full bg-white top-0 opacity-0", count === 0 ? "flash-efect" : null)}></div>
                 </>
               )}
-              {!isCountingDown && cycles == 1 && (
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                  <CameraLoading />
-                </div>
-              )}
             </div>
 
-            {isCountingDown && (
-              <div className="mt-3 relative">
-                <div className="flex items-center justify-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                  <span className="font-bold text-4xl">
-                    <SlidingNumber
-                      value={cycles}
-                      padStart={false}
-                    />
-                  </span>
-                  <h1 className="font-bold text-4xl text-center">/{NUM_OF_CAPTURE_IMAGE}</h1>
-                </div>
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                  <CountdownCircleTimer
-                    isPlaying={isCountingDown && isSocketConnected && isOnline && cycles < NUM_OF_CAPTURE_IMAGE}
-                    strokeWidth={9}
-                    trailStrokeWidth={9}
-                    updateInterval={1}
-                    size={135}
-                    strokeLinecap="square"
-                    key={`${cycles}-${count}`}
-                    initialRemainingTime={count}
-                    duration={CAPTURE_DURATION}
-                    colors="#000000"
-                  ></CountdownCircleTimer>
-                </div>
+            <div className="mt-3 relative">
+              <div className="flex items-center justify-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                <span className="font-bold text-4xl">
+                  <SlidingNumber
+                    value={cycles}
+                    padStart={false}
+                  />
+                </span>
+                <h1 className="font-bold text-4xl text-center">/{NUM_OF_CAPTURE_IMAGE}</h1>
               </div>
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                <CountdownCircleTimer
+                  isPlaying={isCountingDown && isSocketConnected && isOnline && cycles < NUM_OF_CAPTURE_IMAGE}
+                  strokeWidth={9}
+                  trailStrokeWidth={9}
+                  updateInterval={1}
+                  size={135}
+                  strokeLinecap="square"
+                  key={`${cycles}-${count}`}
+                  initialRemainingTime={count}
+                  duration={CAPTURE_DURATION}
+                  colors="#000000"
+                ></CountdownCircleTimer>
+              </div>
+            </div>
+          </div>
+
+          <div
+            className={cn(
+              "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full flex items-center justify-center",
+              !isCountingDown && cycles == NUM_OF_CAPTURE_IMAGE ? "opacity-100" : "opacity-0 pointer-events-none"
             )}
+          >
+            <div id="loader"></div>
           </div>
         </>
       )}
