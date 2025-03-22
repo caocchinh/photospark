@@ -4,6 +4,10 @@ import Image from "next/image";
 import {TextShimmer} from "@/components/ui/text-shimmer";
 import {MdOutlinePermMedia} from "react-icons/md";
 import ErrorDialog from "@/components/ErrorDialog";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function Home() {
   const availableQueues = await getAllQueues();
   return (

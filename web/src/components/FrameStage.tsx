@@ -1,4 +1,4 @@
-import {useRef, useEffect, useState} from "react";
+import {useRef, useEffect, useState, useCallback} from "react";
 import {Stage as StageElement} from "konva/lib/Stage";
 import {Image as KonvaImage, Rect} from "react-konva";
 import {Layer, Stage} from "react-konva";
@@ -21,9 +21,10 @@ const FrameStage = ({processedImage, images, stageRef, onLoadingComplete}: Frame
   const [scale, setScale] = useState(1);
   const [imagesLoaded, setImagesLoaded] = useState(0);
 
-  const handleImageLoaded = () => {
+  const handleImageLoaded = useCallback(() => {
+    console.log("imageLoaded");
     setImagesLoaded((prev) => prev + 1);
-  };
+  }, []);
 
   useEffect(() => {
     const chosenImageCount = images?.filter((image) => image.slotPositionX != null && image.slotPositionY != null).length || 0;
