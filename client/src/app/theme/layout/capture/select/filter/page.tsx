@@ -48,6 +48,12 @@ const FilterPage = () => {
   const [timeLeft, setTimeLeft] = useState(FILTER_SELECT_DURATION);
   const [printed, setPrinted] = useState(false);
 
+  const filterRef = useRef(filter);
+
+  useEffect(() => {
+    filterRef.current = filter;
+  }, [filter]);
+
   const printImage = useCallback(async () => {
     if (stageRef.current && photo && socket && photo.id) {
       if (!isSocketConnected) {
@@ -57,7 +63,7 @@ const FilterPage = () => {
       if (printed) return;
       setPrinted(true);
       try {
-        const filterReponse = await updateFilter(photo.id, filter ? filter : "Original");
+        const filterReponse = await updateFilter(photo.id, filterRef.current ? filterRef.current : "Original");
         if (filterReponse.error) {
           throw new Error("Failed to update filter");
         } else {
@@ -100,7 +106,7 @@ const FilterPage = () => {
         }
       );
     }
-  }, [photo, socket, isSocketConnected, printed, filter, isMediaUploaded, navigateTo]);
+  }, [photo, socket, isSocketConnected, printed, isMediaUploaded, navigateTo]);
 
   useEffect(() => {
     async function uploadImageToDatabase() {

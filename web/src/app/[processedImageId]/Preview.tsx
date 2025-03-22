@@ -112,11 +112,9 @@ const Preview = ({
                   images: images?.map(({id, url}) => ({id, href: url})) || [],
                   selectedImages: [],
                   theme: null,
-                  quantity: null,
                   video: {
                     r2_url: video ? video.url : null,
                   },
-                  isTransition: false,
                   id: null,
                   frameType: null,
                   filters: null,

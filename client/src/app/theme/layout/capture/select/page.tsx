@@ -108,7 +108,7 @@ const PrintPage = () => {
     if (!photo) return 1;
     return photo.frameType == "singular" ? 1 : 2;
   }, [photo]);
-  const [selected, setSelected] = useState(false);
+  const [isSelected, setIsSelected] = useState(false);
   const [slots, setSlots] = useState<Array<number>>(Array.from({length: photo ? photo.theme!.frame.slotCount : 0}, (_, index) => index));
   const [isDragging, setIsDragging] = useState(false);
 
@@ -128,7 +128,7 @@ const PrintPage = () => {
   );
 
   useEffect(() => {
-    if (isSocketConnected && isOnline && !selected) {
+    if (isSocketConnected && isOnline && !isSelected) {
       if (timeLeft > 0) {
         const timerId = setInterval(() => {
           setTimeLeft((prevTime) => prevTime - 1);
@@ -138,7 +138,7 @@ const PrintPage = () => {
         setIsTimeOver(true);
       }
     }
-  }, [timeLeft, isSocketConnected, isOnline, selected]);
+  }, [timeLeft, isSocketConnected, isOnline, isSelected]);
 
   const handleSelect = useCallback(
     (image: {id: string; data: string; href: string} | null) => {
@@ -218,7 +218,7 @@ const PrintPage = () => {
         frameImgStatus != "loaded" ? "opacity-0 pointer-events-none" : "opacity-100"
       )}
     >
-      <div className={cn("flex items-center justify-evenly w-full h-full", isTimeOver || selected ? "pointer-events-none" : null)}>
+      <div className={cn("flex items-center justify-evenly w-full h-full", isTimeOver || isSelected ? "pointer-events-none" : null)}>
         <div className="flex flex-col items-center justify-center h-full">
           <div className="relative h-full flex items-center justify-center">
             <div className="frame-container">
@@ -378,7 +378,7 @@ const PrintPage = () => {
               <Button
                 asChild
                 className="relative"
-                onClick={() => setSelected(true)}
+                onClick={() => setIsSelected(true)}
               >
                 <Link
                   href="#"
@@ -389,7 +389,7 @@ const PrintPage = () => {
                         ? "pointer-events-none opacity-80"
                         : null
                       : null,
-                    selected ? "pointer-events-none opacity-[85%]" : null
+                    isSelected ? "pointer-events-none opacity-[85%]" : null
                   )}
                   onClick={(e) => {
                     e.preventDefault();

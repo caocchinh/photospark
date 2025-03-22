@@ -47,6 +47,7 @@ const i18nConfig = {
         "Refresh the application": "Refresh the application",
         Printing: "Printing",
         "Available cameras": "Available cameras",
+        "Please go out and let the other group in!": "Please go out and let the other group in!",
       },
     },
     vi: {
@@ -91,6 +92,7 @@ const i18nConfig = {
         "Refresh the application": "Refresh ứng dụng",
         Printing: "Đang in",
         "Available cameras": "Camera có sẵn",
+        "Please go out and let the other group in!": "Vui lòng đi ra ngoài cho nhóm khác vào nha!",
       },
     },
     fr: {
@@ -134,6 +136,7 @@ const i18nConfig = {
         "Please check your internet connection and try again": "Veuillez vérifier votre connexion Internet et réessayer",
         "Refresh the application": "Actualiser l'application",
         Printing: "Impression",
+        "Please go out and let the other group in!": "S'il vous plaît, sortez et laissez entrer l'autre groupe!",
         "Available cameras": "Cameras disponibles",
       },
     },
@@ -179,6 +182,7 @@ const i18nConfig = {
         "Refresh the application": "刷新应用程序",
         Printing: "打印",
         "Available cameras": "可用的相机",
+        "Please go out and let the other group in!": "请出去让其他组进来！",
       },
     },
   },

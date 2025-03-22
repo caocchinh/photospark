@@ -453,7 +453,6 @@ export interface PhotoOptions<T extends ValidThemeType> {
     name: T;
     frame: (typeof FrameOptions)[T][number];
   } | null;
-  quantity: number | null;
   images: Array<{
     id: string;
     href: string;
