@@ -147,7 +147,7 @@ const Queue = ({
               </div>
               <div className="flex justify-between w-full">
                 <span>Giá</span>
-                <span className="font-medium text-right">{queue.price} VNĐ</span>
+                <span className="font-medium text-right">{queue.price.toLocaleString("vi-VN")} VNĐ</span>
               </div>
               <div className="flex justify-between w-full">
                 <span>Thời gian đặt:</span>

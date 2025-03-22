@@ -64,6 +64,32 @@ const Print = ({processedImage, images, queue, refreshQueues}: PrintProps) => {
     }
   }, [queue, isPrinted, isDialogOpen]);
 
+  const showToast = (success: boolean, message: string, description: string) => {
+    toast[success ? "success" : "error"](message, {
+      description,
+      duration: 5000,
+      style: {
+        backgroundColor: success ? "#5cb85c" : "#ef4444",
+        color: "white",
+      },
+      descriptionClassName: "!text-white font-medium",
+      className: "flex items-center justify-start flex-col gap-5 w-[300px]",
+      actionButtonStyle: {
+        backgroundColor: "white",
+        color: "black",
+        width: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        cursor: "pointer",
+      },
+      action: {
+        label: "Đóng",
+        onClick: () => toast.dismiss(),
+      },
+    });
+  };
+
   const printImage = useCallback(async () => {
     if (stageRef.current && imageLoaded && processedImage && socket && processedImage.id) {
       if (!isSocketConnected) {
@@ -87,29 +113,7 @@ const Print = ({processedImage, images, queue, refreshQueues}: PrintProps) => {
           if (response.success) {
             setIsPrinting(false);
             setIsPrinted(true);
-            toast.success("Đã đặt in thành công!", {
-              description: `Đơn hàng ${queue.id} đã được đặt in thành công!`,
-              duration: 5000,
-              style: {
-                backgroundColor: "#5cb85c",
-                color: "white",
-              },
-              descriptionClassName: "!text-white font-medium",
-              className: "flex items-center justify-start flex-col gap-5 w-[300px]",
-              actionButtonStyle: {
-                backgroundColor: "white",
-                color: "black",
-                width: "100%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                cursor: "pointer",
-              },
-              action: {
-                label: "Đóng",
-                onClick: () => toast.dismiss(),
-              },
-            });
+            showToast(true, "Đã đặt in thành công!", `Đơn hàng ${queue.id} đã được đặt in thành công!`);
             try {
               const updateStatus = await updateQueueStatus(queue.id, "completed");
               if (updateStatus.error) {
@@ -121,40 +125,26 @@ const Print = ({processedImage, images, queue, refreshQueues}: PrintProps) => {
               }
             } catch (error) {
               console.error("Error printing:", error);
+              showToast(false, "Cập nhật thất bại!", `Đơn hàng ${queue.id} không thể cập nhật trạng thái!`);
+              setIsDialogOpen(false);
+              await refreshQueues();
             }
           } else {
-            toast.error("Đã in thất bại!", {
-              description: `Đơn hàng ${queue.id} đã in thất bại!`,
-              duration: 5000,
-              style: {
-                backgroundColor: "#ef4444",
-                color: "white",
-              },
-              descriptionClassName: "!text-white font-medium",
-              className: "flex items-center justify-start flex-col gap-5 w-[300px]",
-              actionButtonStyle: {
-                backgroundColor: "white",
-                color: "black",
-                width: "100%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                cursor: "pointer",
-              },
-              action: {
-                label: "Đóng",
-                onClick: () => toast.dismiss(),
-              },
-            });
+            showToast(false, "Đã in thất bại!", `Đơn hàng ${queue.id} đã in thất bại!`);
             try {
               const updateStatus = await updateQueueStatus(queue.id, "failed");
               if (updateStatus.error) {
                 throw new Error("Failed to update status");
               } else {
+                setIsDialogOpen(false);
+                await refreshQueues();
                 console.log("Status updated sucessfully to database!");
               }
             } catch (error) {
               console.error("Error updating status:", error);
+              showToast(false, "Cập nhật thất bại!", `Đơn hàng ${queue.id} không thể cập nhật trạng thái!`);
+              setIsDialogOpen(false);
+              await refreshQueues();
             }
           }
         }

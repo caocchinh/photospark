@@ -157,8 +157,8 @@ const Print = ({
                           </TableCell>
                           <TableCell>
                             {typeof item.quantity === "string" && item.quantity.endsWith("+")
-                              ? `${item.price} VNĐ${processedImage.type === "double" ? "/2 ảnh" : "/ảnh"}`
-                              : `${item.price} VNĐ`}
+                              ? `${item.price.toLocaleString("vi-VN")} VNĐ${processedImage.type === "double" ? "/2 ảnh" : "/ảnh"}`
+                              : `${item.price.toLocaleString("vi-VN")} VNĐ`}
                           </TableCell>
                         </TableRow>
                       ))}
@@ -200,8 +200,8 @@ const Print = ({
                     value={[printQuantity]}
                     onValueChange={(values) => setPrintQuantity(values[0])}
                   />
-                  <div className="w-full h-[50px] text-[#f97316] font-semibold text-3xl flex items-center justify-center">
-                    GIÁ: <SlidingNumber value={calculatePrice(printQuantity / (processedImage.type === "double" ? 2 : 1))} /> VNĐ
+                  <div className="w-full h-[50px] text-[#f97316] font-semibold text-3xl flex items-center justify-center gap-1">
+                    GIÁ: {calculatePrice(printQuantity / (processedImage.type === "double" ? 2 : 1)).toLocaleString("vi-VN")} VNĐ
                   </div>
                 </CardContent>
                 <CardFooter className="w-full">

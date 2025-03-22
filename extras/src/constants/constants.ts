@@ -486,3 +486,36 @@ export const QUEUE_TITLE_MAPING = {
   createdAt: "Thời gian đặt",
   price: "Giá",
 };
+
+export const STATUS = {
+  completed: "completed",
+  processing: "processing",
+  failed: "failed",
+  pending: "pending",
+} as const;
+
+export type StatusKey = keyof typeof STATUS;
+export type StatusValue = (typeof STATUS)[StatusKey];
+
+export const STATUS_VIETNAMESE = {
+  [STATUS.completed]: "Hoàn thành",
+  [STATUS.processing]: "Đang xử lý",
+  [STATUS.failed]: "Thất bại",
+  [STATUS.pending]: "Chờ xử lý",
+} as const;
+
+export type VietnameseStatus = (typeof STATUS_VIETNAMESE)[StatusValue];
+
+export const STATUS_COLORS = {
+  [STATUS_VIETNAMESE[STATUS.completed]]: "text-green-600",
+  [STATUS_VIETNAMESE[STATUS.processing]]: "text-blue-600",
+  [STATUS_VIETNAMESE[STATUS.failed]]: "text-red-600",
+  [STATUS_VIETNAMESE[STATUS.pending]]: "text-yellow-600",
+};
+
+export const STATUS_DOT_COLORS = {
+  [STATUS_VIETNAMESE[STATUS.completed]]: "bg-green-600",
+  [STATUS_VIETNAMESE[STATUS.processing]]: "bg-blue-600",
+  [STATUS_VIETNAMESE[STATUS.failed]]: "bg-red-600",
+  [STATUS_VIETNAMESE[STATUS.pending]]: "bg-yellow-600",
+};

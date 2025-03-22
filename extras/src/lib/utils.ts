@@ -2,53 +2,25 @@ import {clsx, type ClassValue} from "clsx";
 import {twMerge} from "tailwind-merge";
 import {QueueEntry} from "@/components/ui/columns";
 import {QueueTable} from "@/drizzle/schema";
+import {STATUS, STATUS_COLORS, STATUS_DOT_COLORS, STATUS_VIETNAMESE, StatusValue, VietnameseStatus} from "@/constants/constants";
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
 export function getStatusColor(status: string) {
-  switch (status) {
-    case "Hoàn thành":
-      return "text-green-600";
-    case "Đang xử lý":
-      return "text-blue-600";
-    case "Thất bại":
-      return "text-red-600";
-    case "Chờ xử lý":
-      return "text-yellow-600";
-    default:
-      return "";
-  }
+  return STATUS_COLORS[status as VietnameseStatus] || "";
 }
 
 export function getStatusColorDot(status: string) {
-  switch (status) {
-    case "Hoàn thành":
-      return "bg-green-600";
-    case "Đang xử lý":
-      return "bg-blue-600";
-    case "Thất bại":
-      return "bg-red-600";
-    case "Chờ xử lý":
-      return "bg-yellow-600";
-    default:
-      return "";
-  }
+  return STATUS_DOT_COLORS[status as VietnameseStatus] || "";
 }
 
-export const getVietnameseStatus = (status: string): "Hoàn thành" | "Đang xử lý" | "Thất bại" | "Chờ xử lý" => {
-  switch (status) {
-    case "completed":
-      return "Hoàn thành";
-    case "processing":
-      return "Đang xử lý";
-    case "failed":
-      return "Thất bại";
-    case "pending":
-      return "Chờ xử lý";
-    default:
-      return status as "Hoàn thành" | "Đang xử lý" | "Thất bại" | "Chờ xử lý";
+export const getVietnameseStatus = (status: string): VietnameseStatus => {
+  if (status in STATUS) {
+    return STATUS_VIETNAMESE[status as StatusValue];
   }
+  return status as VietnameseStatus;
 };
 
 export const formatVietnameseDateUTC7 = (date: Date): string => {

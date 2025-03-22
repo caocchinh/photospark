@@ -28,7 +28,7 @@ const PrintServerAlert = () => {
           <PiPrinter className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-9 h-9" />
           <LoadingSpinner size={75} />
         </div>
-        <AlertDialogDescription className="text-lg text-center">Vui lòng chờ trong khi chúng ứng dụng kết nối với server in</AlertDialogDescription>
+        <AlertDialogDescription className="text-lg text-center">Vui lòng chờ trong khi ứng dụng kết nối với server in</AlertDialogDescription>
         <div className="bg-red-500 flex flex-col gap-2 rounded-lg px-4 py-2 w-full">
           <div className="flex items-center gap-2 w-full group">
             <IoMdArrowDropright
