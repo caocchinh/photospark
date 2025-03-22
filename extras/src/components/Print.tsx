@@ -169,7 +169,7 @@ const Print = ({processedImage, images, queue, refreshQueues}: PrintProps) => {
     >
       <AlertDialogTrigger asChild>
         <Button
-          className="border border-slate-300 flex-1 cursor-pointer w-full"
+          className="border border-slate-300 flex-1 cursor-pointer w-full relative z-[1]"
           onClick={() => setIsDialogOpen(true)}
         >
           In

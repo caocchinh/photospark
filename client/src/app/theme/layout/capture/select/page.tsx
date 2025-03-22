@@ -364,16 +364,14 @@ const PrintPage = () => {
           {photo && (
             <div className="relative w-full h-full">
               {(photo.theme!.frame.slotCount - filteredSelectedImages.length == 0 || isTimeOver) && (
-                <>
-                  <GlowEffect
-                    colors={["#FF5733", "#33FF57", "#3357FF", "#F1C40F"]}
-                    mode="colorShift"
-                    blur="soft"
-                    duration={3}
-                    scale={1}
-                    className="z-[0]"
-                  />
-                </>
+                <GlowEffect
+                  colors={["#FF5733", "#33FF57", "#3357FF", "#F1C40F"]}
+                  mode="colorShift"
+                  blur="soft"
+                  duration={3}
+                  scale={1}
+                  className="z-[0]"
+                />
               )}
               <Button
                 asChild

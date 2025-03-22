@@ -22,6 +22,7 @@ import Print from "@/components/Print";
 import {Label} from "@/components/ui/label";
 import {toast} from "sonner";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import {GlowEffect} from "@/components/ui/glow-effect";
 const Table = ({availableQueues}: {availableQueues: (typeof QueueTable.$inferSelect)[]}) => {
   const placeholderImages = [
     {src: "/ass.gif", alt: "twerk", width: 100, height: 100},
@@ -35,6 +36,7 @@ const Table = ({availableQueues}: {availableQueues: (typeof QueueTable.$inferSel
   const [queueId, setQueueId] = useState<string | null>(null);
   const [queues, setQueues] = useState<(typeof QueueTable.$inferSelect)[]>(availableQueues);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isRefreshButtonDisabled, setIsRefreshButtonDisabled] = useState(false);
   const [randomImageIndex] = useState(() => {
     return Math.floor(Math.random() * placeholderImages.length);
   });
@@ -46,6 +48,7 @@ const Table = ({availableQueues}: {availableQueues: (typeof QueueTable.$inferSel
 
   const refreshQueues = async () => {
     setIsRefreshing(true);
+    setIsRefreshButtonDisabled(true);
     try {
       const newQueues = await getAllQueues();
       if (newQueues.error) {
@@ -99,8 +102,12 @@ const Table = ({availableQueues}: {availableQueues: (typeof QueueTable.$inferSel
           onClick: () => toast.dismiss(),
         },
       });
+    } finally {
+      setIsRefreshing(false);
+      setTimeout(() => {
+        setIsRefreshButtonDisabled(false);
+      }, 3200);
     }
-    setIsRefreshing(false);
   };
 
   useEffect(() => {
@@ -172,17 +179,27 @@ const Table = ({availableQueues}: {availableQueues: (typeof QueueTable.$inferSel
               className="cursor-pointer flex items-center gap-2"
               variant="outline"
               onClick={refreshQueues}
-              disabled={isRefreshing || !isSocketConnected}
+              disabled={isRefreshing || !isSocketConnected || isRefreshButtonDisabled}
             >
               Refresh
               <LuRefreshCcw className={cn(isRefreshing && "animate-spin")} />
             </Button>
             <div
               className={cn(
-                "flex-1",
+                "flex-1 relative",
                 !processedImage || !images || !imageLoaded || !isSocketConnected || isRefreshing || !queueId ? "pointer-events-none opacity-70" : null
               )}
             >
+              {!(!processedImage || !images || !imageLoaded || !isSocketConnected || isRefreshing || !queueId) && (
+                <GlowEffect
+                  colors={["#FF5733", "#33FF57", "#3357FF", "#F1C40F"]}
+                  mode="colorShift"
+                  blur="soft"
+                  duration={3}
+                  scale={1}
+                  className="z-[0]"
+                />
+              )}
               <Print
                 processedImage={processedImage!}
                 images={images!}
