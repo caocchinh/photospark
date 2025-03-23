@@ -9,7 +9,15 @@ interface PhotoContextType {
 
 const PhotoContext = createContext<PhotoContextType>({photo: undefined, setPhoto: undefined});
 
-export const PhotoProvider = ({children, images = []}: {children: ReactNode; images?: Array<{id: string; href: string}>}) => {
+export const PhotoProvider = ({
+  children,
+  images = [],
+  previousProcessedImageId = "",
+}: {
+  children: ReactNode;
+  images?: Array<{id: string; href: string}>;
+  previousProcessedImageId: string;
+}) => {
   const [photo, setPhoto] = useState<PhotoOptions<ValidThemeType> | undefined>(() => {
     if (images.length > 0) {
       return {
@@ -22,6 +30,7 @@ export const PhotoProvider = ({children, images = []}: {children: ReactNode; ima
         id: null,
         frameType: null,
         filters: null,
+        previousProcessedImageId: previousProcessedImageId,
       };
     }
     return undefined;

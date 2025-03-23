@@ -6,6 +6,17 @@ export const VALID_FRAME_TYPES = ["singular", "double"] as const;
 
 export const NUM_OF_CAPTURE_IMAGE = 6;
 
+export const PRINT_PRICING = [
+  {quantity: 1, price: 20000},
+  {quantity: 2, price: 40000},
+  {quantity: 3, price: 60000},
+  {quantity: 4, price: 80000},
+  {quantity: 5, price: 100000},
+  {quantity: "5+", price: 15000},
+];
+
+export const MAX_PRINT_QUANTITY = 10;
+
 export const CAPTURE_DURATION = 3;
 
 export const FILTER_SELECT_DURATION = 25;

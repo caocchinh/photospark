@@ -32,6 +32,7 @@ export interface PhotoOptions<T extends ValidThemeType> {
     r2_url: string | null;
   };
   id: string | null;
+  previousProcessedImageId: string;
   frameType: ValidFrameType | null;
 }
 
