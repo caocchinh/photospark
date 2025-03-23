@@ -22,6 +22,7 @@ import QRCode from "react-qr-code";
 import ReactDOM from "react-dom/client";
 import {ROUTES} from "@/constants/routes";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import {IoIosCheckmark} from "react-icons/io";
 
 const FilterPage = () => {
   const {photo, setPhoto, isOnline} = usePhoto();
@@ -376,10 +377,11 @@ const FilterPage = () => {
                   {t("Random filter")} - {FILTERS.find((item) => item.value == filter)?.name}
                 </Button>
                 <Button
-                  className="w-full mt-2"
+                  className="w-full mt-2 flex items-center justify-center gap-1"
                   onClick={() => setFilter(null)}
                 >
                   {t("Reset filter")}
+                  {!filter && <IoIosCheckmark size={35} />}
                 </Button>
               </div>
               <div className="relative w-full">

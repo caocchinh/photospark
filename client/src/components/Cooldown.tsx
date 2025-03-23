@@ -27,7 +27,7 @@ const Cooldown = () => {
     <>
       {!photo && (
         <AlertDialog open={timeLeft > 0}>
-          <AlertDialogContent className="flex flex-col items-center justify-center">
+          <AlertDialogContent className="flex flex-col items-center justify-center pointer-events-none">
             <AlertDialogTitle className="text-center uppercase text-3xl font-semibold">
               {t("Please go out and let the other group in!")}
             </AlertDialogTitle>
