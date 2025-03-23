@@ -1,30 +1,10 @@
-import Edit from "./Edit";
-import {getProcessedImage, getImage} from "@/server/actions";
-import ImageNotFoundError from "@/components/ImageNotFoundError";
-import FetchError from "@/components/FetchError";
-type Params = Promise<{processedImageId: string}>;
+"use client";
+import {usePhoto} from "@/context/PhotoContext";
 
-const EditPage = async (props: {params: Params}) => {
-  const params = await props.params;
-  const processedImageId = params.processedImageId;
+const EditPage = () => {
+  const {photo} = usePhoto();
 
-  const processedImage = await getProcessedImage(processedImageId);
-
-  if (processedImage.error || !processedImage.data) {
-    return <ImageNotFoundError />;
-  }
-  const images = await getImage(processedImageId);
-  const availableImageCount = images.data?.filter((image) => image.slotPositionX != null && image.slotPositionY != null).length || 0;
-
-  return (
-    <div className="w-full min-h-screen flex items-center justify-center bg-white ">
-      <Edit
-        processedImage={processedImage.data}
-        images={images.data}
-      />
-      {availableImageCount < processedImage.data.slotCount && <FetchError type="image" />}
-    </div>
-  );
+  return <div className="w-full min-h-screen flex items-center justify-center bg-white ">{photo?.images[0].href}</div>;
 };
 
 export default EditPage;

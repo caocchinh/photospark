@@ -1,17 +1,16 @@
-export const VALID_THEMES = ["prom", "usagyuun"] as const;
+import {ValidThemeType, ThemeSelectButtonType, FrameOptionType, FilterType} from "./types";
 
-export type ValidThemeType = (typeof VALID_THEMES)[number];
+export const VALID_THEMES = ["prom", "usagyuun"] as const;
 
 export const VALID_FRAME_TYPES = ["singular", "double"] as const;
 
-export type ValidFrameType = (typeof VALID_FRAME_TYPES)[number];
+export const NUM_OF_CAPTURE_IMAGE = 6;
 
-export const ThemeSelectButton: {
-  title: string;
-  image_src: string;
-  theme: ValidThemeType;
-  style?: {[key: string]: string};
-}[] = [
+export const CAPTURE_DURATION = 3;
+
+export const FILTER_SELECT_DURATION = 25;
+
+export const ThemeSelectButton: ThemeSelectButtonType[] = [
   {
     title: "PROM",
     image_src: "/prom.jpg",
@@ -52,20 +51,7 @@ const PROM_Y_SLOT_SEPERATION = (index: number) => {
 };
 
 export const FrameOptions: {
-  [key in ValidThemeType]: Array<{
-    type: ValidFrameType;
-    src: `/frame/${key}/${key}_${number}.png`;
-    thumbnail?: `/frame/${key}/thumbnail/${key}_${number}.${string}`;
-    slotCount: number;
-    slotDimensions: {
-      width: number;
-      height: number;
-    };
-    slotPositions: {
-      x: number;
-      y: number;
-    }[];
-  }>;
+  [key in ValidThemeType]: Array<FrameOptionType<key>>;
 } = {
   prom: [
     {
@@ -448,34 +434,7 @@ export const FrameOptions: {
   ],
 };
 
-export interface PhotoOptions<T extends ValidThemeType> {
-  theme: {
-    name: T;
-    frame: (typeof FrameOptions)[T][number];
-  } | null;
-  images: Array<{
-    id: string;
-    href: string;
-  }>;
-  selectedImages: Array<{
-    id: string;
-    href: string;
-  }>;
-  video: {
-    r2_url: string | null;
-  };
-  id: string | null;
-  frameType: ValidFrameType | null;
-  filters: string | null;
-}
-
-export const NUM_OF_IMAGE = 6;
-
-export const FILTERS: {
-  name: string;
-  filter: string | null;
-  value: string | null;
-}[] = [
+export const FILTERS: FilterType[] = [
   {name: "Original", filter: null, value: null},
   {name: "1977", filter: "filter-1977", value: "sepia(0.5) hue-rotate(-30deg) saturate(1.4)"},
   {name: "Aden", filter: "filter-aden", value: "sepia(0.2) brightness(1.15) saturate(1.4)"},
@@ -518,14 +477,3 @@ export const FILTERS: {
   {name: "Willow", filter: "filter-willow", value: "brightness(1.2) contrast(0.85) saturate(0.05) sepia(0.2)"},
   {name: "X-Pro II", filter: "filter-xpro-ii", value: "sepia(0.45) contrast(1.25) brightness(1.75) saturate(1.3) hue-rotate(-5deg)"},
 ];
-
-export const PRINT_PRICING = [
-  {quantity: 1, price: 20000},
-  {quantity: 2, price: 40000},
-  {quantity: 3, price: 60000},
-  {quantity: 4, price: 80000},
-  {quantity: 5, price: 100000},
-  {quantity: "5+", price: 15000},
-];
-
-export const MAX_PRINT_QUANTITY = 10;
