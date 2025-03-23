@@ -21,7 +21,7 @@ const LayoutEditPage = () => {
 
   return (
     <div className="w-full min-h-screen flex items-center flex-col justify-center bg-white gap-12">
-      <h1 className="text-5xl font-semibold">Chọn layout</h1>
+      <h1 className="text-5xl font-semibold uppercase">Chọn layout</h1>
       <div className="flex items-center justify-center gap-8 flex-wrap w-full">
         <Link
           href={`/${photo?.previousProcessedImageId}/edit/theme`}

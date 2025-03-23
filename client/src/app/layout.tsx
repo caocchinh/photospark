@@ -58,7 +58,7 @@ export default function RootLayout({
                 bg-no-repeat bg-cover min-h-screen flex items-center justify-center flex-col w-full`}
             >
               {pathName == ROUTES.HOME && <CameraLabel />}
-              {(pathName === ROUTES.HOME || pathName === ROUTES.THEME || pathName === ROUTES.LAYOUT) && <AutoSelectCountDownSlider />}
+              {(pathName === ROUTES.HOME || pathName === ROUTES.THEME || pathName === ROUTES.FRAME) && <AutoSelectCountDownSlider />}
 
               <CollabTransitionOverlay />
               <PageTransitionEffect>

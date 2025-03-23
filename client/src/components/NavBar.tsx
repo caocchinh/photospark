@@ -16,7 +16,7 @@ import {SlidingNumber} from "./ui/sliding-number";
 
 const NavBar = () => {
   const pathname = usePathname();
-  const isActive = pathname == ROUTES.HOME || pathname == ROUTES.LAYOUT || pathname == ROUTES.THEME;
+  const isActive = pathname == ROUTES.HOME || pathname == ROUTES.FRAME || pathname == ROUTES.THEME;
   const hideNavBar = pathname === ROUTES.CAPTURE;
   const {autoSelectCountdown} = usePhoto();
   const {t} = useTranslation();

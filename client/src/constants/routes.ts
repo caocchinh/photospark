@@ -1,10 +1,9 @@
 export const ROUTES = {
   HOME: "/",
-  SETTING: "/setting",
   THEME: "/theme",
-  LAYOUT: "/theme/layout",
-  CAPTURE: "/theme/layout/capture",
-  SELECT: "/theme/layout/capture/select",
-  FILTER: "/theme/layout/capture/select/filter",
-  REVIEW: "/theme/layout/capture/select/filter/review",
+  FRAME: "/theme/frame",
+  CAPTURE: "/theme/frame/capture",
+  SELECT: "/theme/frame/capture/select",
+  FILTER: "/theme/frame/capture/select/filter",
+  REVIEW: "/theme/frame/capture/select/filter/review",
 };

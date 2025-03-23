@@ -62,7 +62,7 @@ const ThemePage = () => {
                   const hasMatchingFrame = FrameOptions[item.theme].some((frame) => frame.type === photo.frameType);
                   return hasMatchingFrame ? (
                     <Link
-                      href={ROUTES.LAYOUT}
+                      href={ROUTES.FRAME}
                       onClick={() => handleThemeChange(item.theme)}
                       key={index}
                     >

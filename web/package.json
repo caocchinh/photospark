@@ -26,6 +26,7 @@
     "dotenv": "^16.4.7",
     "drizzle-orm": "^0.40.0",
     "embla-carousel-react": "^8.5.2",
+    "embla-carousel-wheel-gestures": "^8.0.1",
     "input-otp": "^1.4.2",
     "konva": "^9.3.18",
     "lucide-react": "^0.477.0",

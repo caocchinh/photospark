@@ -88,7 +88,7 @@ const PrintPage = () => {
           );
         } else {
           setPhoto((prevStyle) => prevStyle && {...prevStyle, error: true, images: [], id: null});
-          navigateTo(ROUTES.LAYOUT);
+          navigateTo(ROUTES.FRAME);
         }
       }
     };

@@ -83,7 +83,7 @@ const CapturePage = () => {
           mediaRecorder.stop();
         }
 
-        navigateTo(ROUTES.LAYOUT);
+        navigateTo(ROUTES.FRAME);
       }
     };
 
@@ -122,7 +122,7 @@ const CapturePage = () => {
             mediaRecorder.stop();
           }
           setUploadedImages([]);
-          navigateTo(ROUTES.LAYOUT);
+          navigateTo(ROUTES.FRAME);
         }
       }
     }

@@ -54,7 +54,7 @@ export const PhotoProvider = ({children}: {children: ReactNode}) => {
   const [camera, setCamera] = useState<Camera | null>(null);
   const [availableCameras, setAvailableCameras] = useState<Array<{deviceId: string; label: string}>>([]);
   const [isOnline, setIsOnline] = useState(true);
-  const isValidPageForCountdown = useMemo(() => pathName === ROUTES.HOME || pathName === ROUTES.THEME || pathName === ROUTES.LAYOUT, [pathName]);
+  const isValidPageForCountdown = useMemo(() => pathName === ROUTES.HOME || pathName === ROUTES.THEME || pathName === ROUTES.FRAME, [pathName]);
 
   useEffect(() => {
     const handleOnline = () => {

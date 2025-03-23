@@ -32,7 +32,7 @@ export default async function EditLayout(props: {params: Params; children: React
       images={bindIdToImage}
       previousProcessedImageId={processedImageId}
     >
-      <div className="w-full min-h-screen py-18">
+      <div className="w-full min-h-screen py-20">
         {props.children}
         {images.data.length < NUM_OF_CAPTURE_IMAGE && <FetchError type="image" />}
       </div>
