@@ -2,7 +2,7 @@ import FetchError from "@/components/FetchError";
 import ImageNotFoundError from "@/components/ImageNotFoundError";
 import {NUM_OF_CAPTURE_IMAGE} from "@/constants/constants";
 import {PhotoProvider} from "@/context/PhotoContext";
-import {getImage, getProcessedImage} from "@/server/actions";
+import {getImage, getProcessedImage, getVideo} from "@/server/actions";
 import {ReactNode} from "react";
 type Params = Promise<{processedImageId: string; children: ReactNode}>;
 
@@ -22,6 +22,8 @@ export default async function EditLayout(props: {params: Params; children: React
     return <ImageNotFoundError />;
   }
 
+  const video = await getVideo(processedImageId);
+
   const bindIdToImage = Array.from({length: images.data?.length || 0}, (_, index) => ({
     id: index.toString(),
     href: images.data?.[index]?.url || "",
@@ -31,6 +33,7 @@ export default async function EditLayout(props: {params: Params; children: React
     <PhotoProvider
       images={bindIdToImage}
       previousProcessedImageId={processedImageId}
+      videoUrl={video.data?.url || ""}
     >
       <div className="w-full min-h-screen py-20">
         {props.children}

@@ -5,7 +5,7 @@ import {useCallback, useEffect, useRef, useState} from "react";
 import useImage from "use-image";
 import {Image as KonvaImage, Rect} from "react-konva";
 import {Layer, Stage} from "react-konva";
-import SelectedImage from "@/components/SelectedImage";
+import FrameImage from "@/components/FrameImage";
 import {Button} from "@/components/ui/button";
 import {FILTER_SELECT_DURATION, FILTERS, FRAME_HEIGHT, FRAME_WIDTH, IMAGE_HEIGHT, IMAGE_WIDTH, OFFSET_X, OFFSET_Y} from "@/constants/constants";
 import {cn} from "@/lib/utils";
@@ -291,7 +291,7 @@ const FilterPage = () => {
                     {photo.selectedImages.map(({id, data}, index) => {
                       return (
                         data && (
-                          <SelectedImage
+                          <FrameImage
                             key={id}
                             url={data}
                             y={photo.theme!.frame.slotPositions[index].y}

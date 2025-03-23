@@ -7,7 +7,7 @@ import {Layer, Rect, Stage} from "react-konva";
 import useImage from "use-image";
 import {Image as KonvaImage} from "react-konva";
 import Image from "next/image";
-import SelectedImage from "@/components/SelectedImage";
+import FrameImage from "@/components/FrameImage";
 import Link from "next/link";
 import {FRAME_HEIGHT, FRAME_WIDTH, IMAGE_HEIGHT, IMAGE_WIDTH, OFFSET_X, OFFSET_Y, IMAGE_SELECT_DURATION} from "@/constants/constants";
 import {uploadImageToR2} from "@/lib/r2";
@@ -294,7 +294,7 @@ const PrintPage = () => {
                     y={OFFSET_Y / isSingle}
                   >
                     {selectedImage.map((item, index) => (
-                      <SelectedImage
+                      <FrameImage
                         key={index}
                         url={item?.data}
                         y={photo.theme!.frame.slotPositions[index].y}

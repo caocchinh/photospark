@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {Image as KonvaImage} from "react-konva";
 
-const SelectedImage = ({
+const FrameImage = ({
   url,
   y,
   x,
@@ -55,4 +55,4 @@ const SelectedImage = ({
   );
 };
 
-export default SelectedImage;
+export default FrameImage;

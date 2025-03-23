@@ -13,10 +13,12 @@ export const PhotoProvider = ({
   children,
   images = [],
   previousProcessedImageId = "",
+  videoUrl = "",
 }: {
   children: ReactNode;
   images?: Array<{id: string; href: string}>;
   previousProcessedImageId: string;
+  videoUrl: string;
 }) => {
   const [photo, setPhoto] = useState<PhotoOptions<ValidThemeType> | undefined>(() => {
     if (images.length > 0) {
@@ -25,7 +27,7 @@ export const PhotoProvider = ({
         images: images,
         selectedImages: [],
         video: {
-          r2_url: null,
+          r2_url: videoUrl,
         },
         id: null,
         frameType: null,
