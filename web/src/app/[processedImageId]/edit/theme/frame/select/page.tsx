@@ -2,43 +2,37 @@
 import {Button} from "@/components/ui/button";
 import {usePhoto} from "@/context/PhotoContext";
 import {cn, findSwappedIndices} from "@/lib/utils";
-import {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import {useCallback, useEffect, useMemo, useState} from "react";
 import {Layer, Rect, Stage} from "react-konva";
 import useImage from "use-image";
 import {Image as KonvaImage} from "react-konva";
 import Image from "next/image";
 import Link from "next/link";
 import {FRAME_HEIGHT, FRAME_WIDTH, IMAGE_HEIGHT, IMAGE_WIDTH, OFFSET_X, OFFSET_Y} from "@/constants/constants";
-import {MdOutlineCloudDone} from "react-icons/md";
-import LoadingSpinner from "@/components/LoadingSpinner";
 import {GlowEffect} from "@/components/ui/glow-effect";
 import {ROUTES} from "@/constants/routes";
 import {Reorder} from "motion/react";
 import FrameImage from "@/components/FrameImage";
 import {useRouter} from "next/navigation";
 
-const PrintPage = () => {
+const SelectEditPage = () => {
   const {photo, setPhoto} = usePhoto();
   const router = useRouter();
-  const lastImageUploaded = useMemo(() => {
-    if (photo) {
-      return photo!.images[photo!.images.length - 1].href != "";
-    }
-  }, [photo]);
-
-  const [frameImg, frameImgStatus] = useImage(photo ? photo.theme!.frame.src : "");
+  useEffect(() => {
+    if (!photo?.theme) return router.push(`/${photo?.previousProcessedImageId}/${ROUTES.HOME}`);
+  }, [photo, router]);
+  const [frameImg, frameImgStatus] = useImage(photo?.theme?.frame?.src || "");
 
   const [selectedImage, setSelectedImage] = useState<Array<{id: string; href: string} | null>>(
-    Array.from({length: photo ? photo.theme!.frame.slotCount : 0}, () => null)
+    Array.from({length: photo?.theme?.frame?.slotCount || 0}, () => null)
   );
-  const photoRef = useRef(photo);
-  const [lastRemovedImage, setLastRemovedImage] = useState<number>(photo ? photo.theme!.frame.slotCount - 1 : 0);
+  const [lastRemovedImage, setLastRemovedImage] = useState<number>(photo?.theme?.frame?.slotCount ? photo.theme.frame.slotCount - 1 : 0);
   const isSingle = useMemo(() => {
     if (!photo) return 1;
     return photo.frameType == "singular" ? 1 : 2;
   }, [photo]);
   const [isSelected, setIsSelected] = useState(false);
-  const [slots, setSlots] = useState<Array<number>>(Array.from({length: photo ? photo.theme!.frame.slotCount : 0}, (_, index) => index));
+  const [slots, setSlots] = useState<Array<number>>(Array.from({length: photo?.theme?.frame?.slotCount || 0}, (_, index) => index));
   const [isDragging, setIsDragging] = useState(false);
 
   const handleContextSelect = useCallback(
@@ -97,224 +91,192 @@ const PrintPage = () => {
 
   const filteredSelectedImages = useMemo(() => selectedImage.filter((img) => img !== null), [selectedImage]);
 
-  useEffect(() => {
-    if (!photoRef.current) return;
-
-    const itemLeft = photoRef.current!.theme!.frame.slotCount - filteredSelectedImages.length;
-    if (itemLeft > 0) {
-      const unselectedImage = photoRef.current!.images.filter((item) => !filteredSelectedImages.includes(item));
-
-      const shuffledImages = [...unselectedImage].sort(() => Math.random() - 0.5);
-
-      setSelectedImage((prevImages) => {
-        const newImages = [...prevImages];
-        let currentIndex = 0;
-
-        for (let i = 0; i < newImages.length && currentIndex < itemLeft; i++) {
-          if (newImages[i] === null) {
-            newImages[i] = shuffledImages[currentIndex];
-            currentIndex++;
-          }
-        }
-        return newImages;
-      });
-    }
-  }, [filteredSelectedImages, photo, lastImageUploaded]);
-
   return (
-    <div
-      className={cn(
-        "w-full h-full flex items-center justify-center gap-3 flex-col transition duration-300",
-        frameImgStatus != "loaded" ? "opacity-0 pointer-events-none" : "opacity-100"
-      )}
-    >
-      <div className={cn("flex items-center justify-evenly w-full h-full", isSelected ? "pointer-events-none" : null)}>
-        <div className="flex flex-col items-center justify-center h-full">
-          <div className="relative h-full flex items-center justify-center">
-            <div className="frame-container">
-              <Reorder.Group
-                values={slots}
-                onReorder={(newSlotOrder) => {
-                  const swappedIndices = findSwappedIndices(slots, newSlotOrder);
-                  setSlots(newSlotOrder);
-                  setSelectedImage((prevImages) => {
-                    const reorderedImages = [...prevImages];
-                    const [removed] = reorderedImages.splice(swappedIndices.fromIndex, 1);
-                    reorderedImages.splice(swappedIndices.toIndex, 0, removed);
-                    return reorderedImages;
-                  });
-                }}
-                as="div"
-                className="flex absolute flex-col z-50"
-                style={{
-                  gap:
-                    isSingle == 2 && photo
-                      ? (photo.theme!.frame.slotPositions[0].y / isSingle) * 0.7
-                      : photo
-                      ? OFFSET_Y * 2 + photo.theme!.frame.slotPositions[0].y
-                      : 0,
-                  top: photo ? photo.theme!.frame.slotPositions[0].y + OFFSET_Y / isSingle : 0,
-                  left: OFFSET_X / isSingle,
-                }}
-              >
-                {slots.map((slotIndex, index) => (
-                  <Reorder.Item
-                    value={slotIndex}
-                    key={slotIndex}
-                    z={100}
+    <>
+      {photo && photo.theme && (
+        <div
+          className={cn(
+            "w-full h-full flex items-center justify-center gap-3 flex-col transition duration-300",
+            frameImgStatus != "loaded" ? "opacity-0 pointer-events-none" : "opacity-100"
+          )}
+        >
+          <div className={cn("flex items-center justify-evenly w-full h-full", isSelected ? "pointer-events-none" : null)}>
+            <div className="flex flex-col items-center justify-center h-full">
+              <div className="relative h-full flex items-center justify-center">
+                <div className="frame-container">
+                  <Reorder.Group
+                    values={slots}
+                    onReorder={(newSlotOrder) => {
+                      const swappedIndices = findSwappedIndices(slots, newSlotOrder);
+                      setSlots(newSlotOrder);
+                      setSelectedImage((prevImages) => {
+                        const reorderedImages = [...prevImages];
+                        const [removed] = reorderedImages.splice(swappedIndices.fromIndex, 1);
+                        reorderedImages.splice(swappedIndices.toIndex, 0, removed);
+                        return reorderedImages;
+                      });
+                    }}
                     as="div"
-                    draggable={true}
-                    onDragStart={() => {
-                      setIsDragging(true);
-                    }}
-                    onDragEnd={() => {
-                      setIsDragging(false);
-                    }}
-                    onClick={() => {
-                      if (selectedImage[index] && !isDragging) {
-                        handleSelect(selectedImage[index]);
-                      }
+                    className="flex absolute flex-col z-50"
+                    style={{
+                      gap:
+                        isSingle == 2 && photo
+                          ? (photo.theme!.frame.slotPositions[0].y / isSingle) * 0.7
+                          : photo
+                          ? OFFSET_Y * 2 + photo.theme!.frame.slotPositions[0].y
+                          : 0,
+                      top: photo ? photo.theme!.frame.slotPositions[0].y + OFFSET_Y / isSingle : 0,
+                      left: OFFSET_X / isSingle,
                     }}
                   >
-                    <div
-                      style={{
-                        width: FRAME_WIDTH / isSingle,
-                        height: photo ? photo.theme!.frame.slotDimensions.height : 0,
-                      }}
-                      className="hover:cursor-grab active:cursor-grabbing z-50 bg-transparent"
-                    ></div>
-                  </Reorder.Item>
-                ))}
-              </Reorder.Group>
+                    {slots.map((slotIndex, index) => (
+                      <Reorder.Item
+                        value={slotIndex}
+                        key={slotIndex}
+                        z={100}
+                        as="div"
+                        draggable={true}
+                        onDragStart={() => {
+                          setIsDragging(true);
+                        }}
+                        onDragEnd={() => {
+                          setIsDragging(false);
+                        }}
+                        onClick={() => {
+                          if (selectedImage[index] && !isDragging) {
+                            handleSelect(selectedImage[index]);
+                          }
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: FRAME_WIDTH / isSingle,
+                            height: photo ? photo.theme!.frame.slotDimensions.height : 0,
+                          }}
+                          className="hover:cursor-grab active:cursor-grabbing z-50 bg-transparent"
+                        ></div>
+                      </Reorder.Item>
+                    ))}
+                  </Reorder.Group>
 
-              {frameImg && photo && (
-                <Stage
-                  width={IMAGE_WIDTH / isSingle}
-                  height={IMAGE_HEIGHT}
-                >
-                  <Layer>
-                    <Rect
+                  {frameImg && photo && (
+                    <Stage
                       width={IMAGE_WIDTH / isSingle}
                       height={IMAGE_HEIGHT}
-                      fill="white"
-                    />
-                  </Layer>
-                  <Layer
-                    x={OFFSET_X / isSingle}
-                    y={OFFSET_Y / isSingle}
-                  >
-                    {selectedImage.map((item, index) => (
-                      <FrameImage
-                        key={index}
-                        url={item?.href || ""}
-                        y={photo.theme!.frame.slotPositions[index].y}
-                        x={photo.theme!.frame.slotPositions[index].x}
-                        filter={""}
-                        height={photo.theme!.frame.slotDimensions.height}
-                        width={photo.theme!.frame.slotDimensions.width}
-                      />
-                    ))}
-                  </Layer>
-                  <Layer
-                    x={OFFSET_X / isSingle}
-                    y={OFFSET_Y / isSingle}
-                  >
-                    <KonvaImage
-                      image={frameImg}
-                      height={FRAME_HEIGHT}
-                      width={FRAME_WIDTH / isSingle}
-                    />
-                  </Layer>
-                </Stage>
+                    >
+                      <Layer>
+                        <Rect
+                          width={IMAGE_WIDTH / isSingle}
+                          height={IMAGE_HEIGHT}
+                          fill="white"
+                        />
+                      </Layer>
+                      <Layer
+                        x={OFFSET_X / isSingle}
+                        y={OFFSET_Y / isSingle}
+                      >
+                        {selectedImage.map((item, index) => (
+                          <FrameImage
+                            key={index}
+                            url={item?.href || ""}
+                            y={photo.theme!.frame.slotPositions[index].y}
+                            x={photo.theme!.frame.slotPositions[index].x}
+                            filter={""}
+                            height={photo.theme!.frame.slotDimensions.height}
+                            width={photo.theme!.frame.slotDimensions.width}
+                          />
+                        ))}
+                      </Layer>
+                      <Layer
+                        x={OFFSET_X / isSingle}
+                        y={OFFSET_Y / isSingle}
+                      >
+                        <KonvaImage
+                          image={frameImg}
+                          height={FRAME_HEIGHT}
+                          width={FRAME_WIDTH / isSingle}
+                        />
+                      </Layer>
+                    </Stage>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col w-[60%] gap-11 items-start justify-center ">
+              {photo && (
+                <div className="flex gap-2 w-full item-center justify-center ">
+                  <h1 className="text-5xl font-semibold mb-4 flex gap-2 uppercase"> Chọn hình</h1>
+                </div>
               )}
-            </div>
-          </div>
-        </div>
-        <div className="flex flex-col w-[60%] gap-11 items-start justify-center ">
-          {photo && (
-            <div className="flex gap-2 w-full item-center justify-center ">
-              <h1 className="text-5xl font-semibold mb-4 flex gap-2 uppercase"> Chọn hình</h1>
-            </div>
-          )}
 
-          <div className="grid grid-cols-3 gap-2 items-center justify-center justify-items-center w-full">
-            {photo && (
-              <>
-                {photo.images.map((item, index) => (
-                  <div
-                    key={index}
-                    className={cn(
-                      "bg-gray-200 rounded border-4 border-transparent hover:border-black hover:cursor-pointer",
-                      selectedImage.some((img) => img?.id === item.id) ? "border-rose-500 hover:border-rose-500" : null
-                    )}
-                    onClick={() => handleSelect(item)}
+              <div className="grid grid-cols-3 gap-2 items-center justify-center justify-items-center w-full">
+                {photo && (
+                  <>
+                    {photo.images.map((item, index) => (
+                      <div
+                        key={index}
+                        className={cn(
+                          "bg-gray-200 rounded border-4 border-transparent hover:border-black hover:cursor-pointer",
+                          selectedImage.some((img) => img?.id === item.id) ? "border-rose-500 hover:border-rose-500" : null
+                        )}
+                        onClick={() => handleSelect(item)}
+                      >
+                        <Image
+                          height={280}
+                          width={280}
+                          src={item.href}
+                          alt="image"
+                          priority
+                          className={cn(
+                            "pointer-events-none",
+                            `w-[${photo.theme!.frame.slotDimensions.width * 1.1}px] h-[${photo.theme!.frame.slotDimensions.height * 1.1}px]`
+                          )}
+                        />
+                      </div>
+                    ))}
+                  </>
+                )}
+              </div>
+              {photo && (
+                <div className="relative w-full h-full">
+                  {photo.theme!.frame.slotCount - filteredSelectedImages.length == 0 && (
+                    <GlowEffect
+                      colors={["#FF5733", "#33FF57", "#3357FF", "#F1C40F"]}
+                      mode="colorShift"
+                      blur="soft"
+                      duration={3}
+                      scale={1}
+                      className="z-[0]"
+                    />
+                  )}
+                  <Button
+                    asChild
+                    className="relative"
+                    onClick={() => setIsSelected(true)}
                   >
-                    <Image
-                      height={280}
-                      width={280}
-                      src={item.href}
-                      alt="image"
-                      priority
+                    <Link
+                      href="#"
                       className={cn(
-                        "pointer-events-none",
-                        `w-[${photo.theme!.frame.slotDimensions.width * 1.1}px] h-[${photo.theme!.frame.slotDimensions.height * 1.1}px]`
+                        "flex items-center justify-center gap-2 text-2xl px-14 py-6 w-full",
+                        photo ? (photo.theme!.frame.slotCount - filteredSelectedImages.length != 0 ? "pointer-events-none opacity-80" : null) : null,
+                        isSelected ? "pointer-events-none opacity-[85%]" : null
                       )}
-                    />
-                  </div>
-                ))}
-              </>
-            )}
-          </div>
-          {photo && (
-            <div className="relative w-full h-full">
-              {photo.theme!.frame.slotCount - filteredSelectedImages.length == 0 && (
-                <GlowEffect
-                  colors={["#FF5733", "#33FF57", "#3357FF", "#F1C40F"]}
-                  mode="colorShift"
-                  blur="soft"
-                  duration={3}
-                  scale={1}
-                  className="z-[0]"
-                />
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleContextSelect(filteredSelectedImages);
+                      }}
+                    >
+                      Chọn filter
+                    </Link>
+                  </Button>
+                </div>
               )}
-              <Button
-                asChild
-                className="relative"
-                onClick={() => setIsSelected(true)}
-              >
-                <Link
-                  href="#"
-                  className={cn(
-                    "flex items-center justify-center gap-2 text-2xl px-14 py-6 w-full",
-                    photo
-                      ? photo.theme!.frame.slotCount - filteredSelectedImages.length != 0 || !lastImageUploaded
-                        ? "pointer-events-none opacity-80"
-                        : null
-                      : null,
-                    isSelected ? "pointer-events-none opacity-[85%]" : null
-                  )}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleContextSelect(filteredSelectedImages);
-                  }}
-                >
-                  Chọn filter
-                  {!lastImageUploaded ? (
-                    <LoadingSpinner size={15} />
-                  ) : (
-                    <MdOutlineCloudDone
-                      size={15}
-                      color="white"
-                    />
-                  )}
-                </Link>
-              </Button>
             </div>
-          )}
+          </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 
-export default PrintPage;
+export default SelectEditPage;

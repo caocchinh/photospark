@@ -125,17 +125,17 @@ const FrameEditpage = () => {
       {photo && photo.theme && (
         <div className={cn("flex items-center w-full justify-center h-full", chosen ? "pointer-events-none" : null)}>
           <div className="w-[90%] sm:w-[80%] flex flex-col gap-6 ">
-            <div className="flex items-center justify-center self-start gap-4 flex-wrap">
+            <div className="flex items-center justify-center self-center md:self-start gap-4 flex-wrap">
               <Link
                 href={`/${photo?.previousProcessedImageId}/${ROUTES.THEME}`}
-                className="flex text-center items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-2 hover:opacity-[85%] "
+                className="w-full sm:w-auto flex text-center items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-2 hover:opacity-[85%] "
               >
                 <FaArrowLeft />
                 Chọn theme khác
               </Link>
               <Link
                 href={`/${photo?.previousProcessedImageId}/${ROUTES.HOME}`}
-                className="flex text-center items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-2 hover:opacity-[85%] "
+                className="w-full sm:w-auto flex text-center items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-2 hover:opacity-[85%] "
               >
                 <FaArrowLeft />
                 Chọn layout khác
@@ -156,7 +156,7 @@ const FrameEditpage = () => {
                   {filteredFrames.map((item, index) => (
                     <CarouselItem
                       key={index}
-                      className="pl-8 relative max-w-[290px] mb-8 sm:basis-[100%] md:basis-1/2 lg:basis-1/3 hover:cursor-pointer "
+                      className="pl-4 md:pl-8 relative max-w-[290px] mb-8 sm:basis-[100%] md:basis-1/2 lg:basis-1/3 hover:cursor-pointer "
                     >
                       <div className={cn(current == index + 1 ? "border-red-500" : "border-transparent", " border-6 rounded-md", "flex flex-row")}>
                         {Array.from({length: item.type == "singular" ? 1 : 2}, (_, _index) => {
@@ -222,7 +222,7 @@ const FrameEditpage = () => {
                 )}
                 onClick={handleFrameChosen}
               >
-                Chọn ảnh
+                Chọn hình
                 <FaArrowRight />
               </Link>
             </div>

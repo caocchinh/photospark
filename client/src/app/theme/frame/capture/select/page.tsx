@@ -21,7 +21,7 @@ import usePreventNavigation from "@/hooks/usePreventNavigation";
 import {ROUTES} from "@/constants/routes";
 import {Reorder} from "motion/react";
 
-const PrintPage = () => {
+const SelectPage = () => {
   const {photo, setPhoto, isOnline} = usePhoto();
   const {navigateTo} = usePreventNavigation();
   const {socket, isSocketConnected} = useSocket();
@@ -413,4 +413,4 @@ const PrintPage = () => {
   );
 };
 
-export default PrintPage;
+export default SelectPage;

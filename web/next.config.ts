@@ -23,6 +23,15 @@ const nextConfig: NextConfig = {
           }
         : false,
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "pub-2abc3784ea3543ba9804f812db4aa180.r2.dev",
+        pathname: "/**",
+      },
+    ],
+  },
 };
 
 export default nextConfig;
