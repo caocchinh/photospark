@@ -4,6 +4,7 @@ import SingularLayout from "@/components/layout-image/SingularLayout";
 import {ValidFrameType} from "@/constants/types";
 import {usePhoto} from "@/context/PhotoContext";
 import Link from "next/link";
+import {FaArrowLeft} from "react-icons/fa6";
 
 const LayoutEditPage = () => {
   const {photo, setPhoto} = usePhoto();
@@ -20,25 +21,34 @@ const LayoutEditPage = () => {
   };
 
   return (
-    <div className="w-full min-h-screen flex items-center flex-col justify-center bg-white gap-12">
-      <h1 className="text-5xl font-semibold uppercase">Chọn layout</h1>
-      <div className="flex items-center justify-center gap-8 flex-wrap w-full">
+    <div className="w-full min-h-screen flex items-start justify-center bg-white ">
+      <div className="flex flex-col w-[80%] gap-12 items-center justify-center">
         <Link
-          href={`/${photo?.previousProcessedImageId}/edit/theme`}
-          className=" cursor-pointer hover:scale-[1.02] active:scale-[0.99] flex items-center justify-center"
-          onClick={() => handleTypeChange("singular")}
-          tabIndex={-1}
+          href={`/${photo?.previousProcessedImageId}/`}
+          className="flex text-center w-[90%] sm:w-[280px] items-center self-center sm:self-start justify-center gap-2 bg-foreground text-background rounded px-4 py-2 hover:opacity-[85%] "
         >
-          <SingularLayout />
+          <FaArrowLeft />
+          Quay lại
         </Link>
-        <Link
-          href={`/${photo?.previousProcessedImageId}/edit/theme`}
-          className=" cursor-pointer hover:scale-[1.02] active:scale-[0.99] flex items-center justify-center"
-          onClick={() => handleTypeChange("double")}
-          tabIndex={-1}
-        >
-          <DoubleLayout />
-        </Link>
+        <h1 className="text-5xl font-semibold uppercase text-center">Chọn layout</h1>
+        <div className="flex items-center justify-center gap-8 flex-wrap w-full">
+          <Link
+            href={`/${photo?.previousProcessedImageId}/edit/theme`}
+            className=" cursor-pointer hover:scale-[1.02] active:scale-[0.99] flex items-center justify-center"
+            onClick={() => handleTypeChange("singular")}
+            tabIndex={-1}
+          >
+            <SingularLayout />
+          </Link>
+          <Link
+            href={`/${photo?.previousProcessedImageId}/edit/theme`}
+            className=" cursor-pointer hover:scale-[1.02] active:scale-[0.99] flex items-center justify-center"
+            onClick={() => handleTypeChange("double")}
+            tabIndex={-1}
+          >
+            <DoubleLayout />
+          </Link>
+        </div>
       </div>
     </div>
   );

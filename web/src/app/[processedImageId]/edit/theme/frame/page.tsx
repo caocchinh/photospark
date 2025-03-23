@@ -7,7 +7,7 @@ import {WheelGesturesPlugin} from "embla-carousel-wheel-gestures";
 import Image from "next/image";
 import Link from "next/link";
 import {useCallback, useEffect, useRef, useState, useMemo} from "react";
-import {FaArrowLeft} from "react-icons/fa6";
+import {FaArrowLeft, FaArrowRight} from "react-icons/fa6";
 import {useRouter} from "next/navigation";
 import {GlowEffect} from "@/components/ui/glow-effect";
 
@@ -109,7 +109,7 @@ const FrameEditpage = () => {
       setChosen(true);
       setPhoto((prevStyle) => {
         if (prevStyle) {
-          return {...prevStyle, error: false};
+          return {...prevStyle};
         }
         return prevStyle;
       });
@@ -124,8 +124,8 @@ const FrameEditpage = () => {
     <>
       {photo && photo.theme && (
         <div className={cn("flex items-center w-full justify-center h-full", chosen ? "pointer-events-none" : null)}>
-          <div className="w-[80%] flex flex-col gap-6 ">
-            <div className="flex items-center justify-center self-start gap-3 flex-wrap">
+          <div className="w-[90%] sm:w-[80%] flex flex-col gap-6 ">
+            <div className="flex items-center justify-center self-start gap-4 flex-wrap">
               <Link
                 href={`/${photo?.previousProcessedImageId}/${ROUTES.THEME}`}
                 className="flex text-center items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-2 hover:opacity-[85%] "
@@ -143,7 +143,7 @@ const FrameEditpage = () => {
             </div>
             <h1 className="text-5xl font-semibold uppercase text-center">Chọn frame</h1>
 
-            <div className="relative flex items-center justify-center flex-col py-8 px-2 w-full gap-5">
+            <div className="relative flex items-center justify-center flex-col my-4 px-2 w-full gap-5">
               <Carousel
                 setApi={setApi}
                 plugins={[WheelGesturesPlugin()]}
@@ -158,7 +158,7 @@ const FrameEditpage = () => {
                       key={index}
                       className="pl-8 relative max-w-[290px] mb-8 sm:basis-[100%] md:basis-1/2 lg:basis-1/3 hover:cursor-pointer "
                     >
-                      <div className={cn(current == index + 1 ? "border-red-500" : "border-transparent", " border-3 rounded-md", "flex flex-row")}>
+                      <div className={cn(current == index + 1 ? "border-red-500" : "border-transparent", " border-6 rounded-md", "flex flex-row")}>
                         {Array.from({length: item.type == "singular" ? 1 : 2}, (_, _index) => {
                           return (
                             <Image
@@ -180,9 +180,9 @@ const FrameEditpage = () => {
                 </CarouselContent>
               </Carousel>
 
-              <div className="flex gap-4 items-center justify-center -mt-10">
+              <div className="flex gap-4 items-center justify-center -mt-4">
                 <MdOutlineKeyboardDoubleArrowLeft
-                  size={40}
+                  size={45}
                   className="text-primary hover:cursor-pointer carousel-pointer"
                   onClick={handleLeftClick}
                 />
@@ -190,7 +190,7 @@ const FrameEditpage = () => {
                 {Array.from({length: filteredFrames.length}, (_, index) => (
                   <div
                     key={index}
-                    className="min-w-[12px] min-h-[12px] border-2 border-primary hover:cursor-pointer core-navigate"
+                    className="min-w-[15px] min-h-[15px] border-2 border-primary hover:cursor-pointer core-navigate"
                     style={{
                       background: current === index + 1 ? "black" : "#e2e8f0",
                     }}
@@ -200,7 +200,7 @@ const FrameEditpage = () => {
                   ></div>
                 ))}
                 <MdOutlineKeyboardDoubleArrowRight
-                  size={40}
+                  size={45}
                   className="text-primary hover:cursor-pointer carousel-pointer"
                   onClick={handleRightClick}
                 />
@@ -223,6 +223,7 @@ const FrameEditpage = () => {
                 onClick={handleFrameChosen}
               >
                 Chọn ảnh
+                <FaArrowRight />
               </Link>
             </div>
           </div>
