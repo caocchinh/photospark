@@ -8,12 +8,12 @@ import Image from "next/image";
 import Link from "next/link";
 import {useCallback, useEffect, useRef, useState, useMemo} from "react";
 import {FaArrowLeft} from "react-icons/fa6";
-import {IoIosArrowBack, IoIosArrowForward} from "react-icons/io";
 import {useRouter} from "next/navigation";
 import {GlowEffect} from "@/components/ui/glow-effect";
 
 import {ValidThemeType} from "@/constants/types";
 import {ROUTES} from "@/constants/routes";
+import {MdOutlineKeyboardDoubleArrowLeft, MdOutlineKeyboardDoubleArrowRight} from "react-icons/md";
 
 const FrameEditpage = () => {
   const {photo, setPhoto} = usePhoto();
@@ -23,7 +23,7 @@ const FrameEditpage = () => {
     if (!photo || !photo.theme) return [];
     return FrameOptions[photo.theme.name].filter((item) => item.type == photo.frameType);
   }, [photo]);
-
+  const [current, setCurrent] = useState(0);
   const initializationDoneRef = useRef(false);
   const [chosen, setChosen] = useState<boolean>(false);
 
@@ -76,6 +76,7 @@ const FrameEditpage = () => {
     if (initIndex !== -1) {
       api.scrollTo(initIndex);
     }
+    setCurrent(initIndex + 1);
 
     initializationDoneRef.current = true;
   }, [api, filteredFrames, photo]);
@@ -88,6 +89,7 @@ const FrameEditpage = () => {
     const handleAPISelect = () => {
       if (!api) return;
       const selectedIndex = api.selectedScrollSnap();
+      setCurrent(selectedIndex + 1);
       handleCarouselItemClick(selectedIndex);
       handleFrameChange(filteredFrames[selectedIndex]);
     };
@@ -98,7 +100,7 @@ const FrameEditpage = () => {
     };
   }, [api, filteredFrames, handleCarouselItemClick, handleFrameChange, photo]);
 
-  const handleCaptureClick = useCallback(
+  const handleFrameChosen = useCallback(
     async (e: React.MouseEvent<HTMLAnchorElement>) => {
       e.preventDefault();
 
@@ -121,92 +123,110 @@ const FrameEditpage = () => {
   return (
     <>
       {photo && photo.theme && (
-        <>
-          <div className={cn("flex items-center w-[90%] justify-center gap-24 h-full", chosen ? "pointer-events-none" : null)}>
-            <div className="flex items-center flex-col justify-center gap-4 w-max">
-              <h1 className="text-5xl font-semibold uppercase">Chọn frame</h1>
-              <div className="relative rounded border-2 border-gray-500 flex items-center justify-center py-8 px-2 bg-gray-100 w-[50vw]">
-                <IoIosArrowBack
-                  size={60}
-                  className="text-primary hover:cursor-pointer carousel-pointer"
-                  onClick={handleLeftClick}
-                />
-                <Carousel
-                  setApi={setApi}
-                  plugins={[WheelGesturesPlugin()]}
-                  opts={{
-                    align: "center",
-                    loop: true,
-                  }}
-                >
-                  <CarouselContent>
-                    {filteredFrames.map((item, index) => (
-                      <CarouselItem
-                        key={index}
-                        className="flex gap-4 basis-[100%] items-center justify-center "
-                      >
-                        {Array.from({length: item.type == "singular" ? 1 : 2}, (_, index) => {
+        <div className={cn("flex items-center w-full justify-center h-full", chosen ? "pointer-events-none" : null)}>
+          <div className="w-[80%] flex flex-col gap-6 ">
+            <div className="flex items-center justify-center self-start gap-3 flex-wrap">
+              <Link
+                href={`/${photo?.previousProcessedImageId}/${ROUTES.THEME}`}
+                className="flex text-center items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-2 hover:opacity-[85%] "
+              >
+                <FaArrowLeft />
+                Chọn theme khác
+              </Link>
+              <Link
+                href={`/${photo?.previousProcessedImageId}/${ROUTES.HOME}`}
+                className="flex text-center items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-2 hover:opacity-[85%] "
+              >
+                <FaArrowLeft />
+                Chọn layout khác
+              </Link>
+            </div>
+            <h1 className="text-5xl font-semibold uppercase text-center">Chọn frame</h1>
+
+            <div className="relative flex items-center justify-center flex-col py-8 px-2 w-full gap-5">
+              <Carousel
+                setApi={setApi}
+                plugins={[WheelGesturesPlugin()]}
+                opts={{
+                  align: "center",
+                  loop: true,
+                }}
+              >
+                <CarouselContent>
+                  {filteredFrames.map((item, index) => (
+                    <CarouselItem
+                      key={index}
+                      className="pl-8 relative max-w-[290px] mb-8 sm:basis-[100%] md:basis-1/2 lg:basis-1/3 hover:cursor-pointer "
+                    >
+                      <div className={cn(current == index + 1 ? "border-red-500" : "border-transparent", " border-3 rounded-md", "flex flex-row")}>
+                        {Array.from({length: item.type == "singular" ? 1 : 2}, (_, _index) => {
                           return (
                             <Image
-                              key={index}
+                              key={_index}
                               src={item.src}
                               alt="Frame"
                               height={235}
                               width={item.type == "singular" ? 235 : 120}
-                              className={cn(item.type == "singular" ? "w-[17vw]" : "w-[9vw]")}
+                              onClick={() => {
+                                handleCarouselItemClick(index);
+                              }}
+                              className={cn(item.type == "singular" ? "w-full" : "w-1/2")}
                             />
                           );
                         })}
-                      </CarouselItem>
-                    ))}
-                  </CarouselContent>
-                </Carousel>
-                <IoIosArrowForward
-                  size={60}
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+              </Carousel>
+
+              <div className="flex gap-4 items-center justify-center -mt-10">
+                <MdOutlineKeyboardDoubleArrowLeft
+                  size={40}
+                  className="text-primary hover:cursor-pointer carousel-pointer"
+                  onClick={handleLeftClick}
+                />
+
+                {Array.from({length: filteredFrames.length}, (_, index) => (
+                  <div
+                    key={index}
+                    className="min-w-[12px] min-h-[12px] border-2 border-primary hover:cursor-pointer core-navigate"
+                    style={{
+                      background: current === index + 1 ? "black" : "#e2e8f0",
+                    }}
+                    onClick={() => {
+                      api?.scrollTo(index);
+                    }}
+                  ></div>
+                ))}
+                <MdOutlineKeyboardDoubleArrowRight
+                  size={40}
                   className="text-primary hover:cursor-pointer carousel-pointer"
                   onClick={handleRightClick}
                 />
               </div>
-              <div className="w-[50vw]"></div>
             </div>
-            <div className="flex flex-col items-center justify-center gap-8 h-[80vh]">
-              <div className="flex flex-col gap-4 w-full">
-                <Link
-                  href={`/${photo?.previousProcessedImageId}/${ROUTES.THEME}`}
-                  className="flex  text-center items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-2 hover:opacity-[85%] w-full"
-                >
-                  <FaArrowLeft />
-                  Chọn theme khác
-                </Link>
-                <Link
-                  href={`/${photo?.previousProcessedImageId}/${ROUTES.HOME}`}
-                  className="flex text-center items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-2 hover:opacity-[85%] w-full"
-                >
-                  <FaArrowLeft />
-                  Chọn layout khác
-                </Link>
-                <div className="relative">
-                  <GlowEffect
-                    colors={["#FF5733", "#33FF57", "#3357FF", "#F1C40F"]}
-                    mode="colorShift"
-                    blur="soft"
-                    duration={3}
-                    scale={1.02}
-                  />
-                  <Link
-                    href={`/${photo?.previousProcessedImageId}/${ROUTES.SELECT}`}
-                    className={cn(
-                      "flex text-center items-center justify-center gap-2 text-background rounded px-4 py-2 hover:opacity-[85%] w-full bg-green-700 z-10 relative"
-                    )}
-                    onClick={handleCaptureClick}
-                  >
-                    Chọn ảnh
-                  </Link>
-                </div>
-              </div>
+
+            <div className="relative w-full">
+              <GlowEffect
+                colors={["#FF5733", "#33FF57", "#3357FF", "#F1C40F"]}
+                mode="colorShift"
+                blur="soft"
+                duration={3}
+                scale={1.02}
+              />
+              <Link
+                href={`/${photo?.previousProcessedImageId}/${ROUTES.SELECT}`}
+                className={cn(
+                  "flex text-center items-center justify-center gap-2 text-background rounded px-4 py-2 hover:opacity-[85%] w-full bg-green-700 z-10 relative"
+                )}
+                onClick={handleFrameChosen}
+              >
+                Chọn ảnh
+              </Link>
             </div>
           </div>
-        </>
+        </div>
       )}
     </>
   );
