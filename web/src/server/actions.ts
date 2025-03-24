@@ -31,7 +31,7 @@ export const getVideo = cache(async (processedImageId: string) => {
   return {error: false, data: video};
 });
 
-export const getImage = cache(async (processedImageId: string) => {
+export const getImages = cache(async (processedImageId: string) => {
   if (!processedImageId || !isValidUUID(processedImageId)) {
     return {error: true};
   }

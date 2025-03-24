@@ -11,19 +11,26 @@ import {MdModeEdit} from "react-icons/md";
 import {IoCopySharp} from "react-icons/io5";
 import FrameStage from "@/components/FrameStage";
 import GeneralError from "@/components/GeneralError";
+import {Button} from "@/components/ui/button";
+import {getImages, getProcessedImage} from "@/server/actions";
+import {LuRefreshCcw} from "react-icons/lu";
 
 const Preview = ({
-  processedImage,
-  images,
+  initialProcessedImage,
+  initialImages,
   video,
 }: {
-  processedImage?: typeof ProcessedImageTable.$inferSelect;
-  images?: Array<typeof ImageTable.$inferSelect>;
+  initialProcessedImage: typeof ProcessedImageTable.$inferSelect;
+  initialImages?: Array<typeof ImageTable.$inferSelect>;
   video?: typeof VideoTable.$inferSelect;
 }) => {
   const stageRef = useRef<StageElement | null>(null);
   const [error, setError] = useState(false);
   const [allImagesLoaded, setAllImagesLoaded] = useState(false);
+  const [images, setImages] = useState<Array<typeof ImageTable.$inferSelect>>(initialImages || []);
+  const [processedImage, setProcessedImage] = useState<typeof ProcessedImageTable.$inferSelect>(initialProcessedImage);
+  const [isRefreshButtonDisabled, setIsRefreshButtonDisabled] = useState(false);
+  const [imagesLoaded, setImagesLoaded] = useState(0);
 
   if (!processedImage) {
     return null;
@@ -63,12 +70,56 @@ const Preview = ({
   return (
     <>
       <div className="w-full flex flex-col lg:flex-row items-center justify-center gap-8 m-8 mt-3 h-max ">
-        <FrameStage
-          processedImage={processedImage}
-          images={images}
-          stageRef={stageRef}
-          onLoadingComplete={setAllImagesLoaded}
-        />
+        <div className="relative min-w-[300px]">
+          <div className={cn(!allImagesLoaded && "pointer-events-none opacity-0")}>
+            <FrameStage
+              processedImage={processedImage}
+              images={images}
+              stageRef={stageRef}
+              onLoadingComplete={setAllImagesLoaded}
+              imagesLoaded={imagesLoaded}
+              setImagesLoaded={setImagesLoaded}
+            />
+          </div>
+          {!allImagesLoaded && (
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center gap-2 flex-col">
+              <LoadingSpinner size={100} />
+              <Button
+                variant="outline"
+                className="mt-4 cursor-pointer flex items-center gap-2"
+                disabled={isRefreshButtonDisabled || allImagesLoaded}
+                onClick={async () => {
+                  try {
+                    setIsRefreshButtonDisabled(true);
+                    setAllImagesLoaded(false);
+                    setImagesLoaded(0);
+                    setImages([]);
+                    if (processedImage.id) {
+                      const processedImageResult = await getProcessedImage(processedImage.id);
+                      const imagesResult = await getImages(processedImage.id);
+
+                      if (processedImageResult.error || imagesResult.error) {
+                        throw new Error("Failed to reload images");
+                      }
+                      setProcessedImage(processedImageResult.data!);
+                      setImages(imagesResult.data!);
+                      setError(false);
+                    }
+                  } catch {
+                    setError(true);
+                  } finally {
+                    setTimeout(() => {
+                      setIsRefreshButtonDisabled(false);
+                    }, 6000);
+                  }
+                }}
+              >
+                Tải lại hình
+                <LuRefreshCcw className="ml-1 h-4 w-4" />
+              </Button>
+            </div>
+          )}
+        </div>
 
         <div className="flex items-center justify-center gap-6 flex-col w-[90%] md:w-[280px]">
           <div className="relative w-full h-[50px]">

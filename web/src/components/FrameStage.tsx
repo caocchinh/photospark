@@ -12,27 +12,25 @@ interface FrameStageProps {
   images?: Array<typeof ImageTable.$inferSelect>;
   stageRef: React.RefObject<StageElement | null>;
   qrCode?: boolean;
-  onLoadingComplete?: (isComplete: boolean) => void;
+  onLoadingComplete?: React.Dispatch<React.SetStateAction<boolean>>;
+  imagesLoaded?: number;
+  setImagesLoaded?: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const FrameStage = ({processedImage, images, stageRef, onLoadingComplete}: FrameStageProps) => {
+const FrameStage = ({processedImage, images, stageRef, onLoadingComplete, imagesLoaded, setImagesLoaded}: FrameStageProps) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [frameImg, frameImgStatus] = useImage(processedImage?.frameURL || "", "anonymous");
-
   const [scale, setScale] = useState(1);
-  const [imagesLoaded, setImagesLoaded] = useState(0);
 
   const handleImageLoaded = useCallback(() => {
-    setImagesLoaded((prev) => prev + 1);
-  }, []);
+    setImagesLoaded?.((prev) => prev + 1);
+  }, [setImagesLoaded]);
 
   useEffect(() => {
     const chosenImageCount = images?.filter((image) => image.slotPositionX != null && image.slotPositionY != null).length || 0;
     if (frameImgStatus === "loaded" && imagesLoaded === chosenImageCount * (processedImage?.type == "singular" ? 1 : 2)) {
-      console.log("imagesLoaded");
       onLoadingComplete?.(true);
     } else {
-      console.log("imagesNotLoaded");
       onLoadingComplete?.(false);
     }
   }, [frameImgStatus, imagesLoaded, images, processedImage?.type, onLoadingComplete]);

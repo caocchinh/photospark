@@ -1,4 +1,4 @@
-import {getImage, getProcessedImage, getQueue} from "@/server/actions";
+import {getImages, getProcessedImage, getQueue} from "@/server/actions";
 import FetchError from "@/components/FetchError";
 import ImageNotFoundError from "@/components/ImageNotFoundError";
 import Queue from "./Queue";
@@ -15,7 +15,7 @@ const QueuePage = async (props: {params: Params}) => {
     return <ImageNotFoundError />;
   }
 
-  const images = await getImage(processedImageId);
+  const images = await getImages(processedImageId);
 
   const availableImageCount = images.data?.filter((image) => image.slotPositionX != null && image.slotPositionY != null).length || 0;
 

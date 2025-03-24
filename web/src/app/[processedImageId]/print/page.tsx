@@ -1,6 +1,6 @@
 import ImageNotFoundError from "@/components/ImageNotFoundError";
 import Print from "./Print";
-import {getProcessedImage, getImage} from "@/server/actions";
+import {getProcessedImage, getImages} from "@/server/actions";
 import FetchError from "@/components/FetchError";
 type Params = Promise<{processedImageId: string}>;
 
@@ -13,7 +13,7 @@ const PrintPage = async (props: {params: Params}) => {
   if (processedImage.error || !processedImage.data) {
     return <ImageNotFoundError />;
   }
-  const images = await getImage(processedImageId);
+  const images = await getImages(processedImageId);
 
   const availableImageCount =
     images.data?.filter((image) => image.slotPositionX != null && image.slotPositionY != null && image.height != null && image.width != null)

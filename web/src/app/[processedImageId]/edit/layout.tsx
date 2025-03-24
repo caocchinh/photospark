@@ -2,7 +2,7 @@ import FetchError from "@/components/FetchError";
 import ImageNotFoundError from "@/components/ImageNotFoundError";
 import {NUM_OF_CAPTURE_IMAGE} from "@/constants/constants";
 import {PhotoProvider} from "@/context/PhotoContext";
-import {getImage, getProcessedImage, getVideo} from "@/server/actions";
+import {getImages, getProcessedImage, getVideo} from "@/server/actions";
 import {ReactNode} from "react";
 type Params = Promise<{processedImageId: string; children: ReactNode}>;
 
@@ -16,7 +16,7 @@ export default async function EditLayout(props: {params: Params; children: React
     return <ImageNotFoundError />;
   }
 
-  const images = await getImage(processedImageId);
+  const images = await getImages(processedImageId);
 
   if (images.error || !images.data) {
     return <ImageNotFoundError />;

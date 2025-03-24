@@ -235,8 +235,41 @@ const Table = ({availableQueues}: {availableQueues: (typeof QueueTable.$inferSel
             </div>
 
             {!imageLoaded && (
-              <div className="flex flex-col items-center justify-center relative min-w-[500px] min-h-[500px]">
+              <div className="flex flex-col items-center justify-center relative min-w-[500px] min-h-[500px] gap-2">
                 <LoadingSpinner size={100} />
+                <Button
+                  variant="outline"
+                  className="mt-4 cursor-pointer flex items-center gap-2"
+                  onClick={async () => {
+                    try {
+                      setImageLoaded(false);
+                      setProcessedImage(null);
+                      setImages(null);
+
+                      if (processedImageId) {
+                        const processedImageResult = await getProcessedImage(processedImageId);
+                        const imagesResult = await getImages(processedImageId);
+
+                        if (processedImageResult.error || imagesResult.error) {
+                          throw new Error("Failed to reload images");
+                        }
+
+                        setProcessedImage(processedImageResult.response!);
+                        setImages(imagesResult.response!);
+                        setIsError(false);
+                      }
+                    } catch {
+                      setIsError(true);
+                      toast.error("Tải lại hình ảnh thất bại!", {
+                        duration: 3000,
+                        style: {backgroundColor: "#ef4444", color: "white"},
+                      });
+                    }
+                  }}
+                >
+                  Tải lại hình
+                  <LuRefreshCcw className="ml-1 h-4 w-4" />
+                </Button>
               </div>
             )}
           </>
