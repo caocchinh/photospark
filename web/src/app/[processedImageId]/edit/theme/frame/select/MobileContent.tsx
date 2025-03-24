@@ -247,10 +247,7 @@ const MobileContent = () => {
                       </Reorder.Group>
                     </SheetContent>
                   </Sheet>
-                  <div
-                    className="pointer-events-none"
-                    id="mobile-frame-container"
-                  >
+                  <div className="pointer-events-none mobile-frame-container">
                     {frameImg && photo && (
                       <Stage
                         width={IMAGE_WIDTH / isSingle}

@@ -190,12 +190,12 @@
   }
 }
 
-#mobile-frame-container {
+.mobile-frame-container {
   transform-origin: "center";
 }
 
 @media (max-width: 520px) {
-  #mobile-frame-container {
+  .mobile-frame-container {
     transform: scale(0.8);
     height: 650px;
   }
@@ -204,7 +204,7 @@
   }
 }
 @media (max-width: 400px) {
-  #mobile-frame-container {
+  .mobile-frame-container {
     transform: scale(0.7);
     height: 600px;
   }
@@ -213,7 +213,7 @@
   }
 }
 @media (max-width: 360px) {
-  #mobile-frame-container {
+  .mobile-frame-container {
     transform: scale(0.6);
     height: 570px;
   }
