@@ -119,12 +119,7 @@ const MobileContent = () => {
             )}
           >
             <div className={cn("flex items-center flex-col justify-evenly w-full h-full", isSelected ? "pointer-events-none" : null)}>
-              <h1
-                className="text-5xl font-semibold mb-4 flex gap-2 uppercase text-center"
-                id="mobile-frame-title"
-              >
-                Chọn hình
-              </h1>
+              <h1 className="text-5xl font-semibold mb-4 flex gap-2 uppercase text-center mobile-frame-title">Chọn hình</h1>
 
               <div className="flex flex-col md:flex-row items-center justify-center w-full h-full gap-4">
                 <div className="relative h-full flex items-center justify-center">
@@ -132,7 +127,7 @@ const MobileContent = () => {
                     open={isDrawerOpen}
                     onOpenChange={setIsDrawerOpen}
                   >
-                    <DrawerContent className="h-[90vh] min-w-screen flex items-center justify-start flex-col">
+                    <DrawerContent className="h-[95vh] min-w-screen flex items-center justify-start flex-col">
                       <DrawerHeader className="w-[80%] flex items-center justify-center gap-3">
                         <DrawerTitle className="text-xl font-semibold uppercase text-center">Bấm vào hình để chọn</DrawerTitle>
                         <Button
@@ -151,7 +146,7 @@ const MobileContent = () => {
                           </Button>
                         </DrawerClose>
                       </DrawerHeader>
-                      <ScrollArea className="h-[70%] w-full flex items-center justify-center">
+                      <ScrollArea className="h-[400px] w-full flex items-center justify-center">
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-3 w-[90%] m-auto ">
                           {photo && (
                             <>
@@ -326,7 +321,7 @@ const MobileContent = () => {
                           <Link
                             href={`/${photo?.previousProcessedImageId}/${ROUTES.FILTER}`}
                             className={cn(
-                              "flex items-center justify-center gap-2 text-2xl px-14 py-6 w-full",
+                              "flex items-center justify-center gap-2 text-2xl px-14 py-6 w-full bg-green-700 hover:bg-green-700 ",
                               photo
                                 ? photo.theme!.frame.slotCount - filteredSelectedImages.length != 0
                                   ? "pointer-events-none opacity-80"

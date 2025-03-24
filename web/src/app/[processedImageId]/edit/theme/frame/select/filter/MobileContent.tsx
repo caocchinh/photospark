@@ -55,6 +55,24 @@ const MobileContent = () => {
     filterRef.current = filter;
   }, [filter]);
 
+  const getCurrentFilterIndex = useCallback(() => {
+    return FILTERS.findIndex((item) => item.value === filter);
+  }, [filter]);
+
+  useEffect(() => {
+    if (isDrawerOpen) {
+      const currentFilterIndex = getCurrentFilterIndex();
+      if (currentFilterIndex !== -1) {
+        setTimeout(() => {
+          filterRefs.current[currentFilterIndex]?.scrollIntoView({
+            behavior: "instant",
+            block: "center",
+          });
+        }, 100);
+      }
+    }
+  }, [isDrawerOpen, getCurrentFilterIndex]);
+
   const uploadImageToDatabase = useCallback(async () => {
     if (!photo || uploadAttemptedRef.current) return;
 
@@ -127,6 +145,7 @@ const MobileContent = () => {
           frameImgStatus != "loaded" ? "opacity-0 pointer-events-none" : "opacity-100"
         )}
       >
+        <h1 className="text-5xl font-semibold mb-4 flex gap-2 uppercase text-center mobile-frame-title">Chọn filter</h1>
         {photo && frameImg && (
           <div className="flex items-center justify-evenly gap-3 h-max flex-col md:flex-row w-full">
             <div className="pointer-events-none mobile-frame-container">
@@ -189,13 +208,18 @@ const MobileContent = () => {
                 onOpenChange={setIsDrawerOpen}
               >
                 <DrawerTrigger asChild>
-                  <Button className="w-full rounded-sm cursor-pointer">Chọn filter</Button>
+                  <Button
+                    className="w-full rounded-sm cursor-pointer"
+                    onClick={() => setIsDrawerOpen(true)}
+                  >
+                    Chọn filter{filter ? ` - ${FILTERS.find((item) => item.value === filter)?.name || ""}` : ""}
+                  </Button>
                 </DrawerTrigger>
-                <DrawerContent className="h-[90vh]">
+                <DrawerContent className="h-[95vh]">
                   <DrawerHeader>
                     <DrawerTitle className="text-center uppercase text-xl mb-2">Ấn vào hình để chọn filter</DrawerTitle>
-                    <ScrollArea className=" h-[40%] w-[100%] ">
-                      <div className="flex-wrap flex gap-4 items-center justify-center">
+                    <ScrollArea className=" h-[500px] w-[100%] ">
+                      <div className="grid grid-cols-3 gr md:grid-cols-4 gap-4 items-center justify-center">
                         {FILTERS.map((item, index) => (
                           <div
                             ref={(el) => {
@@ -248,7 +272,7 @@ const MobileContent = () => {
                   onOpenChange={setIsOpen}
                 >
                   <AlertDialogTrigger asChild>
-                    <Button className="flex text-sm text-center items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-6 hover:opacity-[85%] w-full relative z-10 cursor-pointer">
+                    <Button className="flex text-sm text-center items-center justify-center gap-2 text-background rounded px-4 py-6 hover:opacity-[85%] w-full relative z-10 cursor-pointer bg-green-700 hover:bg-green-700">
                       Tạo hình
                       <TbWand
                         size={20}

@@ -269,7 +269,7 @@ const DesktopContent = () => {
                         <Link
                           href={`/${photo?.previousProcessedImageId}/${ROUTES.FILTER}`}
                           className={cn(
-                            "flex items-center justify-center gap-2 text-2xl px-14 py-6 w-full",
+                            "flex items-center justify-center gap-2 text-2xl px-14 py-6 w-full bg-green-700 hover:bg-green-700",
                             photo
                               ? photo.theme!.frame.slotCount - filteredSelectedImages.length != 0
                                 ? "pointer-events-none opacity-80"

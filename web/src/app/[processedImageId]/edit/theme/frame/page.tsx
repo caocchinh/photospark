@@ -29,7 +29,6 @@ const FrameEditpage = () => {
 
   useEffect(() => {
     if (!photo?.theme) return router.push(`/${photo?.previousProcessedImageId}/${ROUTES.HOME}`);
-    if (photo.selectedImages.length > 0) return router.push(`/${photo?.previousProcessedImageId}/${ROUTES.SELECT}`);
   }, [photo, router]);
 
   const handleFrameChange = useCallback(

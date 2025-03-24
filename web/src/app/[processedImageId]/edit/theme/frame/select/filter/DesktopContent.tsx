@@ -244,7 +244,7 @@ const DesktopContent = () => {
                       onOpenChange={setIsOpen}
                     >
                       <AlertDialogTrigger asChild>
-                        <Button className="flex text-sm text-center items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-6 hover:opacity-[85%] w-full relative z-10 cursor-pointer">
+                        <Button className="flex text-sm text-center items-center justify-center gap-2 text-background rounded px-4 py-6 hover:opacity-[85%] w-full relative z-10 cursor-pointer bg-green-700 hover:bg-green-700">
                           Tạo hình
                           <TbWand
                             size={20}
