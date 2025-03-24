@@ -228,6 +228,7 @@ const MobileContent = () => {
                                 <Image
                                   src={selectedImage[index]?.href}
                                   alt="image"
+                                  crossOrigin="anonymous"
                                   width={350}
                                   height={350}
                                   className="pointer-events-none object-cover w-full h-full"

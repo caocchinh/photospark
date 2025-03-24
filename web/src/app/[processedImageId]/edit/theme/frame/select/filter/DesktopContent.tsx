@@ -39,7 +39,7 @@ const DesktopContent = () => {
     if (photo.selectedImages.length == 0) return router.push(`/${photo?.previousProcessedImageId}/${ROUTES.HOME}`);
   }, [photo, router, setPhoto]);
 
-  const [frameImg, frameImgStatus] = useImage(photo?.theme?.frame?.src || "");
+  const [frameImg, frameImgStatus] = useImage(photo?.theme?.frame?.src || "", "anonymous");
   const [filter, setFilter] = useState<string | null>(null);
   const stageRef = useRef<StageElement | null>(null);
   const [isMediaUploaded, setIsMediaUploaded] = useState(false);
@@ -149,6 +149,7 @@ const DesktopContent = () => {
                             height={photo.theme!.frame.slotDimensions.height}
                             width={photo.theme!.frame.slotDimensions.width}
                             filter={filter || ""}
+                            crossOrigin="anonymous"
                           />
                         )
                       );
@@ -191,6 +192,7 @@ const DesktopContent = () => {
                         src={photo?.selectedImages[0]?.href}
                         alt="filtered image"
                         className={cn(item.filter, "w-full")}
+                        crossOrigin="anonymous"
                       />
                       <p>{item.name}</p>
                     </div>
@@ -245,6 +247,7 @@ const DesktopContent = () => {
                       src="/heart.gif"
                       alt="awww"
                       className="w-[45%]"
+                      crossOrigin="anonymous"
                     />
                     <div className="flex items-center justify-center gap-3 flex-col w-full">
                       <AlertDialogCancel className="bg-red-600 hover:bg-red-700 w-full text-white hover:text-white cursor-pointer">

@@ -228,6 +228,7 @@ const DesktopContent = () => {
                           width={280}
                           src={item.href}
                           alt="image"
+                          crossOrigin="anonymous"
                           priority
                           className={cn(
                             "rounded border-4 border-transparent hover:border-black hover:cursor-pointer",
