@@ -121,8 +121,8 @@ const MobileContent = () => {
             <div className={cn("flex items-center flex-col justify-evenly w-full h-full", isSelected ? "pointer-events-none" : null)}>
               <h1 className="text-5xl font-semibold mb-4 flex gap-2 uppercase text-center mobile-frame-title">Chọn hình</h1>
 
-              <div className="flex flex-col md:flex-row items-center justify-center w-full h-full gap-4">
-                <div className="relative h-full flex items-center justify-center">
+              <div className="flex flex-col md:flex-row items-center justify-center w-full h-full gap-6">
+                <div className="relative h-full w-full flex items-center justify-center">
                   <Drawer
                     open={isDrawerOpen}
                     onOpenChange={setIsDrawerOpen}
@@ -153,7 +153,7 @@ const MobileContent = () => {
                               {photo.images.map((item, index) => (
                                 <div
                                   key={index}
-                                  className="flex items-center justify-center"
+                                  className="flex items-center justify-center "
                                   onClick={() => handleSelect(item)}
                                 >
                                   <Image
@@ -166,7 +166,7 @@ const MobileContent = () => {
                                       "rounded border-4 border-transparent hover:border-black hover:cursor-pointer",
                                       `w-[${photo.theme!.frame.slotDimensions.width * 1.1}px] h-[${
                                         photo.theme!.frame.slotDimensions.height * 1.1
-                                      }px]`,
+                                      }px] object-cover`,
                                       selectedImage.some((img) => img?.id === item.id) ? "border-rose-500 hover:border-rose-500" : null
                                     )}
                                   />
@@ -230,10 +230,7 @@ const MobileContent = () => {
                                 />
                               ) : (
                                 <div
-                                  className=" bg-gray-200 rounded-sm w-full"
-                                  style={{
-                                    height: photo.theme!.frame.slotDimensions.height,
-                                  }}
+                                  className={cn(`bg-gray-200 rounded-sm w-full h-[190px] sm:h-[${photo.theme!.frame.slotDimensions.height}px]`)}
                                 ></div>
                               )}
                             </div>
@@ -315,7 +312,7 @@ const MobileContent = () => {
                         )}
                         <Button
                           asChild
-                          className="relative"
+                          className="relative bg-green-700 hover:bg-green-700 "
                           onClick={() => setIsSelected(true)}
                         >
                           <Link

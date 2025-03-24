@@ -263,7 +263,7 @@ const DesktopContent = () => {
                       )}
                       <Button
                         asChild
-                        className="relative"
+                        className="relative bg-green-700 hover:bg-green-700 "
                         onClick={() => setIsSelected(true)}
                       >
                         <Link

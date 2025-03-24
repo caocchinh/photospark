@@ -191,7 +191,7 @@
 }
 
 .mobile-frame-container {
-  transform-origin: "center";
+  transform-origin: center;
 }
 
 @media (max-width: 520px) {

@@ -43,6 +43,7 @@ const FrameEditpage = () => {
             name: prevStyle.theme.name,
             frame: frameAttribute,
           },
+          selectedImages: [],
         };
       });
     },
