@@ -20,7 +20,7 @@ import {Drawer, DrawerClose, DrawerContent, DrawerHeader, DrawerTitle} from "@/c
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {IoMdImages} from "react-icons/io";
 import {GoArrowSwitch} from "react-icons/go";
-import {SheetContent, SheetHeader, SheetTitle} from "@/components/ui/sheet";
+import {SheetContent, SheetDescription, SheetHeader, SheetTitle} from "@/components/ui/sheet";
 import {Sheet} from "@/components/ui/sheet";
 
 const MobileContent = () => {
@@ -119,7 +119,7 @@ const MobileContent = () => {
               Chọn hình
             </h1>
 
-            <div className="flex flex-col md:flex-row items-center justify-center w-full h-full">
+            <div className="flex flex-col md:flex-row items-center justify-center w-full h-full gap-4">
               <div className="relative h-full flex items-center justify-center">
                 <Drawer
                   open={isDrawerOpen}
@@ -135,7 +135,10 @@ const MobileContent = () => {
                         <GoArrowSwitch className="rotate-90" />
                         Đổi vị trí hình
                       </Button>
-                      <DrawerClose className="w-full">
+                      <DrawerClose
+                        className="w-full"
+                        asChild
+                      >
                         <Button className="w-full rounded-sm bg-green-600 hover:bg-green-700 cursor-pointer">Hoàn tất</Button>
                       </DrawerClose>
                     </DrawerHeader>
@@ -173,9 +176,12 @@ const MobileContent = () => {
                   open={isSheetOpen}
                   onOpenChange={setIsSheetOpen}
                 >
-                  <SheetContent>
-                    <SheetHeader>
-                      <SheetTitle className="text-xl font-semibold uppercase text-center">Đổi vị trí hình</SheetTitle>
+                  <SheetContent className="sm:!max-w-sm flex flex-col items-center justify-start">
+                    <SheetHeader className="!pb-0">
+                      <SheetTitle className="text-2xl font-semibold uppercase text-center flex items-center justify-center gap-2">
+                        Đổi vị trí hình <GoArrowSwitch className="rotate-90" />
+                      </SheetTitle>
+                      <SheetDescription className="text-red-500 text-lg text-center">Kéo hình để đổi vị trí</SheetDescription>
                     </SheetHeader>
                     <Reorder.Group
                       values={slots}
@@ -190,7 +196,7 @@ const MobileContent = () => {
                         });
                       }}
                       as="div"
-                      className="grid grid-cols-1 gap-3 items-center justify-center"
+                      className="grid grid-cols-1 gap-3 items-center justify-center p-4"
                     >
                       {slots.map((slotIndex, index) => (
                         <Reorder.Item
@@ -198,6 +204,7 @@ const MobileContent = () => {
                           key={slotIndex}
                           z={100}
                           as="div"
+                          className="flex items-center justify-center"
                           draggable={true}
                         >
                           <div
@@ -210,15 +217,15 @@ const MobileContent = () => {
                               <Image
                                 src={selectedImage[index]?.href}
                                 alt="image"
-                                width={280}
-                                height={280}
-                                className="pointer-events-none"
+                                width={350}
+                                height={350}
+                                className="pointer-events-none object-cover w-full h-full"
                               />
                             ) : (
                               <div
-                                className=" bg-gray-200 rounded-md w-[75%]"
+                                className=" bg-gray-200 rounded-sm w-full"
                                 style={{
-                                  height: photo.theme!.frame.slotDimensions.height / 1.4,
+                                  height: photo.theme!.frame.slotDimensions.height,
                                 }}
                               ></div>
                             )}

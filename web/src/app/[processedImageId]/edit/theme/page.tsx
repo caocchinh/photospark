@@ -44,7 +44,7 @@ const ThemePage = () => {
             Chọn lại layout
           </Link>
           <div className="flex flex-col items-center justify-center gap-8 w-[80%]">
-            <CardTitle className="text-5xl font-semibold uppercase">Chọn theme</CardTitle>
+            <CardTitle className="text-5xl font-semibold uppercase text-center">Chọn theme</CardTitle>
             <CardContent className="flex items-center justify-center gap-8 flex-wrap w-[90%]">
               {ThemeSelectButton.map((item, index) => {
                 const hasMatchingFrame = FrameOptions[item.theme].some((frame) => frame.type === photo.frameType);
