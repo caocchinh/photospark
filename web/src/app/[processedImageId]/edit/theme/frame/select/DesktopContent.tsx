@@ -49,9 +49,9 @@ const DesktopContent = () => {
           };
         }
       });
-      router.push(ROUTES.FILTER);
+      router.push(`/${photo?.previousProcessedImageId}/${ROUTES.FILTER}`);
     },
-    [router, setPhoto]
+    [photo?.previousProcessedImageId, router, setPhoto]
   );
 
   const handleSelect = useCallback(

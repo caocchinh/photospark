@@ -11,6 +11,7 @@ interface FrameStageProps {
   processedImage: typeof ProcessedImageTable.$inferSelect;
   images?: Array<typeof ImageTable.$inferSelect>;
   stageRef: React.RefObject<StageElement | null>;
+  qrCode?: boolean;
   onLoadingComplete?: (isComplete: boolean) => void;
 }
 

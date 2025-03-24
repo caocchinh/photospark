@@ -3,9 +3,10 @@
 import {cache} from "react";
 import {db} from "@/drizzle/db";
 import {isValidUUID} from "@/lib/utils";
-import {QueueTable} from "@/drizzle/schema";
+import {ImageTable, ProcessedImageTable, QueueTable, VideoTable} from "@/drizzle/schema";
 import {MAX_PRINT_QUANTITY} from "@/constants/constants";
-import {eq} from "drizzle-orm";
+import {eq, InferInsertModel} from "drizzle-orm";
+import {ValidFrameType, ValidThemeType} from "@/constants/types";
 
 export const getProcessedImage = cache(async (processedImageId: string) => {
   if (!processedImageId || !isValidUUID(processedImageId)) {
@@ -96,4 +97,115 @@ export const getQueueStatus = async (queueId: string) => {
     .execute();
 
   return {error: false, data: queueStatus[0]?.status};
+};
+
+export const createProcessedImage = async (
+  id: string,
+  theme: ValidThemeType,
+  frameURL: string,
+  type: ValidFrameType,
+  slotCount: number
+): Promise<{error: boolean}> => {
+  if (!id || !isValidUUID(id)) {
+    return {error: true};
+  }
+
+  if (!theme || !type) {
+    return {error: true};
+  }
+
+  if (!frameURL) {
+    return {error: true};
+  }
+
+  if (typeof slotCount !== "number" || slotCount <= 0) {
+    return {error: true};
+  }
+
+  try {
+    await db.insert(ProcessedImageTable).values({id, theme, frameURL, type, slotCount});
+    return {error: false};
+  } catch (error) {
+    console.error("Failed to create image:", error);
+    return {error: true};
+  }
+};
+
+export const updateFilter = async (processedImageId: string, filter: string): Promise<{error: boolean}> => {
+  if (!processedImageId || !isValidUUID(processedImageId)) {
+    return {error: true};
+  }
+
+  try {
+    await db.update(ProcessedImageTable).set({filter}).where(eq(ProcessedImageTable.id, processedImageId));
+    return {error: false};
+  } catch (error) {
+    console.error("Failed to update filter:", error);
+    return {error: true};
+  }
+};
+
+export const createImage = async (
+  href: string,
+  processedImageId: string,
+  slotPositionX: number | null,
+  slotPositionY: number | null,
+  height: number,
+  width: number
+): Promise<{error: boolean}> => {
+  if (!processedImageId || !isValidUUID(processedImageId)) {
+    return {error: true};
+  }
+  if (height == undefined || width == undefined) {
+    return {error: true};
+  }
+
+  if (height < 0 || width < 0) {
+    return {error: true};
+  }
+
+  if (typeof height !== "number" || typeof width !== "number") {
+    return {error: true};
+  }
+
+  try {
+    const values: InferInsertModel<typeof ImageTable> = {
+      url: href,
+      proccessedImageId: processedImageId,
+      height: height,
+      width: width,
+    };
+
+    if (slotPositionX !== null) {
+      values.slotPositionX = slotPositionX;
+    }
+
+    if (slotPositionY !== null) {
+      values.slotPositionY = slotPositionY;
+    }
+
+    await db.insert(ImageTable).values(values);
+    return {error: false};
+  } catch (error) {
+    console.error("Failed to create image:", error);
+    return {error: true};
+  }
+};
+
+export const createVideo = async (href: string, processedImageId: string): Promise<{error: boolean}> => {
+  if (!href) {
+    return {error: true};
+  }
+
+  if (!processedImageId || !isValidUUID(processedImageId)) {
+    return {error: true};
+  }
+
+  try {
+    await db.insert(VideoTable).values({url: href, proccessedImageId: processedImageId});
+    return {error: false};
+  } catch (error) {
+    console.error("Failed to create video:", error);
+    return {error: true};
+  }
 };
