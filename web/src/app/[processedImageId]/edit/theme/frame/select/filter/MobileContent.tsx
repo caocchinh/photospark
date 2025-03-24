@@ -284,7 +284,7 @@ const MobileContent = () => {
                     <RxCross2
                       size={25}
                       color="red"
-                      className="absolute top-[20px] right-[20px] cursor-pointer"
+                      className={cn("absolute top-[11px] right-[11px] cursor-pointer", isUploading ? "pointer-events-none" : null)}
                       onClick={() => setIsOpen(false)}
                     />
                     <AlertDialogHeader className="flex items-center justify-center gap-4 flex-col">
@@ -297,7 +297,12 @@ const MobileContent = () => {
                       crossOrigin="anonymous"
                     />
                     <div className="flex items-center justify-center gap-3 flex-col w-full">
-                      <AlertDialogCancel className="bg-red-600 hover:bg-red-700 w-full text-white hover:text-white cursor-pointer">
+                      <AlertDialogCancel
+                        className={cn(
+                          "bg-red-600 hover:bg-red-700 w-full text-white hover:text-white cursor-pointer",
+                          isUploading ? "pointer-events-none" : null
+                        )}
+                      >
                         Hủy
                       </AlertDialogCancel>
                       <Button

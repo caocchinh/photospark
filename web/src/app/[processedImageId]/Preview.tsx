@@ -70,7 +70,7 @@ const Preview = ({
   return (
     <>
       <div className="w-full flex flex-col lg:flex-row items-center justify-center gap-8 m-8 mt-3 h-max ">
-        <div className="relative min-w-[300px]">
+        <div className="relative min-w-[300px] w-full md:w-max">
           <div className={cn(!allImagesLoaded && "pointer-events-none opacity-0")}>
             <FrameStage
               processedImage={processedImage}
