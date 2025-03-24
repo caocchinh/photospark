@@ -106,7 +106,7 @@ const Preview = ({
               href={`/${processedImage.id}/edit`}
               className="flex items-center justify-center gap-2 h-full w-full"
             >
-              Sửa ảnh
+              Sửa hình
               <MdModeEdit
                 size={27}
                 color="white"

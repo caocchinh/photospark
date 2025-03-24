@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 import {usePhoto} from "@/context/PhotoContext";
-import {useCallback, useEffect, useRef, useState} from "react";
+import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import useImage from "use-image";
 import {Image as KonvaImage, Rect} from "react-konva";
 import {Layer, Stage} from "react-konva";
@@ -15,26 +15,24 @@ import {GlowEffect} from "@/components/ui/glow-effect";
 import {ROUTES} from "@/constants/routes";
 import {IoIosCheckmark} from "react-icons/io";
 import {useRouter} from "next/navigation";
-import {createImage, createVideo} from "@/server/actions";
+import {createImage, createVideo, createProcessedImage} from "@/server/actions";
 import {FaArrowLeft} from "react-icons/fa";
 import Link from "next/link";
 import {TbWand} from "react-icons/tb";
-import {
-  AlertDialogHeader,
-  AlertDialogContent,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-  AlertDialogFooter,
-  AlertDialogAction,
-  AlertDialogCancel,
-} from "@/components/ui/alert-dialog";
+import {AlertDialogHeader, AlertDialogContent, AlertDialogTitle, AlertDialogTrigger, AlertDialogCancel} from "@/components/ui/alert-dialog";
 import {AlertDialog} from "@/components/ui/alert-dialog";
+import {RxCross2} from "react-icons/rx";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 const DesktopContent = () => {
   const {photo, setPhoto} = usePhoto();
   const filterRefs = useRef<(HTMLDivElement | null)[]>([]);
   const uploadAttemptedRef = useRef(false);
   const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
+  const NEW_PROCESSED_IMAGE_ID = useMemo(() => {
+    return crypto.randomUUID();
+  }, []);
 
   useEffect(() => {
     if (!photo) return router.push(`/`);
@@ -42,11 +40,10 @@ const DesktopContent = () => {
   }, [photo, router, setPhoto]);
 
   const [frameImg, frameImgStatus] = useImage(photo?.theme?.frame?.src || "");
-
   const [filter, setFilter] = useState<string | null>(null);
   const stageRef = useRef<StageElement | null>(null);
   const [isMediaUploaded, setIsMediaUploaded] = useState(false);
-
+  const [isUploading, setIsUploading] = useState(false);
   const filterRef = useRef(filter);
 
   useEffect(() => {
@@ -57,13 +54,16 @@ const DesktopContent = () => {
     if (!photo || uploadAttemptedRef.current) return;
 
     uploadAttemptedRef.current = true;
+    setIsUploading(true);
+
+    await createProcessedImage(NEW_PROCESSED_IMAGE_ID, photo.theme!.name, photo.theme!.frame.src, photo.frameType!, photo.theme!.frame.slotCount);
 
     for (const image of photo.images) {
       const slotPosition = photo.selectedImages.findIndex((selectedImage) => selectedImage.id == image.id);
       try {
         const imageResponse = await createImage(
           image.href,
-          photo.id!,
+          NEW_PROCESSED_IMAGE_ID,
           slotPosition != -1 ? photo.theme!.frame.slotPositions[slotPosition].x : null,
           slotPosition != -1 ? photo.theme!.frame.slotPositions[slotPosition].y : null,
           photo.theme!.frame.slotDimensions.height,
@@ -82,7 +82,7 @@ const DesktopContent = () => {
 
     if (photo.video.r2_url) {
       try {
-        const videoResponse = await createVideo(photo.video.r2_url, photo.id!);
+        const videoResponse = await createVideo(photo.video.r2_url, NEW_PROCESSED_IMAGE_ID);
         if (videoResponse.error) {
           throw new Error("Failed to upload video to database");
         } else {
@@ -93,8 +93,11 @@ const DesktopContent = () => {
       }
     }
 
+    setIsUploading(false);
     setIsMediaUploaded(true);
-  }, [photo]);
+    console.log("NEW_PROCESSED_IMAGE_ID", NEW_PROCESSED_IMAGE_ID);
+    router.push(`/${NEW_PROCESSED_IMAGE_ID}`);
+  }, [NEW_PROCESSED_IMAGE_ID, photo, router]);
 
   const selectRandomFilter = useCallback(() => {
     const randomIndex = Math.floor(Math.random() * FILTERS.length);
@@ -116,7 +119,7 @@ const DesktopContent = () => {
       {photo && frameImg && (
         <div className="flex items-center justify-evenly gap-3 h-max flex-col">
           <div className="flex items-center justify-center flex-row gap-6">
-            <div className="frame-container">
+            <div className="pointer-events-none">
               <Stage
                 ref={stageRef}
                 width={IMAGE_WIDTH}
@@ -215,7 +218,10 @@ const DesktopContent = () => {
                   duration={3}
                   scale={1}
                 />
-                <AlertDialog>
+                <AlertDialog
+                  open={isOpen}
+                  onOpenChange={setIsOpen}
+                >
                   <AlertDialogTrigger asChild>
                     <Button className="flex text-sm text-center items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-6 hover:opacity-[85%] w-full relative z-10 cursor-pointer">
                       Tạo hình
@@ -225,18 +231,34 @@ const DesktopContent = () => {
                       />
                     </Button>
                   </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle className="text-center uppercase">Bạn có chắc chưa?</AlertDialogTitle>
+                  <AlertDialogContent className="flex items-center justify-center gap-4 flex-col">
+                    <RxCross2
+                      size={25}
+                      color="red"
+                      className="absolute top-[20px] right-[20px] cursor-pointer"
+                      onClick={() => setIsOpen(false)}
+                    />
+                    <AlertDialogHeader className="flex items-center justify-center gap-4 flex-col">
+                      <AlertDialogTitle className="text-center uppercase text-3xl">Bạn có chắc chưa?</AlertDialogTitle>
                     </AlertDialogHeader>
-                    <AlertDialogFooter className="flex items-center justify-center gap-4 flex-col">
+                    <img
+                      src="/heart.gif"
+                      alt="awww"
+                      className="w-[45%]"
+                    />
+                    <div className="flex items-center justify-center gap-3 flex-col w-full">
                       <AlertDialogCancel className="bg-red-600 hover:bg-red-700 w-full text-white hover:text-white cursor-pointer">
                         Hủy
                       </AlertDialogCancel>
-                      <AlertDialogAction className="bg-green-600 hover:bg-green-700 w-full text-white hover:text-white cursor-pointer">
-                        Chắc
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
+                      <Button
+                        className="bg-green-600 hover:bg-green-700 w-full text-white hover:text-white cursor-pointer"
+                        onClick={uploadImageToDatabase}
+                        disabled={isMediaUploaded}
+                      >
+                        Chắc chắn
+                        {isUploading && <LoadingSpinner size={21} />}
+                      </Button>
+                    </div>
                   </AlertDialogContent>
                 </AlertDialog>
               </div>
