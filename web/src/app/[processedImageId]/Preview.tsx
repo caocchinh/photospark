@@ -13,7 +13,7 @@ import FrameStage from "@/components/FrameStage";
 import GeneralError from "@/components/GeneralError";
 import {Button} from "@/components/ui/button";
 import {getImages, getProcessedImage} from "@/server/actions";
-import {LuRefreshCcw} from "react-icons/lu";
+import {LuRefreshCcw, LuLink} from "react-icons/lu";
 
 const Preview = ({
   initialProcessedImage,
@@ -31,6 +31,7 @@ const Preview = ({
   const [processedImage, setProcessedImage] = useState<typeof ProcessedImageTable.$inferSelect>(initialProcessedImage);
   const [isRefreshButtonDisabled, setIsRefreshButtonDisabled] = useState(false);
   const [imagesLoaded, setImagesLoaded] = useState(0);
+  const [copied, setCopied] = useState(false);
 
   if (!processedImage) {
     return null;
@@ -152,6 +153,19 @@ const Preview = ({
               <AiOutlineDownload size={27} />
             </div>
           )}
+          <div
+            className="w-full h-[50px] text-white bg-black cursor-pointer text-xl rounded-sm flex items-center justify-center gap-3"
+            onClick={() => {
+              navigator.clipboard.writeText(window.location.href);
+              setCopied(true);
+              setTimeout(() => {
+                setCopied(false);
+              }, 2000);
+            }}
+          >
+            {copied ? "Đã copy!" : "Copy link hình"}
+            <LuLink size={27} />
+          </div>
           <div className="w-full h-[50px] text-white cursor-pointer text-xl bg-[#f97316] hover:opacity-90 hover:bg-[#f97316] rounded-sm flex items-center justify-center gap-3">
             <Link
               href={`/${processedImage.id}/edit`}

@@ -131,6 +131,7 @@ const MobileContent = () => {
                       <DrawerHeader className="w-[80%] flex items-center justify-center gap-3">
                         <DrawerTitle className="text-xl font-semibold uppercase text-center">Bấm vào hình để chọn</DrawerTitle>
                         <Button
+                          disabled={selectedImage.filter((img) => img !== null).length != photo.theme?.frame.slotCount}
                           onClick={() => setIsSheetOpen(true)}
                           className="w-full flex items-center justify-center gap-2 text-sm px-14 py-3 rounded-sm cursor-pointer"
                         >
@@ -219,7 +220,7 @@ const MobileContent = () => {
                                 width: photo.theme!.frame.slotDimensions.width,
                               }}
                             >
-                              {selectedImage[index]?.href ? (
+                              {selectedImage[index]?.href && (
                                 <Image
                                   src={selectedImage[index]?.href}
                                   alt="image"
@@ -228,10 +229,6 @@ const MobileContent = () => {
                                   height={350}
                                   className="pointer-events-none object-cover w-full h-full"
                                 />
-                              ) : (
-                                <div
-                                  className={cn(`bg-gray-200 rounded-sm w-full h-[190px] sm:h-[${photo.theme!.frame.slotDimensions.height}px]`)}
-                                ></div>
                               )}
                             </div>
                           </Reorder.Item>
@@ -293,6 +290,7 @@ const MobileContent = () => {
                         Chọn hình
                       </Button>
                       <Button
+                        disabled={selectedImage.filter((img) => img !== null).length != photo.theme?.frame.slotCount}
                         onClick={() => setIsSheetOpen(true)}
                         className="w-full flex items-center justify-center gap-2 text-sm px-14 py-6 cursor-pointer"
                       >

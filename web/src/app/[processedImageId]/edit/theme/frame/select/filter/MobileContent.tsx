@@ -310,7 +310,7 @@ const MobileContent = () => {
                         onClick={uploadImageToDatabase}
                         disabled={isMediaUploaded}
                       >
-                        Chắc chắn
+                        {isUploading ? "Đang xử lý!" : "Chắc chắn"}
                         {isUploading && (
                           <LoadingSpinner
                             size={21}
