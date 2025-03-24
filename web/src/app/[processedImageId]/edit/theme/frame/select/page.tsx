@@ -8,7 +8,7 @@ const MobileContent = dynamic(() => import("./MobileContent"), {ssr: false});
 
 const SelectEditPage = () => {
   const isDesktop = useMediaQuery("(min-width: 1024px)");
-  return <>{isDesktop ? <DesktopContent /> : <MobileContent />}</>;
+  return <div className="w-full h-full p-4">{isDesktop ? <DesktopContent /> : <MobileContent />}</div>;
 };
 
 export default SelectEditPage;

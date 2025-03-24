@@ -138,6 +138,37 @@
   }
 }
 
+#mobile-frame-container {
+  transform-origin: "center";
+}
+
+@media (max-width: 520px) {
+  #mobile-frame-container {
+    transform: scale(0.8);
+    height: 650px;
+  }
+  #mobile-frame-title {
+    margin-bottom: -55px;
+  }
+}
+@media (max-width: 400px) {
+  #mobile-frame-container {
+    transform: scale(0.7);
+    height: 600px;
+  }
+  #mobile-frame-title {
+    margin-bottom: -75px;
+  }
+}
+@media (max-width: 360px) {
+  #mobile-frame-container {
+    transform: scale(0.6);
+    height: 570px;
+  }
+  #mobile-frame-title {
+    margin-bottom: -105px;
+  }
+}
 .filter-1977 {
   -webkit-filter: sepia(0.5) hue-rotate(-30deg) saturate(1.4);
   filter: sepia(0.5) hue-rotate(-30deg) saturate(1.4);

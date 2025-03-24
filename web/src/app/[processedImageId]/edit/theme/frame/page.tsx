@@ -170,7 +170,7 @@ const FrameEditpage = () => {
                               onClick={() => {
                                 handleCarouselItemClick(index);
                               }}
-                              className={cn(item.type == "singular" ? "w-full" : "w-1/2")}
+                              className={cn(item.type == "singular" ? "w-full" : "w-1/2", current != index + 1 ? "blur-[2px] grayscale-25" : null)}
                             />
                           );
                         })}
