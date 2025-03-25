@@ -33,7 +33,7 @@ const FrameStage = ({processedImage, images, stageRef, onLoadingComplete}: Frame
   }, []);
 
   useEffect(() => {
-    if (!processedImage?.id || qrCodeURL != "") return;
+    if (!processedImage?.id) return;
 
     const canvas = document.createElement("canvas");
     const qrSize = 256;
@@ -63,10 +63,13 @@ const FrameStage = ({processedImage, images, stageRef, onLoadingComplete}: Frame
     });
 
     const root = ReactDOM.createRoot(container);
+    if (!process.env.NEXT_PUBLIC_QR_DOMAIN) {
+      throw new Error("NEXT_PUBLIC_QR_DOMAIN is not set");
+    }
     root.render(
       <QRCode
         size={qrSize}
-        value={process.env.NEXT_PUBLIC_QR_DOMAIN! + processedImage.id}
+        value={process.env.NEXT_PUBLIC_QR_DOMAIN + processedImage.id}
         viewBox={`0 0 ${qrSize} ${qrSize}`}
       />
     );
