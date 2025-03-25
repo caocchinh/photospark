@@ -15,7 +15,6 @@ import {GlowEffect} from "@/components/ui/glow-effect";
 import {ROUTES} from "@/constants/routes";
 import {IoIosCheckmark} from "react-icons/io";
 import {useRouter} from "next/navigation";
-import {createImage, createVideo, createProcessedImage} from "@/server/actions";
 import {FaArrowLeft} from "react-icons/fa";
 import Link from "next/link";
 import {TbWand} from "react-icons/tb";
@@ -25,104 +24,38 @@ import {RxCross2} from "react-icons/rx";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import GeneralError from "@/components/GeneralError";
 import {useTranslation} from "react-i18next";
+import {useImageUpload} from "@/hooks/useImageUpload";
+
 const DesktopContent = () => {
   const {photo, setPhoto} = usePhoto();
   const filterRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const uploadAttemptedRef = useRef(false);
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const NEW_PROCESSED_IMAGE_ID = useMemo(() => {
     return crypto.randomUUID();
   }, []);
 
-  useEffect(() => {
-    if (!photo) return router.push(`/`);
-    if (photo.selectedImages.length == 0) return router.push(`/${photo?.previousProcessedImageId}/${ROUTES.HOME}`);
-  }, [photo, router, setPhoto]);
+  const {uploadImageToDatabase, isMediaUploaded, isUploading, error} = useImageUpload(NEW_PROCESSED_IMAGE_ID);
   const {t} = useTranslation();
   const [frameImg, frameImgStatus] = useImage(photo?.theme?.frame?.src || "", "anonymous");
   const [filter, setFilter] = useState<string | null>(null);
   const stageRef = useRef<StageElement | null>(null);
-  const [isMediaUploaded, setIsMediaUploaded] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
-  const [error, setError] = useState(false);
   const filterRef = useRef(filter);
   const dummyLinkRef = useRef<HTMLAnchorElement>(null);
+  const uploadAttemptedRef = useRef(false);
 
   useEffect(() => {
     filterRef.current = filter;
   }, [filter]);
 
-  useEffect(() => {
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      e.preventDefault();
-      e.returnValue = "";
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, [filter, isMediaUploaded, isUploading, t]);
-
-  const uploadImageToDatabase = useCallback(async () => {
-    if (!photo || uploadAttemptedRef.current) return;
-
+  const handleImageUpload = useCallback(async () => {
+    if (uploadAttemptedRef.current) return;
     uploadAttemptedRef.current = true;
-    setIsUploading(true);
-    try {
-      await createProcessedImage(NEW_PROCESSED_IMAGE_ID, photo.theme!.name, photo.theme!.frame.src, photo.frameType!, photo.theme!.frame.slotCount);
-    } catch (error) {
-      console.error("Error uploading processed image to database:", error);
-      setError(true);
-      return;
-    }
-
-    for (const image of photo.images) {
-      const slotPosition = photo.selectedImages.findIndex((selectedImage) => selectedImage.id == image.id);
-      try {
-        const imageResponse = await createImage(
-          image.href,
-          NEW_PROCESSED_IMAGE_ID,
-          slotPosition != -1 ? photo.theme!.frame.slotPositions[slotPosition].x : null,
-          slotPosition != -1 ? photo.theme!.frame.slotPositions[slotPosition].y : null,
-          photo.theme!.frame.slotDimensions.height,
-          photo.theme!.frame.slotDimensions.width
-        );
-
-        if (imageResponse.error) {
-          throw new Error("Failed to upload image to database");
-        } else {
-          console.log("Image uploaded to database successfully");
-        }
-      } catch (error) {
-        console.error("Error uploading image to database:", error);
-        setError(true);
-        return;
-      }
-    }
-
-    if (photo.video.r2_url) {
-      try {
-        const videoResponse = await createVideo(photo.video.r2_url, NEW_PROCESSED_IMAGE_ID);
-        if (videoResponse.error) {
-          throw new Error("Failed to upload video to database");
-        } else {
-          console.log("Video uploaded to database successfully");
-        }
-      } catch (error) {
-        console.error("Error uploading video to database:", error);
-        setError(true);
-        return;
-      }
-    }
-
-    setIsMediaUploaded(true);
-    if (dummyLinkRef.current) {
+    const result = await uploadImageToDatabase();
+    if (result && dummyLinkRef.current) {
       dummyLinkRef.current.click();
     }
-  }, [NEW_PROCESSED_IMAGE_ID, photo]);
+  }, [uploadImageToDatabase]);
 
   const selectRandomFilter = useCallback(() => {
     const randomIndex = Math.floor(Math.random() * FILTERS.length);
@@ -133,6 +66,11 @@ const DesktopContent = () => {
       block: "center",
     });
   }, []);
+
+  useEffect(() => {
+    if (!photo) return router.push(`/`);
+    if (photo.selectedImages.length == 0) return router.push(`/${photo?.previousProcessedImageId}/${ROUTES.HOME}`);
+  }, [photo, router, setPhoto]);
 
   return (
     <>
@@ -292,7 +230,7 @@ const DesktopContent = () => {
                           </AlertDialogCancel>
                           <Button
                             className="bg-green-600 hover:bg-green-700 w-full text-white hover:text-white cursor-pointer"
-                            onClick={uploadImageToDatabase}
+                            onClick={handleImageUpload}
                             disabled={isMediaUploaded}
                           >
                             {isUploading ? t("Processing...") : t("Sure")}
@@ -333,7 +271,7 @@ const DesktopContent = () => {
       {error && (
         <GeneralError
           error={error}
-          message="Đã có lỗi xảy ra khi tạo hình ảnh!"
+          message={t("An error occurred while creating the image!")}
         />
       )}
     </>

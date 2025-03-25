@@ -10,7 +10,14 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const response = await fetch(url);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+    const response = await fetch(url, {
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       return NextResponse.json({error: `Failed to fetch image: ${response.statusText}`}, {status: response.status});
@@ -25,8 +32,13 @@ export async function GET(request: NextRequest) {
         "Cache-Control": "public, max-age=86400",
       },
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Image proxy error:", error);
+
+    if (error instanceof Error && error.name === "AbortError") {
+      return NextResponse.json({error: "url parameter is valid but upstream response timed out"}, {status: 504});
+    }
+
     return NextResponse.json({error: "Failed to fetch image"}, {status: 500});
   }
 }

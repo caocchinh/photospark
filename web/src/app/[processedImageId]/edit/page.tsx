@@ -31,7 +31,7 @@ const LayoutEditPage = () => {
           <FaArrowLeft />
           {t("Back")}
         </Link>
-        <h1 className="text-5xl font-semibold uppercase text-center">{t("Choose layout")}</h1>
+        <h1 className="text-5xl font-semibold uppercase text-center">{t("Choose a layout")}</h1>
         <div className="flex items-center justify-center gap-8 flex-wrap w-full">
           <Link
             href={`/${photo?.previousProcessedImageId}/edit/theme`}

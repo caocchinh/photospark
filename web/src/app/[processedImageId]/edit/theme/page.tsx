@@ -9,8 +9,10 @@ import {useRouter} from "next/navigation";
 import {FaArrowLeftLong} from "react-icons/fa6";
 import {ValidThemeType} from "@/constants/types";
 import {useTranslation} from "react-i18next";
+import {useReloadConfirm} from "@/hooks/useReloadConfirm";
 
 const ThemePage = () => {
+  useReloadConfirm();
   const {photo, setPhoto} = usePhoto();
   const router = useRouter();
   const {t} = useTranslation();

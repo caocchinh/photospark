@@ -14,8 +14,10 @@ import {ValidThemeType} from "@/constants/types";
 import {ROUTES} from "@/constants/routes";
 import {useTranslation} from "react-i18next";
 import {MdOutlineArrowForwardIos, MdOutlineArrowBackIos} from "react-icons/md";
+import {useReloadConfirm} from "@/hooks/useReloadConfirm";
 
 const FrameEditpage = () => {
+  useReloadConfirm();
   const {photo, setPhoto} = usePhoto();
   const router = useRouter();
   const [api, setApi] = useState<CarouselApi>();
