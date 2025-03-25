@@ -16,6 +16,7 @@ import {Slider} from "@/components/ui/slider";
 import {SlidingNumber} from "@/components/ui/sliding-number";
 import {createQueue} from "@/server/actions";
 import GeneralError from "@/components/GeneralError";
+import {useTranslation} from "react-i18next";
 
 const Print = ({
   processedImage,
@@ -31,6 +32,7 @@ const Print = ({
   const [isLoading, setIsLoading] = useState(false);
   const dummyLinkRef = useRef<HTMLAnchorElement>(null);
   const [uuid, setUuid] = useState<string | null>(null);
+  const {t} = useTranslation();
 
   const calculatePrice = (quantity: number) => {
     const priceTier = PRINT_PRICING.find((item) => {
@@ -109,14 +111,14 @@ const Print = ({
                 className="cursor-pointer"
                 onClick={() => handleTabChange("price")}
               >
-                Bảng giá
+                {t("Price table")}
               </TabsTrigger>
               <TabsTrigger
                 value="order"
                 className="cursor-pointer"
                 onClick={() => handleTabChange("order")}
               >
-                Đặt in
+                {t("Order")}
               </TabsTrigger>
             </TabsList>
             <TabsContent
@@ -125,17 +127,17 @@ const Print = ({
             >
               <Card className="h-full w-full flex flex-col items-stretch justify-center">
                 <CardHeader className="w-full">
-                  <CardTitle>Giá</CardTitle>
-                  <CardDescription>Nếu bạn có nhu cầu in thêm ảnh, hãy xem bảng giá dưới đây.</CardDescription>
+                  <CardTitle>{t("Price")}</CardTitle>
+                  <CardDescription>{t("If you need to print more images, please see the price table below.")}</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-2 w-full">
                   <Table>
-                    <TableCaption>Hãy gặp staff VTEAM để in thêm ảnh nha!</TableCaption>
+                    <TableCaption>{t("Please meet staff VTEAM to print more images!")}</TableCaption>
                     <TableHeader>
                       <TableRow>
-                        <TableHead className="w-[100px]">Số lượng</TableHead>
+                        <TableHead className="w-[100px]">{t("Quantity")}</TableHead>
                         <TableHead className="flex items-center gap-2">
-                          Giá
+                          {t("Price")}
                           <Image
                             src="/vn.svg"
                             alt="vn"
@@ -157,7 +159,9 @@ const Print = ({
                           </TableCell>
                           <TableCell>
                             {typeof item.quantity === "string" && item.quantity.endsWith("+")
-                              ? `${item.price.toLocaleString("vi-VN")} VNĐ${processedImage.type === "double" ? "/2 ảnh" : "/ảnh"}`
+                              ? `${item.price.toLocaleString("vi-VN")} VNĐ${
+                                  processedImage.type === "double" ? `/2 ${t("images")}` : `/${t("image")}`
+                                }`
                               : `${item.price.toLocaleString("vi-VN")} VNĐ`}
                           </TableCell>
                         </TableRow>
@@ -170,7 +174,7 @@ const Print = ({
                     className="w-full flex items-center justify-center gap-2 cursor-pointer"
                     onClick={() => handleTabChange("order")}
                   >
-                    Đặt in <FaArrowRight />
+                    {t("Order")} <FaArrowRight />
                   </Button>
                 </CardFooter>
               </Card>
@@ -181,15 +185,17 @@ const Print = ({
             >
               <Card className="h-full">
                 <CardHeader>
-                  <CardTitle>Đặt in</CardTitle>
-                  <CardDescription>Số lượng in tối đa là {MAX_PRINT_QUANTITY * (processedImage.type === "double" ? 2 : 1)} ảnh</CardDescription>
+                  <CardTitle>{t("Order")}</CardTitle>
+                  <CardDescription>
+                    {t("The maximum quantity of prints is")} {MAX_PRINT_QUANTITY * (processedImage.type === "double" ? 2 : 1)} {t("images")}
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-2 w-full flex flex-col items-center justify-center gap-4">
                   <Label
                     htmlFor="print-quantity"
                     className="text-2xl"
                   >
-                    Số lượng in: <SlidingNumber value={printQuantity} /> ảnh
+                    {t("Quantity of prints")}: <SlidingNumber value={printQuantity} /> {printQuantity === 1 ? t("image") : t("images")}
                   </Label>
                   <Slider
                     name="print-quantity"
@@ -201,7 +207,7 @@ const Print = ({
                     onValueChange={(values) => setPrintQuantity(values[0])}
                   />
                   <div className="w-full h-[50px] text-[#f97316] font-semibold text-3xl flex items-center justify-center gap-1">
-                    GIÁ: {calculatePrice(printQuantity / (processedImage.type === "double" ? 2 : 1)).toLocaleString("vi-VN")} VNĐ
+                    {t("Price")}: {calculatePrice(printQuantity / (processedImage.type === "double" ? 2 : 1)).toLocaleString("vi-VN")} VNĐ
                   </div>
                 </CardContent>
                 <CardFooter className="w-full">
@@ -213,11 +219,11 @@ const Print = ({
                     {isLoading ? (
                       <div className="flex items-center gap-2">
                         <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"></span>
-                        Đang xử lý...
+                        {t("Processing...")}
                       </div>
                     ) : (
                       <>
-                        Đặt in <FaArrowRight />
+                        {t("Order")} <FaArrowRight />
                       </>
                     )}
                   </Button>
@@ -231,7 +237,7 @@ const Print = ({
           >
             <Button className="w-full cursor-pointer">
               <FaArrowLeft />
-              Quay lại
+              {t("Back")}
             </Button>
           </Link>
         </div>
@@ -243,7 +249,7 @@ const Print = ({
       </div>
       <GeneralError
         error={error}
-        message="Có lỗi trong khi đặt in!"
+        message={t("There was an error while ordering!")}
       />
     </>
   );

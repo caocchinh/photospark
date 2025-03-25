@@ -27,6 +27,34 @@ export const ThemeSelectButton: ThemeSelectButtonType[] = [
   },
 ];
 
+export const LANGUAGE_LIST = [
+  {
+    value: "vi",
+    label: "Tiếng Việt",
+    image_src: "/vn.svg",
+  },
+  {
+    value: "en",
+    label: "English",
+    image_src: "/gb.svg",
+  },
+  {
+    value: "fr",
+    label: "Français",
+    image_src: "/fr.svg",
+  },
+  {
+    value: "cn",
+    label: "繁體中文",
+    image_src: "/cn.svg",
+  },
+  {
+    value: "kr",
+    label: "한국인",
+    image_src: "/ks-flag.webp",
+  },
+];
+
 export const MULTIPLIER = 1.3;
 
 export const FRAME_WIDTH = 355 * MULTIPLIER;

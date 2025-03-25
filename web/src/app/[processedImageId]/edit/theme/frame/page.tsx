@@ -14,7 +14,7 @@ import {GlowEffect} from "@/components/ui/glow-effect";
 import {ValidThemeType} from "@/constants/types";
 import {ROUTES} from "@/constants/routes";
 import {MdOutlineKeyboardDoubleArrowLeft, MdOutlineKeyboardDoubleArrowRight} from "react-icons/md";
-
+import {useTranslation} from "react-i18next";
 const FrameEditpage = () => {
   const {photo, setPhoto} = usePhoto();
   const router = useRouter();
@@ -26,6 +26,7 @@ const FrameEditpage = () => {
   const [current, setCurrent] = useState(0);
   const initializationDoneRef = useRef(false);
   const [chosen, setChosen] = useState<boolean>(false);
+  const {t} = useTranslation();
 
   useEffect(() => {
     if (!photo?.theme) return router.push(`/${photo?.previousProcessedImageId}/${ROUTES.HOME}`);
@@ -131,17 +132,17 @@ const FrameEditpage = () => {
                 className="w-full sm:w-auto flex text-center items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-2 hover:opacity-[85%] "
               >
                 <FaArrowLeft />
-                Chọn theme khác
+                {t("Choose another theme")}
               </Link>
               <Link
                 href={`/${photo?.previousProcessedImageId}/${ROUTES.HOME}`}
                 className="w-full sm:w-auto flex text-center items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-2 hover:opacity-[85%] "
               >
                 <FaArrowLeft />
-                Chọn layout khác
+                {t("Choose another layout")}
               </Link>
             </div>
-            <h1 className="text-5xl font-semibold uppercase text-center">Chọn frame</h1>
+            <h1 className="text-5xl font-semibold uppercase text-center">{t("Choose frame")}</h1>
 
             <div className="relative flex items-center justify-center flex-col my-4 px-2 w-full gap-5">
               <Carousel
@@ -222,7 +223,7 @@ const FrameEditpage = () => {
                 )}
                 onClick={handleFrameChosen}
               >
-                Chọn hình
+                {t("Choose image")}
                 <FaArrowRight />
               </Link>
             </div>

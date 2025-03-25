@@ -1,8 +1,12 @@
+"use client";
 import Link from "next/link";
 import {IoIosWarning, IoIosArrowBack} from "react-icons/io";
 import {BorderTrail} from "@/components/ui/border-trail";
+import {useTranslation} from "react-i18next";
 
 const ImageNotFoundError = () => {
+  const {t} = useTranslation();
+
   return (
     <div className="flex items-center justify-center min-w-screen min-h-screen">
       <div className="-full flex items-center justify-center  w-[90%] md:w-[400px] flex-col gap-4 ">
@@ -17,8 +21,8 @@ const ImageNotFoundError = () => {
             className="text-red-600"
             size={100}
           />
-          <h2 className="text-3xl font-bold text-red-600">ERROR</h2>
-          <p className="text-gray-800 text-xl uppercase">Hình không tồn tại!</p>
+          <h2 className="text-3xl font-bold text-red-600">{t("An error occurred")}</h2>
+          <p className="text-gray-800 text-xl uppercase">{t("Image not found!")}</p>
         </div>
         <Link
           href="/"
@@ -28,7 +32,7 @@ const ImageNotFoundError = () => {
             className="text-white"
             size={20}
           />
-          <p className="text-white text-xl">Quay lại trang chủ</p>
+          <p className="text-white text-xl">{t("Return to homepage")}</p>
         </Link>
       </div>
     </div>

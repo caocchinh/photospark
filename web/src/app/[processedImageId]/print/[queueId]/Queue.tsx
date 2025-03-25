@@ -13,7 +13,7 @@ import {FaSync} from "react-icons/fa";
 import {cn} from "@/lib/utils";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
 import {SlidingNumber} from "@/components/ui/sliding-number";
-
+import {useTranslation} from "react-i18next";
 const Queue = ({
   processedImage,
   queue,
@@ -28,6 +28,7 @@ const Queue = ({
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [refreshable, setRefreshable] = useState(true);
   const [timeLeft, setTimeLeft] = useState(15);
+  const {t} = useTranslation();
 
   const refreshQueue = useCallback(async () => {
     if (!refreshable) {
@@ -65,8 +66,8 @@ const Queue = ({
     <div className="w-full flex items-center justify-center gap-8  m-8 mt-20 flex-wrap">
       <Card className=" w-[90%] lg:w-[40%]">
         <CardHeader>
-          <CardTitle>Thông tin in ảnh</CardTitle>
-          <CardDescription>Chi tiết về đơn hàng in ảnh của bạn</CardDescription>
+          <CardTitle>{t("Image printing information")}</CardTitle>
+          <CardDescription>{t("Details about the image printing order")}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="border rounded-md p-4 flex flex-col gap-2">
@@ -87,26 +88,26 @@ const Queue = ({
                       <FaSync className={cn(isRefreshing && "animate-spin")} />
                       {isRefreshing || !refreshable ? (
                         <h4 className="text-xs flex items-center gap-1 justify-center">
-                          Đợi
+                          {t("Wait")}
                           <span>
                             <SlidingNumber
                               value={timeLeft}
                               padStart={true}
                             />
                           </span>
-                          giây để làm mới
+                          {t("seconds to refresh")}
                         </h4>
                       ) : (
-                        <h4 className="text-xs">Làm mới trạng thái</h4>
+                        <h4 className="text-xs">{t("Refresh status")}</h4>
                       )}
                     </Button>
                   </div>
                 </TooltipTrigger>
-                <TooltipContent>{!refreshable ? `Đợi ${timeLeft} giây để làm mới` : "Làm mới trạng thái"}</TooltipContent>
+                <TooltipContent>{!refreshable ? `${t("Wait")} ${timeLeft} ${t("seconds to refresh")}` : t("Refresh status")}</TooltipContent>
               </Tooltip>
             </TooltipProvider>
             <div className="flex justify-between items-center mb-2 flex-col gap-3 md:gap-0 md:flex-row">
-              <h3 className="font-medium">Trạng thái đơn hàng</h3>
+              <h3 className="font-medium">{t("Order status")}</h3>
               <div className="flex items-center gap-2 justify-center md:justify-start">
                 <div
                   className={`w-3 h-3 rounded-full ${
@@ -120,44 +121,48 @@ const Queue = ({
                   }`}
                 ></div>
                 <span>
-                  {queueStatus === "pending" && "Chờ in"}
-                  {queueStatus === "processing" && "Đang in"}
-                  {queueStatus === "completed" && "Đã in xong"}
-                  {queueStatus === "failed" && "Thất bại"}
+                  {queueStatus === "pending" && t("Waiting for printing")}
+                  {queueStatus === "processing" && t("Printing")}
+                  {queueStatus === "completed" && t("Printed")}
+                  {queueStatus === "failed" && t("Failed")}
                 </span>
               </div>
             </div>
 
             <div className="flex items-center gap-2 justify-center md:justify-start sm:flex-row flex-col">
-              <h3 className="font-medium">Mã đơn hàng: </h3>
+              <h3 className="font-medium">{t("Order ID")}: </h3>
               <span className="font-medium text-center text-rose-500 hover:underline">{queue.id}</span>
             </div>
           </div>
 
           <div className="border rounded-md p-4">
-            <h3 className="font-medium mb-2">Chi tiết đơn hàng</h3>
+            <h3 className="font-medium mb-2">{t("Order details")}</h3>
             <div className="flex flex-col gap-2 items-center justify-center md:justify-start w-full">
               <div className="flex justify-between w-full">
-                <span>Loại ảnh:</span>
-                <span className="font-medium text-right">{processedImage.type === "double" ? "Ảnh đôi" : "Ảnh đơn"}</span>
+                <span>{t("Image type")}:</span>
+                <span className="font-medium text-right">{processedImage.type === "double" ? t("Double image") : t("Single image")}</span>
               </div>
               <div className="flex justify-between w-full">
-                <span>Số lượng:</span>
-                <span className="font-medium text-right">{queue.quantity * (processedImage.type === "double" ? 2 : 1)} ảnh</span>
+                <span>{t("Quantity")}:</span>
+                <span className="font-medium text-right">
+                  {queue.quantity * (processedImage.type === "double" ? 2 : 1)} {t("images")}
+                </span>
               </div>
               <div className="flex justify-between w-full">
-                <span>Giá</span>
-                <span className="font-medium text-right">{queue.price.toLocaleString("vi-VN")} VNĐ</span>
+                <span>{t("Price")}:</span>
+                <span className="font-medium text-right">
+                  {queue.price.toLocaleString("vi-VN")} {t("VND")}
+                </span>
               </div>
               <div className="flex justify-between w-full">
-                <span>Thời gian đặt:</span>
+                <span>{t("Time")}:</span>
                 <span className="font-medium text-right">{new Date(queue.createdAt).toLocaleString("vi-VN")}</span>
               </div>
             </div>
           </div>
 
           <div className="border rounded-md p-4 bg-yellow-50">
-            <p className="text-center text-sm">Hãy gặp staff VTEAM và đưa mã đơn hàng để được hỗ trợ!</p>
+            <p className="text-center text-sm">{t("Please meet staff VTEAM and bring the order ID to get help!")}</p>
           </div>
         </CardContent>
         <CardFooter className="flex flex-col gap-2 w-full">
@@ -169,7 +174,7 @@ const Queue = ({
               variant="outline"
               className="w-full gap-2 cursor-pointer"
             >
-              <FaArrowLeft /> Quay lại
+              <FaArrowLeft /> {t("Back")}
             </Button>
           </Link>
         </CardFooter>

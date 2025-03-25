@@ -15,6 +15,34 @@ export const PRINT_PRICING = [
   {quantity: "5+", price: 15000},
 ];
 
+export const LANGUAGE_LIST = [
+  {
+    value: "vi",
+    label: "Tiếng Việt",
+    image_src: "/vn.svg",
+  },
+  {
+    value: "en",
+    label: "English",
+    image_src: "/gb.svg",
+  },
+  {
+    value: "fr",
+    label: "Français",
+    image_src: "/fr.svg",
+  },
+  {
+    value: "cn",
+    label: "繁體中文",
+    image_src: "/cn.svg",
+  },
+  {
+    value: "kr",
+    label: "한국인",
+    image_src: "/ks-flag.webp",
+  },
+];
+
 export const MAX_PRINT_QUANTITY = 10;
 
 export const CAPTURE_DURATION = 3;

@@ -4,30 +4,39 @@ import {IoRefresh} from "react-icons/io5";
 import {MdOutlineHideImage} from "react-icons/md";
 import {PiPrinter, PiVideoCameraSlash} from "react-icons/pi";
 import {Button} from "./ui/button";
+import {useTranslation} from "react-i18next";
 
 const FetchError = ({type}: {type: "image" | "video" | "queue"}) => {
+  const {t} = useTranslation();
+
+  const getErrorTypeText = () => {
+    if (type === "image") return t("image");
+    if (type === "video") return t("video");
+    return t("print order");
+  };
+
   return (
     <Dialog defaultOpen={true}>
       <DialogContent className="flex flex-col items-center justify-center gap-4 border border-red-500 min-h-[330px]">
         <div className="flex flex-col items-center justify-center gap-4">
           <DialogTitle className="text-red-500 text-3xl font-semibold text-center uppercase">
-            Lỗi khi load {type === "image" ? "ảnh" : type === "video" ? "video" : "order in"}
+            {t("Error loading")} {getErrorTypeText()}
           </DialogTitle>
           {type === "image" && <MdOutlineHideImage size={100} />}
           {type === "video" && <PiVideoCameraSlash size={100} />}
           {type === "queue" && <PiPrinter size={100} />}
-          <DialogDescription className="text-xl text-center w-[90%]">Vui lòng thử lại sau, hoặc liên hệ VTEAM để được hỗ trợ!</DialogDescription>
+          <DialogDescription className="text-xl text-center w-[90%]">{t("Please try again later, or contact VTEAM for support!")}</DialogDescription>
         </div>
         <div className="flex items-center justify-center gap-4 w-full">
           <Button
             onClick={() => window.location.reload()}
             className="flex items-center justify-center gap-2 cursor-pointer w-1/2 bg-red-500 text-white"
           >
-            Refresh lại trang
+            {t("Refresh the application")}
             <IoRefresh />
           </Button>
           <DialogClose asChild>
-            <Button className="flex items-center justify-center gap-2 cursor-pointer w-1/2">Bỏ qua</Button>
+            <Button className="flex items-center justify-center gap-2 cursor-pointer w-1/2">{t("Close")}</Button>
           </DialogClose>
         </div>
       </DialogContent>

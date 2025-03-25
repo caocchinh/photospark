@@ -3,12 +3,13 @@ import DoubleLayout from "@/components/layout-image/DoubleLayout";
 import SingularLayout from "@/components/layout-image/SingularLayout";
 import {ValidFrameType} from "@/constants/types";
 import {usePhoto} from "@/context/PhotoContext";
+import {useTranslation} from "react-i18next";
 import Link from "next/link";
 import {FaArrowLeft} from "react-icons/fa6";
 
 const LayoutEditPage = () => {
   const {photo, setPhoto} = usePhoto();
-
+  const {t} = useTranslation();
   const handleTypeChange = (type: ValidFrameType) => {
     if (!setPhoto) return;
     setPhoto((prev) => {
@@ -28,9 +29,9 @@ const LayoutEditPage = () => {
           className="flex text-center w-[90%] sm:w-[280px] items-center self-center sm:self-start justify-center gap-2 bg-foreground text-background rounded px-4 py-2 hover:opacity-[85%] "
         >
           <FaArrowLeft />
-          Quay lại
+          {t("Back")}
         </Link>
-        <h1 className="text-5xl font-semibold uppercase text-center">Chọn layout</h1>
+        <h1 className="text-5xl font-semibold uppercase text-center">{t("Choose layout")}</h1>
         <div className="flex items-center justify-center gap-8 flex-wrap w-full">
           <Link
             href={`/${photo?.previousProcessedImageId}/edit/theme`}

@@ -2,9 +2,9 @@ import type {Metadata} from "next";
 import {Geist, Geist_Mono} from "next/font/google";
 import "./globals.css";
 import NextTopLoader from "nextjs-toploader";
-import {TextShimmer} from "@/components/ui/text-shimmer";
-import Image from "next/image";
 import NavBar from "@/components/NavBar";
+import Footer from "@/components/Footer";
+import I18nClientProvider from "@/context/I18nClientProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,27 +35,16 @@ export default function RootLayout({
         />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <NavBar />
-        <NextTopLoader
-          color="black"
-          zIndex={100000}
-          showSpinner={true}
-        />
-        {children}
-        <footer className="w-full bottom-0 flex items-center justify-center bg-black flex-col sm:flex-row pb-4 sm:pb-1">
-          <TextShimmer
-            className="w-max [--base-color:#f97316] [--base-gradient-color:#fdba74] text-center text-md p-2 gap-3"
-            duration={6}
-          >
-            Ứng dụng được phát triển và tài trợ bởi VECTR
-          </TextShimmer>
-          <Image
-            width={25}
-            height={25}
-            src="/vectr.png"
-            alt="Vectr logo"
+        <I18nClientProvider>
+          <NavBar />
+          <NextTopLoader
+            color="black"
+            zIndex={100000}
+            showSpinner={true}
           />
-        </footer>
+          {children}
+          <Footer />
+        </I18nClientProvider>
       </body>
     </html>
   );

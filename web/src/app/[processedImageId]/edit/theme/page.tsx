@@ -8,10 +8,12 @@ import Link from "next/link";
 import {useRouter} from "next/navigation";
 import {FaArrowLeftLong} from "react-icons/fa6";
 import {ValidThemeType} from "@/constants/types";
+import {useTranslation} from "react-i18next";
 
 const ThemePage = () => {
   const {photo, setPhoto} = usePhoto();
   const router = useRouter();
+  const {t} = useTranslation();
   useEffect(() => {
     if (!photo?.frameType) return router.push(`/${photo?.previousProcessedImageId}/edit/`);
   }, [photo, router]);
@@ -41,10 +43,10 @@ const ThemePage = () => {
             className="w-[300px] p-2 rounded flex items-center justify-center gap-2 bg-black text-white"
           >
             <FaArrowLeftLong />
-            Chọn lại layout
+            {t("Choose another layout")}
           </Link>
           <div className="flex flex-col items-center justify-center gap-8 w-[80%]">
-            <CardTitle className="text-5xl font-semibold uppercase text-center">Chọn theme</CardTitle>
+            <CardTitle className="text-5xl font-semibold uppercase text-center">{t("Choose theme")}</CardTitle>
             <CardContent className="flex items-center justify-center gap-8 flex-wrap w-[90%]">
               {ThemeSelectButton.map((item, index) => {
                 const hasMatchingFrame = FrameOptions[item.theme].some((frame) => frame.type === photo.frameType);

@@ -10,13 +10,16 @@ import {
 } from "@/components/ui/alert-dialog";
 import {MdWarning} from "react-icons/md";
 import {IoRefresh} from "react-icons/io5";
+import {useTranslation} from "react-i18next";
 
 const GeneralError = ({error, message}: {error: boolean; message: string}) => {
+  const {t} = useTranslation();
+
   return (
     <AlertDialog open={error}>
       <AlertDialogContent className="flex flex-col items-center justify-center gap-4 border border-red-500">
         <AlertDialogHeader>
-          <AlertDialogTitle className="text-red-600 text-4xl font-bold">OOPS</AlertDialogTitle>
+          <AlertDialogTitle className="text-red-600 text-4xl font-bold">{t("An error occurred")}</AlertDialogTitle>
         </AlertDialogHeader>
         <MdWarning
           className="text-red-500"
@@ -28,7 +31,7 @@ const GeneralError = ({error, message}: {error: boolean; message: string}) => {
             onClick={() => window.location.reload()}
             className="flex items-center justify-center gap-2 cursor-pointer"
           >
-            Refresh lại trang
+            {t("Refresh the application")}
             <IoRefresh />
           </Button>
         </AlertDialogFooter>

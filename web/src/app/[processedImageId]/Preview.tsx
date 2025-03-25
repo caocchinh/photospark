@@ -14,6 +14,8 @@ import GeneralError from "@/components/GeneralError";
 import {Button} from "@/components/ui/button";
 import {getImages, getProcessedImage} from "@/server/actions";
 import {LuRefreshCcw, LuLink} from "react-icons/lu";
+import LanguageBar from "@/components/LanguageBar";
+import {useTranslation} from "react-i18next";
 
 const Preview = ({
   initialProcessedImage,
@@ -24,6 +26,7 @@ const Preview = ({
   initialImages?: Array<typeof ImageTable.$inferSelect>;
   video?: typeof VideoTable.$inferSelect;
 }) => {
+  const {t} = useTranslation();
   const stageRef = useRef<StageElement | null>(null);
   const [error, setError] = useState(false);
   const [allImagesLoaded, setAllImagesLoaded] = useState(false);
@@ -69,7 +72,9 @@ const Preview = ({
   };
 
   return (
-    <>
+    <div className="flex flex-col items-center justify-center gap-8 m-10 mt-3 h-max w-full">
+      <LanguageBar />
+
       <div className="w-full flex flex-col lg:flex-row items-center justify-center gap-8 m-8 mt-3 h-max ">
         <div className="relative min-w-[300px] w-full md:w-max">
           <div className={cn(!allImagesLoaded && "pointer-events-none opacity-0")}>
@@ -115,7 +120,7 @@ const Preview = ({
                   }
                 }}
               >
-                Tải lại hình
+                {t("Reload image")}
                 <LuRefreshCcw className="ml-1 h-4 w-4" />
               </Button>
             </div>
@@ -131,7 +136,7 @@ const Preview = ({
               )}
               onClick={downloadImage}
             >
-              {allImagesLoaded ? "Download hình" : "Đang load hình"}
+              {allImagesLoaded ? t("Download image") : t("Loading image")}
               {!allImagesLoaded ? <LoadingSpinner size={25} /> : <AiOutlineDownload size={27} />}
             </div>
             {allImagesLoaded && (
@@ -149,7 +154,7 @@ const Preview = ({
               className="w-full h-[50px] text-white bg-black cursor-pointer text-xl rounded-sm flex items-center justify-center gap-3"
               onClick={downloadVideo}
             >
-              Download video
+              {t("Download video")}
               <AiOutlineDownload size={27} />
             </div>
           )}
@@ -163,7 +168,7 @@ const Preview = ({
               }, 2000);
             }}
           >
-            {copied ? "Đã copy!" : "Copy link hình"}
+            {copied ? t("Copied!") : t("Copy image link")}
             <LuLink size={27} />
           </div>
           <div className="w-full h-[50px] text-white cursor-pointer text-xl bg-[#f97316] hover:opacity-90 hover:bg-[#f97316] rounded-sm flex items-center justify-center gap-3">
@@ -171,7 +176,7 @@ const Preview = ({
               href={`/${processedImage.id}/edit`}
               className="flex items-center justify-center gap-2 h-full w-full"
             >
-              Sửa hình
+              {t("Edit image")}
               <MdModeEdit
                 size={27}
                 color="white"
@@ -184,7 +189,7 @@ const Preview = ({
               href={`/${processedImage.id}/print`}
               className="flex items-center justify-center gap-2 h-full w-full"
             >
-              In thêm
+              {t("Print more")}
               <IoCopySharp
                 size={22}
                 color="white"
@@ -195,9 +200,9 @@ const Preview = ({
       </div>
       <GeneralError
         error={error}
-        message="Có lỗi trong khi download ảnh!"
+        message={t("Error while downloading image!")}
       />
-    </>
+    </div>
   );
 };
 export default Preview;

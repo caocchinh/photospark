@@ -8,8 +8,10 @@ import {TextShimmer} from "@/components/ui/text-shimmer";
 import {BorderTrail} from "@/components/ui/border-trail";
 import {cn, isValidUUID} from "@/lib/utils";
 import {FaArrowUp, FaArrowRight} from "react-icons/fa6";
+import {useTranslation} from "react-i18next";
 
 export default function Home() {
+  const {t} = useTranslation();
   const [imageId, setImageId] = useState("");
   const [validUUID, setValidUUID] = useState(false);
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -121,7 +123,7 @@ export default function Home() {
                 <InputOTPSlot index={31} />
               </InputOTPGroup>
             </InputOTP>
-            {!validUUID && imageId.trim().length === 32 && <p className="text-red-500 text-sm">Vui lòng nhập ID hình hợp lệ</p>}
+            {!validUUID && imageId.trim().length === 32 && <p className="text-red-500 text-sm">{t("Please enter a valid image ID")}</p>}
             <div
               className={cn(
                 imageId.trim().length === 32 && validUUID
@@ -141,7 +143,7 @@ export default function Home() {
                 href={imageId.trim() ? `/${formatUUID(imageId.trim())}` : "#"}
                 className="w-full transition-colors text-center flex items-center justify-center gap-1"
               >
-                {imageId.trim().length === 32 ? "Tìm hình" : "Nhập ID hình"}
+                {imageId.trim().length === 32 ? t("Find image") : t("Enter image ID")}
                 {imageId.trim().length === 32 ? <FaArrowRight /> : <FaArrowUp />}
               </Link>
             </div>

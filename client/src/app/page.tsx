@@ -15,83 +15,62 @@ import {ROUTES} from "@/constants/routes";
 import SingularLayout from "@/components/layout-image/SingularLayout";
 import DoubleLayout from "@/components/layout-image/DoubleLayout";
 import {MdSettings} from "react-icons/md";
-import {useState} from "react";
+import {useCallback, useState} from "react";
 import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
 import CameraSetting from "@/components/CameraSetting";
 import {RxCross1} from "react-icons/rx";
 import {ValidFrameType} from "@/constants/types";
 import Cooldown from "@/components/Cooldown";
-
-const language = [
-  {
-    value: "vi",
-    label: "Tiếng Việt",
-    image_src: "/vn.svg",
-  },
-  {
-    value: "en",
-    label: "English",
-    image_src: "/gb.svg",
-  },
-  {
-    value: "fr",
-    label: "Français",
-    image_src: "/fr.svg",
-  },
-  {
-    value: "cn",
-    label: "繁體中文",
-    image_src: "/cn.svg",
-  },
-  {
-    value: "kr",
-    label: "한국인",
-    image_src: "/ks-flag.webp",
-  },
-];
+import {LANGUAGE_LIST} from "@/constants/constants";
 
 const LayoutPage = () => {
   const {photo, setPhoto, autoSelectCountdown} = usePhoto();
   const {t, i18n} = useTranslation();
   usePreventNavigation();
   const [isPasswordCorrect, setIsPasswordCorrect] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [password, setPassword] = useState("");
   const [isWrongPassword, setIsWrongPassword] = useState(false);
-  const [value, setValue] = useState(() => {
-    const defaultLang = language.find((lang) => lang.value === i18n.language);
+  const [language, setLanguage] = useState(() => {
+    const defaultLang = LANGUAGE_LIST.find((lang) => lang.value === i18n.language);
     return defaultLang?.label ?? "English";
   });
 
-  const handleLanguageSelect = (currentValue: string) => {
-    const selectedLang = language.find((lang) => lang.label === currentValue);
-    if (selectedLang) {
-      setValue(currentValue);
-      i18n.changeLanguage(selectedLang.value);
-    }
-    setOpen(false);
-  };
+  const handleLanguageSelect = useCallback(
+    (currentValue: string) => {
+      const selectedLang = LANGUAGE_LIST.find((lang) => lang.label === currentValue);
+      if (selectedLang) {
+        setLanguage(currentValue);
+        i18n.changeLanguage(selectedLang.value);
+      }
+      setIsOpen(false);
+    },
+    [i18n]
+  );
 
-  const handleTypeChange = (type: ValidFrameType) => {
-    if (!setPhoto) return;
-    setPhoto(() => {
-      return {
-        images: [],
-        selectedImages: [],
-        theme: null,
-        quantity: null,
-        video: {
-          data: new Blob(),
-          r2_url: null,
-        },
-        isTransition: false,
-        id: null,
-        error: false,
-        frameType: type,
-      };
-    });
-  };
+  const handleTypeChange = useCallback(
+    (type: ValidFrameType) => {
+      if (!setPhoto) return;
+      setPhoto(() => {
+        return {
+          images: [],
+          selectedImages: [],
+          theme: null,
+          quantity: null,
+          video: {
+            data: new Blob(),
+            r2_url: null,
+          },
+          isTransition: false,
+          id: null,
+          error: false,
+          frameType: type,
+        };
+      });
+    },
+    [setPhoto]
+  );
 
   return (
     <>
@@ -102,20 +81,20 @@ const LayoutPage = () => {
         {!photo && <CollabTransition />}
 
         <Popover
-          open={open}
-          onOpenChange={setOpen}
+          open={isOpen}
+          onOpenChange={setIsOpen}
         >
           <PopoverTrigger asChild>
             <Button
               variant="outline"
               role="combobox"
-              aria-expanded={open}
+              aria-expanded={isOpen}
               className="w-[200px] justify-between self-end"
             >
               <div className="flex items-center gap-2 justify-center">
-                {value ? language.find((language) => language.label === value)?.label : t("Select language...")}
+                {language ? LANGUAGE_LIST.find((_language) => _language.label === language)?.label : t("Select language...")}
                 <Image
-                  src={language.find((language) => language.label === value)?.image_src ?? ""}
+                  src={LANGUAGE_LIST.find((_language) => _language.label === language)?.image_src ?? ""}
                   alt="language"
                   width={20}
                   height={20}
@@ -128,20 +107,20 @@ const LayoutPage = () => {
             <Command>
               <CommandList>
                 <CommandGroup>
-                  {language.map((language) => (
+                  {LANGUAGE_LIST.map((_language) => (
                     <CommandItem
-                      key={language.value}
-                      value={language.label}
+                      key={_language.value}
+                      value={_language.label}
                       onSelect={handleLanguageSelect}
                     >
-                      {language.label}
+                      {_language.label}
                       <Image
-                        src={language.image_src}
+                        src={_language.image_src}
                         alt="language"
                         width={20}
                         height={20}
                       />
-                      <Check className={cn("ml-auto", value === language.label ? "opacity-100" : "opacity-0")} />
+                      <Check className={cn("ml-auto", language === _language.label ? "opacity-100" : "opacity-0")} />
                     </CommandItem>
                   ))}
                 </CommandGroup>
