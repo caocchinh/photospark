@@ -124,6 +124,7 @@ const i18nConfig = {
         "Are you sure?": "Are you sure?",
         Cancel: "Cancel",
         "Drag image to change position": "Drag image to change position",
+        "Click on the image to choose": "Click on the image to choose",
       },
     },
     vi: {
@@ -234,6 +235,7 @@ const i18nConfig = {
         Cancel: "Hủy",
         Sure: "Chắc chắn",
         "Drag image to change position": "Kéo ảnh để đổi vị trí",
+        "Click on the image to choose": "Bấm vào ảnh để chọn",
       },
     },
     fr: {
@@ -347,6 +349,7 @@ const i18nConfig = {
         Cancel: "Annuler",
         Sure: "Sûr",
         "Drag image to change position": "Glisser pour changer la position de l'image",
+        "Click on the image to choose": "Cliquer sur l'image pour choisir",
       },
     },
     cn: {
@@ -458,6 +461,7 @@ const i18nConfig = {
         Cancel: "取消",
         Sure: "确定",
         "Drag image to change position": "拖动图像以更改位置",
+        "Click on the image to choose": "点击图像选择",
       },
     },
     kr: {
@@ -569,6 +573,7 @@ const i18nConfig = {
         Cancel: "취소",
         Sure: "확실합니다",
         "Drag image to change position": "이미지를 드래그하여 위치 변경",
+        "Click on the image to choose": "이미지를 클릭하여 선택",
       },
     },
   },
