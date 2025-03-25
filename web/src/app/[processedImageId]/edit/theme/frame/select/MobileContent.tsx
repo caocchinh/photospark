@@ -127,14 +127,13 @@ const MobileContent = () => {
                     onOpenChange={setIsDrawerOpen}
                   >
                     <DrawerContent className="h-[95vh] min-w-screen flex items-center justify-start flex-col">
-                      <DrawerHeader className="w-[80%] flex items-center justify-center gap-3">
+                      <DrawerHeader className="w-[80%] flex items-center justify-center gap-2">
                         <DrawerTitle className="text-xl font-semibold uppercase text-center">{t("Click on the image to choose")}</DrawerTitle>
                         <Button
                           disabled={selectedImage.filter((img) => img !== null).length != photo.theme?.frame.slotCount}
                           onClick={() => setIsSheetOpen(true)}
                           className="w-full flex items-center justify-center gap-2 text-sm px-14 py-3 rounded-sm cursor-pointer"
                         >
-                          <GoArrowSwitch className="rotate-90" />
                           {t("Change image position")}
                         </Button>
                         <DrawerClose
