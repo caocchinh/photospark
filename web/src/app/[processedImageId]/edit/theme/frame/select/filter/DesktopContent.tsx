@@ -53,6 +53,19 @@ const DesktopContent = () => {
     filterRef.current = filter;
   }, [filter]);
 
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = "";
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [filter, isMediaUploaded, isUploading, t]);
+
   const uploadImageToDatabase = useCallback(async () => {
     if (!photo || uploadAttemptedRef.current) return;
 

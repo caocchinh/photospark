@@ -10,6 +10,7 @@ interface ProtectedHistoryState {
 /**
  * Custom hook to prevent navigation back while allowing forward navigation
  * Handles aggressive back navigation attempts (spamming gestures/shortcuts)
+ * Also prevents page reloads with a confirmation dialog
  */
 const usePreventNavigation = () => {
   const router = useRouter();
@@ -87,6 +88,13 @@ const usePreventNavigation = () => {
 
     // Handle keyboard shortcuts with more aggressive prevention
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Prevent F5/Ctrl+R reload shortcuts
+      if (e.key === "F5" || (e.ctrlKey && e.key === "r")) {
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
+
       if ((e.altKey && e.key === "ArrowLeft") || (e.altKey && e.key === "Left") || e.key === "BrowserBack") {
         e.preventDefault();
         e.stopPropagation();
@@ -96,6 +104,16 @@ const usePreventNavigation = () => {
           window.history.pushState(historyMarker, "", window.location.pathname);
         }
       }
+    };
+
+    // Add handler for beforeunload to prevent reload and tab close
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      // Cancel the event
+      e.preventDefault();
+      // Chrome requires returnValue to be set
+      e.returnValue = "";
+      // This will show a confirmation dialog
+      return "";
     };
 
     // Handle touchpad gestures by monitoring rapid popstate events
@@ -116,12 +134,14 @@ const usePreventNavigation = () => {
     window.addEventListener("popstate", handlePopState, {capture: true});
     window.addEventListener("popstate", handleRapidPopstate);
     window.addEventListener("keydown", handleKeyDown, {capture: true});
+    window.addEventListener("beforeunload", handleBeforeUnload);
 
     // Clean up
     return () => {
       window.removeEventListener("popstate", handlePopState, {capture: true});
       window.removeEventListener("popstate", handleRapidPopstate);
       window.removeEventListener("keydown", handleKeyDown, {capture: true});
+      window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, []);
 

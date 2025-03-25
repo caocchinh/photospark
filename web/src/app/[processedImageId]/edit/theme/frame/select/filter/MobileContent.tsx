@@ -57,6 +57,19 @@ const MobileContent = () => {
     filterRef.current = filter;
   }, [filter]);
 
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = "";
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [filter, isMediaUploaded, isUploading, t]);
+
   const getCurrentFilterIndex = useCallback(() => {
     return FILTERS.findIndex((item) => item.value === filter);
   }, [filter]);

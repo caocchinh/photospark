@@ -121,7 +121,7 @@ const MobileContent = () => {
               <h1 className="text-5xl font-semibold mb-4 flex gap-2 uppercase text-center mobile-frame-title">{t("Choose images")}</h1>
 
               <div className="flex flex-col md:flex-row items-center justify-center w-full h-full gap-6">
-                <div className="relative h-full w-max flex items-center justify-center">
+                <div className="relative h-full w-full flex items-center justify-center">
                   <Drawer
                     open={isDrawerOpen}
                     onOpenChange={setIsDrawerOpen}
