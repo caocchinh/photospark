@@ -49,15 +49,14 @@ const FrameImage = ({
 
     img.onerror = (error) => {
       console.error("Image loading error:", error);
-      // Create a fallback canvas with error indication
       const canvas = document.createElement("canvas");
       const context = canvas.getContext("2d");
       canvas.width = 300;
       canvas.height = 150;
       if (context) {
-        context.fillStyle = "rgba(200, 200, 200, 0.5)";
+        context.fillStyle = "#FF0000";
         context.fillRect(0, 0, canvas.width, canvas.height);
-        context.fillStyle = "#888";
+        context.fillStyle = "#111111";
         context.font = "14px Arial";
         context.textAlign = "center";
         context.fillText("Image could not be loaded", canvas.width / 2, canvas.height / 2);
