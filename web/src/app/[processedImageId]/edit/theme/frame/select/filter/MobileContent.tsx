@@ -26,6 +26,7 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import {DrawerHeader, DrawerTitle, DrawerTrigger} from "@/components/ui/drawer";
 import {DrawerContent} from "@/components/ui/drawer";
 import {Drawer} from "@/components/ui/drawer";
+import {useTranslation} from "react-i18next";
 
 const MobileContent = () => {
   const {photo, setPhoto} = usePhoto();
@@ -33,6 +34,7 @@ const MobileContent = () => {
   const uploadAttemptedRef = useRef(false);
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+  const {t} = useTranslation();
   const NEW_PROCESSED_IMAGE_ID = useMemo(() => {
     return crypto.randomUUID();
   }, []);
@@ -145,7 +147,7 @@ const MobileContent = () => {
           frameImgStatus != "loaded" ? "opacity-0 pointer-events-none" : "opacity-100"
         )}
       >
-        <h1 className="text-5xl font-semibold mb-4 flex gap-2 uppercase text-center mobile-frame-title">Chọn filter</h1>
+        <h1 className="text-5xl font-semibold mb-4 flex gap-2 uppercase text-center mobile-frame-title">{t("Choose a filter")}</h1>
         {photo && frameImg && (
           <div className="flex items-center justify-evenly gap-3 h-max flex-col md:flex-row w-full">
             <div className="pointer-events-none mobile-frame-container">
@@ -212,12 +214,13 @@ const MobileContent = () => {
                     className="w-full rounded-sm cursor-pointer"
                     onClick={() => setIsDrawerOpen(true)}
                   >
-                    Chọn filter{filter ? ` - ${FILTERS.find((item) => item.value === filter)?.name || ""}` : ""}
+                    {t("Choose a filter")}
+                    {filter ? ` - ${FILTERS.find((item) => item.value === filter)?.name || ""}` : ""}
                   </Button>
                 </DrawerTrigger>
                 <DrawerContent className="h-[95vh]">
                   <DrawerHeader>
-                    <DrawerTitle className="text-center uppercase text-xl mb-2">Ấn vào hình để chọn filter</DrawerTitle>
+                    <DrawerTitle className="text-center uppercase text-xl mb-2">{t("Click on the image to choose filter")}</DrawerTitle>
                     <ScrollArea className=" h-[500px] w-[100%] ">
                       <div className="grid grid-cols-3 gr md:grid-cols-4 gap-4 items-center justify-center">
                         {FILTERS.map((item, index) => (
@@ -250,13 +253,13 @@ const MobileContent = () => {
                 className="w-full  rounded-sm cursor-pointer"
                 onClick={selectRandomFilter}
               >
-                Random Filter - {FILTERS.find((item) => item.value == filter)?.name}
+                {t("Random Filter")} - {FILTERS.find((item) => item.value == filter)?.name}
               </Button>
               <Button
                 className="w-full flex items-center justify-center gap-1 rounded-sm cursor-pointer"
                 onClick={() => setFilter(null)}
               >
-                Reset Filter
+                {t("Reset Filter")}
                 {!filter && <IoIosCheckmark size={35} />}
               </Button>
               <div className="relative w-full">
@@ -273,7 +276,7 @@ const MobileContent = () => {
                 >
                   <AlertDialogTrigger asChild>
                     <Button className="flex text-sm text-center items-center justify-center gap-2 text-background rounded px-4 py-6 hover:opacity-[85%] w-full relative z-10 cursor-pointer bg-green-700 hover:bg-green-700">
-                      Tạo hình
+                      {t("Create image")}
                       <TbWand
                         size={20}
                         color="white"
@@ -288,7 +291,7 @@ const MobileContent = () => {
                       onClick={() => setIsOpen(false)}
                     />
                     <AlertDialogHeader className="flex items-center justify-center gap-4 flex-col">
-                      <AlertDialogTitle className="text-center uppercase text-3xl">Bạn có chắc chưa?</AlertDialogTitle>
+                      <AlertDialogTitle className="text-center uppercase text-3xl">{t("Are you sure?")}</AlertDialogTitle>
                     </AlertDialogHeader>
                     <img
                       src="/heart.gif"
@@ -303,14 +306,14 @@ const MobileContent = () => {
                           isUploading ? "pointer-events-none" : null
                         )}
                       >
-                        Hủy
+                        {t("Cancel")}
                       </AlertDialogCancel>
                       <Button
                         className="bg-green-600 hover:bg-green-700 w-full text-white hover:text-white cursor-pointer"
                         onClick={uploadImageToDatabase}
                         disabled={isMediaUploaded}
                       >
-                        {isUploading ? "Đang xử lý!" : "Chắc chắn"}
+                        {isUploading ? t("Processing...") : t("Sure")}
                         {isUploading && (
                           <LoadingSpinner
                             size={21}
@@ -331,7 +334,7 @@ const MobileContent = () => {
                   className="flex items-center justify-center gap-2 text-2xl px-14 py-6 w-full"
                 >
                   <FaArrowLeft />
-                  Chọn lại hình
+                  {t("Choose other images")}
                 </Link>
               </Button>
             </div>

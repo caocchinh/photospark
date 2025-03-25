@@ -10,11 +10,11 @@ import {useCallback, useEffect, useRef, useState, useMemo} from "react";
 import {FaArrowLeft, FaArrowRight} from "react-icons/fa6";
 import {useRouter} from "next/navigation";
 import {GlowEffect} from "@/components/ui/glow-effect";
-
 import {ValidThemeType} from "@/constants/types";
 import {ROUTES} from "@/constants/routes";
-import {MdOutlineKeyboardDoubleArrowLeft, MdOutlineKeyboardDoubleArrowRight} from "react-icons/md";
 import {useTranslation} from "react-i18next";
+import {MdOutlineArrowForwardIos, MdOutlineArrowBackIos} from "react-icons/md";
+
 const FrameEditpage = () => {
   const {photo, setPhoto} = usePhoto();
   const router = useRouter();
@@ -142,7 +142,7 @@ const FrameEditpage = () => {
                 {t("Choose another layout")}
               </Link>
             </div>
-            <h1 className="text-5xl font-semibold uppercase text-center">{t("Choose frame")}</h1>
+            <h1 className="text-5xl font-semibold uppercase text-center">{t("Choose a frame")}</h1>
 
             <div className="relative flex items-center justify-center flex-col my-4 px-2 w-full gap-5">
               <Carousel
@@ -182,8 +182,8 @@ const FrameEditpage = () => {
               </Carousel>
 
               <div className="flex gap-4 items-center justify-center -mt-4">
-                <MdOutlineKeyboardDoubleArrowLeft
-                  size={45}
+                <MdOutlineArrowBackIos
+                  size={30}
                   className="text-primary hover:cursor-pointer carousel-pointer"
                   onClick={handleLeftClick}
                 />
@@ -200,8 +200,8 @@ const FrameEditpage = () => {
                     }}
                   ></div>
                 ))}
-                <MdOutlineKeyboardDoubleArrowRight
-                  size={45}
+                <MdOutlineArrowForwardIos
+                  size={30}
                   className="text-primary hover:cursor-pointer carousel-pointer"
                   onClick={handleRightClick}
                 />
@@ -223,7 +223,7 @@ const FrameEditpage = () => {
                 )}
                 onClick={handleFrameChosen}
               >
-                {t("Choose image")}
+                {t("Choose images")}
                 <FaArrowRight />
               </Link>
             </div>

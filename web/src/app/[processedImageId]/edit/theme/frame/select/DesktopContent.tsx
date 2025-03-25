@@ -16,6 +16,7 @@ import {Reorder} from "motion/react";
 import FrameImage from "@/components/FrameImage";
 import {useRouter} from "next/navigation";
 import {FaArrowRight, FaArrowLeft} from "react-icons/fa6";
+import {useTranslation} from "react-i18next";
 
 const DesktopContent = () => {
   const {photo, setPhoto} = usePhoto();
@@ -25,7 +26,7 @@ const DesktopContent = () => {
     if (!photo?.theme) return router.push(`/${photo?.previousProcessedImageId}/${ROUTES.HOME}`);
   }, [photo, router]);
   const [frameImg, frameImgStatus] = useImage(photo?.theme?.frame?.src || "");
-
+  const {t} = useTranslation();
   const [selectedImage, setSelectedImage] = useState<Array<{id: string; href: string} | null>>(
     photo?.selectedImages && photo.selectedImages.length > 0
       ? [...photo.selectedImages]
@@ -214,7 +215,7 @@ const DesktopContent = () => {
               <div className="flex flex-col w-[60%] gap-5 items-start justify-center ">
                 {photo && (
                   <div className="flex gap-2 w-full item-center justify-center ">
-                    <h1 className="text-5xl font-semibold mb-4 flex gap-2 uppercase"> Chọn hình</h1>
+                    <h1 className="text-5xl font-semibold mb-4 flex gap-2 uppercase">{t("Choose images")}</h1>
                   </div>
                 )}
 
@@ -282,7 +283,7 @@ const DesktopContent = () => {
                             handleContextSelect(filteredSelectedImages);
                           }}
                         >
-                          Chọn filter
+                          {t("Choose a filter")}
                           <FaArrowRight />
                         </Link>
                       </Button>
@@ -297,7 +298,7 @@ const DesktopContent = () => {
                         className="flex items-center justify-center gap-2 text-2xl px-14 py-6 w-full"
                       >
                         <FaArrowLeft />
-                        Chọn frame khác
+                        {t("Choose another frame")}
                       </Link>
                     </Button>
                   </div>

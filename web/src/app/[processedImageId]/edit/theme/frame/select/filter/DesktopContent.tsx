@@ -24,7 +24,7 @@ import {AlertDialog} from "@/components/ui/alert-dialog";
 import {RxCross2} from "react-icons/rx";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import GeneralError from "@/components/GeneralError";
-
+import {useTranslation} from "react-i18next";
 const DesktopContent = () => {
   const {photo, setPhoto} = usePhoto();
   const filterRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -39,7 +39,7 @@ const DesktopContent = () => {
     if (!photo) return router.push(`/`);
     if (photo.selectedImages.length == 0) return router.push(`/${photo?.previousProcessedImageId}/${ROUTES.HOME}`);
   }, [photo, router, setPhoto]);
-
+  const {t} = useTranslation();
   const [frameImg, frameImgStatus] = useImage(photo?.theme?.frame?.src || "", "anonymous");
   const [filter, setFilter] = useState<string | null>(null);
   const stageRef = useRef<StageElement | null>(null);
@@ -222,13 +222,13 @@ const DesktopContent = () => {
                     className="w-full mt-2 rounded-sm cursor-pointer"
                     onClick={selectRandomFilter}
                   >
-                    Random Filter - {FILTERS.find((item) => item.value == filter)?.name}
+                    {t("Random Filter")} - {FILTERS.find((item) => item.value == filter)?.name}
                   </Button>
                   <Button
                     className="w-full flex items-center justify-center gap-1 rounded-sm cursor-pointer"
                     onClick={() => setFilter(null)}
                   >
-                    Reset Filter
+                    {t("Reset Filter")}
                     {!filter && <IoIosCheckmark size={35} />}
                   </Button>
                   <div className="relative w-full">
@@ -245,7 +245,7 @@ const DesktopContent = () => {
                     >
                       <AlertDialogTrigger asChild>
                         <Button className="flex text-sm text-center items-center justify-center gap-2 text-background rounded px-4 py-6 hover:opacity-[85%] w-full relative z-10 cursor-pointer bg-green-700 hover:bg-green-700">
-                          Tạo hình
+                          {t("Create image")}
                           <TbWand
                             size={20}
                             color="white"
@@ -260,7 +260,7 @@ const DesktopContent = () => {
                           onClick={() => setIsOpen(false)}
                         />
                         <AlertDialogHeader className="flex items-center justify-center gap-4 flex-col">
-                          <AlertDialogTitle className="text-center uppercase text-3xl">Bạn có chắc chưa?</AlertDialogTitle>
+                          <AlertDialogTitle className="text-center uppercase text-3xl">{t("Are you sure?")}</AlertDialogTitle>
                         </AlertDialogHeader>
                         <img
                           src="/heart.gif"
@@ -275,14 +275,14 @@ const DesktopContent = () => {
                               isUploading ? "pointer-events-none" : null
                             )}
                           >
-                            Hủy
+                            {t("Cancel")}
                           </AlertDialogCancel>
                           <Button
                             className="bg-green-600 hover:bg-green-700 w-full text-white hover:text-white cursor-pointer"
                             onClick={uploadImageToDatabase}
                             disabled={isMediaUploaded}
                           >
-                            {isUploading ? "Đang xử lý!" : "Chắc chắn"}
+                            {isUploading ? t("Processing...") : t("Sure")}
                             {isUploading && (
                               <LoadingSpinner
                                 size={21}
@@ -303,7 +303,7 @@ const DesktopContent = () => {
                       className="flex items-center justify-center gap-2 text-2xl px-14 py-6 w-full"
                     >
                       <FaArrowLeft />
-                      Chọn lại hình
+                      {t("Choose other images")}
                     </Link>
                   </Button>
                 </div>

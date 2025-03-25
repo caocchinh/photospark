@@ -1,7 +1,7 @@
 "use client";
 
 import {LANGUAGE_LIST} from "@/constants/constants";
-import {useCallback, useState} from "react";
+import {useCallback, useState, useEffect} from "react";
 import {Command, CommandGroup, CommandItem, CommandList} from "@/components/ui/command";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import {Button} from "@/components/ui/button";
@@ -13,20 +13,25 @@ import {useTranslation} from "react-i18next";
 const LanguageBar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const {t, i18n} = useTranslation();
-  const [language, setLanguage] = useState(() => {
+  const [language, setLanguage] = useState("English");
+
+  useEffect(() => {
     if (typeof window !== "undefined") {
       const savedLanguage = localStorage.getItem("selectedLanguage");
       if (savedLanguage) {
         const langObject = LANGUAGE_LIST.find((lang) => lang.value === savedLanguage);
         if (langObject) {
           i18n.changeLanguage(savedLanguage);
-          return langObject.label;
+          setLanguage(langObject.label);
+          return;
         }
       }
     }
     const defaultLang = LANGUAGE_LIST.find((lang) => lang.value === i18n.language);
-    return defaultLang?.label ?? "English";
-  });
+    if (defaultLang) {
+      setLanguage(defaultLang.label);
+    }
+  }, [i18n]);
 
   const handleLanguageSelect = useCallback(
     (currentValue: string) => {

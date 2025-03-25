@@ -23,9 +23,12 @@ import {GoArrowSwitch} from "react-icons/go";
 import {SheetContent, SheetDescription, SheetHeader, SheetTitle} from "@/components/ui/sheet";
 import {Sheet} from "@/components/ui/sheet";
 import {IoCheckmark} from "react-icons/io5";
+import {useTranslation} from "react-i18next";
+
 const MobileContent = () => {
   const {photo, setPhoto} = usePhoto();
   const router = useRouter();
+  const {t} = useTranslation();
   useEffect(() => {
     if (!photo) return router.push(`/`);
     if (!photo?.theme) return router.push(`/${photo?.previousProcessedImageId}/${ROUTES.HOME}`);
@@ -38,10 +41,6 @@ const MobileContent = () => {
       : Array.from({length: photo?.theme?.frame?.slotCount || 0}, () => null)
   );
   const [lastRemovedImage, setLastRemovedImage] = useState<number>(photo?.theme?.frame?.slotCount ? photo.theme.frame.slotCount - 1 : 0);
-  const isSingle = useMemo(() => {
-    if (!photo) return 1;
-    return photo.frameType == "singular" ? 1 : 2;
-  }, [photo]);
   const [isSelected, setIsSelected] = useState(false);
   const [slots, setSlots] = useState<Array<number>>(Array.from({length: photo?.theme?.frame?.slotCount || 0}, (_, index) => index));
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -119,31 +118,31 @@ const MobileContent = () => {
             )}
           >
             <div className={cn("flex items-center flex-col justify-evenly w-full h-full", isSelected ? "pointer-events-none" : null)}>
-              <h1 className="text-5xl font-semibold mb-4 flex gap-2 uppercase text-center mobile-frame-title">Chọn hình</h1>
+              <h1 className="text-5xl font-semibold mb-4 flex gap-2 uppercase text-center mobile-frame-title">{t("Choose images")}</h1>
 
               <div className="flex flex-col md:flex-row items-center justify-center w-full h-full gap-6">
-                <div className="relative h-full w-full flex items-center justify-center">
+                <div className="relative h-full w-max flex items-center justify-center">
                   <Drawer
                     open={isDrawerOpen}
                     onOpenChange={setIsDrawerOpen}
                   >
                     <DrawerContent className="h-[95vh] min-w-screen flex items-center justify-start flex-col">
                       <DrawerHeader className="w-[80%] flex items-center justify-center gap-3">
-                        <DrawerTitle className="text-xl font-semibold uppercase text-center">Bấm vào hình để chọn</DrawerTitle>
+                        <DrawerTitle className="text-xl font-semibold uppercase text-center">{t("Click on the image to choose")}</DrawerTitle>
                         <Button
                           disabled={selectedImage.filter((img) => img !== null).length != photo.theme?.frame.slotCount}
                           onClick={() => setIsSheetOpen(true)}
                           className="w-full flex items-center justify-center gap-2 text-sm px-14 py-3 rounded-sm cursor-pointer"
                         >
                           <GoArrowSwitch className="rotate-90" />
-                          Đổi vị trí hình
+                          {t("Change image position")}
                         </Button>
                         <DrawerClose
                           className="w-full"
                           asChild
                         >
                           <Button className="w-full rounded-sm bg-green-600 hover:bg-green-700 cursor-pointer">
-                            Hoàn tất <IoCheckmark size={25} />
+                            {t("Finish")} <IoCheckmark size={25} />
                           </Button>
                         </DrawerClose>
                       </DrawerHeader>
@@ -186,9 +185,9 @@ const MobileContent = () => {
                     <SheetContent className="sm:!max-w-sm flex flex-col items-center justify-center">
                       <SheetHeader className="!pb-0">
                         <SheetTitle className="text-2xl font-semibold uppercase text-center flex items-center justify-center gap-2">
-                          Đổi vị trí hình <GoArrowSwitch className="rotate-90" />
+                          {t("Change image position")} <GoArrowSwitch className="rotate-90" />
                         </SheetTitle>
-                        <SheetDescription className="text-red-500 text-lg text-center">Kéo hình để đổi vị trí</SheetDescription>
+                        <SheetDescription className="text-red-500 text-lg text-center">{t("Drag image to change position")}</SheetDescription>
                       </SheetHeader>
                       <Reorder.Group
                         values={slots}
@@ -239,42 +238,49 @@ const MobileContent = () => {
                   <div className="pointer-events-none mobile-frame-container">
                     {frameImg && photo && (
                       <Stage
-                        width={IMAGE_WIDTH / isSingle}
+                        width={IMAGE_WIDTH}
                         height={IMAGE_HEIGHT}
                       >
                         <Layer>
                           <Rect
-                            width={IMAGE_WIDTH / isSingle}
+                            width={IMAGE_WIDTH}
                             height={IMAGE_HEIGHT}
                             fill="white"
                           />
                         </Layer>
-                        <Layer
-                          x={OFFSET_X / isSingle}
-                          y={OFFSET_Y / isSingle}
-                        >
-                          {selectedImage.map((item, index) => (
-                            <FrameImage
-                              key={index}
-                              url={item?.href || ""}
-                              y={photo.theme!.frame.slotPositions[index].y}
-                              x={photo.theme!.frame.slotPositions[index].x}
-                              filter={""}
-                              height={photo.theme!.frame.slotDimensions.height}
-                              width={photo.theme!.frame.slotDimensions.width}
+                        {Array.from({length: photo.frameType == "singular" ? 1 : 2}, (_, _index) => (
+                          <Layer
+                            key={_index}
+                            x={OFFSET_X}
+                            y={OFFSET_Y}
+                          >
+                            {selectedImage.map((item, index) => (
+                              <FrameImage
+                                key={index}
+                                url={item?.href || ""}
+                                y={photo.theme!.frame.slotPositions[index].y}
+                                x={photo.theme!.frame.slotPositions[index].x + (FRAME_WIDTH / 2) * _index}
+                                filter={""}
+                                height={photo.theme!.frame.slotDimensions.height}
+                                width={photo.theme!.frame.slotDimensions.width}
+                              />
+                            ))}
+                          </Layer>
+                        ))}
+                        {Array.from({length: photo.frameType == "singular" ? 1 : 2}, (_, index) => (
+                          <Layer
+                            key={index}
+                            x={OFFSET_X}
+                            y={OFFSET_Y}
+                          >
+                            <KonvaImage
+                              image={frameImg}
+                              x={(FRAME_WIDTH / 2) * index}
+                              height={FRAME_HEIGHT}
+                              width={FRAME_WIDTH / (photo.frameType == "singular" ? 1 : 2)}
                             />
-                          ))}
-                        </Layer>
-                        <Layer
-                          x={OFFSET_X / isSingle}
-                          y={OFFSET_Y / isSingle}
-                        >
-                          <KonvaImage
-                            image={frameImg}
-                            height={FRAME_HEIGHT}
-                            width={FRAME_WIDTH / isSingle}
-                          />
-                        </Layer>
+                          </Layer>
+                        ))}
                       </Stage>
                     )}
                   </div>
@@ -287,7 +293,7 @@ const MobileContent = () => {
                         className="w-full flex items-center justify-center gap-2 text-sm px-14 py-6 cursor-pointer"
                       >
                         <IoMdImages />
-                        Chọn hình
+                        {t("Choose images")}
                       </Button>
                       <Button
                         disabled={selectedImage.filter((img) => img !== null).length != photo.theme?.frame.slotCount}
@@ -295,7 +301,7 @@ const MobileContent = () => {
                         className="w-full flex items-center justify-center gap-2 text-sm px-14 py-6 cursor-pointer"
                       >
                         <GoArrowSwitch className="rotate-90" />
-                        Đổi vị trí hình
+                        {t("Change image position")}
                       </Button>
                       <div className="relative w-full h-full">
                         {photo.theme!.frame.slotCount - filteredSelectedImages.length == 0 && (
@@ -329,7 +335,7 @@ const MobileContent = () => {
                               handleContextSelect(filteredSelectedImages);
                             }}
                           >
-                            Chọn filter
+                            {t("Choose a filter")}
                             <FaArrowRight />
                           </Link>
                         </Button>
@@ -344,7 +350,7 @@ const MobileContent = () => {
                           className="flex items-center justify-center gap-2 text-2xl px-14 py-6 w-full"
                         >
                           <FaArrowLeft />
-                          Chọn frame khác
+                          {t("Choose another frame")}
                         </Link>
                       </Button>
                     </div>
