@@ -2,6 +2,19 @@
 
 import i18next from "i18next";
 import {initReactI18next} from "react-i18next";
+import LanguageDetector from "i18next-browser-languagedetector";
+
+const supportedLanguages = ["en", "vi", "fr", "cn", "kr"];
+
+const getBrowserLanguage = () => {
+  const browserLang = navigator.language.split("-")[0];
+
+  if (supportedLanguages.includes(browserLang)) {
+    return browserLang;
+  }
+
+  return "en";
+};
 
 const i18nConfig = {
   resources: {
@@ -185,14 +198,63 @@ const i18nConfig = {
         "Please go out and let the other group in!": "请出去让其他组进来！",
       },
     },
+    kr: {
+      translation: {
+        "Choose a theme": "테마 선택",
+        "Select language...": "언어 선택...",
+        "Choose a frame": "프레임 선택",
+        "Choose number of copies": "복사본 수 선택",
+        "Choose another theme": "다른 테마 선택",
+        Capture: "캡쳐",
+        "This application is developed and sponsored by VECTR": "이 애플리케이션은 VECTR에서 개발 및 후원합니다.",
+        "Waiting for camera...": "카메라를 기다리는 중...",
+        "Choose pictures": "사진 선택",
+        "Choose a filter": "필터 선택",
+        Instruction: "지시",
+        Close: "닫기",
+        Print: "인쇄",
+        "Reset filter": "필터 초기화",
+        "Please go outside to take the photo": "외부에서 사진을 찍으세요",
+        "Random filter": "랜덤 필터",
+        "Click on image to unselect": "이미지를 클릭하여 선택 취소",
+        "Drag to switch images position": "이미지를 드래그하여 위치 전환",
+        "An error occurred": "오류가 발생했습니다",
+        "Please try again": "다시 시도해주세요",
+        "Camera settings": "카메라 설정",
+        "Choose camera source": "카메라 소스 선택",
+        "Error loading camera": "카메라 로딩 오류",
+        "Choose a layout": "레이아웃 선택",
+        "Choose another layout": "다른 레이아웃 선택",
+        "Current layout": "현재 레이아웃",
+        "Waiting for print server": "인쇄 서버 대기",
+        "Please wait while we connect to the print server": "인쇄 서버에 연결하는 중입니다...",
+        "Please select a frame before the countdown ends": "카운트다운이 끝나기 전에 프레임을 선택하세요",
+        "You have 30 seconds left to select a frame, or the frame will be selected automatically!":
+          "30초 남았습니다. 프레임을 선택하세요, 아니면 프레임이 자동으로 선택됩니다!",
+        "Enter password to access settings": "비밀번호를 입력하여 설정에 액세스하세요",
+        "No Internet Connection": "인터넷 연결이 없습니다",
+        "Please check your internet connection and try again": "인터넷 연결을 확인하고 다시 시도해주세요",
+        "Refresh the application": "애플리케이션 새로고침",
+        Printing: "인쇄",
+        "Available cameras": "사용 가능한 카메라",
+        "Please go out and let the other group in!": "다른 그룹이 들어오기 전에 나가세요!",
+        Save: "저장",
+        "Wrong password": "비밀번호가 틀렸습니다",
+        Submit: "제출",
+      },
+    },
   },
-  lng: "vi",
+  lng: getBrowserLanguage(),
   fallbackLng: "en",
+  detection: {
+    order: ["navigator", "htmlTag", "path", "localStorage"],
+    caches: ["localStorage"],
+  },
   interpolation: {
     escapeValue: false,
   },
 };
 
-i18next.use(initReactI18next).init(i18nConfig);
+i18next.use(LanguageDetector).use(initReactI18next).init(i18nConfig);
 
 export default i18next;

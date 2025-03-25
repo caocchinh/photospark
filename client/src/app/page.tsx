@@ -44,6 +44,11 @@ const language = [
     label: "繁體中文",
     image_src: "/cn.svg",
   },
+  {
+    value: "kr",
+    label: "한국인",
+    image_src: "/ks-flag.webp",
+  },
 ];
 
 const LayoutPage = () => {
