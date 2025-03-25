@@ -18,6 +18,7 @@ import ErrorDialog from "@/components/ErrorDialog";
 import {ROUTES} from "@/constants/routes";
 import {Spotlight} from "@/components/ui/spotlight";
 import {ValidThemeType} from "@/constants/types";
+import {PiVideoCameraLight} from "react-icons/pi";
 
 const LayoutPage = () => {
   const {photo, setPhoto, autoSelectCountdown} = usePhoto();
@@ -368,6 +369,10 @@ const LayoutPage = () => {
                     onClick={handleCaptureClick}
                   >
                     {t("Capture")}
+                    <PiVideoCameraLight
+                      size={20}
+                      color="white"
+                    />
                   </Link>
                 </div>
               </div>
