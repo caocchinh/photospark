@@ -9,7 +9,7 @@ const Footer = () => {
   return (
     <footer className="w-full bottom-0  flex items-center justify-center bg-black flex-col sm:flex-row pb-4 sm:pb-1">
       <TextShimmer
-        className="w-full [--base-color:#f97316] [--base-gradient-color:#fdba74] text-center text-md p-2 gap-3"
+        className="whitespace-wrap [--base-color:#f97316] [--base-gradient-color:#fdba74] text-center text-md p-2 gap-3"
         duration={6}
       >
         {t("This application is developed and sponsored by VECTR")}

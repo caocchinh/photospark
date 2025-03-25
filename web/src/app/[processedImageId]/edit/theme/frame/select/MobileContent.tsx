@@ -134,6 +134,7 @@ const MobileContent = () => {
                           onClick={() => setIsSheetOpen(true)}
                           className="w-full flex items-center justify-center gap-2 text-sm px-14 py-3 rounded-sm cursor-pointer"
                         >
+                          <GoArrowSwitch className="rotate-90" />
                           {t("Change image position")}
                         </Button>
                         <DrawerClose
@@ -183,8 +184,8 @@ const MobileContent = () => {
                   >
                     <SheetContent className="sm:!max-w-sm flex flex-col items-center justify-center">
                       <SheetHeader className="!pb-0">
-                        <SheetTitle className="text-2xl font-semibold uppercase text-center flex items-center justify-center gap-2">
-                          {t("Change image position")} <GoArrowSwitch className="rotate-90" />
+                        <SheetTitle className="text-2xl font-semibold uppercase text-center flex items-center justify-center">
+                          {t("Change image position")}
                         </SheetTitle>
                         <SheetDescription className="text-red-500 text-lg text-center">{t("Drag image to change position")}</SheetDescription>
                       </SheetHeader>
@@ -201,7 +202,7 @@ const MobileContent = () => {
                           });
                         }}
                         as="div"
-                        className="grid grid-cols-1 gap-5 items-center justify-center p-4"
+                        className="grid grid-cols-1 gap-5 items-center justify-center p-4 pt-0"
                       >
                         {slots.map((slotIndex, index) => (
                           <Reorder.Item
@@ -209,7 +210,7 @@ const MobileContent = () => {
                             key={slotIndex}
                             z={100}
                             as="div"
-                            className="flex items-center justify-center"
+                            className="flex items-center justify-center pt-0"
                             draggable={true}
                           >
                             <div
