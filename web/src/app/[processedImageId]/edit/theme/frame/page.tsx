@@ -152,7 +152,12 @@ const FrameEditpage = () => {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="start">
                         <DropdownMenuItem className="cursor-pointer active:bg-slate-200 hover:bg-slate-200">
-                          <Link href={`/${photo?.previousProcessedImageId}/edit/`}>{t("Layout")}</Link>
+                          <Link
+                            href={`/${photo?.previousProcessedImageId}/edit/`}
+                            className="w-full"
+                          >
+                            {t("Layout")}
+                          </Link>
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>

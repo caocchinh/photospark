@@ -34,13 +34,28 @@ const FilterEditPage = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start">
                 <DropdownMenuItem className="cursor-pointer active:bg-slate-200 hover:bg-slate-200">
-                  <Link href={`/${photo?.previousProcessedImageId}/edit/`}>{t("Layout")}</Link>
+                  <Link
+                    href={`/${photo?.previousProcessedImageId}/edit/`}
+                    className="w-full"
+                  >
+                    {t("Layout")}
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem className="cursor-pointer active:bg-slate-200 hover:bg-slate-200">
-                  <Link href={`/${photo?.previousProcessedImageId}/edit/theme/`}>{t("Theme")}</Link>
+                  <Link
+                    href={`/${photo?.previousProcessedImageId}/edit/theme/`}
+                    className="w-full"
+                  >
+                    {t("Theme")}
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem className="cursor-pointer active:bg-slate-200 hover:bg-slate-200">
-                  <Link href={`/${photo?.previousProcessedImageId}/edit/theme/frame/`}>{t("Frame")}</Link>
+                  <Link
+                    href={`/${photo?.previousProcessedImageId}/edit/theme/frame/`}
+                    className="w-full"
+                  >
+                    {t("Frame")}
+                  </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
