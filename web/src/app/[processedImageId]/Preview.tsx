@@ -49,12 +49,18 @@ const Preview = ({
         mimeType: "image/png",
       });
 
-      const link = document.createElement("a");
-      link.download = generateTimestampFilename("VTEAM", "png");
-      link.href = dataURL;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+      if (isIOS) {
+        window.open(dataURL);
+      } else {
+        const link = document.createElement("a");
+        link.download = generateTimestampFilename("VTEAM", "png");
+        link.href = dataURL;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
     } catch {
       setError(true);
     }
@@ -118,7 +124,7 @@ const Preview = ({
                   } finally {
                     setTimeout(() => {
                       setIsRefreshButtonDisabled(false);
-                    }, 6000);
+                    }, 3000);
                   }
                 }}
               >
