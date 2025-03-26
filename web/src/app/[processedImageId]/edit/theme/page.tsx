@@ -39,10 +39,10 @@ const ThemePage = () => {
 
   return (
     <div className="flex flex-col items-center justify-center w-full gap-12">
-      <div className="w-[80%] flex items-center justify-between  sm:flex-row flex-col">
+      <div className="w-[90%] flex items-center justify-between  sm:flex-row flex-col">
         <Link
           href={`/${photo?.previousProcessedImageId}/edit/`}
-          className="w-[300px] p-2 rounded flex items-center justify-center gap-2 bg-black text-white order-1 sm:order-0"
+          className="w-[260px] p-2 rounded flex items-center justify-center gap-2 bg-black text-white order-1 sm:order-0"
         >
           <FaArrowLeftLong />
           {t("Choose another layout")}

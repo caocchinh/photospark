@@ -33,13 +33,13 @@ const FilterEditPage = () => {
                 <span className="sr-only">Toggle menu</span>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start">
-                <DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer active:bg-slate-200 hover:bg-slate-200">
                   <Link href={`/${photo?.previousProcessedImageId}/edit/`}>{t("Layout")}</Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer active:bg-slate-200 hover:bg-slate-200">
                   <Link href={`/${photo?.previousProcessedImageId}/edit/theme/`}>{t("Theme")}</Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer active:bg-slate-200 hover:bg-slate-200">
                   <Link href={`/${photo?.previousProcessedImageId}/edit/theme/frame/`}>{t("Frame")}</Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
