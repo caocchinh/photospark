@@ -124,7 +124,7 @@ export default function HomePage() {
                   className="h-48 w-full object-cover"
                 />
                 <div className="flex flex-col grow items-center justify-center px-3 py-2">
-                  <MorphingDialogTitle className="text-zinc-950 dark:text-zinc-50  flex  items-center gap-1 justify-center">
+                  <MorphingDialogTitle className="text-zinc-950 dark:text-zinc-50  flex flex-wrap text-center  items-center gap-1 justify-center">
                     {t("Developer Information")} <SiMinutemailer size={17} />
                   </MorphingDialogTitle>
                   <MorphingDialogSubtitle className="text-zinc-700 dark:text-zinc-400">Mr. Cao Cự Chính</MorphingDialogSubtitle>
@@ -144,7 +144,7 @@ export default function HomePage() {
                   />
                   <div className="p-6">
                     <div className="flex flex-col grow items-center justify-center px-3 py-2">
-                      <MorphingDialogTitle className="text-zinc-950 dark:text-zinc-50 flex items-center  flex-wrap whitespace-nowrap gap-1 justify-center text-2xl">
+                      <MorphingDialogTitle className="text-zinc-950 dark:text-zinc-50 flex items-center flex-wrap text-center gap-1 justify-center text-2xl">
                         {t("Developer Information")} <SiMinutemailer size={20} />
                       </MorphingDialogTitle>
                       <MorphingDialogSubtitle className="text-zinc-700 dark:text-zinc-400 text-lg">Mr. Cao Cự Chính</MorphingDialogSubtitle>
