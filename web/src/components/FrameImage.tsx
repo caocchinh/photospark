@@ -1,6 +1,7 @@
 "use client";
 import {Image as KonvaImage} from "react-konva";
 import {useState, useCallback, useEffect} from "react";
+import {useTranslation} from "react-i18next";
 
 const FrameImage = ({
   url,
@@ -22,10 +23,12 @@ const FrameImage = ({
   onLoad?: () => void;
 }) => {
   const [image, setImage] = useState<HTMLCanvasElement | null>(null);
-
+  const [isLoading, setIsLoading] = useState(false);
+  const {t} = useTranslation();
   const loadImage = useCallback(() => {
     if (!url) return setImage(null);
 
+    setIsLoading(true);
     const imageUrl = url.includes("r2.dev") ? `/api/proxy/image?url=${encodeURIComponent(url)}` : url;
 
     const img = document.createElement("img");
@@ -44,6 +47,7 @@ const FrameImage = ({
         context.drawImage(img, 0, 0);
       }
       setImage(canvas);
+      setIsLoading(false);
       if (onLoad) onLoad();
     };
 
@@ -63,6 +67,7 @@ const FrameImage = ({
         context.fillText("CORS error", canvas.width / 2, canvas.height / 2 + 20);
       }
       setImage(canvas);
+      setIsLoading(false);
       if (onLoad) onLoad();
     };
   }, [filter, url, crossOrigin, onLoad]);
@@ -70,6 +75,24 @@ const FrameImage = ({
   useEffect(() => {
     loadImage();
   }, [loadImage, url, filter, crossOrigin]);
+
+  useEffect(() => {
+    if (isLoading) {
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
+      canvas.width = width;
+      canvas.height = height;
+      if (context) {
+        context.fillStyle = "#FFFFFF";
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        context.fillStyle = "#000000";
+        context.font = "14px Arial";
+        context.textAlign = "center";
+        context.fillText(t("Loading..."), canvas.width / 2, canvas.height / 2);
+      }
+      setImage(canvas);
+    }
+  }, [isLoading, width, height, t]);
 
   return (
     <KonvaImage

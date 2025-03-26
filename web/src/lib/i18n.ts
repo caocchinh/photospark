@@ -134,6 +134,7 @@ const i18nConfig = {
         "Navigating...": "Navigating...",
         "You may order to print your image.": "You may order to print your image.",
         "Successfully created image!": "Successfully created image!",
+        "Loading...": "Loading...",
       },
     },
     vi: {
@@ -254,6 +255,7 @@ const i18nConfig = {
         "Navigating...": "Đang chuyển hướng...",
         "You may order to print your image.": "Bạn có thể đặt hàng để in hình của bạn.",
         "Successfully created image!": "Đã tạo hình thành công!",
+        "Loading...": "Đang tải...",
       },
     },
     fr: {
@@ -377,6 +379,7 @@ const i18nConfig = {
         "Navigating...": "Navigation...",
         "You may order to print your image.": "Vous pouvez passer commande pour imprimer votre image.",
         "Successfully created image!": "Image créée avec succès!",
+        "Loading...": "Chargement...",
       },
     },
     cn: {
@@ -498,6 +501,7 @@ const i18nConfig = {
         "Navigating...": "导航...",
         "You may order to print your image.": "您可以订购打印您的图像。",
         "Successfully created image!": "成功创建图像！",
+        "Loading...": "加载中...",
       },
     },
     kr: {
@@ -619,6 +623,7 @@ const i18nConfig = {
         "Navigating...": "리디렉션 중...",
         "You may order to print your image.": "이미지를 인쇄할 수 있습니다.",
         "Successfully created image!": "이미지가 성공적으로 생성되었습니다!",
+        "Loading...": "로딩 중...",
       },
     },
   },

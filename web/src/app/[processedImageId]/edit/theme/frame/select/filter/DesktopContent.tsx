@@ -62,7 +62,7 @@ const DesktopContent = () => {
     setFilter(FILTERS[randomIndex].value);
 
     filterRefs.current[randomIndex]?.scrollIntoView({
-      behavior: "instant",
+      behavior: "smooth",
       block: "center",
     });
   }, []);
