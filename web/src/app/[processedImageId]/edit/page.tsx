@@ -6,6 +6,7 @@ import {usePhoto} from "@/context/PhotoContext";
 import {useTranslation} from "react-i18next";
 import Link from "next/link";
 import {FaArrowLeft} from "react-icons/fa6";
+import {Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbSeparator} from "@/components/ui/breadcrumb";
 
 const LayoutEditPage = () => {
   const {photo, setPhoto} = usePhoto();
@@ -24,13 +25,26 @@ const LayoutEditPage = () => {
   return (
     <div className="w-full min-h-screen flex items-start justify-center bg-white ">
       <div className="flex flex-col w-[80%] gap-12 items-center justify-center">
-        <Link
-          href={`/${photo?.previousProcessedImageId}/`}
-          className="flex text-center w-[90%] sm:w-[280px] items-center self-center sm:self-start justify-center gap-2 bg-foreground text-background rounded px-4 py-2 hover:opacity-[85%] "
-        >
-          <FaArrowLeft />
-          {t("Back")}
-        </Link>
+        <div className="flex items-center justify-between w-full sm:flex-row flex-col gap-4 sm:gap-0">
+          <Link
+            href={`/${photo?.previousProcessedImageId}/`}
+            className="flex text-center w-[90%] sm:w-[280px] items-center self-center sm:self-start justify-center gap-2 bg-foreground text-background rounded px-4 py-2 hover:opacity-[85%] order-1 sm:order-0"
+          >
+            <FaArrowLeft />
+            {t("Back")}
+          </Link>
+          <Breadcrumb className="order-0 sm:order-1 -mt-[45px] sm:mt-0 mb-[35px] sm:mb-0 self-end sm:self-center">
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <Link href={`/${photo?.previousProcessedImageId}/`}>{t("Home")}</Link>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <p className="text-black">{t("Layout")}</p>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </div>
         <h1 className="text-5xl font-semibold uppercase text-center">{t("Choose a layout")}</h1>
         <div className="flex items-center justify-center gap-8 flex-wrap w-full">
           <Link

@@ -5,6 +5,7 @@ import NextTopLoader from "nextjs-toploader";
 import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
 import I18nClientProvider from "@/context/I18nClientProvider";
+import {Toaster} from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -43,6 +44,7 @@ export default function RootLayout({
             showSpinner={true}
           />
           {children}
+          <Toaster />
           <Footer />
         </I18nClientProvider>
       </body>

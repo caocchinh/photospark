@@ -15,6 +15,8 @@ import {ROUTES} from "@/constants/routes";
 import {useTranslation} from "react-i18next";
 import {MdOutlineArrowForwardIos, MdOutlineArrowBackIos} from "react-icons/md";
 import {useReloadConfirm} from "@/hooks/useReloadConfirm";
+import {Breadcrumb, BreadcrumbEllipsis, BreadcrumbItem, BreadcrumbList, BreadcrumbSeparator} from "@/components/ui/breadcrumb";
+import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
 
 const FrameEditpage = () => {
   useReloadConfirm();
@@ -128,21 +130,43 @@ const FrameEditpage = () => {
       {photo && photo.theme && (
         <div className={cn("flex items-center w-full justify-center h-full", chosen ? "pointer-events-none" : null)}>
           <div className="w-[90%] sm:w-[80%] flex flex-col gap-6 ">
-            <div className="flex items-center justify-center self-center md:self-start gap-4 flex-wrap">
+            <div className="flex items-center justify-between w-full sm:flex-row flex-col gap-4 sm:gap-0">
               <Link
                 href={`/${photo?.previousProcessedImageId}/${ROUTES.THEME}`}
-                className="w-full sm:w-auto flex text-center items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-2 hover:opacity-[85%] "
+                className="w-full sm:w-auto flex text-center items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-2 hover:opacity-[85%] order-1 sm:order-0"
               >
                 <FaArrowLeft />
                 {t("Choose another theme")}
               </Link>
-              <Link
-                href={`/${photo?.previousProcessedImageId}/${ROUTES.HOME}`}
-                className="w-full sm:w-auto flex text-center items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-2 hover:opacity-[85%] "
-              >
-                <FaArrowLeft />
-                {t("Choose another layout")}
-              </Link>
+              <Breadcrumb className="order-0 sm:order-1 -mt-[45px] sm:mt-0 mb-[35px] sm:mb-0 self-end sm:self-center">
+                <BreadcrumbList>
+                  <BreadcrumbItem>
+                    <Link href={`/${photo?.previousProcessedImageId}/`}>{t("Home")}</Link>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator />
+                  <BreadcrumbItem>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger className="flex items-center gap-1">
+                        <BreadcrumbEllipsis className="h-4 w-4" />
+                        <span className="sr-only">Toggle menu</span>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="start">
+                        <DropdownMenuItem>
+                          <Link href={`/${photo?.previousProcessedImageId}/edit/`}>{t("Layout")}</Link>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator />
+                  <BreadcrumbItem>
+                    <Link href={`/${photo?.previousProcessedImageId}/edit/theme/`}>{t("Theme")}</Link>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator />
+                  <BreadcrumbItem>
+                    <p className="text-black">{t("Frame")}</p>
+                  </BreadcrumbItem>
+                </BreadcrumbList>
+              </Breadcrumb>
             </div>
             <h1 className="text-5xl font-semibold uppercase text-center">{t("Choose a frame")}</h1>
 
@@ -193,7 +217,7 @@ const FrameEditpage = () => {
                 {Array.from({length: filteredFrames.length}, (_, index) => (
                   <div
                     key={index}
-                    className="min-w-[15px] min-h-[15px] border-2 border-primary hover:cursor-pointer core-navigate"
+                    className="min-w-[15px] min-h-[15px] rounded-[2px] border-2 border-primary hover:cursor-pointer core-navigate"
                     style={{
                       background: current === index + 1 ? "black" : "#e2e8f0",
                     }}

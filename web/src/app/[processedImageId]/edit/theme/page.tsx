@@ -10,6 +10,7 @@ import {FaArrowLeftLong} from "react-icons/fa6";
 import {ValidThemeType} from "@/constants/types";
 import {useTranslation} from "react-i18next";
 import {useReloadConfirm} from "@/hooks/useReloadConfirm";
+import {Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbSeparator} from "@/components/ui/breadcrumb";
 
 const ThemePage = () => {
   useReloadConfirm();
@@ -37,16 +38,33 @@ const ThemePage = () => {
   };
 
   return (
-    <>
+    <div className="flex flex-col items-center justify-center w-full gap-12">
+      <div className="w-[80%] flex items-center justify-between  sm:flex-row flex-col">
+        <Link
+          href={`/${photo?.previousProcessedImageId}/edit/`}
+          className="w-[300px] p-2 rounded flex items-center justify-center gap-2 bg-black text-white order-1 sm:order-0"
+        >
+          <FaArrowLeftLong />
+          {t("Choose another layout")}
+        </Link>
+        <Breadcrumb className="order-0 sm:order-1 -mt-[45px] sm:mt-0 mb-[35px] sm:mb-0 self-end sm:self-center">
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <Link href={`/${photo?.previousProcessedImageId}/`}>{t("Home")}</Link>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <Link href={`/${photo?.previousProcessedImageId}/edit/`}>{t("Layout")}</Link>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <p className="text-black">{t("Theme")}</p>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+      </div>
       {photo && photo.frameType && (
         <div className="flex flex-col items-center justify-center w-full gap-12">
-          <Link
-            href={`/${photo?.previousProcessedImageId}/edit/`}
-            className="w-[300px] p-2 rounded flex items-center justify-center gap-2 bg-black text-white"
-          >
-            <FaArrowLeftLong />
-            {t("Choose another layout")}
-          </Link>
           <div className="flex flex-col items-center justify-center gap-8 w-[80%]">
             <CardTitle className="text-5xl font-semibold uppercase text-center">{t("Choose a theme")}</CardTitle>
             <CardContent className="flex items-center justify-center gap-8 flex-wrap w-[90%]">
@@ -78,7 +96,7 @@ const ThemePage = () => {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

@@ -3,14 +3,57 @@
 import {useMediaQuery} from "@/hooks/useMediaQuery";
 import {useReloadConfirm} from "@/hooks/useReloadConfirm";
 import dynamic from "next/dynamic";
-
+import Link from "next/link";
+import {Breadcrumb, BreadcrumbEllipsis, BreadcrumbItem, BreadcrumbList, BreadcrumbSeparator} from "@/components/ui/breadcrumb";
+import {usePhoto} from "@/context/PhotoContext";
+import {useTranslation} from "react-i18next";
+import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
 const DesktopContent = dynamic(() => import("./DesktopContent"), {ssr: false});
 const MobileContent = dynamic(() => import("./MobileContent"), {ssr: false});
 
 const SelectEditPage = () => {
   useReloadConfirm();
   const isDesktop = useMediaQuery("(min-width: 1024px)");
-  return <div className="w-full h-full p-4">{isDesktop ? <DesktopContent /> : <MobileContent />}</div>;
+  const {photo} = usePhoto();
+  const {t} = useTranslation();
+
+  return (
+    <div className="w-full h-full p-4">
+      <Breadcrumb className="-mt-[60px] mb-[40px]  flex items-center justify-end sm:w-[95%] w-[90%]">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <Link href={`/${photo?.previousProcessedImageId}/`}>{t("Home")}</Link>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center gap-1">
+                <BreadcrumbEllipsis className="h-4 w-4" />
+                <span className="sr-only">Toggle menu</span>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start">
+                <DropdownMenuItem>
+                  <Link href={`/${photo?.previousProcessedImageId}/edit/`}>{t("Layout")}</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link href={`/${photo?.previousProcessedImageId}/edit/theme/`}>{t("Theme")}</Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <Link href={`/${photo?.previousProcessedImageId}/edit/theme/frame`}>{t("Frame")}</Link>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <p className="text-black">{t("Select")}</p>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+      <div className="w-full h-full">{isDesktop ? <DesktopContent /> : <MobileContent />}</div>
+    </div>
+  );
 };
 
 export default SelectEditPage;

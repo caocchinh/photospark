@@ -233,7 +233,9 @@ const DesktopContent = () => {
                             onClick={handleImageUpload}
                             disabled={isMediaUploaded}
                           >
-                            {isUploading ? t("Processing...") : t("Sure")}
+                            {isUploading && !isMediaUploaded && t("Processing...")}
+                            {!isUploading && !isMediaUploaded && t("Sure")}
+                            {isMediaUploaded && t("Navigating...")}
                             {isUploading && (
                               <LoadingSpinner
                                 size={21}
