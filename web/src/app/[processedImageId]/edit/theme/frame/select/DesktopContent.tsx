@@ -285,9 +285,9 @@ const DesktopContent = () => {
                     <Button
                       asChild
                       className="relative"
-                      onClick={() => setIsSelected(true)}
                     >
                       <Link
+                        onClick={() => setIsSelected(true)}
                         href={`/${photo?.previousProcessedImageId}/${ROUTES.FRAME}`}
                         className="flex items-center justify-center gap-2 text-2xl px-14 py-6 w-full"
                       >

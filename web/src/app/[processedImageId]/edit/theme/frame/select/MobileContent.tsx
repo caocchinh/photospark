@@ -299,8 +299,13 @@ const MobileContent = () => {
                         {t("Choose images")}
                       </Button>
                       <Button
-                        disabled={selectedImage.filter((img) => img !== null).length != photo.theme?.frame.slotCount}
-                        onClick={() => setIsSheetOpen(true)}
+                        onClick={() => {
+                          if (selectedImage.filter((img) => img !== null).length == photo.theme?.frame.slotCount) {
+                            setIsSheetOpen(true);
+                          } else {
+                            setIsDialogOpen(true);
+                          }
+                        }}
                         className="w-full flex items-center justify-center gap-2 text-sm px-14 py-6 cursor-pointer"
                       >
                         <GoArrowSwitch className="rotate-90" />

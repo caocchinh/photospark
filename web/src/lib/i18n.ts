@@ -138,6 +138,8 @@ const i18nConfig = {
         "Please choose images": "Please choose images",
         "You need to choose images to continue": "You need to choose images to continue",
         Understood: "Understood",
+        "Developer Information": "Developer Information",
+        "Copy Email Address": "Copy Email Address",
       },
     },
     vi: {
@@ -262,6 +264,8 @@ const i18nConfig = {
         "Please choose images": "Vui lòng chọn hình",
         "You need to choose images to continue": "Bạn cần chọn hình để tiếp tục",
         Understood: "Đã hiểu",
+        "Developer Information": "Thông tin nhà phát triển",
+        "Copy Email Address": "Sao chép địa chỉ email",
       },
     },
     fr: {
@@ -389,6 +393,8 @@ const i18nConfig = {
         "Please choose images": "Veuillez choisir des images",
         "You need to choose images to continue": "Vous devez choisir des images pour continuer",
         Understood: "Compris",
+        "Developer Information": "Informations sur le développeur",
+        "Copy Email Address": "Copier l'adresse email",
       },
     },
     cn: {
@@ -514,6 +520,8 @@ const i18nConfig = {
         "Please choose images": "请选择图像",
         "You need to choose images to continue": "您需要选择图像以继续",
         Understood: "已理解",
+        "Developer Information": "开发者信息",
+        "Copy Email Address": "复制邮箱地址",
       },
     },
     kr: {
@@ -639,6 +647,8 @@ const i18nConfig = {
         "Please choose images": "이미지를 선택하세요",
         "You need to choose images to continue": "이미지를 선택하세요",
         Understood: "이해했습니다",
+        "Developer Information": "개발자 정보",
+        "Copy Email Address": "이메일 주소 복사",
       },
     },
   },

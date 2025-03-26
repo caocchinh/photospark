@@ -66,7 +66,7 @@ export function useImageUpload(newProcessedImageId: string) {
     setIsMediaUploaded(true);
     toast.success(t("Successfully created image!"), {
       description: t("You may order to print your image."),
-      duration: 5000,
+      duration: 6000,
       style: {
         backgroundColor: "#5cb85c",
         color: "white",
