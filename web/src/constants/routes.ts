@@ -4,5 +4,4 @@ export const ROUTES = {
   FRAME: "/edit/theme/frame",
   SELECT: "/edit/theme/frame/select",
   FILTER: "/edit/theme/frame/select/filter",
-  CONFIRM: "/edit/theme/frame/select/filter/confirm",
 };
