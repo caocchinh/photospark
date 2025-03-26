@@ -3,7 +3,7 @@
 import {Button} from "@/components/ui/button";
 import {usePhoto} from "@/context/PhotoContext";
 import {cn, findSwappedIndices} from "@/lib/utils";
-import {useCallback, useEffect, useMemo, useState} from "react";
+import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {Layer, Rect, Stage} from "react-konva";
 import useImage from "use-image";
 import {Image as KonvaImage} from "react-konva";
@@ -24,17 +24,18 @@ import {SheetContent, SheetDescription, SheetHeader, SheetTitle} from "@/compone
 import {Sheet} from "@/components/ui/sheet";
 import {IoCheckmark} from "react-icons/io5";
 import {useTranslation} from "react-i18next";
-
+import {Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog";
 const MobileContent = () => {
   const {photo, setPhoto} = usePhoto();
   const router = useRouter();
+  const dummyLinkRef = useRef<HTMLAnchorElement>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const {t} = useTranslation();
   useEffect(() => {
     if (!photo) return router.push(`/`);
     if (!photo?.theme) return router.push(`/${photo?.previousProcessedImageId}/${ROUTES.HOME}`);
   }, [photo, router]);
   const [frameImg, frameImgStatus] = useImage(photo?.theme?.frame?.src || "");
-
   const [selectedImage, setSelectedImage] = useState<Array<{id: string; href: string} | null>>(
     photo?.selectedImages && photo.selectedImages.length > 0
       ? [...photo.selectedImages]
@@ -56,9 +57,11 @@ const MobileContent = () => {
           };
         }
       });
-      router.push(`/${photo?.previousProcessedImageId}/${ROUTES.FILTER}`);
+      if (dummyLinkRef.current) {
+        dummyLinkRef.current.click();
+      }
     },
-    [photo?.previousProcessedImageId, router, setPhoto]
+    [setPhoto]
   );
 
   const handleSelect = useCallback(
@@ -315,29 +318,18 @@ const MobileContent = () => {
                           />
                         )}
                         <Button
-                          asChild
-                          className="relative bg-green-700 hover:bg-green-700 "
-                          onClick={() => setIsSelected(true)}
-                        >
-                          <Link
-                            href={`/${photo?.previousProcessedImageId}/${ROUTES.FILTER}`}
-                            className={cn(
-                              "flex items-center justify-center gap-2 text-2xl px-14 py-6 w-full bg-green-700 hover:bg-green-700 ",
-                              photo
-                                ? photo.theme!.frame.slotCount - filteredSelectedImages.length != 0
-                                  ? "pointer-events-none opacity-80"
-                                  : null
-                                : null,
-                              isSelected ? "pointer-events-none opacity-[85%]" : null
-                            )}
-                            onClick={(e) => {
-                              e.preventDefault();
+                          className="relative bg-green-700 hover:bg-green-700 w-full py-6 px-2 cursor-pointer"
+                          onClick={() => {
+                            if (photo.theme!.frame.slotCount - filteredSelectedImages.length == 0 && !isSelected) {
+                              setIsSelected(true);
                               handleContextSelect(filteredSelectedImages);
-                            }}
-                          >
-                            {t("Choose a filter")}
-                            <FaArrowRight />
-                          </Link>
+                            } else if (photo.theme!.frame.slotCount - filteredSelectedImages.length != 0) {
+                              setIsDialogOpen(true);
+                            }
+                          }}
+                        >
+                          {t("Choose a filter")}
+                          <FaArrowRight />
                         </Button>
                       </div>
                       <Button
@@ -361,6 +353,33 @@ const MobileContent = () => {
           </div>
         </div>
       )}
+      <Link
+        href={`/${photo?.previousProcessedImageId}/${ROUTES.FILTER}`}
+        className="hidden"
+        ref={dummyLinkRef}
+      ></Link>
+      <Dialog
+        open={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+      >
+        <DialogContent>
+          <DialogHeader className="flex items-center justify-center flex-col gap-3">
+            <DialogTitle>{t("Please choose images")}</DialogTitle>
+            <DialogDescription>{t("You need to choose images to continue")}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              className="w-full cursor-pointer"
+              onClick={() => {
+                setIsDialogOpen(false);
+                setIsDrawerOpen(true);
+              }}
+            >
+              {t("Choose images")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

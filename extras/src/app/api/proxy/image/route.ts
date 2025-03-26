@@ -15,6 +15,7 @@ export async function GET(request: NextRequest) {
 
     const response = await fetch(url, {
       signal: controller.signal,
+      next: {revalidate: 3600},
     });
 
     clearTimeout(timeoutId);
@@ -24,12 +25,12 @@ export async function GET(request: NextRequest) {
     }
 
     const contentType = response.headers.get("content-type");
-    const buffer = await response.arrayBuffer();
+    const cacheControl = response.headers.get("cache-control") || "public, max-age=86400";
 
-    return new NextResponse(buffer, {
+    return new NextResponse(response.body, {
       headers: {
         "Content-Type": contentType || "image/jpeg",
-        "Cache-Control": "public, max-age=86400",
+        "Cache-Control": cacheControl,
       },
     });
   } catch (error: unknown) {

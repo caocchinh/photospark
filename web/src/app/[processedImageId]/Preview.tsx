@@ -49,28 +49,12 @@ const Preview = ({
         mimeType: "image/png",
       });
 
-      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-
-      if (isIOS) {
-        // Convert dataURL to Blob
-        fetch(dataURL)
-          .then((res) => res.blob())
-          .then((blob) => {
-            // Create blob URL
-            const url = window.URL.createObjectURL(blob);
-            // Open in new tab
-            window.location.href = url;
-            // Clean up
-            setTimeout(() => window.URL.revokeObjectURL(url), 100);
-          });
-      } else {
-        const link = document.createElement("a");
-        link.download = generateTimestampFilename("VTEAM", "png");
-        link.href = dataURL;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
+      const link = document.createElement("a");
+      link.download = generateTimestampFilename("VTEAM", "png");
+      link.href = dataURL;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     } catch {
       setError(true);
     }
@@ -134,7 +118,7 @@ const Preview = ({
                   } finally {
                     setTimeout(() => {
                       setIsRefreshButtonDisabled(false);
-                    }, 3000);
+                    }, 2500);
                   }
                 }}
               >
