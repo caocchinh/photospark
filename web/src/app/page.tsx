@@ -120,7 +120,7 @@ export default function HomePage() {
               >
                 <MorphingDialogImage
                   src="/cute.jpg"
-                  alt="A desk lamp designed by Edouard Wilfrid Buquet in 1925. It features a double-arm design and is made from nickel-plated brass, aluminium and varnished wood."
+                  alt="Cao Cự Chính is the developer of this website. All rights reserved."
                   className="h-48 w-full object-cover"
                 />
                 <div className="flex flex-col grow items-center justify-center px-3 py-2">
@@ -139,7 +139,7 @@ export default function HomePage() {
                 >
                   <MorphingDialogImage
                     src="/cute.jpg"
-                    alt="A desk lamp designed by Edouard Wilfrid Buquet in 1925. It features a double-arm design and is made from nickel-plated brass, aluminium and varnished wood."
+                    alt="Cao Cự Chính is the developer of this website. All rights reserved."
                     className="h-full w-full"
                   />
                   <div className="p-6">
