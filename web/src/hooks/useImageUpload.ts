@@ -87,7 +87,7 @@ export function useImageUpload(newProcessedImageId: string) {
         cursor: "pointer",
       },
       action: {
-        label: "Đóng",
+        label: t("Close"),
         onClick: () => toast.dismiss(),
       },
     });
