@@ -52,7 +52,19 @@ const Preview = ({
       const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
       if (isIOS) {
-        window.open(dataURL);
+        // Create a temporary link with specific attributes for iOS
+        const link = document.createElement("a");
+        link.href = dataURL;
+        link.target = "_blank";
+        link.download = generateTimestampFilename("VTEAM", "png");
+        // Set these attributes to help iOS handle the image
+        link.setAttribute("rel", "noopener");
+        link.setAttribute("type", "image/png");
+        // Force the image to be treated as a download
+        link.setAttribute("target", "_blank");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
       } else {
         const link = document.createElement("a");
         link.download = generateTimestampFilename("VTEAM", "png");
