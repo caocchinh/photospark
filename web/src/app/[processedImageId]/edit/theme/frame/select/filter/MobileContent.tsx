@@ -68,10 +68,10 @@ const MobileContent = () => {
       if (currentFilterIndex !== -1) {
         setTimeout(() => {
           filterRefs.current[currentFilterIndex]?.scrollIntoView({
-            behavior: "instant",
+            behavior: "smooth",
             block: "center",
           });
-        }, 100);
+        }, 50);
       }
     }
   }, [isDrawerOpen, getCurrentFilterIndex]);
