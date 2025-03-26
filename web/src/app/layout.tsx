@@ -28,15 +28,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <head>
-        <link
-          rel="shortcut icon"
-          href="/favicon.ico"
-        />
-      </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <I18nClientProvider>
+    <I18nClientProvider>
+      <html lang="en">
+        <head>
+          <link
+            rel="shortcut icon"
+            href="/favicon.ico"
+          />
+        </head>
+        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
           <NavBar />
           <NextTopLoader
             color="black"
@@ -46,8 +46,8 @@ export default function RootLayout({
           {children}
           <Toaster />
           <Footer />
-        </I18nClientProvider>
-      </body>
-    </html>
+        </body>
+      </html>
+    </I18nClientProvider>
   );
 }

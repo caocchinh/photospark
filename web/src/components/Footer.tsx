@@ -2,9 +2,23 @@
 import {TextShimmer} from "@/components/ui/text-shimmer";
 import Image from "next/image";
 import {useTranslation} from "react-i18next";
+import {useEffect, useState} from "react";
 
 const Footer = () => {
-  const {t} = useTranslation();
+  const {t, i18n} = useTranslation();
+  const [isLanguageInitialized, setIsLanguageInitialized] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedLanguage = localStorage.getItem("selectedLanguage");
+      if (savedLanguage) {
+        i18n.changeLanguage(savedLanguage);
+      }
+    }
+    setIsLanguageInitialized(true);
+  }, [i18n]);
+
+  if (!isLanguageInitialized) return null;
 
   return (
     <footer className="w-full bottom-0 bg-black  ">
