@@ -56,7 +56,7 @@ const LanguageBar = () => {
           variant="outline"
           role="combobox"
           aria-expanded={isOpen}
-          className="w-[200px] justify-between"
+          className="w-[200px] justify-between cursor-pointer"
         >
           <div className="flex items-center gap-2 justify-center">
             {language ? LANGUAGE_LIST.find((_language) => _language.label === language)?.label : t("Select language...")}
@@ -79,6 +79,7 @@ const LanguageBar = () => {
                   key={_language.value}
                   value={_language.label}
                   onSelect={handleLanguageSelect}
+                  className="cursor-pointer"
                 >
                   {_language.label}
                   <Image

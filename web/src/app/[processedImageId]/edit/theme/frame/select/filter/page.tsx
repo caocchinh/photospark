@@ -51,7 +51,7 @@ const FilterEditPage = () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <p className="text-black">{t("Filter")}</p>
+            <p className="text-black cursor-pointer">{t("Filter")}</p>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>

@@ -47,7 +47,7 @@ const SelectEditPage = () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <p className="text-black">{t("Select")}</p>
+            <p className="text-black cursor-pointer">{t("Select")}</p>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>

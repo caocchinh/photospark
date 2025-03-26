@@ -40,7 +40,7 @@ const LayoutEditPage = () => {
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <p className="text-black">{t("Layout")}</p>
+                <p className="text-black cursor-pointer">{t("Layout")}</p>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>

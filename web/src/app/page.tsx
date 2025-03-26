@@ -33,7 +33,7 @@ export default function HomePage() {
           height={400}
           width={800}
           alt="VTEAM"
-          className="w-full rounded-lg object-cover grayscale-25 duration-700 group-hover:grayscale-0"
+          className="w-full rounded-lg object-cover grayscale-0 sm:grayscale-25 duration-700 group-hover:grayscale-0"
         />
       </Tilt>
       <div className="flex flex-col space-y-0.5 pb-0 pt-3 items-center justify-center">
