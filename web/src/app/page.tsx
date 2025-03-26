@@ -1,7 +1,8 @@
 "use client";
+import {ImageComparisonImage, ImageComparisonSlider} from "@/components/ui/image-comparison";
+import {ImageComparison} from "@/components/ui/image-comparison";
 import {Spotlight} from "@/components/ui/spotlight";
 import {Tilt} from "@/components/ui/tilt";
-import Image from "next/image";
 
 export default function HomePage() {
   return (
@@ -28,13 +29,23 @@ export default function HomePage() {
             mass: 0.2,
           }}
         />
-        <Image
-          src="/vteam.jpg"
-          height={400}
-          width={800}
-          alt="VTEAM"
-          className="w-full rounded-lg object-cover grayscale-0 sm:grayscale-25 duration-700 group-hover:grayscale-0"
-        />
+
+        <ImageComparison
+          className="aspect-16/10 w-full rounded-lg border border-zinc-200 dark:border-zinc-800"
+          enableHover
+        >
+          <ImageComparisonImage
+            src="/vteam2.jpg"
+            alt="Motion Primitives Dark"
+            position="left"
+          />
+          <ImageComparisonImage
+            src="/vteam.jpg"
+            alt="Motion Primitives Light"
+            position="right"
+          />
+          <ImageComparisonSlider className="bg-white" />
+        </ImageComparison>
       </Tilt>
       <div className="flex flex-col space-y-0.5 pb-0 pt-3 items-center justify-center">
         <h3 className="font-mono font-medium text-zinc-500 dark:text-zinc-400 text-3xl text-center">VTEAM - Vinschool Central Park</h3>
