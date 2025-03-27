@@ -105,7 +105,7 @@ const Preview = ({
               <Button
                 variant="outline"
                 className="mt-4 cursor-pointer flex items-center gap-2"
-                disabled={isRefreshButtonDisabled || allImagesLoaded}
+                disabled={isRefreshButtonDisabled || allImagesLoaded || initialCountDown > 0}
                 onClick={async () => {
                   try {
                     setIsRefreshButtonDisabled(true);
@@ -126,7 +126,7 @@ const Preview = ({
                   } catch {
                     setError(true);
                   } finally {
-                    if (initialCountDown === 0) {
+                    if (initialCountDown <= 0) {
                       setTimeout(() => {
                         setIsRefreshButtonDisabled(false);
                       }, 5000);
