@@ -43,9 +43,9 @@ export const CameraProvider = ({children}: {children: ReactNode}) => {
   useEffect(() => {
     if (!photo?.theme?.frame.slotDimensions) return;
     if (setCameraConstraints) {
-      setCameraConstraints(getCameraConstraints(photo.theme.frame.slotDimensions.width, photo.theme.frame.slotDimensions.height));
+      setCameraConstraints(getCameraConstraints(photo.theme.frame.slotDimensions.width, photo.theme.frame.slotDimensions.height, camera?.deviceId));
     }
-  }, [photo?.theme?.frame.slotDimensions, setCameraConstraints]);
+  }, [camera?.deviceId, photo?.theme?.frame.slotDimensions]);
 
   // Initialize camera devices
   useEffect(() => {
