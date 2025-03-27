@@ -1,6 +1,6 @@
 "use client";
 import {ProcessedImageTable, ImageTable, VideoTable} from "@/drizzle/schema";
-import {useRef, useState} from "react";
+import {useRef, useState, useEffect} from "react";
 import {Stage as StageElement} from "konva/lib/Stage";
 import {cn, generateTimestampFilename} from "@/lib/utils";
 import Link from "next/link";
@@ -35,6 +35,16 @@ const Preview = ({
   const [isRefreshButtonDisabled, setIsRefreshButtonDisabled] = useState(false);
   const [imagesLoaded, setImagesLoaded] = useState(0);
   const [copied, setCopied] = useState(false);
+  const [initialCountDown, setInitialCountDown] = useState(7);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (initialCountDown > 0) {
+        setInitialCountDown((prev) => prev - 1);
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [initialCountDown]);
 
   if (!processedImage) {
     return null;
@@ -116,9 +126,11 @@ const Preview = ({
                   } catch {
                     setError(true);
                   } finally {
-                    setTimeout(() => {
-                      setIsRefreshButtonDisabled(false);
-                    }, 6000);
+                    if (initialCountDown === 0) {
+                      setTimeout(() => {
+                        setIsRefreshButtonDisabled(false);
+                      }, 5000);
+                    }
                   }
                 }}
               >
