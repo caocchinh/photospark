@@ -4,13 +4,13 @@ import {useTranslation} from "react-i18next";
 import Image from "next/image";
 import {useState} from "react";
 import {useEffect} from "react";
-import {usePhoto} from "@/context/PhotoContext";
 import {SlidingNumber} from "./ui/sliding-number";
+import {usePhotoState} from "@/context/PhotoStateContext";
 
 const Cooldown = () => {
   const {t} = useTranslation();
   const [timeLeft, setTimeLeft] = useState(7);
-  const {photo} = usePhoto();
+  const {photo} = usePhotoState();
 
   useEffect(() => {
     if (!photo) {

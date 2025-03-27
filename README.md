@@ -1,173 +1,128 @@
-# Photo Booth Application 📸
+# PhotoBooth CP1500 📸
 
-A modern photo booth application built with Next.js and Socket.IO, featuring real-time photo capture, custom frames, and image filters.
+A modern photo booth application built with Next.js and Socket.IO that offers real-time photo capture, custom frames, Instagram-style filters, and direct printing to Canon SELPHY CP1500 printers.
 
-## Table of Contents
-
-- [Features](#features)
-- [Prerequisites](#prerequisites)
-- [Quick Start Guide](#quick-start-guide)
-- [Environment Setup](#environment-setup)
-- [Installation](#installation)
-- [Development](#development)
-- [Database Management](#database-management)
-- [Printer Setup](#printer-setup)
-- [Video Processing](#video-processing)
-- [Animations and Transitions](#animations-and-transitions)
-- [Project Structure](#project-structure)
-- [Technologies Used](#technologies-used)
-- [Troubleshooting](#troubleshooting)
-- [License](#license)
-- [Acknowledgments](#acknowledgments)
-
-## Features
+## 🌟 Features
 
 - 📸 Real-time photo capture with webcam support
 - 🖼️ Multiple theme options (PROM, Usagyuuun)
 - ✨ 30+ Instagram-style filters
 - 🎞️ Custom frame layouts (single and double formats)
+- 🖨️ Direct printing support for Canon SELPHY CP1500
+- 🎥 Video recording and processing capabilities
 - 🔄 Real-time preview and editing
 - 🌐 Socket.IO integration for real-time communication
 - ☁️ Cloudflare R2 integration for image storage
 - 🎨 Tailwind CSS with custom UI components
 - 🚀 Smooth animations powered by Framer Motion
-- 🖨️ Direct printing support for Canon SELPHY CP1500
 
-## Prerequisites
+## 📋 Prerequisites
 
 - Node.js 18+ (Node.js 20 recommended)
-- npm/yarn/pnpm/bun
+- npm or another package manager (yarn/pnpm/bun)
 - Neon PostgreSQL database account
 - FFmpeg (for video processing)
-- Windows OS (for printing functionality)
-- Canon SELPHY CP1500 printer ([Product Link](https://www.amazon.com/Canon-SELPHY-CP1500-Compact-Printer/dp/B0BF6T86WD))
-- Canon SELPHY CP1500 ink & paper ([Product Link](https://www.amazon.com/KP-108IN-Cassette-Wireless-Compact-Printer/dp/B079B5LTGW))
+- Windows OS (required for printing functionality)
+- Canon SELPHY CP1500 printer ([Amazon Link](https://www.amazon.com/Canon-SELPHY-CP1500-Compact-Printer/dp/B0BF6T86WD))
+- CP1500 ink & paper ([Amazon Link](https://www.amazon.com/KP-108IN-Cassette-Wireless-Compact-Printer/dp/B079B5LTGW))
 - Webcam with 720p or higher resolution
 - Modern browser (Chrome or Firefox recommended)
 
-## Quick Start Guide
+## 🚀 Quick Start Guide
 
-1. **Clone the repository:**
-
-   ```bash
-   git clone https://github.com/yourusername/photo-booth.git
-   cd photo-booth
-   ```
-
-2. **Set up environment variables:**
-
-   ```bash
-   cp copy.env .env
-   ```
-
-   Then edit the `.env` file with your credentials
-
-3. **Install dependencies and start development servers:**
-
-   ```bash
-   npm install
-   npm run dev
-   ```
-
-4. **Access the application:**
-   Open your browser and navigate to [http://localhost:8080](http://localhost:8080)
-
-## Environment Setup
-
-1. Copy the example environment file:
+### 1. Clone the Repository
 
 ```bash
+git clone https://github.com/ChinCao/photobooth-cp1500.git
+cd photobooth-cp1500
+```
+
+### 2. Environment Setup
+
+Copy the example environment files:
+
+```bash
+# Root directory
 cp copy.env .env
+
+# For each subdirectory
+cd client && cp copy.env .env && cd ..
+cd server && cp copy.env .env && cd ..
+cd extras && cp copy.env .env && cd ..
 ```
 
-2. Configure the following environment variables:
+Configure the environment variables in each `.env` file:
 
-```bash
-CLOUDFARE_ACCOUNT_ID=cloudfare_CLOUDFARE_ACCOUNT_ID
-R2_ACCESS_KEY_ID=r2_access_key
-R2_SECRET_ACCESS_KEY=r2_secret_key
-NEON_DATABASE_URL=neon_NEON_DATABASE_URL
+```
+# Main environment variables to set
+CLOUDFARE_ACCOUNT_ID=your_cloudflare_account_id
+R2_ACCESS_KEY_ID=your_r2_access_key
+R2_SECRET_ACCESS_KEY=your_r2_secret_key
+NEON_DATABASE_URL=your_neon_database_url
 ```
 
-## Installation
-
-1. Install client dependencies:
+### 3. Install Dependencies
 
 ```bash
-cd client
+# Install root dependencies
 npm install
+
+# Install dependencies for all components
+cd client && npm install && cd ..
+cd server && npm install && cd ..
+cd web && npm install && cd ..
+cd extras && npm install && cd ..
 ```
 
-2. Install server dependencies:
+### 4. Start Development Servers
 
 ```bash
-cd server
-npm install
-```
-
-3. Install root project dependencies (optional):
-
-```bash
-npm install
-```
-
-## Development
-
-1. Start the client development server:
-
-```bash
-cd client
+# Start all services at once
 npm run dev
 ```
 
-The client will be available at [http://localhost:8080](http://localhost:8080)
+This will concurrently start:
+- Client application at [http://localhost:8080](http://localhost:8080)
+- Socket.IO server on port 6969
+- Web interface
+- Extras interface
 
-2. Start the server:
+## 🧩 Project Components
+
+This project consists of multiple components working together:
+
+### 📱 Client (port 8080)
+The main photo booth interface where users can take photos, apply filters, and send them to be printed.
+
+### 🖥️ Server (port 6969)
+Socket.IO server that handles printing requests and video processing.
+
+### 🌐 Web
+Additional web interface component.
+
+### 🛠️ Extras
+Administration tools and additional features.
+
+## 📊 Database Management
 
 ```bash
-cd server
-npm run dev
-```
-
-OR IF YOU WANT TO START THE CLIENT AND SERVER SIMULTANEOUSLY:
-
-```bash
-npm run dev
-```
-
-The Socket.IO server will run on port 6969 and the client will be available at [http://localhost:8080](http://localhost:8080)
-
-## Database Management
-
-Generate database migrations:
-
-```bash
+# Generate database migrations
 npm run db:generate
-```
 
-Apply migrations:
-
-```bash
+# Apply migrations
 npm run db:migrate
-```
 
-Launch Drizzle Studio:
-
-```bash
+# Launch Drizzle Studio for database management
 npm run db:studio
 ```
 
-## Printer Setup
+## 🖨️ Printer Setup
 
-The application is designed to work with the Canon SELPHY CP1500 photo printer. This compact printer offers:
+### Hardware Requirements
+- Canon SELPHY CP1500 printer connected via USB-C
+- KP-108IN paper cassette and ink loaded
 
-- High-quality 300x300 DPI photo printing
-- Support for postcard size (148x100mm)
-- Borderless printing capability
-- Direct USB-C connectivity
-- Dye-sublimation printing technology for professional quality prints
-
-### Printer Installation Steps:
+### Setup Steps
 
 1. Connect the Canon SELPHY CP1500 to your Windows PC via USB-C cable
 2. Install the official Canon SELPHY CP1500 drivers from the [Canon website](https://www.canon.com/support/)
@@ -175,64 +130,61 @@ The application is designed to work with the Canon SELPHY CP1500 photo printer. 
 4. Configure the printer for "Japan Hagaki postcard (148x100mm)" paper size
 5. Test the printer using Canon's utilities before using with the photo booth
 
-Printer Requirements:
+> **Important**: The printer must be connected via USB-C cable (wireless printing not supported) and requires Windows OS.
 
-1. Must be connected via USB-C cable (wireless printing not supported)
-2. Windows OS required (not compatible with macOS or Linux)
-3. Printer name must contain "CP1500" for auto-detection
-4. Windows Print Spooler service must be running and properly configured
-5. Paper type must be set to "Japan Hagaki postcard (148x100mm)"
+## 🎥 Video Processing
 
-## Video Processing
-
-The application uses FFmpeg for video processing with the following optimizations:
-
-- Speeds up recorded videos by 2x
-- Compresses videos for faster loading
+The application uses FFmpeg for processing recorded videos:
+- Speeds up videos by 2x
+- Compresses for faster loading
 - Converts WebM to MP4 format
-- Applies H.264 encoding for broad compatibility
-- Maintains quality while reducing file size
+- Applies H.264 encoding
 
-FFmpeg must be installed and accessible in the system PATH for video processing to work.
+Make sure FFmpeg is installed and accessible in your system PATH.
 
-## Animations and Transitions
+## 🛠️ Development Workflows
 
-This project utilizes [Framer Motion](https://motion.dev/) to create smooth and performant animations and page transitions. Framer Motion is used throughout the application to enhance the user experience with animated transitions, loading effects, and interactive UI elements.
+### Client Development Only
 
-## Project Structure
+```bash
+cd client
+npm run dev
+```
+
+### Server Development Only
+
+```bash
+cd server
+npm run dev
+```
+
+### Building for Production
+
+```bash
+npm run build
+```
+
+## 📁 Project Structure
 
 - `/client` - Next.js frontend application
 - `/server` - Socket.IO backend print server
-- `/public` - Static assets including frames and images
-- `/src/components` - Reusable React components
-- `/src/lib` - Utility functions and shared logic
-- `/src/constants` - Application constants and configurations
+- `/web` - Additional web interface
+- `/extras` - Admin tools and utilities
+- `/client/src/components` - Reusable React components
+- `/client/src/lib` - Utility functions and shared logic
+- `/client/public` - Static assets including frames and images
 
-## Technologies Used
-
-- [Next.js](https://nextjs.org/) - React framework
-- [Socket.IO](https://socket.io/) - Real-time communication
-- [Tailwind CSS](https://tailwindcss.com/) - Styling
-- [shadcn/ui](https://ui.shadcn.com/) - UI components
-- [Drizzle ORM](https://orm.drizzle.team/) - Database ORM
-- [Cloudflare R2](https://www.cloudflare.com/products/r2/) - Image storage
-- [TypeScript](https://www.typescriptlang.org/) - Type safety
-- [Neon](https://neon.tech) - Serverless Postgres database
-- [Framer Motion](https://www.framer.com/motion/) - Animations and transitions
-
-## Troubleshooting
+## 🔧 Troubleshooting
 
 ### Common Issues
 
 #### Webcam Not Working
-
 - Ensure browser has camera permissions
-- Try refreshing the page
+- Refresh the page
 - Check if webcam is being used by another application
 - Verify webcam drivers are up to date
 
 #### Printer Not Detected
-
 - Verify printer name contains "CP1500"
 - Check USB connection
 - Restart Windows Print Spooler service:
@@ -243,96 +195,33 @@ This project utilizes [Framer Motion](https://motion.dev/) to create smooth and 
 - Reinstall printer drivers
 
 #### Socket.IO Connection Issues
-
 - Check that both client and server are running
 - Verify port 6969 is not blocked by firewall
 - Check for any CORS issues in browser console
 
-#### Image Upload Failures
-
-- Verify Cloudflare R2 credentials in `.env` file
-- Check network connectivity
-- Ensure database connection is working
-
-#### Database Connection Issues
-
-- Verify Neon database URL in `.env` file
-- Check if IP is allowlisted in Neon dashboard
-- Run database migrations
-
-### Getting Help
-
-If you encounter issues not covered here, please check the GitHub issues page or contact the developers directly.
-
-## Deployment
-
-### Production Setup
-
-1. Build the client:
-
-   ```bash
-   cd client
-   npm run build
-   ```
-
-2. Build the server:
-
-   ```bash
-   cd server
-   npm run build
-   ```
-
-3. Start the production services:
-   ```bash
-   npm run start:prod
-   ```
-
-### Hardware Requirements for Production
+## 📱 Hardware Requirements
 
 - Windows PC or laptop with USB-C port
-- Minimum 8GB RAM, 16GB recommended
+- Minimum 8GB RAM (16GB recommended)
 - Intel i5/AMD Ryzen 5 or better processor
 - Stable internet connection
 - External webcam (1080p recommended for best quality)
-- Sufficient disk space for image storage (minimum 10GB)
+- Canon SELPHY CP1500 printer and supplies
 
-## Updates and Maintenance
+## ⚠️ Important Notes
 
-### Updating the Application
+- This application does not support mobile devices
+- Enter full screen mode for the best experience
+- Designed to work with Canon SELPHY CP1500 printer only
+- Requires Windows OS for printing functionality
 
-1. Pull the latest changes:
-
-   ```bash
-   git pull
-   ```
-
-2. Install any new dependencies:
-
-   ```bash
-   npm install
-   ```
-
-3. Apply database migrations:
-
-   ```bash
-   npm run db:migrate
-   ```
-
-4. Restart the application
-
-### Backing Up Data
-
-It's recommended to regularly back up your Neon database and Cloudflare R2 storage.
-
-## License
+## 📄 License
 
 This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](LICENSE) file for details.
 
 © 2024 [@ChinCao](https://github.com/ChinCao). All rights reserved.
 
-## Acknowledgments
+## 🙏 Acknowledgments
 
-- Developed by [@ChinCao](https://github.com/ChinCao) and sponsored by VECTR.
-- All rights reserved to [@ChinCao](https://github.com/ChinCao).
-- Does not support mobile devices.
-- Enter full screen mode for a better experience.
+- Developed by [@ChinCao](https://github.com/ChinCao)
+- Sponsored by VECTR

@@ -1,5 +1,4 @@
 "use client";
-import {usePhoto} from "@/context/PhotoContext";
 import {cn} from "@/lib/utils";
 import {useState, useEffect, useRef, useCallback} from "react";
 import useSound from "use-sound";
@@ -9,18 +8,21 @@ import {SlidingNumber} from "@/components/ui/sliding-number";
 import usePreventNavigation from "@/hooks/usePreventNavigation";
 import {createProcessedImage} from "@/server/actions";
 import {ROUTES} from "@/constants/routes";
-import {useSocket} from "@/context/SocketContext";
 import {CountdownCircleTimer} from "react-countdown-circle-timer";
 import CameraLoading from "@/components/CameraLoading";
+import {usePhotoState} from "@/context/PhotoStateContext";
+import {useCamera} from "@/context/CameraContext";
+import {useSocket} from "@/context/SocketContext";
 
 const CapturePage = () => {
-  const {setPhoto, photo, cameraStream, startCamera, stopCamera, isOnline} = usePhoto();
+  const {photo, setPhoto, addPhotoImage, updateVideoData} = usePhotoState();
+  const {cameraStream, stopCamera, startCamera} = useCamera();
   const [count, setCount] = useState(CAPTURE_DURATION);
   const [isCountingDown, setIsCountingDown] = useState(false);
   const [cycles, setCycles] = useState(1);
   const [videoIntrinsicSize, setVideoIntrinsicSize] = useState<{width: number; height: number} | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const {isSocketConnected} = useSocket();
+  const {isSocketConnected, isOnline} = useSocket();
   const [isVideoRefReady, setIsVideoRefReady] = useState(false);
   const setVideoRef = useCallback((node: HTMLVideoElement | null) => {
     if (node !== null) {
@@ -28,9 +30,7 @@ const CapturePage = () => {
       setIsVideoRefReady(true);
     }
   }, []);
-  const [image, setImage] = useState<Array<{id: string; data: string}>>([]);
   const [playCameraShutterSound] = useSound("/shutter.mp3", {volume: 1});
-  const [uploadedImages, setUploadedImages] = useState<Array<{id: string; href: string}>>([]);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
   const {navigateTo} = usePreventNavigation();
   const photoRef = useRef(photo);
@@ -105,7 +105,6 @@ const CapturePage = () => {
         context.translate(-canvas.width, 0);
         context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
         const dataURL = canvas.toDataURL("image/jpeg", 1.0);
-        setImage((prevItems) => [...prevItems, {id: cycles.toString(), data: dataURL}]);
         if (cycles == NUM_OF_CAPTURE_IMAGE) return;
 
         const r2Response = await uploadImageToR2(dataURL);
@@ -114,19 +113,18 @@ const CapturePage = () => {
           const data = await r2Response.response?.json();
           const imageUrl = data.url;
           console.log("Image URL:", imageUrl);
-          setUploadedImages((prevItems) => [...prevItems, {id: cycles.toString(), href: imageUrl}]);
+          addPhotoImage(cycles.toString(), dataURL, imageUrl);
         } else {
           setPhoto!((prevStyle) => prevStyle && {...prevStyle, error: true, id: null, images: []});
           stopCamera();
           if (mediaRecorder && mediaRecorder.state === "recording") {
             mediaRecorder.stop();
           }
-          setUploadedImages([]);
           navigateTo(ROUTES.FRAME);
         }
       }
     }
-  }, [cycles, mediaRecorder, navigateTo, photo, setPhoto, stopCamera, videoIntrinsicSize]);
+  }, [addPhotoImage, cycles, mediaRecorder, navigateTo, photo, setPhoto, stopCamera, videoIntrinsicSize]);
 
   const handleRecording = useCallback(() => {
     if (!videoRef.current?.srcObject) return;
@@ -174,24 +172,14 @@ const CapturePage = () => {
     recorder.onstop = () => {
       const videoBlob = new Blob(chunks, {type: "video/webm"});
       if (videoBlob.size > 0) {
-        setPhoto!((prevStyle) => {
-          if (prevStyle) {
-            return {
-              ...prevStyle,
-              video: {
-                ...prevStyle.video,
-                data: videoBlob,
-              },
-            };
-          }
-        });
+        updateVideoData(videoBlob, null);
       }
       chunks = [];
     };
 
     setMediaRecorder(recorder);
     recorder.start(100);
-  }, [isOnline, isSocketConnected, setPhoto]);
+  }, [isOnline, isSocketConnected, updateVideoData]);
 
   useEffect(() => {
     const getVideo = async () => {
@@ -240,19 +228,10 @@ const CapturePage = () => {
           setCycles((prevCycle) => prevCycle + 1);
           setCount(CAPTURE_DURATION);
         }
-        if (cycles == NUM_OF_CAPTURE_IMAGE && count <= 0 && uploadedImages.length == NUM_OF_CAPTURE_IMAGE - 1) {
+        if (cycles == NUM_OF_CAPTURE_IMAGE && count <= 0 && photo?.images?.length == NUM_OF_CAPTURE_IMAGE - 1) {
           if (mediaRecorder) {
             mediaRecorder.stop();
           }
-          setPhoto!((prevStyle) => {
-            if (prevStyle) {
-              return {
-                ...prevStyle,
-                images: image.map((item) => ({...item, href: uploadedImages.find((image) => image.id == item.id)?.href || ""})),
-              };
-            }
-            return prevStyle;
-          });
           setIsCountingDown(false);
           if (mediaRecorder && mediaRecorder.state === "recording") {
             mediaRecorder.stop();
@@ -269,17 +248,16 @@ const CapturePage = () => {
     count,
     cycles,
     handleCapture,
-    image,
     isCountingDown,
     mediaRecorder,
     playCameraShutterSound,
     navigateTo,
     setPhoto,
-    uploadedImages,
-    photo?.id,
     stopCamera,
     isSocketConnected,
     isOnline,
+    photo?.id,
+    photo?.images?.length,
   ]);
 
   return (

@@ -9,19 +9,23 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import {Button} from "@/components/ui/button";
-import {usePhoto} from "@/context/PhotoContext";
 import {useEffect, useRef, useState, useCallback} from "react";
 import {useTranslation} from "react-i18next";
 import {PiVideoCameraFill} from "react-icons/pi";
 import {Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {IoMdCheckmark} from "react-icons/io";
 import {cn} from "@/lib/utils";
-
 import {MdWarning} from "react-icons/md";
 import CameraLoading from "./CameraLoading";
+import {useCountdown} from "@/context/CountdownContext";
+import {useCamera} from "@/context/CameraContext";
+import {usePhotoState} from "@/context/PhotoStateContext";
+
 const CameraSetting = () => {
   const {t} = useTranslation();
-  const {camera, photo, setCamera, availableCameras, startCamera, stopCamera, cameraStream, setShouldRunCountdown, autoSelectCountdown} = usePhoto();
+  const {setCamera, camera, availableCameras, cameraStream, startCamera, stopCamera} = useCamera();
+  const {setShouldRunCountdown, autoSelectCountdownTimer} = useCountdown();
+  const {photo} = usePhotoState();
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [videoRefReady, setVideoRefReady] = useState(false);
@@ -77,14 +81,14 @@ const CameraSetting = () => {
 
   return (
     <AlertDialog
-      open={isOpen && autoSelectCountdown > 1}
+      open={isOpen && autoSelectCountdownTimer > 1}
       onOpenChange={setIsOpen}
     >
       <AlertDialogTrigger asChild>
         <Button
           variant="outline"
           className="flex items-center justify-center gap-1 w-full"
-          disabled={autoSelectCountdown <= 1}
+          disabled={autoSelectCountdownTimer <= 1}
         >
           <p> {t("Camera settings")}</p> <PiVideoCameraFill />
         </Button>

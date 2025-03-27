@@ -1,6 +1,6 @@
 "use client";
 
-import React, {useState} from "react";
+import {useState} from "react";
 import {AnimatePresence, motion} from "framer-motion";
 import {createPortal} from "react-dom";
 

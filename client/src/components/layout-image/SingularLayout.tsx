@@ -1,5 +1,8 @@
+"use client";
+
 import {BorderTrail} from "../ui/border-trail";
 import Image from "next/image";
+
 const SingularLayout = () => {
   return (
     <div className="shadow-lg border w-max relative rounded-sm">

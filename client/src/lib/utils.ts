@@ -21,7 +21,7 @@ export function findSwappedIndices(arr1: number[], arr2: number[]) {
   };
 }
 
-export function getCameraConstraints(frameWidth: number, frameHeight: number, deviceId?: string) {
+export function getCameraConstraints(frameWidth: number, frameHeight: number, deviceId?: string): MediaStreamConstraints {
   const aspectRatio = frameWidth / frameHeight;
 
   let idealWidth = Math.round(1280);
@@ -46,5 +46,5 @@ export function getCameraConstraints(frameWidth: number, frameHeight: number, de
     deviceId: deviceId ? {exact: deviceId} : undefined,
   };
 
-  return constraints;
+  return { video: constraints };
 }

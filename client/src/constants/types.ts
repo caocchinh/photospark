@@ -32,7 +32,7 @@ export interface PhotoOptions<T extends ValidThemeType> {
     href: string;
   }>;
   video: {
-    data: Blob;
+    data: Blob | null;
     r2_url: string | null;
   };
   id: string | null;

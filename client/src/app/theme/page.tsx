@@ -1,7 +1,7 @@
 "use client";
 import {CardContent, CardTitle} from "@/components/ui/card";
 import {FrameOptions, ThemeSelectButton} from "@/constants/constants";
-import {usePhoto} from "@/context/PhotoContext";
+import {usePhotoState} from "@/context/PhotoStateContext";
 import Image from "next/image";
 import React, {useEffect} from "react";
 import Link from "next/link";
@@ -13,9 +13,11 @@ import SingularLayout from "@/components/layout-image/SingularLayout";
 import DoubleLayout from "@/components/layout-image/DoubleLayout";
 import {cn} from "@/lib/utils";
 import {ValidThemeType} from "@/constants/types";
+import {useCountdown} from "@/context/CountdownContext";
 
 const ThemePage = () => {
-  const {photo, setPhoto, autoSelectCountdown} = usePhoto();
+  const {photo, setPhoto} = usePhotoState();
+  const {autoSelectCountdownTimer} = useCountdown();
   const {t} = useTranslation();
   const router = useRouter();
   useEffect(() => {
@@ -42,7 +44,7 @@ const ThemePage = () => {
   return (
     <>
       {photo && (
-        <div className={cn("w-full h-full flex items-center", autoSelectCountdown <= 0 ? "pointer-events-none" : null)}>
+        <div className={cn("w-full h-full flex items-center", autoSelectCountdownTimer <= 0 ? "pointer-events-none" : null)}>
           <div className="flex items-start justify-evenly w-full">
             <div className="flex flex-col w-max items-center justify-center gap-6">
               <CardTitle className="text-5xl uppercase">{t("Current layout")}</CardTitle>

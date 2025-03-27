@@ -1,10 +1,10 @@
 "use client";
-import {usePhoto} from "@/context/PhotoContext";
 import SlideTransition from "@/components/SlideTransition";
+import {usePhotoState} from "@/context/PhotoStateContext";
 import {useEffect, useState} from "react";
 
 export default function CollabTransitionOverlay() {
-  const {photo} = usePhoto();
+  const {photo} = usePhotoState();
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {

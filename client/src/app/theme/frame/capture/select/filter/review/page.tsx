@@ -1,14 +1,14 @@
 "use client";
-import {usePhoto} from "@/context/PhotoContext";
 import {useEffect, useState} from "react";
 import Image from "next/image";
 import {useTranslation} from "react-i18next";
 import {SlidingNumber} from "@/components/ui/sliding-number";
 import usePreventNavigation from "@/hooks/usePreventNavigation";
 import {ROUTES} from "@/constants/routes";
+import { usePhotoState } from "@/context/PhotoStateContext";
 
 const ReviewPage = () => {
-  const {photo, setPhoto} = usePhoto();
+  const {photo, setPhoto} = usePhotoState();
   const {navigateTo} = usePreventNavigation();
   const [timeLeft, setTimeLeft] = useState(6);
   const {t} = useTranslation();

@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import {usePhoto} from "@/context/PhotoContext";
 import {useCallback, useEffect, useRef, useState} from "react";
 import useImage from "use-image";
 import {Image as KonvaImage, Rect} from "react-konva";
@@ -23,9 +22,10 @@ import ReactDOM from "react-dom/client";
 import {ROUTES} from "@/constants/routes";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import {IoIosCheckmark} from "react-icons/io";
+import { usePhotoState } from "@/context/PhotoStateContext";
 
 const FilterPage = () => {
-  const {photo, setPhoto, isOnline} = usePhoto();
+  const {photo, setPhoto } = usePhotoState();
   const {navigateTo} = usePreventNavigation();
   const filterRefs = useRef<(HTMLDivElement | null)[]>([]);
   const uploadAttemptedRef = useRef(false);
@@ -44,7 +44,7 @@ const FilterPage = () => {
 
   const [filter, setFilter] = useState<string | null>(null);
   const stageRef = useRef<StageElement | null>(null);
-  const {socket, isSocketConnected} = useSocket();
+  const {socket, isSocketConnected, isOnline} = useSocket();
   const [isMediaUploaded, setIsMediaUploaded] = useState(false);
   const [timeLeft, setTimeLeft] = useState(FILTER_SELECT_DURATION);
   const [printed, setPrinted] = useState(false);

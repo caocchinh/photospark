@@ -1,6 +1,5 @@
 "use client";
 import {Button} from "@/components/ui/button";
-import {usePhoto} from "@/context/PhotoContext";
 import {cn, findSwappedIndices} from "@/lib/utils";
 import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {Layer, Rect, Stage} from "react-konva";
@@ -20,11 +19,12 @@ import {SlidingNumber} from "@/components/ui/sliding-number";
 import usePreventNavigation from "@/hooks/usePreventNavigation";
 import {ROUTES} from "@/constants/routes";
 import {Reorder} from "motion/react";
+import {usePhotoState} from "@/context/PhotoStateContext";
 
 const SelectPage = () => {
-  const {photo, setPhoto, isOnline} = usePhoto();
+  const {photo, setPhoto, updateVideoData, setSelectedImages} = usePhotoState();
   const {navigateTo} = usePreventNavigation();
-  const {socket, isSocketConnected} = useSocket();
+  const {socket, isSocketConnected, isOnline} = useSocket();
   const [videoProcessed, setVideoProcessed] = useState(false);
   const {t} = useTranslation();
 
@@ -53,17 +53,13 @@ const SelectPage = () => {
           if (response.success) {
             console.log("Video processed", response.r2_url);
 
-            setPhoto!((prevStyle) => {
-              if (prevStyle) {
-                return {...prevStyle, video: {...prevStyle.video, r2_url: response.r2_url}};
-              }
-            });
+            updateVideoData(null, response.r2_url);
             setVideoProcessed(true);
           }
         }
       );
     }
-  }, [isOnline, isSocketConnected, photo, setPhoto, socket]);
+  }, [isOnline, isSocketConnected, photo, setPhoto, socket, updateVideoData]);
 
   useEffect(() => {
     if (!photo) return navigateTo(ROUTES.HOME);
@@ -114,17 +110,10 @@ const SelectPage = () => {
 
   const handleContextSelect = useCallback(
     async (images: Array<{id: string; data: string; href: string}>) => {
-      setPhoto!((prevStyle) => {
-        if (prevStyle) {
-          return {
-            ...prevStyle,
-            selectedImages: images,
-          };
-        }
-      });
+      setSelectedImages(images);
       navigateTo(ROUTES.FILTER);
     },
-    [navigateTo, setPhoto]
+    [navigateTo, setSelectedImages]
   );
 
   useEffect(() => {
@@ -179,7 +168,10 @@ const SelectPage = () => {
     [lastRemovedImage, photo, selectedImage]
   );
 
-  const filteredSelectedImages = useMemo(() => selectedImage.filter((img) => img !== null), [selectedImage]);
+  const filteredSelectedImages = useMemo(
+    () => selectedImage.filter((img) => img !== null) as Array<{id: string; data: string; href: string}>,
+    [selectedImage]
+  );
 
   useEffect(() => {
     if (!isTimeOver || !photoRef.current) return;

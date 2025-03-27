@@ -2,6 +2,7 @@ import LoadingSpinner from "./LoadingSpinner";
 import {ImCamera} from "react-icons/im";
 import {TextShimmer} from "./ui/text-shimmer";
 import {useTranslation} from "react-i18next";
+
 const CameraLoading = () => {
   const {t} = useTranslation();
   return (

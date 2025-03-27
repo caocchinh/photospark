@@ -7,22 +7,22 @@ import {cn} from "@/lib/utils";
 import {BorderTrail} from "./ui/border-trail";
 import {ROUTES} from "@/constants/routes";
 import {LuClockAlert} from "react-icons/lu";
-import {usePhoto} from "@/context/PhotoContext";
 import {AUTO_SELECT_COUNTDOWN_DURATION} from "@/constants/constants";
 import {TbClockRecord} from "react-icons/tb";
 import {toast} from "sonner";
 import {useTranslation} from "react-i18next";
 import {SlidingNumber} from "./ui/sliding-number";
+import {useCountdown} from "@/context/CountdownContext";
 
 const NavBar = () => {
   const pathname = usePathname();
   const isActive = pathname == ROUTES.HOME || pathname == ROUTES.FRAME || pathname == ROUTES.THEME;
   const hideNavBar = pathname === ROUTES.CAPTURE;
-  const {autoSelectCountdown} = usePhoto();
+  const {autoSelectCountdownTimer} = useCountdown();
   const {t} = useTranslation();
 
   useEffect(() => {
-    if (autoSelectCountdown == 30) {
+    if (autoSelectCountdownTimer == 30) {
       toast.error(t("Please select a frame before the countdown ends"), {
         description: t("You have 30 seconds left to select a frame, or the frame will be selected automatically!"),
         duration: 6900,
@@ -47,7 +47,7 @@ const NavBar = () => {
         },
       });
     }
-  }, [autoSelectCountdown, t]);
+  }, [autoSelectCountdownTimer, t]);
 
   return (
     <header className={cn("bg-transparent pt-4 px-5 fixed z-50 w-max left-0 top-0", hideNavBar ? "hidden" : null)}>
@@ -77,29 +77,29 @@ const NavBar = () => {
           </Link>
           {isActive && (
             <div className="flex items-center justify-center gap-1">
-              {autoSelectCountdown == AUTO_SELECT_COUNTDOWN_DURATION ? (
+              {autoSelectCountdownTimer == AUTO_SELECT_COUNTDOWN_DURATION ? (
                 <TbClockRecord
                   className="text-green-700"
                   size={24}
                 />
               ) : (
                 <LuClockAlert
-                  className={cn(autoSelectCountdown <= 30 ? "text-red-500" : "text-gray-500")}
+                  className={cn(autoSelectCountdownTimer <= 30 ? "text-red-500" : "text-gray-500")}
                   size={24}
                 />
               )}
               <div
                 className={cn(
-                  autoSelectCountdown == AUTO_SELECT_COUNTDOWN_DURATION
+                  autoSelectCountdownTimer == AUTO_SELECT_COUNTDOWN_DURATION
                     ? "text-green-700"
-                    : autoSelectCountdown <= 30
+                    : autoSelectCountdownTimer <= 30
                     ? "text-red-500"
                     : "text-gray-500",
                   "text-2xl"
                 )}
               >
                 <SlidingNumber
-                  value={autoSelectCountdown}
+                  value={autoSelectCountdownTimer}
                   padStart={false}
                 />
               </div>

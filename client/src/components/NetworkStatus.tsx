@@ -5,11 +5,11 @@ import {useTranslation} from "react-i18next";
 import {MdWifiOff} from "react-icons/md";
 import {IoRefresh} from "react-icons/io5";
 import {Button} from "@/components/ui/button";
-import {usePhoto} from "@/context/PhotoContext";
+import {useSocket} from "@/context/SocketContext";
 
 const NetworkStatus = () => {
   const {t} = useTranslation();
-  const {isOnline} = usePhoto();
+  const {isOnline} = useSocket();
 
   return (
     <AlertDialog open={!isOnline}>

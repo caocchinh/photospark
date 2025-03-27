@@ -1,9 +1,9 @@
 "use client";
 
-import {usePhoto} from "@/context/PhotoContext";
+import {useCamera} from "@/context/CameraContext";
 
 const CameraLabel = () => {
-  const {camera} = usePhoto();
+  const {camera} = useCamera();
   return <p className="text-center text-gray-500 uppercase text-[10px] absolute top-[10px] right-0 pointer-events-none">{camera?.label}</p>;
 };
 

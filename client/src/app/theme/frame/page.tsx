@@ -1,7 +1,6 @@
 "use client";
 import {Carousel, CarouselContent, CarouselItem, type CarouselApi} from "@/components/ui/carousel";
 import {FrameOptions} from "@/constants/constants";
-import {usePhoto} from "@/context/PhotoContext";
 import {cn} from "@/lib/utils";
 import {WheelGesturesPlugin} from "embla-carousel-wheel-gestures";
 import Image from "next/image";
@@ -17,11 +16,13 @@ import {AnimatedBackground} from "@/components/ui/animated-background";
 import ErrorDialog from "@/components/ErrorDialog";
 import {ROUTES} from "@/constants/routes";
 import {Spotlight} from "@/components/ui/spotlight";
-import {ValidThemeType} from "@/constants/types";
 import {PiVideoCameraLight} from "react-icons/pi";
+import {usePhotoState} from "@/context/PhotoStateContext";
+import {useCountdown} from "@/context/CountdownContext";
 
 const LayoutPage = () => {
-  const {photo, setPhoto, autoSelectCountdown} = usePhoto();
+  const {photo, setPhoto, updatePhotoQuantity, updateFrame} = usePhotoState();
+  const {autoSelectCountdownTimer} = useCountdown();
   const router = useRouter();
   const {t} = useTranslation();
   const maxQuantity = 5;
@@ -30,7 +31,6 @@ const LayoutPage = () => {
     if (!photo || !photo.theme) return [];
     return FrameOptions[photo.theme.name].filter((item) => item.type == photo.frameType);
   }, [photo]);
-
   const [apiPreview, setApiPreview] = useState<CarouselApi>();
   const [current, setCurrent] = useState(1);
   const initializationDoneRef = useRef(false);
@@ -41,37 +41,6 @@ const LayoutPage = () => {
     if (!photo) return router.push(ROUTES.HOME);
     if (photo.images.length > 0) return router.push(ROUTES.CAPTURE);
   }, [photo, router]);
-
-  const handleQuantityChange = (quantity: number) => {
-    if (!setPhoto) return;
-    setPhoto((prevStyle) => {
-      if (prevStyle) {
-        return {
-          ...prevStyle,
-          quantity: quantity,
-        };
-      }
-      return prevStyle;
-    });
-  };
-
-  const handleFrameChange = useCallback(
-    (frameAttribute: (typeof FrameOptions)[ValidThemeType][number]) => {
-      if (!setPhoto) return;
-      setPhoto((prevStyle) => {
-        if (!prevStyle || !prevStyle.theme) return prevStyle;
-        return {
-          ...prevStyle,
-          theme: {
-            ...prevStyle.theme,
-            name: prevStyle.theme.name,
-            frame: frameAttribute,
-          },
-        };
-      });
-    },
-    [setPhoto]
-  );
 
   const handleLeftClick = useCallback(() => {
     if (!api) return;
@@ -125,8 +94,8 @@ const LayoutPage = () => {
       if (thumbnailRefs.current[selectedIndex] == null || !photo.theme) return;
       setCurrent(selectedIndex + 1);
       handleCarouselItemClick(selectedIndex);
-      handleFrameChange(filteredFrames[selectedIndex]);
-      thumbnailRefs.current[selectedIndex].scrollIntoView({
+      updateFrame(filteredFrames[selectedIndex]);
+      thumbnailRefs.current[selectedIndex]?.scrollIntoView({
         behavior: "instant",
         block: "center",
       });
@@ -138,8 +107,8 @@ const LayoutPage = () => {
       if (thumbnailRefs.current[selectedIndex] == null || !photo.theme) return;
       setCurrent(selectedIndex + 1);
       handleCarouselItemClick(selectedIndex);
-      handleFrameChange(filteredFrames[selectedIndex]);
-      thumbnailRefs.current[selectedIndex].scrollIntoView({
+      updateFrame(filteredFrames[selectedIndex]);
+      thumbnailRefs.current[selectedIndex]?.scrollIntoView({
         behavior: "instant",
         block: "center",
       });
@@ -151,7 +120,7 @@ const LayoutPage = () => {
       api.off("select", handleAPISelect);
       apiPreview.off("select", handlePreviewAPISelect);
     };
-  }, [api, apiPreview, filteredFrames, handleCarouselItemClick, handleFrameChange, photo]);
+  }, [api, apiPreview, filteredFrames, handleCarouselItemClick, photo, updateFrame]);
 
   const handleCaptureClick = useCallback(
     async (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -180,7 +149,7 @@ const LayoutPage = () => {
           <div
             className={cn(
               "flex items-center w-[90%] justify-center gap-24 h-full",
-              chosen || autoSelectCountdown <= 0 ? "pointer-events-none" : null
+              chosen || autoSelectCountdownTimer <= 0 ? "pointer-events-none" : null
             )}
           >
             <div className="flex items-center flex-col justify-center gap-4 w-max">
@@ -247,7 +216,6 @@ const LayoutPage = () => {
                         className={cn("flex items-center justify-center cursor-pointer", item.type == "singular" ? " basis-1/4" : "basis-[15%]")}
                         onClick={() => {
                           handleCarouselItemClick(index);
-                          handleFrameChange(item);
                         }}
                       >
                         <div
@@ -277,7 +245,7 @@ const LayoutPage = () => {
                   <AnimatedBackground
                     defaultValue={photo.frameType == "singular" ? photo.quantity!.toString() : (photo.quantity! * 2).toString()}
                     onValueChange={(value) => {
-                      handleQuantityChange(parseInt(value!) / (photo.frameType == "singular" ? 1 : 2));
+                      updatePhotoQuantity(parseInt(value!) / (photo.frameType == "singular" ? 1 : 2));
                     }}
                     className="rounded-lg bg-green-700"
                     transition={{
@@ -314,7 +282,6 @@ const LayoutPage = () => {
                         }}
                         key={index}
                         onClick={() => {
-                          handleFrameChange(item);
                           handleCarouselItemClick(index);
                         }}
                         className="relative h-[100px] w-[100px] object-cover"

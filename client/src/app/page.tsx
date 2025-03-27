@@ -1,5 +1,4 @@
 "use client";
-import {usePhoto} from "@/context/PhotoContext";
 import usePreventNavigation from "@/hooks/usePreventNavigation";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import CollabTransition from "@/components/CollabTransition";
@@ -23,9 +22,12 @@ import {RxCross1} from "react-icons/rx";
 import {ValidFrameType} from "@/constants/types";
 import Cooldown from "@/components/Cooldown";
 import {LANGUAGE_LIST} from "@/constants/constants";
+import { usePhotoState } from "@/context/PhotoStateContext";
+import { useCountdown } from "@/context/CountdownContext";
 
 const LayoutPage = () => {
-  const {photo, setPhoto, autoSelectCountdown} = usePhoto();
+  const {photo, setPhoto} = usePhotoState();
+  const {autoSelectCountdownTimer} = useCountdown();
   const {t, i18n} = useTranslation();
   usePreventNavigation();
   const [isPasswordCorrect, setIsPasswordCorrect] = useState(false);
@@ -76,7 +78,7 @@ const LayoutPage = () => {
     <>
       <Cooldown />
       <div
-        className={cn("w-[90%] h-full flex items-center justify-start flex-col relative", autoSelectCountdown <= 0 ? "pointer-events-none" : null)}
+        className={cn("w-[90%] h-full flex items-center justify-start flex-col relative", autoSelectCountdownTimer <= 0 ? "pointer-events-none" : null)}
       >
         {!photo && <CollabTransition />}
 
