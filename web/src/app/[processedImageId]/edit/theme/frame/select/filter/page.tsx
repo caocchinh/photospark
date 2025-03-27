@@ -28,7 +28,7 @@ const FilterEditPage = () => {
           <BreadcrumbSeparator />
           <BreadcrumbItem>
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-1">
+              <DropdownMenuTrigger className="flex items-center gap-1 cursor-pointer">
                 <BreadcrumbEllipsis className="h-4 w-4" />
                 <span className="sr-only">Toggle menu</span>
               </DropdownMenuTrigger>
