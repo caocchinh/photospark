@@ -27,15 +27,11 @@ const SelectPage = () => {
   const {socket, isSocketConnected, isOnline} = useSocket();
   const [videoProcessed, setVideoProcessed] = useState(false);
   const {t} = useTranslation();
-  const lastImageUploadedAttempt = useRef(false);
+  const isLastImageUploadedAttempt = useRef(false);
 
   usePreventNavigation();
 
-  const lastImageUploaded = useMemo(() => {
-    if (photo) {
-      return !photo.images.some((item) => item.href == "");
-    }
-  }, [photo]);
+  const [isLastImageUploaded, setLastImageUploaded] = useState(false);
 
   const videoRequestSent = useRef(false);
 
@@ -67,11 +63,11 @@ const SelectPage = () => {
 
     const uploadImage = async () => {
       if (!setPhoto) return;
-      if (!lastImageUploaded && !lastImageUploadedAttempt.current) {
-        lastImageUploadedAttempt.current = true;
-        const latestImage = photo.images[photo.images.length - 1];
+      if (!isLastImageUploaded && photo.images.some((item) => item.href == "") && !isLastImageUploadedAttempt.current) {
+        isLastImageUploadedAttempt.current = true;
+        const latestImage = photo.images.find((item) => item.href == "");
+        if (!latestImage) return;
         const r2Response = await uploadImageToR2(latestImage.data);
-
         if (!r2Response.error && r2Response.response) {
           const data = await r2Response.response?.json();
           const imageUrl = data.url;
@@ -83,16 +79,17 @@ const SelectPage = () => {
                 images: prevStyle.images.map((item) => (item.id === latestImage.id ? {...item, href: imageUrl} : item)),
               }
           );
+          setLastImageUploaded(true);
         } else {
           setPhoto((prevStyle) => prevStyle && {...prevStyle, error: true, images: [], id: null});
           navigateTo(ROUTES.FRAME);
-          lastImageUploadedAttempt.current = true;
+          isLastImageUploadedAttempt.current = true;
         }
       }
     };
 
     uploadImage();
-  }, [photo, navigateTo, setPhoto, lastImageUploaded]);
+  }, [photo, navigateTo, setPhoto, isLastImageUploaded]);
   const [frameImg, frameImgStatus] = useImage(photo ? photo.theme!.frame.src : "");
 
   const [selectedImage, setSelectedImage] = useState<Array<{id: string; data: string; href: string} | null>>(
@@ -189,13 +186,13 @@ const SelectPage = () => {
         return newImages;
       });
     }
-  }, [isTimeOver, filteredSelectedImages, photo, lastImageUploaded]);
+  }, [isTimeOver, filteredSelectedImages, photo, isLastImageUploaded]);
 
   useEffect(() => {
-    if (isTimeOver && lastImageUploaded && videoProcessed) {
+    if (isTimeOver && isLastImageUploaded && videoProcessed) {
       setSelectedImages(filteredSelectedImages);
     }
-  }, [isTimeOver, filteredSelectedImages, lastImageUploaded, videoProcessed, setSelectedImages]);
+  }, [isTimeOver, filteredSelectedImages, isLastImageUploaded, videoProcessed, setSelectedImages]);
 
   return (
     <div className="w-full h-full relative">
@@ -378,7 +375,7 @@ const SelectPage = () => {
                     className={cn(
                       "flex items-center justify-center gap-2 text-2xl px-14 py-6 w-full",
                       photo
-                        ? photo.theme!.frame.slotCount - filteredSelectedImages.length != 0 || isTimeOver || !lastImageUploaded || !videoProcessed
+                        ? photo.theme!.frame.slotCount - filteredSelectedImages.length != 0 || isTimeOver || !isLastImageUploaded || !videoProcessed
                           ? "pointer-events-none opacity-80"
                           : null
                         : null,
@@ -390,7 +387,7 @@ const SelectPage = () => {
                     }}
                   >
                     {t("Choose a filter")}
-                    {!lastImageUploaded || !videoProcessed ? (
+                    {!isLastImageUploaded || !videoProcessed ? (
                       <LoadingSpinner size={15} />
                     ) : (
                       <MdOutlineCloudDone
