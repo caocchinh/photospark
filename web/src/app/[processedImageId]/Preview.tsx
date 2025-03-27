@@ -118,7 +118,7 @@ const Preview = ({
                   } finally {
                     setTimeout(() => {
                       setIsRefreshButtonDisabled(false);
-                    }, 2500);
+                    }, 6000);
                   }
                 }}
               >
