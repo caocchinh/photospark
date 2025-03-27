@@ -12,46 +12,44 @@ import {IoCopySharp} from "react-icons/io5";
 import FrameStage from "@/components/FrameStage";
 import GeneralError from "@/components/GeneralError";
 import {Button} from "@/components/ui/button";
-import {getImages, getProcessedImage} from "@/server/actions";
 import {LuRefreshCcw, LuLink} from "react-icons/lu";
 import LanguageBar from "@/components/LanguageBar";
 import {useTranslation} from "react-i18next";
+import {useRouter} from "next/navigation";
 
 const Preview = ({
-  initialProcessedImage,
-  initialImages,
+  processedImage,
+  images,
   video,
 }: {
-  initialProcessedImage: typeof ProcessedImageTable.$inferSelect;
-  initialImages?: Array<typeof ImageTable.$inferSelect>;
+  processedImage: typeof ProcessedImageTable.$inferSelect;
+  images?: Array<typeof ImageTable.$inferSelect>;
   video?: typeof VideoTable.$inferSelect;
 }) => {
   const {t} = useTranslation();
   const stageRef = useRef<StageElement | null>(null);
   const [error, setError] = useState(false);
-  const [allImagesLoaded, setAllImagesLoaded] = useState(false);
-  const [images, setImages] = useState<Array<typeof ImageTable.$inferSelect>>(initialImages || []);
-  const [processedImage, setProcessedImage] = useState<typeof ProcessedImageTable.$inferSelect>(initialProcessedImage);
-  const [isRefreshButtonDisabled, setIsRefreshButtonDisabled] = useState(false);
-  const [imagesLoaded, setImagesLoaded] = useState(0);
+  const [isAllImagesLoaded, setIsAllImagesLoaded] = useState(false);
+  const router = useRouter();
   const [copied, setCopied] = useState(false);
-  const [initialCountDown, setInitialCountDown] = useState(7);
+  const [initialCountDown, setInitialCountDown] = useState(10);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (initialCountDown > 0) {
+      if (initialCountDown > 0 && !isAllImagesLoaded) {
         setInitialCountDown((prev) => prev - 1);
+        console.log(initialCountDown);
       }
     }, 1000);
     return () => clearInterval(interval);
-  }, [initialCountDown]);
+  }, [initialCountDown, isAllImagesLoaded]);
 
   if (!processedImage) {
     return null;
   }
 
   const downloadImage = () => {
-    if (!stageRef.current || !allImagesLoaded) return;
+    if (!stageRef.current || !isAllImagesLoaded) return;
 
     try {
       const dataURL = stageRef.current.toDataURL({
@@ -89,52 +87,29 @@ const Preview = ({
 
       <div className="w-full flex flex-col lg:flex-row items-center justify-center gap-8 m-8 mt-3 h-max ">
         <div className="relative min-w-[300px] w-full md:w-max">
-          <div className={cn(!allImagesLoaded && "pointer-events-none opacity-0")}>
+          <div className={cn(!isAllImagesLoaded && "pointer-events-none opacity-0")}>
             <FrameStage
               processedImage={processedImage}
               images={images}
               stageRef={stageRef}
-              onLoadingComplete={setAllImagesLoaded}
-              imagesLoaded={imagesLoaded}
-              setImagesLoaded={setImagesLoaded}
+              setIsAllImagesLoaded={setIsAllImagesLoaded}
             />
           </div>
-          {!allImagesLoaded && (
+          {!isAllImagesLoaded && (
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center gap-2 flex-col">
               <LoadingSpinner size={100} />
               <Button
                 variant="outline"
                 className="mt-4 cursor-pointer flex items-center gap-2"
-                disabled={isRefreshButtonDisabled || allImagesLoaded || initialCountDown > 0}
-                onClick={async () => {
-                  try {
-                    setIsRefreshButtonDisabled(true);
-                    setAllImagesLoaded(false);
-                    setImagesLoaded(0);
-                    setImages([]);
-                    if (processedImage.id) {
-                      const processedImageResult = await getProcessedImage(processedImage.id);
-                      const imagesResult = await getImages(processedImage.id);
-
-                      if (processedImageResult.error || imagesResult.error) {
-                        throw new Error("Failed to reload images");
-                      }
-                      setProcessedImage(processedImageResult.data!);
-                      setImages(imagesResult.data!);
-                      setError(false);
-                    }
-                  } catch {
-                    setError(true);
-                  } finally {
-                    if (initialCountDown <= 0) {
-                      setTimeout(() => {
-                        setIsRefreshButtonDisabled(false);
-                      }, 5000);
-                    }
+                disabled={isAllImagesLoaded || initialCountDown > 0}
+                onClick={() => {
+                  if (initialCountDown <= 0) {
+                    setInitialCountDown(10);
+                    router.refresh();
                   }
                 }}
               >
-                {t("Reload image")}
+                {t("Reload")}
                 <LuRefreshCcw className="ml-1 h-4 w-4" />
               </Button>
             </div>
@@ -146,14 +121,14 @@ const Preview = ({
             <div
               className={cn(
                 "w-full h-full text-white cursor-pointer text-xl bg-black rounded-sm relative z-10 flex items-center justify-center gap-3",
-                !allImagesLoaded && "pointer-events-none"
+                !isAllImagesLoaded && "pointer-events-none"
               )}
               onClick={downloadImage}
             >
-              {allImagesLoaded ? t("Download image") : t("Loading image")}
-              {!allImagesLoaded ? <LoadingSpinner size={25} /> : <AiOutlineDownload size={27} />}
+              {isAllImagesLoaded ? t("Download image") : t("Loading image")}
+              {!isAllImagesLoaded ? <LoadingSpinner size={25} /> : <AiOutlineDownload size={27} />}
             </div>
-            {allImagesLoaded && (
+            {isAllImagesLoaded && (
               <GlowEffect
                 colors={["#0894FF", "#C959DD", "#FF2E54", "#FF9004"]}
                 mode="static"

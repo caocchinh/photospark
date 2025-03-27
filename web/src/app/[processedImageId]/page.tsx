@@ -28,8 +28,8 @@ const PreviewPage = async (props: {params: Params}) => {
     return (
       <div className="w-full min-h-screen flex items-center justify-center bg-white bg-no-repeat bg-cover">
         <Preview
-          initialProcessedImage={processedImage.data}
-          initialImages={images.data}
+          processedImage={processedImage.data}
+          images={images.data}
           video={video.data!}
         />
         {availableImageCount < processedImage.data.slotCount && <FetchError type="image" />}
