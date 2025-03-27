@@ -168,7 +168,7 @@ const CapturePage = () => {
     let chunks: Blob[] = [];
 
     recorder.ondataavailable = (event) => {
-      if (event.data && event.data.size > 0 && isOnline && isSocketConnected) {
+      if (event.data && event.data.size > 0 && isOnline && isSocketConnected && cycles != NUM_OF_CAPTURE_IMAGE) {
         chunks.push(event.data);
       }
     };
@@ -183,7 +183,7 @@ const CapturePage = () => {
 
     setMediaRecorder(recorder);
     recorder.start(100);
-  }, [isOnline, isSocketConnected, updateVideoData]);
+  }, [cycles, isOnline, isSocketConnected, updateVideoData]);
 
   useEffect(() => {
     const getVideo = async () => {
@@ -219,6 +219,20 @@ const CapturePage = () => {
   }, [isCountingDown, handleRecording, cameraStream, isVideoRefReady, startCamera, cycles]);
 
   useEffect(() => {
+    if (
+      cycles == NUM_OF_CAPTURE_IMAGE &&
+      count <= 0 &&
+      numberOfUploadedImage >= NUM_OF_CAPTURE_IMAGE - 1 &&
+      photo?.images.length == NUM_OF_CAPTURE_IMAGE
+    ) {
+      setIsCountingDown(false);
+      if (mediaRecorder && mediaRecorder.state === "recording") {
+        mediaRecorder.stop();
+      }
+      stopCamera();
+      navigateTo(ROUTES.SELECT);
+      return;
+    }
     const timer = setInterval(async () => {
       if (isCountingDown && isSocketConnected && isOnline) {
         if (count > 0 && cycles <= NUM_OF_CAPTURE_IMAGE) {
@@ -227,18 +241,21 @@ const CapturePage = () => {
             handleCapture();
             playCameraShutterSound();
           }
+          return;
         }
         if (count <= 0 && cycles < NUM_OF_CAPTURE_IMAGE && photo?.id) {
           setCycles((prevCycle) => prevCycle + 1);
           setCount(CAPTURE_DURATION);
+          return;
         }
-        if (cycles == NUM_OF_CAPTURE_IMAGE && count <= 0 && numberOfUploadedImage >= NUM_OF_CAPTURE_IMAGE - 1) {
+
+        if (cycles == NUM_OF_CAPTURE_IMAGE && count <= 0) {
           setIsCountingDown(false);
           if (mediaRecorder && mediaRecorder.state === "recording") {
             mediaRecorder.stop();
           }
           stopCamera();
-          navigateTo(ROUTES.SELECT);
+          return;
         }
       }
     }, 1000);
@@ -258,6 +275,7 @@ const CapturePage = () => {
     isOnline,
     photo?.id,
     numberOfUploadedImage,
+    photo?.images.length,
   ]);
 
   return (
@@ -338,7 +356,7 @@ const CapturePage = () => {
               !isCountingDown && cycles == NUM_OF_CAPTURE_IMAGE ? "opacity-100" : "opacity-0 pointer-events-none"
             )}
           >
-            <div id="loader"></div>
+            <div className="loader"></div>
           </div>
         </>
       )}

@@ -102,13 +102,13 @@ body {
   }
 }
 
-#loader {
+.loader {
   width: 40px;
   aspect-ratio: 1;
   position: relative;
 }
-#loader:before,
-#loader:after {
+.loader:before,
+.loader:after {
   content: "";
   position: absolute;
   top: 0;
@@ -121,7 +121,7 @@ body {
     l1-1 2s infinite,
     l1-2 0.5s infinite;
 }
-#loader:after {
+.loader:after {
   background: #676767;
   animation-delay: -1s, 0s;
 }

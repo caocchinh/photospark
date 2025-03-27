@@ -31,8 +31,6 @@ const PhotoStateContext = createContext<PhotoStateContextType>({
 export const PhotoStateProvider = ({children}: {children: ReactNode}) => {
   const [photo, setPhoto] = useState<PhotoOptions<ValidThemeType> | undefined>(undefined);
 
-  // Update camera constraints when photo theme changes
-
   // Helper functions for updating photo state
   const updatePhotoTheme = (themeName: ValidThemeType, frameIndex: number) => {
     const frame = FrameOptions[themeName][frameIndex];

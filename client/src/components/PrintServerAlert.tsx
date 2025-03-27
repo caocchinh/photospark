@@ -14,7 +14,7 @@ const PrintServerAlert = () => {
   return (
     <AlertDialog open={!isSocketConnected}>
       <AlertDialogContent
-        className="flex flex-col items-center justify-center"
+        className="flex flex-col items-center justify-center z-[998]"
         aria-description="Waiting for print server"
       >
         <AlertDialogTitle className="relative">

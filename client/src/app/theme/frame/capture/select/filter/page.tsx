@@ -22,10 +22,10 @@ import ReactDOM from "react-dom/client";
 import {ROUTES} from "@/constants/routes";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import {IoIosCheckmark} from "react-icons/io";
-import { usePhotoState } from "@/context/PhotoStateContext";
+import {usePhotoState} from "@/context/PhotoStateContext";
 
 const FilterPage = () => {
-  const {photo, setPhoto } = usePhotoState();
+  const {photo, setPhoto} = usePhotoState();
   const {navigateTo} = usePreventNavigation();
   const filterRefs = useRef<(HTMLDivElement | null)[]>([]);
   const uploadAttemptedRef = useRef(false);
@@ -168,7 +168,7 @@ const FilterPage = () => {
   }, [isSocketConnected, isMediaUploaded, photo, socket, isOnline]);
 
   useEffect(() => {
-    if (isSocketConnected && isOnline && isMediaUploaded && !printed) {
+    if (isSocketConnected && isOnline && isMediaUploaded && !printed && frameImgStatus === "loaded") {
       if (timeLeft > 0) {
         const timerId = setInterval(() => {
           setTimeLeft((prevTime) => prevTime - 1);
@@ -178,7 +178,7 @@ const FilterPage = () => {
         printImage();
       }
     }
-  }, [printImage, timeLeft, isSocketConnected, isOnline, isMediaUploaded, printed]);
+  }, [printImage, timeLeft, isSocketConnected, isOnline, isMediaUploaded, printed, frameImgStatus]);
 
   const selectRandomFilter = useCallback(() => {
     const randomIndex = Math.floor(Math.random() * FILTERS.length);
@@ -259,162 +259,173 @@ const FilterPage = () => {
   }, [photo, qrCodeURL]);
 
   return (
-    <div
-      className={cn(
-        !timeLeft || printed ? "pointer-events-none" : null,
-        "w-[95%] flex items-center justify-center flex-col transition duration-300",
-        frameImgStatus != "loaded" ? "opacity-0 pointer-events-none" : "opacity-100"
-      )}
-    >
-      {photo && frameImg && (
-        <div className="flex items-center justify-evenly gap-3 h-max flex-col">
-          <div className="flex items-center justify-center flex-row gap-6">
-            <div className="frame-container">
-              <Stage
-                ref={stageRef}
-                width={IMAGE_WIDTH}
-                height={IMAGE_HEIGHT}
-              >
-                <Layer>
-                  <Rect
-                    width={IMAGE_WIDTH}
-                    height={IMAGE_HEIGHT}
-                    fill="white"
-                  />
-                </Layer>
-                {Array.from({length: photo.frameType == "singular" ? 1 : 2}, (_, _index) => (
-                  <Layer
-                    key={_index}
-                    x={OFFSET_X}
-                    y={OFFSET_Y}
-                  >
-                    {photo.selectedImages.map(({id, data}, index) => {
-                      return (
-                        data && (
-                          <FrameImage
-                            key={id}
-                            url={data}
-                            y={photo.theme!.frame.slotPositions[index].y}
-                            x={photo.theme!.frame.slotPositions[index].x + (FRAME_WIDTH / 2) * _index}
-                            height={photo.theme!.frame.slotDimensions.height}
-                            width={photo.theme!.frame.slotDimensions.width}
-                            filter={filter}
-                          />
-                        )
-                      );
-                    })}
-                  </Layer>
-                ))}
+    <div className="w-full h-full relative">
+      <div
+        className={cn(
+          "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full flex items-center justify-center",
+          frameImgStatus != "loaded" ? "opacity-100" : "opacity-0 pointer-events-none"
+        )}
+      >
+        <div className="loader"></div>
+      </div>
 
-                {Array.from({length: photo.frameType == "singular" ? 1 : 2}, (_, index) => (
-                  <Layer
-                    key={index}
-                    x={OFFSET_X}
-                    y={OFFSET_Y}
-                  >
-                    <KonvaImage
-                      image={frameImg}
-                      x={(FRAME_WIDTH / 2) * index}
-                      height={FRAME_HEIGHT}
-                      width={FRAME_WIDTH / (photo.frameType == "singular" ? 1 : 2)}
+      <div
+        className={cn(
+          !timeLeft || printed ? "pointer-events-none" : null,
+          "w-[95%] flex items-center justify-center flex-col transition duration-300",
+          frameImgStatus != "loaded" ? "opacity-0 pointer-events-none" : "opacity-100"
+        )}
+      >
+        {photo && frameImg && (
+          <div className="flex items-center justify-evenly gap-3 h-max flex-col">
+            <div className="flex items-center justify-center flex-row gap-6">
+              <div className="frame-container">
+                <Stage
+                  ref={stageRef}
+                  width={IMAGE_WIDTH}
+                  height={IMAGE_HEIGHT}
+                >
+                  <Layer>
+                    <Rect
+                      width={IMAGE_WIDTH}
+                      height={IMAGE_HEIGHT}
+                      fill="white"
                     />
                   </Layer>
-                ))}
-
-                <Layer>
-                  {Array.from({length: photo.frameType == "singular" ? 1 : 2}, (_, index) => (
-                    <KonvaImage
-                      key={index}
-                      image={qrCodeImage}
-                      x={photo.frameType == "singular" ? FRAME_WIDTH - OFFSET_X - 19 : (FRAME_WIDTH / 2) * index + OFFSET_X + FRAME_WIDTH / 2.6}
-                      y={FRAME_HEIGHT - OFFSET_Y - 7}
-                      height={40}
-                      width={40}
-                    />
-                  ))}
-                </Layer>
-              </Stage>
-            </div>
-            <div className="flex items-center justify-center flex-col gap-5">
-              <div className="flex gap-2 items-center justify-center mb-4">
-                <h1 className="text-4xl font-semibold  uppercase">{t("Choose a filter")}</h1>
-                <span className="text-rose-500 text-4xl font-bold ">
-                  <SlidingNumber
-                    value={timeLeft}
-                    padStart={true}
-                  />
-                </span>
-              </div>
-              <ScrollArea className=" h-[60vh] w-[100%] ">
-                <div className="flex-wrap flex gap-4 items-center justify-center">
-                  {FILTERS.map((item, index) => (
-                    <div
-                      ref={(el) => {
-                        filterRefs.current[index] = el;
-                      }}
-                      className={cn(
-                        "basis-1/6 flex flex-col gap-2 items-center justify-center border-[4px] cursor-pointer rounded hover:border-black",
-                        filter == item.value ? "border-rose-500 hover:border-rose-500" : null
-                      )}
-                      key={index}
-                      onClick={() => setFilter(item.value)}
+                  {Array.from({length: photo.frameType == "singular" ? 1 : 2}, (_, _index) => (
+                    <Layer
+                      key={_index}
+                      x={OFFSET_X}
+                      y={OFFSET_Y}
                     >
-                      <img
-                        src={photo?.selectedImages[0]?.data}
-                        alt="filtered image"
-                        className={cn(item.filter, "w-full")}
-                      />
-                      <p>{item.name}</p>
-                    </div>
+                      {photo.selectedImages.map(({id, data}, index) => {
+                        return (
+                          data && (
+                            <FrameImage
+                              key={id}
+                              url={data}
+                              y={photo.theme!.frame.slotPositions[index].y}
+                              x={photo.theme!.frame.slotPositions[index].x + (FRAME_WIDTH / 2) * _index}
+                              height={photo.theme!.frame.slotDimensions.height}
+                              width={photo.theme!.frame.slotDimensions.width}
+                              filter={filter}
+                            />
+                          )
+                        );
+                      })}
+                    </Layer>
                   ))}
-                </div>
-              </ScrollArea>
-              <div className="flex gap-2 w-full">
-                <Button
-                  className="w-full mt-2"
-                  onClick={selectRandomFilter}
-                >
-                  {t("Random filter")} - {FILTERS.find((item) => item.value == filter)?.name}
-                </Button>
-                <Button
-                  className="w-full mt-2 flex items-center justify-center gap-1"
-                  onClick={() => setFilter(null)}
-                >
-                  {t("Reset filter")}
-                  {!filter && <IoIosCheckmark size={35} />}
-                </Button>
+
+                  {Array.from({length: photo.frameType == "singular" ? 1 : 2}, (_, index) => (
+                    <Layer
+                      key={index}
+                      x={OFFSET_X}
+                      y={OFFSET_Y}
+                    >
+                      <KonvaImage
+                        image={frameImg}
+                        x={(FRAME_WIDTH / 2) * index}
+                        height={FRAME_HEIGHT}
+                        width={FRAME_WIDTH / (photo.frameType == "singular" ? 1 : 2)}
+                      />
+                    </Layer>
+                  ))}
+
+                  <Layer>
+                    {Array.from({length: photo.frameType == "singular" ? 1 : 2}, (_, index) => (
+                      <KonvaImage
+                        key={index}
+                        image={qrCodeImage}
+                        x={photo.frameType == "singular" ? FRAME_WIDTH - OFFSET_X - 19 : (FRAME_WIDTH / 2) * index + OFFSET_X + FRAME_WIDTH / 2.6}
+                        y={FRAME_HEIGHT - OFFSET_Y - 7}
+                        height={40}
+                        width={40}
+                      />
+                    ))}
+                  </Layer>
+                </Stage>
               </div>
-              <div className="relative w-full">
-                <GlowEffect
-                  colors={["#FF5733", "#33FF57", "#3357FF", "#F1C40F"]}
-                  mode="colorShift"
-                  blur="soft"
-                  duration={3}
-                  scale={1}
-                />
-                <Button
-                  className={cn(
-                    "flex text-xl text-center items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-6 hover:opacity-[85%] w-full relative z-10",
-                    printed || !isMediaUploaded ? "pointer-events-none opacity-[85%]" : null
-                  )}
-                  onClick={printImage}
-                >
-                  {printed ? (
-                    <>
-                      {t("Printing")} <LoadingSpinner size={20} />
-                    </>
-                  ) : (
-                    <>
-                      {t("Print")}
-                      <PiPrinter size={15} />
-                    </>
-                  )}
-                </Button>
+              <div className="flex items-center justify-center flex-col gap-5">
+                <div className="flex gap-2 items-center justify-center mb-4">
+                  <h1 className="text-4xl font-semibold  uppercase">{t("Choose a filter")}</h1>
+                  <span className="text-rose-500 text-4xl font-bold ">
+                    <SlidingNumber
+                      value={timeLeft}
+                      padStart={true}
+                    />
+                  </span>
+                </div>
+                <ScrollArea className=" h-[60vh] w-[100%] ">
+                  <div className="flex-wrap flex gap-4 items-center justify-center">
+                    {FILTERS.map((item, index) => (
+                      <div
+                        ref={(el) => {
+                          filterRefs.current[index] = el;
+                        }}
+                        className={cn(
+                          "basis-1/6 flex flex-col gap-2 items-center justify-center border-[4px] cursor-pointer rounded hover:border-black",
+                          filter == item.value ? "border-rose-500 hover:border-rose-500" : null
+                        )}
+                        key={index}
+                        onClick={() => setFilter(item.value)}
+                      >
+                        <img
+                          src={photo?.selectedImages[0]?.data}
+                          alt="filtered image"
+                          className={cn(item.filter, "w-full")}
+                        />
+                        <p>{item.name}</p>
+                      </div>
+                    ))}
+                  </div>
+                </ScrollArea>
+                <div className="flex gap-2 w-full">
+                  <Button
+                    className="w-full mt-2"
+                    onClick={selectRandomFilter}
+                  >
+                    {t("Random filter")} - {FILTERS.find((item) => item.value == filter)?.name}
+                  </Button>
+                  <Button
+                    className="w-full mt-2 flex items-center justify-center gap-1"
+                    onClick={() => setFilter(null)}
+                  >
+                    {t("Reset filter")}
+                    {!filter && <IoIosCheckmark size={35} />}
+                  </Button>
+                </div>
+                <div className="relative w-full">
+                  <GlowEffect
+                    colors={["#FF5733", "#33FF57", "#3357FF", "#F1C40F"]}
+                    mode="colorShift"
+                    blur="soft"
+                    duration={3}
+                    scale={1}
+                  />
+                  <Button
+                    className={cn(
+                      "flex text-xl text-center items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-6 hover:opacity-[85%] w-full relative z-10",
+                      printed || !isMediaUploaded ? "pointer-events-none opacity-[85%]" : null
+                    )}
+                    onClick={printImage}
+                  >
+                    {printed ? (
+                      <>
+                        {t("Printing")} <LoadingSpinner size={20} />
+                      </>
+                    ) : (
+                      <>
+                        {t("Print")}
+                        <PiPrinter size={15} />
+                      </>
+                    )}
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

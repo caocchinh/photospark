@@ -18,11 +18,16 @@ export const SocketProvider = ({children}: {children: React.ReactNode}) => {
 
   // Online/offline status
   useEffect(() => {
+    if (typeof window === "undefined") return;
+
     const handleOnline = () => {
       setIsOnline(true);
     };
     const handleOffline = () => {
       setIsOnline(false);
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     };
 
     setIsOnline(navigator.onLine);
@@ -35,7 +40,6 @@ export const SocketProvider = ({children}: {children: React.ReactNode}) => {
       window.removeEventListener("offline", handleOffline);
     };
   }, []);
-
 
   // Socket status
   useEffect(() => {
@@ -64,10 +68,16 @@ export const SocketProvider = ({children}: {children: React.ReactNode}) => {
     newSocket.on("disconnect", () => {
       console.log("Disconnected from server.");
       setIsSocketConnected(false);
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     });
 
     newSocket.on("error", (error) => {
       console.error("Socket error:", error);
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     });
 
     setSocket(newSocket);

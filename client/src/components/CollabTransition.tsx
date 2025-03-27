@@ -89,7 +89,7 @@ const CollabTransition = () => {
   return createPortal(
     <AnimatePresence mode="wait">
       <motion.div
-        className="fixed inset-0 z-[60] flex items-center justify-center flex-col w-full bg-black"
+        className="fixed inset-0 z-[1000] flex items-center justify-center flex-col w-full bg-black"
         initial="initial"
         animate="animate"
         onAnimationStart={() => document.body.classList.add("overflow-hidden")}

@@ -14,15 +14,23 @@ const SocketContext = createContext<SocketContextType>({socket: null, isSocketCo
 export const SocketProvider = ({children}: {children: React.ReactNode}) => {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [isSocketConnected, setIsSocketConnected] = useState(false);
-  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [isOnline, setIsOnline] = useState(true);
 
+  // Online/offline status
   useEffect(() => {
+    if (typeof window === "undefined") return;
+
     const handleOnline = () => {
       setIsOnline(true);
     };
     const handleOffline = () => {
       setIsOnline(false);
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     };
+
+    setIsOnline(navigator.onLine);
 
     window.addEventListener("online", handleOnline);
     window.addEventListener("offline", handleOffline);
@@ -31,8 +39,9 @@ export const SocketProvider = ({children}: {children: React.ReactNode}) => {
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
     };
-  }, [isSocketConnected]);
+  }, []);
 
+  // Socket status
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -59,10 +68,16 @@ export const SocketProvider = ({children}: {children: React.ReactNode}) => {
     newSocket.on("disconnect", () => {
       console.log("Disconnected from server.");
       setIsSocketConnected(false);
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     });
 
     newSocket.on("error", (error) => {
       console.error("Socket error:", error);
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     });
 
     setSocket(newSocket);

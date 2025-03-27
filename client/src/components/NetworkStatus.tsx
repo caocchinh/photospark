@@ -13,7 +13,7 @@ const NetworkStatus = () => {
 
   return (
     <AlertDialog open={!isOnline}>
-      <AlertDialogContent className="flex flex-col items-center justify-center gap-4 border border-red-500">
+      <AlertDialogContent className="flex flex-col items-center justify-center gap-4 border border-red-500 z-[999]">
         <AlertDialogTitle className="text-red-600 text-4xl font-semibold flex gap-2 items-center justify-center flex-col uppercase text-center">
           {t("No Internet Connection")}
           <MdWifiOff size={100} />
