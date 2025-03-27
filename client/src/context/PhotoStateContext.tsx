@@ -1,9 +1,7 @@
 "use client";
 
-import {createContext, ReactNode, useContext, useState, useEffect} from "react";
+import {createContext, ReactNode, useContext, useState} from "react";
 import {PhotoOptions, ValidThemeType} from "@/constants/types";
-import {useCamera} from "./CameraContext";
-import {getCameraConstraints} from "@/lib/utils";
 import {FrameOptions} from "@/constants/constants";
 
 interface PhotoStateContextType {
@@ -11,7 +9,7 @@ interface PhotoStateContextType {
   setPhoto: React.Dispatch<React.SetStateAction<PhotoOptions<ValidThemeType> | undefined>> | undefined;
   updatePhotoTheme: (themeName: ValidThemeType, frameIndex: number) => void;
   updatePhotoQuantity: (quantity: number) => void;
-  addPhotoImage: (id: string, imageData: string, r2Url: string) => void;
+  addPhotoImage: (id: string, imageData: string, r2Url?: string) => void;
   setSelectedImages: (selectedImages: Array<{id: string; data: string; href: string}>) => void;
   updateVideoData: (videoBlob: Blob | null, r2Url: string | null) => void;
   updateFrame: (frameAttribute: (typeof FrameOptions)[ValidThemeType][number]) => void;
@@ -32,16 +30,8 @@ const PhotoStateContext = createContext<PhotoStateContextType>({
 
 export const PhotoStateProvider = ({children}: {children: ReactNode}) => {
   const [photo, setPhoto] = useState<PhotoOptions<ValidThemeType> | undefined>(undefined);
-  const {setCameraConstraints} = useCamera();
 
   // Update camera constraints when photo theme changes
-  useEffect(() => {
-    if (!photo?.theme?.frame.slotDimensions) return;
-
-    if (setCameraConstraints) {
-      setCameraConstraints(getCameraConstraints(photo.theme.frame.slotDimensions.width, photo.theme.frame.slotDimensions.height));
-    }
-  }, [photo?.theme?.frame.slotDimensions, setCameraConstraints]);
 
   // Helper functions for updating photo state
   const updatePhotoTheme = (themeName: ValidThemeType, frameIndex: number) => {
@@ -68,14 +58,14 @@ export const PhotoStateProvider = ({children}: {children: ReactNode}) => {
     });
   };
 
-  const addPhotoImage = (id: string, imageData: string, r2Url: string) => {
+  const addPhotoImage = (id: string, imageData: string, r2Url?: string) => {
     setPhoto((prev) => {
       if (!prev) return prev;
 
       const newImage = {
         id,
         data: imageData,
-        href: r2Url,
+        href: r2Url ? r2Url : "",
       };
 
       return {

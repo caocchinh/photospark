@@ -34,11 +34,11 @@ const CapturePage = () => {
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
   const {navigateTo} = usePreventNavigation();
   const photoRef = useRef(photo);
+  const [numberOfUploadedImage, setNumberOfUploadedImage] = useState(0);
   const initializationDoneRef = useRef(false);
 
   useEffect(() => {
     if (!photo) return navigateTo(ROUTES.HOME);
-    if (photo!.images!.length == NUM_OF_CAPTURE_IMAGE) return navigateTo(ROUTES.SELECT);
   }, [photo, navigateTo]);
 
   useEffect(() => {
@@ -105,7 +105,10 @@ const CapturePage = () => {
         context.translate(-canvas.width, 0);
         context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
         const dataURL = canvas.toDataURL("image/jpeg", 1.0);
-        if (cycles == NUM_OF_CAPTURE_IMAGE) return;
+        if (cycles == NUM_OF_CAPTURE_IMAGE) {
+          addPhotoImage(cycles.toString(), dataURL);
+          return;
+        }
 
         const r2Response = await uploadImageToR2(dataURL);
 
@@ -113,6 +116,7 @@ const CapturePage = () => {
           const data = await r2Response.response?.json();
           const imageUrl = data.url;
           console.log("Image URL:", imageUrl);
+          setNumberOfUploadedImage((prev) => prev + 1);
           addPhotoImage(cycles.toString(), dataURL, imageUrl);
         } else {
           setPhoto!((prevStyle) => prevStyle && {...prevStyle, error: true, id: null, images: []});
@@ -228,16 +232,12 @@ const CapturePage = () => {
           setCycles((prevCycle) => prevCycle + 1);
           setCount(CAPTURE_DURATION);
         }
-        if (cycles == NUM_OF_CAPTURE_IMAGE && count <= 0 && photo?.images?.length == NUM_OF_CAPTURE_IMAGE - 1) {
-          if (mediaRecorder) {
-            mediaRecorder.stop();
-          }
+        if (cycles == NUM_OF_CAPTURE_IMAGE && count <= 0 && numberOfUploadedImage >= NUM_OF_CAPTURE_IMAGE - 1) {
           setIsCountingDown(false);
           if (mediaRecorder && mediaRecorder.state === "recording") {
             mediaRecorder.stop();
           }
           stopCamera();
-
           navigateTo(ROUTES.SELECT);
         }
       }
@@ -257,7 +257,7 @@ const CapturePage = () => {
     isSocketConnected,
     isOnline,
     photo?.id,
-    photo?.images?.length,
+    numberOfUploadedImage,
   ]);
 
   return (

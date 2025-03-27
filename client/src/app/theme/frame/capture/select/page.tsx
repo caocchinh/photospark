@@ -27,6 +27,7 @@ const SelectPage = () => {
   const {socket, isSocketConnected, isOnline} = useSocket();
   const [videoProcessed, setVideoProcessed] = useState(false);
   const {t} = useTranslation();
+  const lastImageUploadedAttempt = useRef(false);
 
   usePreventNavigation();
 
@@ -46,16 +47,15 @@ const SelectPage = () => {
         {
           dataURL: photo.video.data,
           id: photo.id!,
-          frameImageUrl: photo.theme!.frame.src,
-          processingMode: "overlay",
         },
         async (response: {success: boolean; r2_url: string}) => {
           if (response.success) {
             console.log("Video processed", response.r2_url);
-
             updateVideoData(null, response.r2_url);
-            setVideoProcessed(true);
+          } else {
+            updateVideoData(null, null);
           }
+          setVideoProcessed(true);
         }
       );
     }
@@ -66,8 +66,9 @@ const SelectPage = () => {
     if (photo.selectedImages.length === photo.theme!.frame.slotCount) return navigateTo(ROUTES.FILTER);
 
     const uploadImage = async () => {
-      if (!setPhoto) return;
+      if (!setPhoto || lastImageUploadedAttempt.current) return;
       if (!lastImageUploaded) {
+        lastImageUploadedAttempt.current = true;
         const latestImage = photo.images[photo.images.length - 1];
         const r2Response = await uploadImageToR2(latestImage.data);
 
@@ -107,14 +108,6 @@ const SelectPage = () => {
   const [isSelected, setIsSelected] = useState(false);
   const [slots, setSlots] = useState<Array<number>>(Array.from({length: photo ? photo.theme!.frame.slotCount : 0}, (_, index) => index));
   const [isDragging, setIsDragging] = useState(false);
-
-  const handleContextSelect = useCallback(
-    async (images: Array<{id: string; data: string; href: string}>) => {
-      setSelectedImages(images);
-      navigateTo(ROUTES.FILTER);
-    },
-    [navigateTo, setSelectedImages]
-  );
 
   useEffect(() => {
     if (isSocketConnected && isOnline && !isSelected) {
@@ -199,9 +192,9 @@ const SelectPage = () => {
 
   useEffect(() => {
     if (isTimeOver && lastImageUploaded && videoProcessed) {
-      handleContextSelect(filteredSelectedImages);
+      setSelectedImages(filteredSelectedImages);
     }
-  }, [isTimeOver, filteredSelectedImages, handleContextSelect, lastImageUploaded, videoProcessed]);
+  }, [isTimeOver, filteredSelectedImages, lastImageUploaded, videoProcessed, setSelectedImages]);
 
   return (
     <div
@@ -383,7 +376,7 @@ const SelectPage = () => {
                   )}
                   onClick={(e) => {
                     e.preventDefault();
-                    handleContextSelect(filteredSelectedImages);
+                    setSelectedImages(filteredSelectedImages);
                   }}
                 >
                   {t("Choose a filter")}

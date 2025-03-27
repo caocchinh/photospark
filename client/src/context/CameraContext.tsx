@@ -3,6 +3,8 @@
 import {createContext, ReactNode, useContext, useState, useEffect, Dispatch, SetStateAction, useCallback} from "react";
 import {usePathname} from "next/navigation";
 import {ROUTES} from "@/constants/routes";
+import {usePhotoState} from "./PhotoStateContext";
+import {getCameraConstraints} from "@/lib/utils";
 
 interface Camera {
   deviceId: string;
@@ -30,11 +32,20 @@ const CameraContext = createContext<CameraContextType>({
 });
 
 export const CameraProvider = ({children}: {children: ReactNode}) => {
+  const {photo} = usePhotoState();
   const [camera, setCamera] = useState<Camera | null>(null);
   const [availableCameras, setAvailableCameras] = useState<Array<{deviceId: string; label: string}>>([]);
   const [cameraStream, setCameraStream] = useState<MediaStream | null>(null);
   const [cameraConstraints, setCameraConstraints] = useState<MediaStreamConstraints | null>(null);
   const pathName = usePathname();
+
+  // Update camera constraints when photo theme changes
+  useEffect(() => {
+    if (!photo?.theme?.frame.slotDimensions) return;
+    if (setCameraConstraints) {
+      setCameraConstraints(getCameraConstraints(photo.theme.frame.slotDimensions.width, photo.theme.frame.slotDimensions.height));
+    }
+  }, [photo?.theme?.frame.slotDimensions, setCameraConstraints]);
 
   // Initialize camera devices
   useEffect(() => {
@@ -84,6 +95,7 @@ export const CameraProvider = ({children}: {children: ReactNode}) => {
   const startCamera = useCallback(async () => {
     try {
       console.log("Creating new camera stream");
+      console.log("Camera constraints: ", cameraConstraints);
       if (!cameraStream) {
         const cameraPromise = await navigator.mediaDevices.getUserMedia({
           video:
