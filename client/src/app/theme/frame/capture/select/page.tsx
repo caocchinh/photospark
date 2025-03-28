@@ -8,7 +8,6 @@ import useImage from "use-image";
 import {Image as KonvaImage} from "react-konva";
 import Image from "next/image";
 import FrameImage from "@/components/FrameImage";
-import Link from "next/link";
 import {FRAME_HEIGHT, FRAME_WIDTH, IMAGE_HEIGHT, IMAGE_WIDTH, OFFSET_X, OFFSET_Y, IMAGE_SELECT_DURATION} from "@/constants/constants";
 import {uploadImageToR2} from "@/lib/r2";
 import {MdOutlineCloudDone} from "react-icons/md";
@@ -30,11 +29,10 @@ const SelectPage = () => {
       window.location.href = ROUTES.HOME;
       return;
     }
-    if (!photo.frameType || !photo.theme || photo.images.length < photo.theme.frame.slotCount)  {
+    if (!photo.frameType || !photo.theme || photo.images.length < photo.theme.frame.slotCount) {
       window.location.href = ROUTES.HOME;
       return;
     }
-  
   }, [photo]);
   const {socket, isSocketConnected, isOnline} = useSocket();
   const [videoProcessed, setVideoProcessed] = useState(false);
@@ -177,7 +175,6 @@ const SelectPage = () => {
   useEffect(() => {
     if (!isTimeOver || !photo) return;
     if (photo.theme!.frame.slotCount != filteredSelectedImages.length) {
-      console.log("Not all images selected", filteredSelectedImages.length, photo.theme!.frame.slotCount);
       const itemLeft = photo.theme!.frame.slotCount - filteredSelectedImages.length;
       if (itemLeft > 0) {
         const unselectedImage = photo.images.filter((item) => !filteredSelectedImages.includes(item));
@@ -377,36 +374,30 @@ const SelectPage = () => {
                   />
                 )}
                 <Button
-                  asChild
-                  className="relative"
-                  onClick={() => setIsSelected(true)}
+                  className={cn(
+                    "flex items-center justify-center gap-2 text-xl px-14 py-6 w-full relative font-light",
+                    photo
+                      ? photo.theme!.frame.slotCount - filteredSelectedImages.length != 0 || isTimeOver || !isLastImageUploaded || !videoProcessed
+                        ? "pointer-events-none opacity-80"
+                        : null
+                      : null,
+                    isSelected ? "pointer-events-none opacity-[85%]" : null
+                  )}
+                  onClick={() => {
+                    setIsSelected(true);
+                    setSelectedImages(filteredSelectedImages);
+                    navigateTo(ROUTES.FILTER);
+                  }}
                 >
-                  <Link
-                    href="#"
-                    className={cn(
-                      "flex items-center justify-center gap-2 text-2xl px-14 py-6 w-full",
-                      photo
-                        ? photo.theme!.frame.slotCount - filteredSelectedImages.length != 0 || isTimeOver || !isLastImageUploaded || !videoProcessed
-                          ? "pointer-events-none opacity-80"
-                          : null
-                        : null,
-                      isSelected ? "pointer-events-none opacity-[85%]" : null
-                    )}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setSelectedImages(filteredSelectedImages);
-                    }}
-                  >
-                    {t("Choose a filter")}
-                    {!isLastImageUploaded || !videoProcessed ? (
-                      <LoadingSpinner size={15} />
-                    ) : (
-                      <MdOutlineCloudDone
-                        size={15}
-                        color="white"
-                      />
-                    )}
-                  </Link>
+                  {t("Choose a filter")}
+                  {!isLastImageUploaded || !videoProcessed ? (
+                    <LoadingSpinner size={15} />
+                  ) : (
+                    <MdOutlineCloudDone
+                      size={15}
+                      color="white"
+                    />
+                  )}
                 </Button>
               </div>
             )}

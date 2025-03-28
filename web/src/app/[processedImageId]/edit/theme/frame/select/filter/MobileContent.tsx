@@ -40,8 +40,6 @@ const MobileContent = () => {
   const {uploadImageToDatabase, isMediaUploaded, isUploading, error} = useImageUpload(NEW_PROCESSED_IMAGE_ID);
   const dummyLinkRef = useRef<HTMLAnchorElement>(null);
 
-
-
   const [frameImg, frameImgStatus] = useImage(photo?.theme?.frame?.src || "", "anonymous");
   const [filter, setFilter] = useState<string | null>(null);
   const stageRef = useRef<StageElement | null>(null);
@@ -74,11 +72,11 @@ const MobileContent = () => {
   const handleImageUpload = useCallback(async () => {
     if (uploadAttemptedRef.current) return;
     uploadAttemptedRef.current = true;
-    const result = await uploadImageToDatabase();
+    const result = await uploadImageToDatabase(filter ? filter : "");
     if (result && dummyLinkRef.current) {
       dummyLinkRef.current.click();
     }
-  }, [uploadImageToDatabase]);
+  }, [filter, uploadImageToDatabase]);
 
   const selectRandomFilter = useCallback(() => {
     const randomIndex = Math.floor(Math.random() * FILTERS.length);

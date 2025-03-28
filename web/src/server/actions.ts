@@ -104,7 +104,8 @@ export const createProcessedImage = async (
   theme: ValidThemeType,
   frameURL: string,
   type: ValidFrameType,
-  slotCount: number
+  slotCount: number,
+  filter: string
 ): Promise<{error: boolean}> => {
   if (!id || !isValidUUID(id)) {
     return {error: true};
@@ -123,24 +124,10 @@ export const createProcessedImage = async (
   }
 
   try {
-    await db.insert(ProcessedImageTable).values({id, theme, frameURL, type, slotCount});
+    await db.insert(ProcessedImageTable).values({id, theme, frameURL, type, slotCount, filter});
     return {error: false};
   } catch (error) {
     console.error("Failed to create image:", error);
-    return {error: true};
-  }
-};
-
-export const updateFilter = async (processedImageId: string, filter: string): Promise<{error: boolean}> => {
-  if (!processedImageId || !isValidUUID(processedImageId)) {
-    return {error: true};
-  }
-
-  try {
-    await db.update(ProcessedImageTable).set({filter}).where(eq(ProcessedImageTable.id, processedImageId));
-    return {error: false};
-  } catch (error) {
-    console.error("Failed to update filter:", error);
     return {error: true};
   }
 };

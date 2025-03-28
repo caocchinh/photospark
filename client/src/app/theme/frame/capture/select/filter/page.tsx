@@ -28,14 +28,14 @@ const FilterPage = () => {
   const {photo} = usePhotoState();
   useEffect(() => {
     if (typeof window === "undefined") return;
-      if (!photo) {
-        window.location.href = ROUTES.HOME;
-        return;
-      }
-      if (!photo.frameType || !photo.theme || photo.images.length < photo.theme.frame.slotCount || photo.selectedImages.length == 0) {
-        window.location.href = ROUTES.HOME;
-        return;
-      }
+    if (!photo) {
+      window.location.href = ROUTES.HOME;
+      return;
+    }
+    if (!photo.frameType || !photo.theme || photo.images.length < photo.theme.frame.slotCount || photo.selectedImages.length == 0) {
+      window.location.href = ROUTES.HOME;
+      return;
+    }
   }, [photo]);
   const filterRefs = useRef<(HTMLDivElement | null)[]>([]);
   const uploadAttemptedRef = useRef(false);
@@ -118,6 +118,7 @@ const FilterPage = () => {
       uploadAttemptedRef.current = true;
 
       for (const image of photo.images) {
+        console.log("Uploading image to database:", image.href, photo.images.length);
         const slotPosition = photo.selectedImages.findIndex((selectedImage) => selectedImage.id == image.id);
         try {
           const imageResponse = await createImage(
@@ -176,9 +177,9 @@ const FilterPage = () => {
           setTimeLeft((prevTime) => prevTime - 1);
         }, 1000);
         return () => clearInterval(timerId);
-      } 
+      }
     }
-  }, [timeLeft, isSocketConnected, isOnline, isMediaUploaded, printed, frameImgStatus]);
+  }, [timeLeft, isSocketConnected, isOnline, printed, frameImgStatus]);
 
   useEffect(() => {
     if (isSocketConnected && isOnline && !printed && frameImgStatus === "loaded" && isMediaUploaded && timeLeft <= 0) {

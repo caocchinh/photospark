@@ -23,18 +23,16 @@ import {useCountdown} from "@/context/CountdownContext";
 const LayoutPage = () => {
   const {photo, setPhoto, updatePhotoQuantity, updateFrame} = usePhotoState();
   useEffect(() => {
-      if (typeof window === "undefined") return;
+    if (typeof window === "undefined") return;
 
-      if (!photo) {
-        window.location.href = ROUTES.HOME;
-        return;
-      }
-      if (!photo.frameType || !photo.theme) {
-        window.location.href = ROUTES.HOME;
-        return;
-      }
-    
-      
+    if (!photo) {
+      window.location.href = ROUTES.HOME;
+      return;
+    }
+    if (!photo.frameType || !photo.theme) {
+      window.location.href = ROUTES.HOME;
+      return;
+    }
   }, [photo]);
   const router = useRouter();
   const {autoSelectCountdownTimer} = useCountdown();
@@ -317,14 +315,14 @@ const LayoutPage = () => {
               <div className="flex flex-col gap-4 w-full">
                 <Link
                   href={ROUTES.THEME}
-                  className="flex  text-center items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-2 hover:opacity-[85%] w-full"
+                  className="flex  text-center font-light items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-2 hover:opacity-[85%] w-full"
                 >
                   <FaArrowLeft />
                   {t("Choose another theme")}
                 </Link>
                 <Link
                   href={ROUTES.HOME}
-                  className="flex text-center items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-2 hover:opacity-[85%] w-full"
+                  className="flex text-center items-center font-light justify-center gap-2 bg-foreground text-background rounded px-4 py-2 hover:opacity-[85%] w-full"
                 >
                   <FaArrowLeft />
                   {t("Choose another layout")}
@@ -340,7 +338,7 @@ const LayoutPage = () => {
                   <Link
                     href={ROUTES.CAPTURE}
                     className={cn(
-                      "flex text-center items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-2 hover:opacity-[85%] w-full bg-green-700 z-10 relative"
+                      "flex text-center items-center justify-center gap-2 font-light bg-foreground text-background rounded px-4 py-2 hover:opacity-[85%] w-full bg-green-700 z-10 relative"
                     )}
                     onClick={handleCaptureClick}
                   >

@@ -49,11 +49,11 @@ const DesktopContent = () => {
   const handleImageUpload = useCallback(async () => {
     if (uploadAttemptedRef.current) return;
     uploadAttemptedRef.current = true;
-    const result = await uploadImageToDatabase();
+    const result = await uploadImageToDatabase(filter ? filter : "");
     if (result && dummyLinkRef.current) {
       dummyLinkRef.current.click();
     }
-  }, [uploadImageToDatabase]);
+  }, [filter, uploadImageToDatabase]);
 
   const selectRandomFilter = useCallback(() => {
     const randomIndex = Math.floor(Math.random() * FILTERS.length);
@@ -64,8 +64,6 @@ const DesktopContent = () => {
       block: "center",
     });
   }, []);
-
-
 
   return (
     <>
