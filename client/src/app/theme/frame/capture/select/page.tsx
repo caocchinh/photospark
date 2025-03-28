@@ -59,7 +59,10 @@ const SelectPage = () => {
 
   useEffect(() => {
     if (!photo) return navigateTo(ROUTES.HOME);
-    if (photo.selectedImages.length === photo.theme!.frame.slotCount) return navigateTo(ROUTES.FILTER);
+    if (!photo.frameType) return navigateTo(ROUTES.HOME);
+    if (!photo.theme) return navigateTo(ROUTES.HOME);
+    if (photo.images.length < photo.theme.frame.slotCount) return navigateTo(ROUTES.HOME);
+    if (photo.selectedImages.length === photo.theme.frame.slotCount) return navigateTo(ROUTES.FILTER);
 
     const uploadImage = async () => {
       if (!setPhoto) return;

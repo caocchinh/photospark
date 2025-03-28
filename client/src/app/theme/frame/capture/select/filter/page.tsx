@@ -34,6 +34,9 @@ const FilterPage = () => {
 
   useEffect(() => {
     if (!photo) return navigateTo(ROUTES.HOME);
+    if (!photo.frameType) return navigateTo(ROUTES.HOME);
+    if (!photo.theme) return navigateTo(ROUTES.HOME);
+    if (photo.images.length < photo.theme.frame.slotCount) return navigateTo(ROUTES.HOME);
     if (photo.selectedImages.length == 0) return navigateTo(ROUTES.SELECT);
   }, [photo, navigateTo, setPhoto]);
 

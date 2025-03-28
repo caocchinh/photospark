@@ -5,7 +5,7 @@ import {useTranslation} from "react-i18next";
 import {SlidingNumber} from "@/components/ui/sliding-number";
 import usePreventNavigation from "@/hooks/usePreventNavigation";
 import {ROUTES} from "@/constants/routes";
-import { usePhotoState } from "@/context/PhotoStateContext";
+import {usePhotoState} from "@/context/PhotoStateContext";
 
 const ReviewPage = () => {
   const {photo, setPhoto} = usePhotoState();
@@ -15,6 +15,9 @@ const ReviewPage = () => {
 
   useEffect(() => {
     if (!photo) return navigateTo(ROUTES.HOME);
+    if (!photo.frameType) return navigateTo(ROUTES.HOME);
+    if (!photo.theme) return navigateTo(ROUTES.HOME);
+    if (photo.images.length < photo.theme.frame.slotCount) return navigateTo(ROUTES.HOME);
     if (!photo.video.r2_url) return navigateTo(ROUTES.HOME);
   }, [photo, navigateTo, setPhoto]);
 

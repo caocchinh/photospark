@@ -39,6 +39,8 @@ const CapturePage = () => {
 
   useEffect(() => {
     if (!photo) return navigateTo(ROUTES.HOME);
+    if (!photo.theme) return navigateTo(ROUTES.HOME);
+    if (!photo.frameType) return navigateTo(ROUTES.HOME);
   }, [photo, navigateTo]);
 
   useEffect(() => {

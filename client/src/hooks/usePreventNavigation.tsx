@@ -1,6 +1,7 @@
 "use client";
 import {useEffect, useRef, useCallback} from "react";
 import {useRouter} from "next/navigation";
+import {useSocket} from "@/context/SocketContext";
 
 // Define an interface for our history state
 interface ProtectedHistoryState {
@@ -17,6 +18,7 @@ const usePreventNavigation = () => {
   const navigationLock = useRef(false);
   const backAttemptCount = useRef(0);
   const backPreventionActive = useRef(false);
+  const {isOnline, isSocketConnected} = useSocket();
 
   // Use useCallback to ensure navigateTo function has stable identity
   const navigateTo = useCallback(
@@ -45,7 +47,7 @@ const usePreventNavigation = () => {
 
   useEffect(() => {
     // Check if running in a browser environment
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined" || !isOnline || !isSocketConnected) return;
 
     // Create a history entry marker to identify our pages
     const historyMarker: ProtectedHistoryState = {isProtectedPage: true};
@@ -60,6 +62,8 @@ const usePreventNavigation = () => {
 
     // Handle popstate event (when user tries to go back)
     const handlePopState = (e: PopStateEvent) => {
+      if (!isOnline || !isSocketConnected) return; // Don't handle if offline
+      // Prevent default behavior of going back
       // Check if we're on a protected page
       if (e.state && (e.state as ProtectedHistoryState).isProtectedPage) {
         // Increment back attempt counter
@@ -88,6 +92,7 @@ const usePreventNavigation = () => {
 
     // Handle keyboard shortcuts with more aggressive prevention
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (!isOnline || !isSocketConnected) return; // Don't handle if offline
       // Prevent F5/Ctrl+R reload shortcuts
       if (e.key === "F5" || (e.ctrlKey && e.key === "r")) {
         e.preventDefault();
@@ -108,6 +113,7 @@ const usePreventNavigation = () => {
 
     // Add handler for beforeunload to prevent reload and tab close
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (!isOnline || !isSocketConnected) return; // Don't show dialog if offline
       // Cancel the event
       e.preventDefault();
       // Chrome requires returnValue to be set
@@ -119,6 +125,7 @@ const usePreventNavigation = () => {
     // Handle touchpad gestures by monitoring rapid popstate events
     let popstateTimestamp = 0;
     const handleRapidPopstate = () => {
+      if (!isOnline || !isSocketConnected) return; // Don't handle if offline
       const now = Date.now();
       if (now - popstateTimestamp < 300) {
         // Rapid popstate detected, likely a touchpad gesture
@@ -143,7 +150,7 @@ const usePreventNavigation = () => {
       window.removeEventListener("keydown", handleKeyDown, {capture: true});
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, []);
+  }, [isOnline, isSocketConnected]);
 
   return {navigateTo};
 };

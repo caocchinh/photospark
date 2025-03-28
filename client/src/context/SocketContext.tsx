@@ -2,6 +2,7 @@
 
 import {createContext, useContext, useEffect, useState} from "react";
 import {io, Socket} from "socket.io-client";
+import {useRouter} from "next/navigation";
 
 interface SocketContextType {
   socket: Socket | null;
@@ -15,6 +16,7 @@ export const SocketProvider = ({children}: {children: React.ReactNode}) => {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [isSocketConnected, setIsSocketConnected] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
+  const router = useRouter();
 
   // Online/offline status
   useEffect(() => {
@@ -25,6 +27,10 @@ export const SocketProvider = ({children}: {children: React.ReactNode}) => {
     };
     const handleOffline = () => {
       setIsOnline(false);
+      for (let i = 0; i < 19; i++) {
+        router.push("/");
+      }
+
       setTimeout(() => {
         window.location.reload();
       }, 2000);
@@ -39,7 +45,7 @@ export const SocketProvider = ({children}: {children: React.ReactNode}) => {
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
     };
-  }, []);
+  }, [router]);
 
   // Socket status
   useEffect(() => {
@@ -67,6 +73,9 @@ export const SocketProvider = ({children}: {children: React.ReactNode}) => {
 
     newSocket.on("disconnect", () => {
       console.log("Disconnected from server.");
+      for (let i = 0; i < 19; i++) {
+        router.push("/");
+      }
       setIsSocketConnected(false);
       setTimeout(() => {
         window.location.reload();
@@ -75,6 +84,9 @@ export const SocketProvider = ({children}: {children: React.ReactNode}) => {
 
     newSocket.on("error", (error) => {
       console.error("Socket error:", error);
+      for (let i = 0; i < 19; i++) {
+        router.push("/");
+      }
       setTimeout(() => {
         window.location.reload();
       }, 2000);
@@ -86,7 +98,7 @@ export const SocketProvider = ({children}: {children: React.ReactNode}) => {
       newSocket.disconnect();
       newSocket.removeAllListeners();
     };
-  }, []);
+  }, [router]);
 
   return <SocketContext.Provider value={{socket, isSocketConnected, isOnline}}>{children}</SocketContext.Provider>;
 };

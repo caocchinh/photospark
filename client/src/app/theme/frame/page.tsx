@@ -39,6 +39,8 @@ const LayoutPage = () => {
 
   useEffect(() => {
     if (!photo) return router.push(ROUTES.HOME);
+    if (!photo.frameType) return router.push(ROUTES.HOME);
+    if (!photo.theme) return router.push(ROUTES.THEME);
     if (photo.images.length > 0) return router.push(ROUTES.CAPTURE);
   }, [photo, router]);
 
