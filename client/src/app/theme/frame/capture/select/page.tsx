@@ -21,6 +21,13 @@ import {ROUTES} from "@/constants/routes";
 import {Reorder} from "motion/react";
 import {usePhotoState} from "@/context/PhotoStateContext";
 
+
+const spamNavigate = (navigateFn: (route: string) => void, route: string) => {
+  for (let i = 0; i < 10; i++) {
+    navigateFn(route);
+  }
+};
+
 const SelectPage = () => {
   const {photo, setPhoto, updateVideoData, setSelectedImages} = usePhotoState();
   const {navigateTo} = usePreventNavigation();
@@ -58,11 +65,22 @@ const SelectPage = () => {
   }, [isOnline, isSocketConnected, photo, setPhoto, socket, updateVideoData]);
 
   useEffect(() => {
-    if (!photo) return navigateTo(ROUTES.HOME);
-    if (!photo.frameType) return navigateTo(ROUTES.HOME);
-    if (!photo.theme) return navigateTo(ROUTES.HOME);
-    if (photo.images.length < photo.theme.frame.slotCount) return navigateTo(ROUTES.HOME);
-    if (photo.selectedImages.length === photo.theme.frame.slotCount) return navigateTo(ROUTES.FILTER);
+    if (!photo) {
+      spamNavigate(navigateTo, ROUTES.HOME);
+      return;
+    }
+    if (!photo.frameType) {
+      spamNavigate(navigateTo, ROUTES.HOME);
+      return;
+    }
+    if (!photo.theme) {
+      spamNavigate(navigateTo, ROUTES.HOME);
+      return;
+    }
+    if (photo.images.length < photo.theme.frame.slotCount) {
+      spamNavigate(navigateTo, ROUTES.HOME);
+      return;
+    }
 
     const uploadImage = async () => {
       if (!setPhoto) return;
@@ -100,7 +118,6 @@ const SelectPage = () => {
   );
   const [timeLeft, setTimeLeft] = useState(IMAGE_SELECT_DURATION);
   const [isTimeOver, setIsTimeOver] = useState(false);
-  const photoRef = useRef(photo);
   const [lastRemovedImage, setLastRemovedImage] = useState<number>(photo ? photo.theme!.frame.slotCount - 1 : 0);
   const isSingle = useMemo(() => {
     if (!photo) return 1;
@@ -168,34 +185,35 @@ const SelectPage = () => {
   );
 
   useEffect(() => {
-    if (!isTimeOver || !photoRef.current) return;
+    if (!isTimeOver || !photo) return;
+    if (photo.theme!.frame.slotCount != filteredSelectedImages.length) {
+      console.log("Not all images selected", filteredSelectedImages.length, photo.theme!.frame.slotCount);
+      const itemLeft = photo.theme!.frame.slotCount - filteredSelectedImages.length;
+      if (itemLeft > 0) {
+        const unselectedImage = photo.images.filter((item) => !filteredSelectedImages.includes(item));
 
-    const itemLeft = photoRef.current!.theme!.frame.slotCount - filteredSelectedImages.length;
-    if (itemLeft > 0) {
-      const unselectedImage = photoRef.current!.images.filter((item) => !filteredSelectedImages.includes(item));
+        const shuffledImages = [...unselectedImage].sort(() => Math.random() - 0.5);
 
-      const shuffledImages = [...unselectedImage].sort(() => Math.random() - 0.5);
+        setSelectedImage((prevImages) => {
+          const newImages = [...prevImages];
+          let currentIndex = 0;
 
-      setSelectedImage((prevImages) => {
-        const newImages = [...prevImages];
-        let currentIndex = 0;
-
-        for (let i = 0; i < newImages.length && currentIndex < itemLeft; i++) {
-          if (newImages[i] === null) {
-            newImages[i] = shuffledImages[currentIndex];
-            currentIndex++;
+          for (let i = 0; i < newImages.length && currentIndex < itemLeft; i++) {
+            if (newImages[i] === null) {
+              newImages[i] = shuffledImages[currentIndex];
+              currentIndex++;
+            }
           }
-        }
-        return newImages;
-      });
+          return newImages;
+        });
+      }
+    } else {
+      if (photo.selectedImages.length == 0 && videoProcessed && isLastImageUploaded) {
+        setSelectedImages(filteredSelectedImages);
+        return navigateTo(ROUTES.FILTER);
+      }
     }
-  }, [isTimeOver, filteredSelectedImages, photo, isLastImageUploaded]);
-
-  useEffect(() => {
-    if (isTimeOver && isLastImageUploaded && videoProcessed) {
-      setSelectedImages(filteredSelectedImages);
-    }
-  }, [isTimeOver, filteredSelectedImages, isLastImageUploaded, videoProcessed, setSelectedImages]);
+  }, [filteredSelectedImages, isLastImageUploaded, isTimeOver, navigateTo, photo, setSelectedImages, videoProcessed]);
 
   return (
     <div className="w-full h-full relative">

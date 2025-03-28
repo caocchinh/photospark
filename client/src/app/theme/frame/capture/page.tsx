@@ -14,6 +14,12 @@ import {usePhotoState} from "@/context/PhotoStateContext";
 import {useCamera} from "@/context/CameraContext";
 import {useSocket} from "@/context/SocketContext";
 
+const spamNavigate = (navigateFn: (route: string) => void, route: string) => {
+  for (let i = 0; i < 10; i++) {
+    navigateFn(route);
+  }
+};
+
 const CapturePage = () => {
   const {photo, setPhoto, addPhotoImage, updateVideoData} = usePhotoState();
   const {cameraStream, stopCamera, startCamera} = useCamera();
@@ -38,9 +44,19 @@ const CapturePage = () => {
   const initializationDoneRef = useRef(false);
 
   useEffect(() => {
-    if (!photo) return navigateTo(ROUTES.HOME);
-    if (!photo.theme) return navigateTo(ROUTES.HOME);
-    if (!photo.frameType) return navigateTo(ROUTES.HOME);
+    if (!photo) {
+      spamNavigate(navigateTo, ROUTES.HOME);
+      return;
+    }
+    if (!photo.frameType) {
+      spamNavigate(navigateTo, ROUTES.HOME);
+      return;
+    }
+    if (!photo.theme) {
+      spamNavigate(navigateTo, ROUTES.HOME);
+      return;
+    }
+   
   }, [photo, navigateTo]);
 
   useEffect(() => {
@@ -164,7 +180,7 @@ const CapturePage = () => {
 
     const recorder = new MediaRecorder(flippedStream, {
       mimeType: "video/webm;codecs=vp8",
-      videoBitsPerSecond: 10000000,
+      videoBitsPerSecond: 50000000,
     });
 
     let chunks: Blob[] = [];

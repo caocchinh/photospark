@@ -7,6 +7,13 @@ import usePreventNavigation from "@/hooks/usePreventNavigation";
 import {ROUTES} from "@/constants/routes";
 import {usePhotoState} from "@/context/PhotoStateContext";
 
+
+const spamNavigate = (navigateFn: (route: string) => void, route: string) => {
+  for (let i = 0; i < 10; i++) {
+    navigateFn(route);
+  }
+};
+
 const ReviewPage = () => {
   const {photo, setPhoto} = usePhotoState();
   const {navigateTo} = usePreventNavigation();
@@ -14,11 +21,11 @@ const ReviewPage = () => {
   const {t} = useTranslation();
 
   useEffect(() => {
-    if (!photo) return navigateTo(ROUTES.HOME);
-    if (!photo.frameType) return navigateTo(ROUTES.HOME);
-    if (!photo.theme) return navigateTo(ROUTES.HOME);
-    if (photo.images.length < photo.theme.frame.slotCount) return navigateTo(ROUTES.HOME);
-    if (!photo.video.r2_url) return navigateTo(ROUTES.HOME);
+    if (!photo) return spamNavigate(navigateTo, ROUTES.HOME);
+    if (!photo.frameType) return spamNavigate(navigateTo, ROUTES.HOME);
+    if (!photo.theme) return spamNavigate(navigateTo, ROUTES.HOME);
+    if (photo.images.length < photo.theme.frame.slotCount) return spamNavigate(navigateTo, ROUTES.HOME);
+    if (!photo.video.r2_url) return spamNavigate(navigateTo, ROUTES.HOME);
   }, [photo, navigateTo, setPhoto]);
 
   useEffect(() => {

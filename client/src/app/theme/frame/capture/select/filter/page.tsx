@@ -24,6 +24,13 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import {IoIosCheckmark} from "react-icons/io";
 import {usePhotoState} from "@/context/PhotoStateContext";
 
+
+const spamNavigate = (navigateFn: (route: string) => void, route: string) => {
+  for (let i = 0; i < 10; i++) {
+    navigateFn(route);
+  }
+};
+
 const FilterPage = () => {
   const {photo, setPhoto} = usePhotoState();
   const {navigateTo} = usePreventNavigation();
@@ -33,11 +40,26 @@ const FilterPage = () => {
   const {t} = useTranslation();
 
   useEffect(() => {
-    if (!photo) return navigateTo(ROUTES.HOME);
-    if (!photo.frameType) return navigateTo(ROUTES.HOME);
-    if (!photo.theme) return navigateTo(ROUTES.HOME);
-    if (photo.images.length < photo.theme.frame.slotCount) return navigateTo(ROUTES.HOME);
-    if (photo.selectedImages.length == 0) return navigateTo(ROUTES.SELECT);
+    if (!photo) {
+      spamNavigate(navigateTo, ROUTES.HOME);
+      return;
+    }
+    if (!photo.frameType) {
+      spamNavigate(navigateTo, ROUTES.HOME);
+      return;
+    }
+    if (!photo.theme) {
+      spamNavigate(navigateTo, ROUTES.HOME);
+      return;
+    }
+    if (photo.images.length < photo.theme.frame.slotCount) {
+      spamNavigate(navigateTo, ROUTES.HOME);
+      return;
+    }
+    if (photo.selectedImages.length == 0) {
+      spamNavigate(navigateTo, ROUTES.SELECT);
+      return;
+    }
   }, [photo, navigateTo, setPhoto]);
 
   const [frameImg, frameImgStatus] = useImage(photo ? photo.theme!.frame.src : "");

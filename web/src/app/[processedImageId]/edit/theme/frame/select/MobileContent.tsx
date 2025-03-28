@@ -25,6 +25,7 @@ import {Sheet} from "@/components/ui/sheet";
 import {IoCheckmark} from "react-icons/io5";
 import {useTranslation} from "react-i18next";
 import {Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog";
+
 const MobileContent = () => {
   const {photo, setPhoto} = usePhoto();
   const router = useRouter();

@@ -20,6 +20,9 @@ import {PiVideoCameraLight} from "react-icons/pi";
 import {usePhotoState} from "@/context/PhotoStateContext";
 import {useCountdown} from "@/context/CountdownContext";
 
+
+
+
 const LayoutPage = () => {
   const {photo, setPhoto, updatePhotoQuantity, updateFrame} = usePhotoState();
   const {autoSelectCountdownTimer} = useCountdown();
