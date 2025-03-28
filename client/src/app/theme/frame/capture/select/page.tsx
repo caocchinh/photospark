@@ -68,10 +68,9 @@ const SelectPage = () => {
   }, [isOnline, isSocketConnected, photo, setPhoto, socket, updateVideoData]);
 
   useEffect(() => {
-    if (!photo) return navigateTo(ROUTES.HOME);
+    if (!photo || !setPhoto) return ;
 
     const uploadImage = async () => {
-      if (!setPhoto) return;
       if (!isLastImageUploaded && photo.images.some((item) => item.href == "") && !isLastImageUploadedAttempt.current) {
         isLastImageUploadedAttempt.current = true;
         const latestImage = photo.images.find((item) => item.href == "");

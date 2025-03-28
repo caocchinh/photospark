@@ -48,6 +48,7 @@ const CameraSetting = () => {
             await startCamera();
             return;
           }
+          setIsError(false);
           currentVideoRef.srcObject = cameraStream;
         } catch {
           setIsError(true);
@@ -105,7 +106,7 @@ const CameraSetting = () => {
               camera && videoRefReady && cameraStream && !isError ? "opacity-100 block" : "opacity-0 absolute"
             )}
           />
-          {!(camera && videoRefReady && cameraStream && !isError) && isOpen && <CameraLoading />}
+          {!(camera && videoRefReady && cameraStream ) && !isError && isOpen && <CameraLoading />}
           {isError && (
             <div className="flex items-center justify-center flex-col gap-3">
               <MdWarning
@@ -122,7 +123,7 @@ const CameraSetting = () => {
             </AlertDialogHeader>
 
             <Select
-              disabled={!(camera && videoRefReady && cameraStream)}
+              disabled={!(camera && videoRefReady && cameraStream) && !isError}
               value={camera?.deviceId}
               onValueChange={(value) => {
                 const device = availableCameras.find((d) => d.deviceId === value);
@@ -132,8 +133,8 @@ const CameraSetting = () => {
                 }
               }}
             >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder={camera?.label} />
+              <SelectTrigger className="w-full relative z-[10]">
+                <SelectValue placeholder={camera?.label}/>
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
@@ -154,7 +155,7 @@ const CameraSetting = () => {
 
         <AlertDialogFooter className="w-full">
           <AlertDialogAction
-            disabled={!(camera && videoRefReady && cameraStream)}
+            disabled={!(camera && videoRefReady && cameraStream)&& !isError}
             className="bg-green-700 hover:bg-green-800 w-full"
             onClick={() => {
               stopCamera();

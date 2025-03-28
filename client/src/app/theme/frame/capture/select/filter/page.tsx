@@ -16,7 +16,7 @@ import {useTranslation} from "react-i18next";
 import {GlowEffect} from "@/components/ui/glow-effect";
 import {SlidingNumber} from "@/components/ui/sliding-number";
 import usePreventNavigation from "@/hooks/usePreventNavigation";
-import {createImage, createVideo, updateFilter} from "@/server/actions";
+import {updateFilter} from "@/server/actions";
 import QRCode from "react-qr-code";
 import ReactDOM from "react-dom/client";
 import {ROUTES} from "@/constants/routes";
@@ -117,10 +117,14 @@ const FilterPage = () => {
 
       uploadAttemptedRef.current = true;
 
+      console.log("Starting image upload process");
+
       for (const image of photo.images) {
         console.log("Uploading image to database:", image.href, photo.images.length);
         const slotPosition = photo.selectedImages.findIndex((selectedImage) => selectedImage.id == image.id);
         try {
+          const {createImage} = await import("@/server/actions");
+          
           const imageResponse = await createImage(
             image.href,
             photo.id!,
@@ -129,6 +133,7 @@ const FilterPage = () => {
             photo.theme!.frame.slotDimensions.height,
             photo.theme!.frame.slotDimensions.width
           );
+          
 
           if (imageResponse.error) {
             throw new Error("Failed to upload image to database");
@@ -150,6 +155,7 @@ const FilterPage = () => {
 
       if (photo.video.r2_url) {
         try {
+          const {createVideo} = await import("@/server/actions");
           const videoResponse = await createVideo(photo.video.r2_url, photo.id!);
           if (videoResponse.error) {
             throw new Error("Failed to upload video to database");
@@ -388,13 +394,13 @@ const FilterPage = () => {
                 </ScrollArea>
                 <div className="flex gap-2 w-full">
                   <Button
-                    className="w-full mt-2"
+                    className="w-full mt-2 font-light"
                     onClick={selectRandomFilter}
                   >
                     {t("Random filter")} - {FILTERS.find((item) => item.value == filter)?.name}
                   </Button>
                   <Button
-                    className="w-full mt-2 flex items-center justify-center gap-1"
+                    className="w-full mt-2 flex items-center justify-center gap-1 font-light"
                     onClick={() => setFilter(null)}
                   >
                     {t("Reset filter")}
@@ -411,7 +417,7 @@ const FilterPage = () => {
                   />
                   <Button
                     className={cn(
-                      "flex text-xl text-center items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-6 hover:opacity-[85%] w-full relative z-10",
+                      "flex text-xl text-center items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-6 font-light hover:opacity-[85%] w-full relative z-10",
                       printed || !isMediaUploaded ? "pointer-events-none opacity-[85%]" : null
                     )}
                     onClick={printImage}

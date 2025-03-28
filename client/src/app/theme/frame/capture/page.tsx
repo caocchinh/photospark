@@ -13,6 +13,10 @@ import CameraLoading from "@/components/CameraLoading";
 import {usePhotoState} from "@/context/PhotoStateContext";
 import {useCamera} from "@/context/CameraContext";
 import {useSocket} from "@/context/SocketContext";
+import {MdWarning} from "react-icons/md";
+import { useTranslation } from "react-i18next";
+import { Button } from "@/components/ui/button";
+import { IoRefresh } from "react-icons/io5";
 
 const CapturePage = () => {
   const {photo, setPhoto, addPhotoImage, updateVideoData} = usePhotoState();
@@ -30,11 +34,13 @@ const CapturePage = () => {
   }, [photo]);
   const {cameraStream, stopCamera, startCamera} = useCamera();
   const [count, setCount] = useState(CAPTURE_DURATION);
+  const [isCameraError, setIsCameraError] = useState(false);
   const [isCountingDown, setIsCountingDown] = useState(false);
   const [cycles, setCycles] = useState(1);
   const [videoIntrinsicSize, setVideoIntrinsicSize] = useState<{width: number; height: number} | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const {isSocketConnected, isOnline} = useSocket();
+  const {t} = useTranslation();
 
   const [isVideoRefReady, setIsVideoRefReady] = useState(false);
   const setVideoRef = useCallback((node: HTMLVideoElement | null) => {
@@ -198,10 +204,16 @@ const CapturePage = () => {
   useEffect(() => {
     const getVideo = async () => {
       if (videoRef.current && isVideoRefReady) {
-        if (!cameraStream) {
-          await startCamera();
-          return;
+        try{
+          if (!cameraStream) {
+            await startCamera();
+            return;
+          }
+          setIsCameraError(false);
+        }catch{
+          setIsCameraError(true);
         }
+       
         try {
           videoRef.current.srcObject = cameraStream;
 
@@ -292,15 +304,34 @@ const CapturePage = () => {
     <div className="relative w-full h-full flex items-center justify-center">
       {photo && (
         <>
-          {!isCountingDown && cycles == 1 && (
+          {!isCountingDown && !isCameraError && cycles == 1 && (
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full flex items-center justify-center">
               <CameraLoading />
+            </div>
+          )}
+          {isCameraError && (
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full flex items-center justify-center">
+              <div className="flex items-center justify-center flex-col gap-3">
+              <MdWarning
+                className="text-red-500"
+                size={130}
+              />
+              <p className="text-red-500 text-4xl uppercase font-semibold">{t("Error loading camera")}!</p>
+              <Button
+            variant="outline"
+            onClick={() => window.location.reload()}
+            className="flex items-center justify-center gap-2 cursor-pointer w-full"
+          >
+            {t("Refresh the application")}
+            <IoRefresh />
+          </Button>
+            </div>
             </div>
           )}
           <div
             className={cn(
               "w-full h-full gap-2 flex items-center justify-evenly transition duration-300",
-              isCountingDown ? "opacity-100" : "opacity-0 pointer-events-none"
+              isCountingDown && !isCameraError ? "opacity-100" : "opacity-0 pointer-events-none"
             )}
           >
             <div className="relative w-max h-[88vh]">

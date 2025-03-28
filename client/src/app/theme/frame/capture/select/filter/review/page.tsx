@@ -6,25 +6,25 @@ import {SlidingNumber} from "@/components/ui/sliding-number";
 import usePreventNavigation from "@/hooks/usePreventNavigation";
 import {ROUTES} from "@/constants/routes";
 import {usePhotoState} from "@/context/PhotoStateContext";
+import { useRouter } from "next/navigation";
 
 const ReviewPage = () => {
   const {photo, setPhoto} = usePhotoState();
+  const [timeLeft, setTimeLeft] = useState(6);
+  const router = useRouter();
   useEffect(() => {
     if (typeof window === "undefined") return;
-
-      if (!photo) {
-        window.location.href = ROUTES.HOME;
-        return;
-      }
-      if (!photo.frameType || !photo.theme || photo.images.length < photo.theme.frame.slotCount || !photo.video.r2_url) {
-        window.location.href = ROUTES.HOME;
-        return;
-      }
-      
-   
-  }, [photo]);
+    if (!photo) {
+      router.push(ROUTES.HOME);
+      return;
+    }
+    if (!photo.frameType || !photo.theme || photo.images.length < photo.theme.frame.slotCount || !photo.video.r2_url) {
+      router.push(ROUTES.HOME);
+      return;
+    }
+  }, [photo, router]);
   const {navigateTo} = usePreventNavigation();
-  const [timeLeft, setTimeLeft] = useState(6);
+
   const {t} = useTranslation();
   usePreventNavigation();
 
