@@ -14,7 +14,6 @@ import {Stage as StageElement} from "konva/lib/Stage";
 import {GlowEffect} from "@/components/ui/glow-effect";
 import {ROUTES} from "@/constants/routes";
 import {IoIosCheckmark} from "react-icons/io";
-import {useRouter} from "next/navigation";
 import {FaArrowLeft} from "react-icons/fa";
 import Link from "next/link";
 import {TbWand} from "react-icons/tb";
@@ -27,9 +26,8 @@ import {useTranslation} from "react-i18next";
 import {useImageUpload} from "@/hooks/useImageUpload";
 
 const DesktopContent = () => {
-  const {photo, setPhoto} = usePhoto();
+  const {photo} = usePhoto();
   const filterRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const NEW_PROCESSED_IMAGE_ID = useMemo(() => {
     return crypto.randomUUID();
@@ -67,10 +65,7 @@ const DesktopContent = () => {
     });
   }, []);
 
-  useEffect(() => {
-    if (!photo) return router.push(`/`);
-    if (photo.selectedImages.length == 0) return router.push(`/${photo?.previousProcessedImageId}/${ROUTES.HOME}`);
-  }, [photo, router, setPhoto]);
+
 
   return (
     <>

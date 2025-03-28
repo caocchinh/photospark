@@ -24,64 +24,41 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import {IoIosCheckmark} from "react-icons/io";
 import {usePhotoState} from "@/context/PhotoStateContext";
 
-
-const spamNavigate = (navigateFn: (route: string) => void, route: string) => {
-  for (let i = 0; i < 10; i++) {
-    navigateFn(route);
-  }
-};
-
 const FilterPage = () => {
-  const {photo, setPhoto} = usePhotoState();
-  const {navigateTo} = usePreventNavigation();
+  const {photo} = usePhotoState();
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+      if (!photo) {
+        window.location.href = ROUTES.HOME;
+        return;
+      }
+      if (!photo.frameType || !photo.theme || photo.images.length < photo.theme.frame.slotCount || photo.selectedImages.length == 0) {
+        window.location.href = ROUTES.HOME;
+        return;
+      }
+  }, [photo]);
   const filterRefs = useRef<(HTMLDivElement | null)[]>([]);
   const uploadAttemptedRef = useRef(false);
-
   const {t} = useTranslation();
-
-  useEffect(() => {
-    if (!photo) {
-      spamNavigate(navigateTo, ROUTES.HOME);
-      return;
-    }
-    if (!photo.frameType) {
-      spamNavigate(navigateTo, ROUTES.HOME);
-      return;
-    }
-    if (!photo.theme) {
-      spamNavigate(navigateTo, ROUTES.HOME);
-      return;
-    }
-    if (photo.images.length < photo.theme.frame.slotCount) {
-      spamNavigate(navigateTo, ROUTES.HOME);
-      return;
-    }
-    if (photo.selectedImages.length == 0) {
-      spamNavigate(navigateTo, ROUTES.SELECT);
-      return;
-    }
-  }, [photo, navigateTo, setPhoto]);
-
   const [frameImg, frameImgStatus] = useImage(photo ? photo.theme!.frame.src : "");
-
   const [qrCodeURL, setQrCodeURL] = useState<string>("");
   const [qrCodeImage] = useImage(qrCodeURL);
-
   const [filter, setFilter] = useState<string | null>(null);
   const stageRef = useRef<StageElement | null>(null);
   const {socket, isSocketConnected, isOnline} = useSocket();
   const [isMediaUploaded, setIsMediaUploaded] = useState(false);
   const [timeLeft, setTimeLeft] = useState(FILTER_SELECT_DURATION);
   const [printed, setPrinted] = useState(false);
-
+  const {navigateTo} = usePreventNavigation();
   const filterRef = useRef(filter);
+  usePreventNavigation();
 
   useEffect(() => {
     filterRef.current = filter;
   }, [filter]);
 
   const printImage = useCallback(async () => {
-    if (stageRef.current && photo && socket && photo.id) {
+    if (stageRef.current && photo && socket && photo.id && !printed) {
       if (!isSocketConnected) {
         console.error("Socket not connected. Cannot print.");
         return;
@@ -193,17 +170,21 @@ const FilterPage = () => {
   }, [isSocketConnected, isMediaUploaded, photo, socket, isOnline]);
 
   useEffect(() => {
-    if (isSocketConnected && isOnline && isMediaUploaded && !printed && frameImgStatus === "loaded") {
+    if (isSocketConnected && isOnline && !printed && frameImgStatus === "loaded") {
       if (timeLeft > 0) {
         const timerId = setInterval(() => {
           setTimeLeft((prevTime) => prevTime - 1);
         }, 1000);
         return () => clearInterval(timerId);
-      } else {
-        printImage();
-      }
+      } 
     }
-  }, [printImage, timeLeft, isSocketConnected, isOnline, isMediaUploaded, printed, frameImgStatus]);
+  }, [timeLeft, isSocketConnected, isOnline, isMediaUploaded, printed, frameImgStatus]);
+
+  useEffect(() => {
+    if (isSocketConnected && isOnline && !printed && frameImgStatus === "loaded" && isMediaUploaded && timeLeft <= 0) {
+      printImage();
+    }
+  }, [printImage, isSocketConnected, isOnline, printed, frameImgStatus, isMediaUploaded, timeLeft]);
 
   const selectRandomFilter = useCallback(() => {
     const randomIndex = Math.floor(Math.random() * FILTERS.length);

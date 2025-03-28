@@ -7,7 +7,6 @@ import React, {useEffect} from "react";
 import Link from "next/link";
 import {ROUTES} from "@/constants/routes";
 import {useTranslation} from "react-i18next";
-import {useRouter} from "next/navigation";
 import {FaArrowLeftLong} from "react-icons/fa6";
 import SingularLayout from "@/components/layout-image/SingularLayout";
 import DoubleLayout from "@/components/layout-image/DoubleLayout";
@@ -17,13 +16,18 @@ import {useCountdown} from "@/context/CountdownContext";
 
 const ThemePage = () => {
   const {photo, setPhoto} = usePhotoState();
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    if (!photo || !photo.frameType) {
+      window.location.href = ROUTES.HOME;
+      return;
+    }
+   
+  }, [photo]);
   const {autoSelectCountdownTimer} = useCountdown();
   const {t} = useTranslation();
-  const router = useRouter();
-  useEffect(() => {
-    if (!photo) return router.push(ROUTES.HOME);
-    if (!photo.frameType) return router.push(ROUTES.HOME);
-  }, [photo, router]);
+
   const handleThemeChange = (name: ValidThemeType) => {
     if (!setPhoto || !photo) return;
     setPhoto((prev) => {

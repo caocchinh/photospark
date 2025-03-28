@@ -7,26 +7,26 @@ import usePreventNavigation from "@/hooks/usePreventNavigation";
 import {ROUTES} from "@/constants/routes";
 import {usePhotoState} from "@/context/PhotoStateContext";
 
-
-const spamNavigate = (navigateFn: (route: string) => void, route: string) => {
-  for (let i = 0; i < 10; i++) {
-    navigateFn(route);
-  }
-};
-
 const ReviewPage = () => {
   const {photo, setPhoto} = usePhotoState();
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+      if (!photo) {
+        window.location.href = ROUTES.HOME;
+        return;
+      }
+      if (!photo.frameType || !photo.theme || photo.images.length < photo.theme.frame.slotCount || !photo.video.r2_url) {
+        window.location.href = ROUTES.HOME;
+        return;
+      }
+      
+   
+  }, [photo]);
   const {navigateTo} = usePreventNavigation();
   const [timeLeft, setTimeLeft] = useState(6);
   const {t} = useTranslation();
-
-  useEffect(() => {
-    if (!photo) return spamNavigate(navigateTo, ROUTES.HOME);
-    if (!photo.frameType) return spamNavigate(navigateTo, ROUTES.HOME);
-    if (!photo.theme) return spamNavigate(navigateTo, ROUTES.HOME);
-    if (photo.images.length < photo.theme.frame.slotCount) return spamNavigate(navigateTo, ROUTES.HOME);
-    if (!photo.video.r2_url) return spamNavigate(navigateTo, ROUTES.HOME);
-  }, [photo, navigateTo, setPhoto]);
+  usePreventNavigation();
 
   useEffect(() => {
     if (timeLeft > 0) {

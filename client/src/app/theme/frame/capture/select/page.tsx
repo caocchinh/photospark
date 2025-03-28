@@ -1,4 +1,5 @@
 "use client";
+
 import {Button} from "@/components/ui/button";
 import {cn, findSwappedIndices} from "@/lib/utils";
 import {useCallback, useEffect, useMemo, useRef, useState} from "react";
@@ -21,25 +22,29 @@ import {ROUTES} from "@/constants/routes";
 import {Reorder} from "motion/react";
 import {usePhotoState} from "@/context/PhotoStateContext";
 
-
-const spamNavigate = (navigateFn: (route: string) => void, route: string) => {
-  for (let i = 0; i < 10; i++) {
-    navigateFn(route);
-  }
-};
-
 const SelectPage = () => {
   const {photo, setPhoto, updateVideoData, setSelectedImages} = usePhotoState();
-  const {navigateTo} = usePreventNavigation();
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!photo) {
+      window.location.href = ROUTES.HOME;
+      return;
+    }
+    if (!photo.frameType || !photo.theme || photo.images.length < photo.theme.frame.slotCount)  {
+      window.location.href = ROUTES.HOME;
+      return;
+    }
+  
+  }, [photo]);
   const {socket, isSocketConnected, isOnline} = useSocket();
   const [videoProcessed, setVideoProcessed] = useState(false);
   const {t} = useTranslation();
   const isLastImageUploadedAttempt = useRef(false);
 
-  usePreventNavigation();
-
   const [isLastImageUploaded, setLastImageUploaded] = useState(false);
+  const {navigateTo} = usePreventNavigation();
 
+  usePreventNavigation();
   const videoRequestSent = useRef(false);
 
   useEffect(() => {
@@ -65,22 +70,7 @@ const SelectPage = () => {
   }, [isOnline, isSocketConnected, photo, setPhoto, socket, updateVideoData]);
 
   useEffect(() => {
-    if (!photo) {
-      spamNavigate(navigateTo, ROUTES.HOME);
-      return;
-    }
-    if (!photo.frameType) {
-      spamNavigate(navigateTo, ROUTES.HOME);
-      return;
-    }
-    if (!photo.theme) {
-      spamNavigate(navigateTo, ROUTES.HOME);
-      return;
-    }
-    if (photo.images.length < photo.theme.frame.slotCount) {
-      spamNavigate(navigateTo, ROUTES.HOME);
-      return;
-    }
+    if (!photo) return navigateTo(ROUTES.HOME);
 
     const uploadImage = async () => {
       if (!setPhoto) return;

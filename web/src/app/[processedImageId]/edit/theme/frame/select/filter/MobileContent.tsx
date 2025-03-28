@@ -14,7 +14,6 @@ import {Stage as StageElement} from "konva/lib/Stage";
 import {GlowEffect} from "@/components/ui/glow-effect";
 import {ROUTES} from "@/constants/routes";
 import {IoIosCheckmark} from "react-icons/io";
-import {useRouter} from "next/navigation";
 import {FaArrowLeft} from "react-icons/fa";
 import Link from "next/link";
 import {TbWand} from "react-icons/tb";
@@ -30,9 +29,8 @@ import {useImageUpload} from "@/hooks/useImageUpload";
 import GeneralError from "@/components/GeneralError";
 
 const MobileContent = () => {
-  const {photo, setPhoto} = usePhoto();
+  const {photo} = usePhoto();
   const filterRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const {t} = useTranslation();
   const NEW_PROCESSED_IMAGE_ID = useMemo(() => {
@@ -42,10 +40,7 @@ const MobileContent = () => {
   const {uploadImageToDatabase, isMediaUploaded, isUploading, error} = useImageUpload(NEW_PROCESSED_IMAGE_ID);
   const dummyLinkRef = useRef<HTMLAnchorElement>(null);
 
-  useEffect(() => {
-    if (!photo) return router.push(`/`);
-    if (photo.selectedImages.length == 0) return router.push(`/${photo?.previousProcessedImageId}/${ROUTES.HOME}`);
-  }, [photo, router, setPhoto]);
+
 
   const [frameImg, frameImgStatus] = useImage(photo?.theme?.frame?.src || "", "anonymous");
   const [filter, setFilter] = useState<string | null>(null);

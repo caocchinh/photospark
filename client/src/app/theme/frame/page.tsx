@@ -20,13 +20,24 @@ import {PiVideoCameraLight} from "react-icons/pi";
 import {usePhotoState} from "@/context/PhotoStateContext";
 import {useCountdown} from "@/context/CountdownContext";
 
-
-
-
 const LayoutPage = () => {
   const {photo, setPhoto, updatePhotoQuantity, updateFrame} = usePhotoState();
-  const {autoSelectCountdownTimer} = useCountdown();
+  useEffect(() => {
+      if (typeof window === "undefined") return;
+
+      if (!photo) {
+        window.location.href = ROUTES.HOME;
+        return;
+      }
+      if (!photo.frameType || !photo.theme) {
+        window.location.href = ROUTES.HOME;
+        return;
+      }
+    
+      
+  }, [photo]);
   const router = useRouter();
+  const {autoSelectCountdownTimer} = useCountdown();
   const {t} = useTranslation();
   const maxQuantity = 5;
   const [api, setApi] = useState<CarouselApi>();
@@ -39,13 +50,6 @@ const LayoutPage = () => {
   const initializationDoneRef = useRef(false);
   const thumbnailRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [chosen, setChosen] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (!photo) return router.push(ROUTES.HOME);
-    if (!photo.frameType) return router.push(ROUTES.HOME);
-    if (!photo.theme) return router.push(ROUTES.THEME);
-    if (photo.images.length > 0) return router.push(ROUTES.CAPTURE);
-  }, [photo, router]);
 
   const handleLeftClick = useCallback(() => {
     if (!api) return;

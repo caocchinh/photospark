@@ -33,8 +33,11 @@ const FrameEditpage = () => {
   const {t} = useTranslation();
 
   useEffect(() => {
-    if (!photo?.theme) return router.push(`/${photo?.previousProcessedImageId}/${ROUTES.HOME}`);
-  }, [photo, router]);
+    if (!photo?.frameType || !photo?.theme) {
+      window.location.href = `/${photo?.previousProcessedImageId}${ROUTES.HOME}`;
+      return
+    };
+  }, [photo]);
 
   const handleFrameChange = useCallback(
     (frameAttribute: (typeof FrameOptions)[ValidThemeType][number]) => {

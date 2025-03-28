@@ -14,14 +14,20 @@ import {usePhotoState} from "@/context/PhotoStateContext";
 import {useCamera} from "@/context/CameraContext";
 import {useSocket} from "@/context/SocketContext";
 
-const spamNavigate = (navigateFn: (route: string) => void, route: string) => {
-  for (let i = 0; i < 10; i++) {
-    navigateFn(route);
-  }
-};
-
 const CapturePage = () => {
   const {photo, setPhoto, addPhotoImage, updateVideoData} = usePhotoState();
+  useEffect(() => {
+      if (typeof window === "undefined") return;
+      if (!photo) {
+        window.location.href = ROUTES.HOME;
+        return;
+      }
+      if (!photo.theme || !photo.frameType) {
+        window.location.href = ROUTES.HOME;
+        return;
+      }
+     
+  }, [photo]);
   const {cameraStream, stopCamera, startCamera} = useCamera();
   const [count, setCount] = useState(CAPTURE_DURATION);
   const [isCountingDown, setIsCountingDown] = useState(false);
@@ -29,6 +35,7 @@ const CapturePage = () => {
   const [videoIntrinsicSize, setVideoIntrinsicSize] = useState<{width: number; height: number} | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const {isSocketConnected, isOnline} = useSocket();
+
   const [isVideoRefReady, setIsVideoRefReady] = useState(false);
   const setVideoRef = useCallback((node: HTMLVideoElement | null) => {
     if (node !== null) {
@@ -38,26 +45,11 @@ const CapturePage = () => {
   }, []);
   const [playCameraShutterSound] = useSound("/shutter.mp3", {volume: 1});
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
+
   const {navigateTo} = usePreventNavigation();
   const photoRef = useRef(photo);
   const [numberOfUploadedImage, setNumberOfUploadedImage] = useState(0);
   const initializationDoneRef = useRef(false);
-
-  useEffect(() => {
-    if (!photo) {
-      spamNavigate(navigateTo, ROUTES.HOME);
-      return;
-    }
-    if (!photo.frameType) {
-      spamNavigate(navigateTo, ROUTES.HOME);
-      return;
-    }
-    if (!photo.theme) {
-      spamNavigate(navigateTo, ROUTES.HOME);
-      return;
-    }
-   
-  }, [photo, navigateTo]);
 
   useEffect(() => {
     const initializeProcessedImage = async () => {
@@ -180,7 +172,7 @@ const CapturePage = () => {
 
     const recorder = new MediaRecorder(flippedStream, {
       mimeType: "video/webm;codecs=vp8",
-      videoBitsPerSecond: 50000000,
+      videoBitsPerSecond: 11111111,
     });
 
     let chunks: Blob[] = [];

@@ -8,6 +8,8 @@ import {Breadcrumb, BreadcrumbEllipsis, BreadcrumbItem, BreadcrumbList, Breadcru
 import {usePhoto} from "@/context/PhotoContext";
 import {useTranslation} from "react-i18next";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
+import { ROUTES } from "@/constants/routes";
+import { useEffect } from "react";
 const DesktopContent = dynamic(() => import("./DesktopContent"), {ssr: false});
 const MobileContent = dynamic(() => import("./MobileContent"), {ssr: false});
 
@@ -16,6 +18,13 @@ const SelectEditPage = () => {
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   const {photo} = usePhoto();
   const {t} = useTranslation();
+
+  useEffect(() => {
+      if (!photo?.frameType || !photo?.theme) {
+      window.location.href = `/${photo?.previousProcessedImageId}${ROUTES.HOME}`;
+      return
+    };
+  }, [photo]);
 
   return (
     <div className="w-full h-full p-4">

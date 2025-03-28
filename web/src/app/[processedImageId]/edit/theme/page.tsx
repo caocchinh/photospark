@@ -5,21 +5,23 @@ import {usePhoto} from "@/context/PhotoContext";
 import Image from "next/image";
 import React, {useEffect} from "react";
 import Link from "next/link";
-import {useRouter} from "next/navigation";
 import {FaArrowLeftLong} from "react-icons/fa6";
 import {ValidThemeType} from "@/constants/types";
 import {useTranslation} from "react-i18next";
 import {useReloadConfirm} from "@/hooks/useReloadConfirm";
 import {Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbSeparator} from "@/components/ui/breadcrumb";
+import { ROUTES } from "@/constants/routes";
 
 const ThemePage = () => {
   useReloadConfirm();
   const {photo, setPhoto} = usePhoto();
-  const router = useRouter();
   const {t} = useTranslation();
   useEffect(() => {
-    if (!photo?.frameType) return router.push(`/${photo?.previousProcessedImageId}/edit/`);
-  }, [photo, router]);
+    if (!photo?.frameType) {
+      window.location.href = `/${photo?.previousProcessedImageId}${ROUTES.HOME}`;
+      return
+    };
+  }, [photo]);
   const handleThemeChange = (name: ValidThemeType) => {
     if (!setPhoto || !photo) return;
     setPhoto((prev) => {

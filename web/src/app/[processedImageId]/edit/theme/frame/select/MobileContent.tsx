@@ -3,7 +3,7 @@
 import {Button} from "@/components/ui/button";
 import {usePhoto} from "@/context/PhotoContext";
 import {cn, findSwappedIndices} from "@/lib/utils";
-import {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import {useCallback, useMemo, useRef, useState} from "react";
 import {Layer, Rect, Stage} from "react-konva";
 import useImage from "use-image";
 import {Image as KonvaImage} from "react-konva";
@@ -14,7 +14,6 @@ import {GlowEffect} from "@/components/ui/glow-effect";
 import {ROUTES} from "@/constants/routes";
 import {Reorder} from "motion/react";
 import FrameImage from "@/components/FrameImage";
-import {useRouter} from "next/navigation";
 import {FaArrowRight, FaArrowLeft} from "react-icons/fa6";
 import {Drawer, DrawerClose, DrawerContent, DrawerHeader, DrawerTitle} from "@/components/ui/drawer";
 import {ScrollArea} from "@/components/ui/scroll-area";
@@ -28,14 +27,10 @@ import {Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, Di
 
 const MobileContent = () => {
   const {photo, setPhoto} = usePhoto();
-  const router = useRouter();
   const dummyLinkRef = useRef<HTMLAnchorElement>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const {t} = useTranslation();
-  useEffect(() => {
-    if (!photo) return router.push(`/`);
-    if (!photo?.theme) return router.push(`/${photo?.previousProcessedImageId}/${ROUTES.HOME}`);
-  }, [photo, router]);
+
   const [frameImg, frameImgStatus] = useImage(photo?.theme?.frame?.src || "");
   const [selectedImage, setSelectedImage] = useState<Array<{id: string; href: string} | null>>(
     photo?.selectedImages && photo.selectedImages.length > 0
@@ -225,7 +220,7 @@ const MobileContent = () => {
                             >
                               {selectedImage[index]?.href && (
                                 <Image
-                                  src={selectedImage[index]?.href}
+                                  src={selectedImage[index]?.href || ""}
                                   alt="image"
                                   crossOrigin="anonymous"
                                   width={350}
@@ -328,7 +323,7 @@ const MobileContent = () => {
                           onClick={() => {
                             if (photo.theme!.frame.slotCount - filteredSelectedImages.length == 0 && !isSelected) {
                               setIsSelected(true);
-                              handleContextSelect(filteredSelectedImages);
+                              handleContextSelect(filteredSelectedImages as Array<{id: string; href: string}>);
                             } else if (photo.theme!.frame.slotCount - filteredSelectedImages.length != 0) {
                               setIsDialogOpen(true);
                             }
