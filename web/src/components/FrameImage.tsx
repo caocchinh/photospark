@@ -119,11 +119,12 @@ const FrameImage = ({
     originalImg.src = imageUrl;
 
     originalImg.onload = () => {
-      if (isAppleDeviceDetected() && filter) {
-        applyFilterWithRasterizeHTML(originalImg);
-      } else {
-        applyFilterWithCanvas(originalImg);
-      }
+      // if (isAppleDeviceDetected() && filter) {
+      //   applyFilterWithRasterizeHTML(originalImg);
+      // } else {
+      //   applyFilterWithCanvas(originalImg);
+      // }
+      applyFilterWithRasterizeHTML(originalImg);
     };
 
     originalImg.onerror = () => {
