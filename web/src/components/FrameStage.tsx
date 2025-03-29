@@ -1,3 +1,5 @@
+"use client";
+
 import {useRef, useEffect, useState, useCallback} from "react";
 import {Stage as StageElement} from "konva/lib/Stage";
 import {Image as KonvaImage, Rect} from "react-konva";
@@ -20,6 +22,7 @@ const FrameStage = ({processedImage, images, stageRef, setIsAllImagesLoaded}: Fr
   const [frameImg, frameImgStatus] = useImage(processedImage?.frameURL || "", "anonymous");
   const [loadedImageCount, setLoadedImageCount] = useState(0);
   const [scale, setScale] = useState(1);
+  const [isFilterLoading, setIsFilterLoading] = useState(false);
 
   const handleImageLoaded = useCallback(() => {
     setLoadedImageCount((prev) => prev + 1);
@@ -27,12 +30,12 @@ const FrameStage = ({processedImage, images, stageRef, setIsAllImagesLoaded}: Fr
 
   useEffect(() => {
     const chosenImageCount = images?.filter((image) => image.slotPositionX != null && image.slotPositionY != null).length || 0;
-    if (frameImgStatus === "loaded" && loadedImageCount === chosenImageCount * (processedImage?.type == "singular" ? 1 : 2)) {
+    if (frameImgStatus === "loaded" && loadedImageCount === chosenImageCount * (processedImage?.type == "singular" ? 1 : 2) && !isFilterLoading) {
       setIsAllImagesLoaded?.(true);
     } else {
       setIsAllImagesLoaded?.(false);
     }
-  }, [frameImgStatus, images, processedImage?.type, setIsAllImagesLoaded, loadedImageCount]);
+  }, [frameImgStatus, images, processedImage?.type, setIsAllImagesLoaded, loadedImageCount, isFilterLoading]);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -100,6 +103,7 @@ const FrameStage = ({processedImage, images, stageRef, setIsAllImagesLoaded}: Fr
                     filter={processedImage.filter!}
                     crossOrigin="anonymous"
                     onLoad={handleImageLoaded}
+                    setIsFilterLoading={setIsFilterLoading}
                   />
                 )
               );
