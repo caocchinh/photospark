@@ -213,18 +213,6 @@ const FrameImage = ({
     }
   }, [isLoading, width, height, t]);
 
-  // Add cleanup on component unmount
-  useEffect(() => {
-    return () => {
-      const oldContainers = document.querySelectorAll('[id^="filter-container-"]');
-      oldContainers.forEach((container) => {
-        if (document.body.contains(container)) {
-          document.body.removeChild(container);
-        }
-      });
-    };
-  }, []);
-
   return (
     <KonvaImage
       image={canvas || undefined}
