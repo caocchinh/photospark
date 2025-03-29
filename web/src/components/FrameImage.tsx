@@ -92,6 +92,8 @@ const FrameImage = ({
           container.style.pointerEvents = "none";
           container.style.zIndex = "-1";
           container.style.overflow = "hidden";
+          container.style.visibility = "visible";
+          container.style.opacity = "1";
 
           const img = document.createElement("img");
           img.src = originalImg.src;
@@ -107,33 +109,53 @@ const FrameImage = ({
           document.body.appendChild(container);
 
           const processImage = async () => {
-            const canvas = await toCanvas(container, {
-              quality: 1.0,
-              pixelRatio: 1,
-              cacheBust: true,
-              skipAutoScale: true,
-              includeQueryParams: true,
-              canvasWidth: originalImg.naturalWidth,
-              canvasHeight: originalImg.naturalHeight,
-              fetchRequestInit: {
-                cache: "no-store",
-                headers: {
-                  "Cache-Control": "no-cache, no-store, must-revalidate",
-                  Pragma: "no-cache",
-                  Expires: "0",
+            try {
+              await new Promise((resolve) => setTimeout(resolve, 100));
+
+              const canvas = await toCanvas(container, {
+                quality: 1.0,
+                pixelRatio: 1,
+                cacheBust: true,
+                skipAutoScale: true,
+                includeQueryParams: true,
+                canvasWidth: originalImg.naturalWidth,
+                canvasHeight: originalImg.naturalHeight,
+                fetchRequestInit: {
+                  cache: "no-store",
+                  headers: {
+                    "Cache-Control": "no-cache, no-store, must-revalidate",
+                    Pragma: "no-cache",
+                    Expires: "0",
+                  },
                 },
-              },
-            });
+              });
 
-            setCanvas(canvas);
-            setIsFilterLoading?.(false);
-            setIsLoading(false);
-            if (onLoad) onLoad();
+              const ctx = canvas.getContext("2d");
+              const imageData = ctx?.getImageData(0, 0, canvas.width, canvas.height);
+              const isBlank = !imageData || !imageData.data.some((channel) => channel !== 0);
 
-            if (document.body.contains(container)) {
-              document.body.removeChild(container);
+              if (isBlank) {
+                console.warn("Generated a blank canvas, falling back to standard method");
+                applyFilterWithCanvas(originalImg);
+              } else {
+                setCanvas(canvas);
+                setIsFilterLoading?.(false);
+                setIsLoading(false);
+                if (onLoad) onLoad();
+              }
+            } catch (error) {
+              console.error("Error in html-to-image processing:", error);
+              applyFilterWithCanvas(originalImg);
+              if (document.body.contains(container)) {
+                document.body.removeChild(container);
+              }
+            } finally {
+              if (document.body.contains(container)) {
+                document.body.removeChild(container);
+              }
             }
           };
+
           img.onload = () => {
             processImage();
           };

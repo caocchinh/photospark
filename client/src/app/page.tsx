@@ -19,14 +19,13 @@ import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
 import CameraSetting from "@/components/CameraSetting";
 import {RxCross1} from "react-icons/rx";
-import {ValidFrameType} from "@/constants/types";
 import Cooldown from "@/components/Cooldown";
 import {LANGUAGE_LIST} from "@/constants/constants";
-import { usePhotoState } from "@/context/PhotoStateContext";
-import { useCountdown } from "@/context/CountdownContext";
+import {usePhotoState} from "@/context/PhotoStateContext";
+import {useCountdown} from "@/context/CountdownContext";
 
 const LayoutPage = () => {
-  const {photo, setPhoto} = usePhotoState();
+  const {photo, updateFrameType} = usePhotoState();
   const {autoSelectCountdownTimer} = useCountdown();
   const {t, i18n} = useTranslation();
   usePreventNavigation();
@@ -51,34 +50,14 @@ const LayoutPage = () => {
     [i18n]
   );
 
-  const handleTypeChange = useCallback(
-    (type: ValidFrameType) => {
-      if (!setPhoto) return;
-      setPhoto(() => {
-        return {
-          images: [],
-          selectedImages: [],
-          theme: null,
-          quantity: null,
-          video: {
-            data: new Blob(),
-            r2_url: null,
-          },
-          isTransition: false,
-          id: null,
-          error: false,
-          frameType: type,
-        };
-      });
-    },
-    [setPhoto]
-  );
-
   return (
     <>
       <Cooldown />
       <div
-        className={cn("w-[90%] h-full flex items-center justify-start flex-col relative", autoSelectCountdownTimer <= 0 ? "pointer-events-none" : null)}
+        className={cn(
+          "w-[90%] h-full flex items-center justify-start flex-col relative",
+          autoSelectCountdownTimer <= 0 ? "pointer-events-none" : null
+        )}
       >
         {!photo && <CollabTransition />}
 
@@ -136,7 +115,7 @@ const LayoutPage = () => {
           <Link
             href={ROUTES.THEME}
             className=" cursor-pointer hover:scale-[1.02] active:scale-[0.99]"
-            onClick={() => handleTypeChange("singular")}
+            onClick={() => updateFrameType("singular")}
             tabIndex={-1}
           >
             <SingularLayout />
@@ -144,7 +123,7 @@ const LayoutPage = () => {
           <Link
             href={ROUTES.THEME}
             className=" cursor-pointer hover:scale-[1.02] active:scale-[0.99] "
-            onClick={() => handleTypeChange("double")}
+            onClick={() => updateFrameType("double")}
             tabIndex={-1}
           >
             <DoubleLayout />

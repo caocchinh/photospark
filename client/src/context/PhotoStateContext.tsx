@@ -1,7 +1,7 @@
 "use client";
 
 import {createContext, ReactNode, useContext, useState} from "react";
-import {PhotoOptions, ValidThemeType} from "@/constants/types";
+import {PhotoOptions, ValidThemeType, ValidFrameType} from "@/constants/types";
 import {FrameOptions} from "@/constants/constants";
 
 interface PhotoStateContextType {
@@ -14,6 +14,7 @@ interface PhotoStateContextType {
   updateVideoData: (videoBlob: Blob | null, r2Url: string | null) => void;
   updateFrame: (frameAttribute: (typeof FrameOptions)[ValidThemeType][number]) => void;
   clearPhotoState: () => void;
+  updateFrameType: (frameType: ValidFrameType) => void;
 }
 
 const PhotoStateContext = createContext<PhotoStateContextType>({
@@ -26,6 +27,7 @@ const PhotoStateContext = createContext<PhotoStateContextType>({
   updateVideoData: () => {},
   updateFrame: () => {},
   clearPhotoState: () => {},
+  updateFrameType: () => {},
 });
 
 export const PhotoStateProvider = ({children}: {children: ReactNode}) => {
@@ -110,6 +112,27 @@ export const PhotoStateProvider = ({children}: {children: ReactNode}) => {
     });
   };
 
+  const updateFrameType = (frameType: ValidFrameType) => {
+    setPhoto((prev) => {
+      if (!prev)
+        return {
+          images: [],
+          selectedImages: [],
+          theme: null,
+          quantity: null,
+          video: {
+            data: new Blob(),
+            r2_url: null,
+          },
+          isTransition: false,
+          id: null,
+          error: false,
+          frameType: frameType,
+        };
+      return {...prev, frameType};
+    });
+  };
+
   const clearPhotoState = () => {
     setPhoto(undefined);
   };
@@ -126,6 +149,7 @@ export const PhotoStateProvider = ({children}: {children: ReactNode}) => {
         updateVideoData,
         clearPhotoState,
         updateFrame,
+        updateFrameType,
       }}
     >
       {children}
