@@ -26,7 +26,7 @@ const FrameImage = ({
   onLoad?: () => void;
   setIsFilterLoading?: (isLoading: boolean) => void;
 }) => {
-  const [image, setImage] = useState<HTMLImageElement | null>(null);
+  const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const {t} = useTranslation();
 
@@ -39,6 +39,28 @@ const FrameImage = ({
 
     return isAppleVendor || isApplePlatform || isAppleUserAgent;
   }, []);
+
+  const applyFilterWithCanvas = useCallback(
+    (originalImg: HTMLImageElement) => {
+      if (typeof window === "undefined") return;
+
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
+      canvas.width = originalImg.width;
+      canvas.height = originalImg.height;
+      if (context) {
+        if (typeof context.filter !== "undefined" && filter) {
+          context.filter = filter;
+        }
+        context.drawImage(originalImg, 0, 0);
+      }
+      setCanvas(canvas);
+      setIsFilterLoading?.(false);
+      setIsLoading(false);
+      if (onLoad) onLoad();
+    },
+    [filter, onLoad, setIsFilterLoading]
+  );
 
   const isAppleDeviceDetected = useCallback(() => {
     return typeof window !== "undefined" ? isAppleDevice() : false;
@@ -69,86 +91,22 @@ const FrameImage = ({
       rasterizeHTML
         .drawHTML(htmlContent, canvas)
         .then(() => {
-          const filteredImg = new Image();
-          if (crossOrigin) filteredImg.crossOrigin = crossOrigin;
-          filteredImg.src = canvas.toDataURL("image/jpg");
-          filteredImg.onload = () => {
-            setImage(filteredImg);
-            setIsFilterLoading?.(false);
-            setIsLoading(false);
-            if (onLoad) onLoad();
-          };
-
-          filteredImg.onerror = () => {
-            console.error("Failed to load filtered image");
-            setImage(originalImg);
-            setIsFilterLoading?.(false);
-            setIsLoading(false);
-            if (onLoad) onLoad();
-          };
-        })
-        .catch(() => {
-          console.error("Error rasterizing HTML");
-          setImage(originalImg); // Fallback to original
+          setCanvas(canvas);
           setIsFilterLoading?.(false);
           setIsLoading(false);
           if (onLoad) onLoad();
+        })
+        .catch(() => {
+          applyFilterWithCanvas(originalImg);
         });
     },
-    [filter, crossOrigin, setImage, setIsFilterLoading, setIsLoading, onLoad]
-  );
-
-  // Method for non-apple devices using canvas filter
-  const applyFilterWithCanvas = useCallback(
-    (originalImg: HTMLImageElement) => {
-      if (typeof window === "undefined") return;
-      // Create a canvas with original image dimensions
-      const canvas = document.createElement("canvas");
-      canvas.width = originalImg.naturalWidth;
-      canvas.height = originalImg.naturalHeight;
-      const ctx = canvas.getContext("2d");
-
-      if (!ctx) {
-        setImage(originalImg); // Fallback to original
-        setIsFilterLoading?.(false);
-        setIsLoading(false);
-        if (onLoad) onLoad();
-        return;
-      }
-
-      // Apply filter directly using canvas context filter property
-      if (filter) {
-        ctx.filter = filter;
-      }
-      ctx.drawImage(originalImg, 0, 0);
-
-      // Create a new image from the canvas
-      const filteredImg = new Image();
-      if (crossOrigin) filteredImg.crossOrigin = crossOrigin;
-      filteredImg.src = canvas.toDataURL("image/jpg");
-
-      filteredImg.onload = () => {
-        setImage(filteredImg);
-        setIsFilterLoading?.(false);
-        setIsLoading(false);
-        if (onLoad) onLoad();
-      };
-
-      filteredImg.onerror = () => {
-        console.error("Failed to load filtered image");
-        setImage(originalImg);
-        setIsFilterLoading?.(false);
-        setIsLoading(false);
-        if (onLoad) onLoad();
-      };
-    },
-    [filter, crossOrigin, setImage, setIsFilterLoading, setIsLoading, onLoad]
+    [filter, crossOrigin, setIsFilterLoading, onLoad, applyFilterWithCanvas]
   );
 
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (!url) {
-      setImage(null);
+      setCanvas(null);
       return;
     }
 
@@ -158,27 +116,13 @@ const FrameImage = ({
 
     const originalImg = new Image();
     if (crossOrigin) originalImg.crossOrigin = crossOrigin;
+    originalImg.src = imageUrl;
 
     originalImg.onload = () => {
-      // If no filter, just use the original image
-      if (!filter || filter == "") {
+      if (isAppleDeviceDetected() && filter) {
+        applyFilterWithRasterizeHTML(originalImg);
+      } else {
         applyFilterWithCanvas(originalImg);
-      }
-
-      try {
-        if (isAppleDeviceDetected()) {
-          // Apple device method: use rasterizeHTML
-          applyFilterWithRasterizeHTML(originalImg);
-        } else {
-          // Non-Apple device method: use canvas filter
-          applyFilterWithCanvas(originalImg);
-        }
-      } catch {
-        console.error("Error applying filter");
-        setImage(originalImg); // Fallback to original
-        setIsFilterLoading?.(false);
-        setIsLoading(false);
-        if (onLoad) onLoad();
       }
     };
 
@@ -200,13 +144,10 @@ const FrameImage = ({
         context.fillText("CORS error", errorCanvas.width / 2, errorCanvas.height / 2 + 20);
       }
 
-      const errorImg = new Image();
-      errorImg.onload = () => {
-        setImage(errorImg);
-        setIsLoading(false);
-        if (onLoad) onLoad();
-      };
-      errorImg.src = errorCanvas.toDataURL();
+      setCanvas(errorCanvas);
+      setIsLoading(false);
+      setIsFilterLoading?.(false);
+      if (onLoad) onLoad();
     };
 
     originalImg.src = imageUrl;
@@ -228,17 +169,13 @@ const FrameImage = ({
         context.fillText(t("Loading..."), loadingCanvas.width / 2, loadingCanvas.height / 2);
       }
 
-      const loadingImg = new Image();
-      loadingImg.onload = () => {
-        setImage(loadingImg);
-      };
-      loadingImg.src = loadingCanvas.toDataURL();
+      setCanvas(loadingCanvas);
     }
   }, [isLoading, width, height, t]);
 
   return (
     <KonvaImage
-      image={image || undefined}
+      image={canvas || undefined}
       height={height}
       width={width}
       x={x}
