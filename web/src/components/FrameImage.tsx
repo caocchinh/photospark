@@ -77,11 +77,12 @@ const FrameImage = ({
     setIsFilterLoading?.(true);
     const originalImg = new Image();
     if (crossOrigin) originalImg.crossOrigin = crossOrigin;
-    originalImg.src = url;
+    const imageUrl = url.includes("r2.dev") ? `/api/proxy/image?url=${encodeURIComponent(url)}` : url;
+    originalImg.src = imageUrl;
 
     originalImg.onload = () => {
       try {
-        if (filter) {
+        if (filter && isAppleDeviceDetected()) {
           const container = document.createElement("div");
           container.style.position = "fixed";
           container.style.top = "0";
