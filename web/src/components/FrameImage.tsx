@@ -37,7 +37,7 @@ const FrameImage = ({
     const isApplePlatform = /Mac|iPad|iPhone|iPod/.test(navigator.platform);
     const isAppleUserAgent = /Mac|iPad|iPhone|iPod/.test(navigator.userAgent);
 
-    return isAppleVendor || isApplePlatform || isAppleUserAgent;
+    return isAppleVendor || isApplePlatform || isAppleUserAgent || navigator.platform === "MacIntel" || navigator.userAgent.includes("Macintosh");
   }, []);
 
   const applyFilterWithCanvas = useCallback(
