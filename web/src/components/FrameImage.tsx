@@ -119,12 +119,11 @@ const FrameImage = ({
     originalImg.src = imageUrl;
 
     originalImg.onload = () => {
-      // if (isAppleDeviceDetected() && filter) {
-      //   applyFilterWithRasterizeHTML(originalImg);
-      // } else {
-      //   applyFilterWithCanvas(originalImg);
-      // }
-      applyFilterWithRasterizeHTML(originalImg);
+      if (isAppleDeviceDetected() && filter) {
+        applyFilterWithRasterizeHTML(originalImg);
+      } else {
+        applyFilterWithCanvas(originalImg);
+      }
     };
 
     originalImg.onerror = () => {
@@ -150,8 +149,6 @@ const FrameImage = ({
       setIsFilterLoading?.(false);
       if (onLoad) onLoad();
     };
-
-    originalImg.src = imageUrl;
   }, [url, crossOrigin, onLoad, filter, isAppleDeviceDetected, setIsFilterLoading, applyFilterWithRasterizeHTML, applyFilterWithCanvas]);
 
   useEffect(() => {
