@@ -33,7 +33,6 @@ const FilterPage = () => {
       window.location.href = ROUTES.HOME;
       return;
     }
-   
   }, [photo]);
   const filterRefs = useRef<(HTMLDivElement | null)[]>([]);
   const uploadAttemptedRef = useRef(false);
@@ -122,7 +121,7 @@ const FilterPage = () => {
         const slotPosition = photo.selectedImages.findIndex((selectedImage) => selectedImage.id == image.id);
         try {
           const {createImage} = await import("@/server/actions");
-          
+
           const imageResponse = await createImage(
             image.href,
             photo.id!,
@@ -131,7 +130,6 @@ const FilterPage = () => {
             photo.theme!.frame.slotDimensions.height,
             photo.theme!.frame.slotDimensions.width
           );
-          
 
           if (imageResponse.error) {
             throw new Error("Failed to upload image to database");
@@ -270,7 +268,7 @@ const FilterPage = () => {
   }, [photo, qrCodeURL]);
 
   return (
-    <div className="w-full h-full relative">
+    <div className="w-full h-full relative flex items-center justify-center">
       <div
         className={cn(
           "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full flex items-center justify-center",

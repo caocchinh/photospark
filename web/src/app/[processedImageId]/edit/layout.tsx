@@ -45,7 +45,7 @@ export default async function EditLayout(props: {params: Params; children: React
       previousProcessedImageId={processedImageId}
       videoUrl={video.data?.url || ""}
     >
-      <div className="w-full min-h-screen py-20">
+      <div className="w-full min-h-screen py-20 relative z-[0] bg-white">
         {props.children}
         {images.data.length < NUM_OF_CAPTURE_IMAGE && <FetchError type="image" />}
       </div>

@@ -9,7 +9,7 @@ const NavBar = () => {
   return (
     <>
       {pathname != "/" && (
-        <header className={cn("bg-transparent pt-4 px-5 fixed z-50 w-max left-0 top-0")}>
+        <header className={cn("bg-transparent pt-4 px-5 fixed z-[1] w-max left-0 top-0")}>
           <nav className=" flex w-max justify-between">
             <div className="w-max py-2 px-1 shadow-lg rounded-md  bg-card text-card-foreground relative flex items-center justify-center flex-row gap-1">
               <BorderTrail

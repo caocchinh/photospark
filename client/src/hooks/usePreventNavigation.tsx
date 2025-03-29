@@ -112,20 +112,10 @@ const usePreventNavigation = () => {
     };
 
     // Add handler for beforeunload to prevent reload and tab close
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (!isOnline || !isSocketConnected) return; // Don't show dialog if offline
-      // Cancel the event
-      e.preventDefault();
-      // Chrome requires returnValue to be set
-      e.returnValue = "";
-      // This will show a confirmation dialog
-      return "";
-    };
 
     // Handle touchpad gestures by monitoring rapid popstate events
     let popstateTimestamp = 0;
     const handleRapidPopstate = () => {
-      if (!isOnline || !isSocketConnected) return; // Don't handle if offline
       const now = Date.now();
       if (now - popstateTimestamp < 300) {
         // Rapid popstate detected, likely a touchpad gesture
@@ -141,14 +131,12 @@ const usePreventNavigation = () => {
     window.addEventListener("popstate", handlePopState, {capture: true});
     window.addEventListener("popstate", handleRapidPopstate);
     window.addEventListener("keydown", handleKeyDown, {capture: true});
-    window.addEventListener("beforeunload", handleBeforeUnload);
 
     // Clean up
     return () => {
       window.removeEventListener("popstate", handlePopState, {capture: true});
       window.removeEventListener("popstate", handleRapidPopstate);
       window.removeEventListener("keydown", handleKeyDown, {capture: true});
-      window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [isOnline, isSocketConnected]);
 

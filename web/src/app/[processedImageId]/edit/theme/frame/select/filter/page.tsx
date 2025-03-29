@@ -8,8 +8,8 @@ import {Breadcrumb, BreadcrumbEllipsis, BreadcrumbItem, BreadcrumbList, Breadcru
 import {usePhoto} from "@/context/PhotoContext";
 import {useTranslation} from "react-i18next";
 import Link from "next/link";
-import { ROUTES } from "@/constants/routes";
-import { useEffect } from "react";
+import {ROUTES} from "@/constants/routes";
+import {useEffect} from "react";
 
 const DesktopContent = dynamic(() => import("./DesktopContent"), {ssr: false});
 const MobileContent = dynamic(() => import("./MobileContent"), {ssr: false});
@@ -22,10 +22,10 @@ const FilterEditPage = () => {
 
   useEffect(() => {
     if (!photo?.frameType || !photo?.theme || photo.selectedImages.length == 0) {
-    window.location.href = `/${photo?.previousProcessedImageId}${ROUTES.HOME}`;
-    return
-  };
-}, [photo]);
+      window.location.href = `/${photo?.previousProcessedImageId}${ROUTES.HOME}`;
+      return;
+    }
+  }, [photo]);
 
   return (
     <div className="w-full h-full p-4">

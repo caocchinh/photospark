@@ -8,8 +8,8 @@ import {Breadcrumb, BreadcrumbEllipsis, BreadcrumbItem, BreadcrumbList, Breadcru
 import {usePhoto} from "@/context/PhotoContext";
 import {useTranslation} from "react-i18next";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
-import { ROUTES } from "@/constants/routes";
-import { useEffect } from "react";
+import {ROUTES} from "@/constants/routes";
+import {useEffect} from "react";
 const DesktopContent = dynamic(() => import("./DesktopContent"), {ssr: false});
 const MobileContent = dynamic(() => import("./MobileContent"), {ssr: false});
 
@@ -20,10 +20,10 @@ const SelectEditPage = () => {
   const {t} = useTranslation();
 
   useEffect(() => {
-      if (!photo?.frameType || !photo?.theme) {
+    if (!photo?.frameType || !photo?.theme) {
       window.location.href = `/${photo?.previousProcessedImageId}${ROUTES.HOME}`;
-      return
-    };
+      return;
+    }
   }, [photo]);
 
   return (

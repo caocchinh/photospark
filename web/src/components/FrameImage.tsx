@@ -3,7 +3,7 @@
 import {Image as KonvaImage} from "react-konva";
 import {useState, useEffect, useCallback} from "react";
 import {useTranslation} from "react-i18next";
-import rasterizeHTML from "rasterizehtml";
+import {toCanvas} from "html-to-image";
 
 const FrameImage = ({
   url,
@@ -66,43 +66,6 @@ const FrameImage = ({
     return typeof window !== "undefined" ? isAppleDevice() : false;
   }, [isAppleDevice]);
 
-  const applyFilterWithRasterizeHTML = useCallback(
-    (originalImg: HTMLImageElement) => {
-      if (typeof window === "undefined") return;
-
-      // Create a canvas with original image dimensions
-      const canvas = document.createElement("canvas");
-      canvas.width = originalImg.naturalWidth;
-      canvas.height = originalImg.naturalHeight;
-
-      // Create HTML with the image and CSS filter
-      const htmlContent = `
-      <div style="width: ${originalImg.naturalWidth}px; height: ${originalImg.naturalHeight}px;">
-        <img 
-          src="${originalImg.src}" 
-          width="${originalImg.naturalWidth}" 
-          height="${originalImg.naturalHeight}"
-          style="filter: ${filter};" 
-          ${crossOrigin ? `crossorigin="${crossOrigin}"` : ""}
-        />
-      </div>
-    `;
-
-      rasterizeHTML
-        .drawHTML(htmlContent, canvas)
-        .then(() => {
-          setCanvas(canvas);
-          setIsFilterLoading?.(false);
-          setIsLoading(false);
-          if (onLoad) onLoad();
-        })
-        .catch(() => {
-          applyFilterWithCanvas(originalImg);
-        });
-    },
-    [filter, crossOrigin, setIsFilterLoading, onLoad, applyFilterWithCanvas]
-  );
-
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (!url) {
@@ -112,16 +75,72 @@ const FrameImage = ({
 
     setIsLoading(true);
     setIsFilterLoading?.(true);
-    const imageUrl = url.includes("r2.dev") ? `/api/proxy/image?url=${encodeURIComponent(url)}` : url;
-
     const originalImg = new Image();
     if (crossOrigin) originalImg.crossOrigin = crossOrigin;
-    originalImg.src = imageUrl;
+    originalImg.src = url;
 
     originalImg.onload = () => {
-      if (isAppleDeviceDetected() && filter) {
-        applyFilterWithRasterizeHTML(originalImg);
-      } else {
+      try {
+        if (filter) {
+          const container = document.createElement("div");
+          container.style.position = "absolute";
+          container.style.top = "0";
+          container.style.left = "0";
+          container.style.width = `${originalImg.naturalWidth}px`;
+          container.style.height = `${originalImg.naturalHeight}px`;
+          container.style.pointerEvents = "none";
+          container.style.zIndex = "-1";
+          container.style.overflow = "hidden";
+
+          const img = document.createElement("img");
+          img.src = originalImg.src;
+          img.width = originalImg.naturalWidth;
+          img.height = originalImg.naturalHeight;
+          img.style.width = "100%";
+          img.style.height = "100%";
+          img.style.objectFit = "contain";
+          img.style.filter = filter;
+          if (crossOrigin) img.crossOrigin = crossOrigin;
+
+          container.appendChild(img);
+          document.body.appendChild(container);
+
+          const processImage = async () => {
+            const canvas = await toCanvas(container, {
+              quality: 1.0,
+              pixelRatio: 1,
+              cacheBust: true,
+              skipAutoScale: true,
+              includeQueryParams: true,
+              canvasWidth: originalImg.naturalWidth,
+              canvasHeight: originalImg.naturalHeight,
+              fetchRequestInit: {
+                cache: "no-store",
+                headers: {
+                  "Cache-Control": "no-cache, no-store, must-revalidate",
+                  Pragma: "no-cache",
+                  Expires: "0",
+                },
+              },
+            });
+
+            setCanvas(canvas);
+            setIsFilterLoading?.(false);
+            setIsLoading(false);
+            if (onLoad) onLoad();
+
+            if (document.body.contains(container)) {
+              document.body.removeChild(container);
+            }
+          };
+          img.onload = () => {
+            processImage();
+          };
+        } else {
+          applyFilterWithCanvas(originalImg);
+        }
+      } catch (error) {
+        console.error("Error in image processing:", error);
         applyFilterWithCanvas(originalImg);
       }
     };
@@ -149,7 +168,7 @@ const FrameImage = ({
       setIsFilterLoading?.(false);
       if (onLoad) onLoad();
     };
-  }, [url, crossOrigin, onLoad, filter, isAppleDeviceDetected, setIsFilterLoading, applyFilterWithRasterizeHTML, applyFilterWithCanvas]);
+  }, [url, crossOrigin, onLoad, filter, isAppleDeviceDetected, setIsFilterLoading, applyFilterWithCanvas]);
 
   useEffect(() => {
     if (isLoading) {
@@ -170,6 +189,18 @@ const FrameImage = ({
       setCanvas(loadingCanvas);
     }
   }, [isLoading, width, height, t]);
+
+  // Add cleanup on component unmount
+  useEffect(() => {
+    return () => {
+      const oldContainers = document.querySelectorAll('[id^="filter-container-"]');
+      oldContainers.forEach((container) => {
+        if (document.body.contains(container)) {
+          document.body.removeChild(container);
+        }
+      });
+    };
+  }, []);
 
   return (
     <KonvaImage

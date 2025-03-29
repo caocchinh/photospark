@@ -80,7 +80,7 @@ const Preview = ({
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-8 p-4 mt-3 h-max w-full">
+    <div className="flex flex-col items-center justify-center gap-8 p-4 mt-3 h-max w-full relative z-[0] bg-white">
       <div className="w-[95%] flex items-center justify-end">
         <LanguageBar />
       </div>

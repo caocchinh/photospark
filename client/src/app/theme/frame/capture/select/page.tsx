@@ -30,7 +30,6 @@ const SelectPage = () => {
       window.location.href = ROUTES.HOME;
       return;
     }
-   
   }, [photo]);
   const {socket, isSocketConnected, isOnline} = useSocket();
   const [videoProcessed, setVideoProcessed] = useState(false);
@@ -66,7 +65,7 @@ const SelectPage = () => {
   }, [isOnline, isSocketConnected, photo, setPhoto, socket, updateVideoData]);
 
   useEffect(() => {
-    if (!photo || !setPhoto) return ;
+    if (!photo || !setPhoto) return;
 
     const uploadImage = async () => {
       if (!isLastImageUploaded && photo.images.some((item) => item.href == "") && !isLastImageUploadedAttempt.current) {
@@ -200,7 +199,7 @@ const SelectPage = () => {
   }, [filteredSelectedImages, isLastImageUploaded, isTimeOver, navigateTo, photo, setSelectedImages, videoProcessed]);
 
   return (
-    <div className="w-full h-full relative">
+    <div className="w-full h-full relative flex items-center justify-center">
       <div
         className={cn(
           "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full flex items-center justify-center",
