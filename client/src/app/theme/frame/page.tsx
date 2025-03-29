@@ -29,10 +29,7 @@ const LayoutPage = () => {
       window.location.href = ROUTES.HOME;
       return;
     }
-    if (!photo.frameType || !photo.theme) {
-      window.location.href = ROUTES.HOME;
-      return;
-    }
+   
   }, [photo]);
   const router = useRouter();
   const {autoSelectCountdownTimer} = useCountdown();

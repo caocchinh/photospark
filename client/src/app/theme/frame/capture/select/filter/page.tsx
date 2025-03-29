@@ -28,14 +28,12 @@ const FilterPage = () => {
   const {photo} = usePhotoState();
   useEffect(() => {
     if (typeof window === "undefined") return;
+
     if (!photo) {
       window.location.href = ROUTES.HOME;
       return;
     }
-    if (!photo.frameType || !photo.theme || photo.images.length < photo.theme.frame.slotCount || photo.selectedImages.length == 0) {
-      window.location.href = ROUTES.HOME;
-      return;
-    }
+   
   }, [photo]);
   const filterRefs = useRef<(HTMLDivElement | null)[]>([]);
   const uploadAttemptedRef = useRef(false);

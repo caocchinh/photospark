@@ -5,7 +5,6 @@ import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import useImage from "use-image";
 import {Image as KonvaImage, Rect} from "react-konva";
 import {Layer, Stage} from "react-konva";
-import FrameImage from "@/components/FrameImage";
 import {Button} from "@/components/ui/button";
 import {FILTERS, FRAME_HEIGHT, FRAME_WIDTH, IMAGE_HEIGHT, IMAGE_WIDTH, OFFSET_X, OFFSET_Y} from "@/constants/constants";
 import {cn} from "@/lib/utils";
@@ -27,6 +26,7 @@ import {Drawer} from "@/components/ui/drawer";
 import {useTranslation} from "react-i18next";
 import {useImageUpload} from "@/hooks/useImageUpload";
 import GeneralError from "@/components/GeneralError";
+import FrameImageWrapper from "@/components/FrameImageWrapper";
 
 const MobileContent = () => {
   const {photo} = usePhoto();
@@ -46,6 +46,7 @@ const MobileContent = () => {
   const filterRef = useRef(filter);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const uploadAttemptedRef = useRef(false);
+  const [isFilterLoading, setIsFilterLoading] = useState(false);
 
   useEffect(() => {
     filterRef.current = filter;
@@ -127,7 +128,7 @@ const MobileContent = () => {
                       {photo.selectedImages.map((item, index) => {
                         return (
                           item.href && (
-                            <FrameImage
+                            <FrameImageWrapper
                               key={item.id}
                               url={item.href}
                               y={photo.theme!.frame.slotPositions[index].y}
@@ -135,6 +136,7 @@ const MobileContent = () => {
                               height={photo.theme!.frame.slotDimensions.height}
                               width={photo.theme!.frame.slotDimensions.width}
                               filter={filter || ""}
+                              setIsFilterLoading={setIsFilterLoading}
                               crossOrigin="anonymous"
                             />
                           )
@@ -175,8 +177,16 @@ const MobileContent = () => {
                   </DrawerTrigger>
                   <DrawerContent className="h-[95vh]">
                     <DrawerHeader>
-                      <DrawerTitle className="text-center uppercase text-xl mb-2">{t("Click on the image to choose filter")}</DrawerTitle>
-                      <ScrollArea className=" h-[500px] w-[100%] ">
+                      <DrawerTitle className="text-center uppercase text-xl mb-2 flex items-center justify-center gap-2 flex-wrap">
+                        {t("Click on the image to choose filter")}{" "}
+                        {isFilterLoading ? (
+                          <LoadingSpinner
+                            size={20}
+                            color="black"
+                          />
+                        ) : null}
+                      </DrawerTitle>
+                      <ScrollArea className={cn(" h-[500px] w-[100%]", isFilterLoading ? "pointer-events-none" : null)}>
                         <div className="grid grid-cols-3 gr md:grid-cols-4 gap-4 items-center justify-center">
                           {FILTERS.map((item, index) => (
                             <div
@@ -205,17 +215,31 @@ const MobileContent = () => {
                   </DrawerContent>
                 </Drawer>
                 <Button
-                  className="w-full  rounded-sm cursor-pointer"
+                  className="w-full  rounded-sm cursor-pointer flex items-center justify-center gap-2"
                   onClick={selectRandomFilter}
+                  disabled={isFilterLoading}
                 >
                   {t("Random Filter")} - {FILTERS.find((item) => item.value == filter)?.name}
+                  {isFilterLoading && (
+                    <LoadingSpinner
+                      size={20}
+                      color="white"
+                    />
+                  )}
                 </Button>
                 <Button
                   className="w-full flex items-center justify-center gap-1 rounded-sm cursor-pointer"
                   onClick={() => setFilter(null)}
+                  disabled={isFilterLoading}
                 >
                   {t("Reset Filter")}
-                  {!filter && <IoIosCheckmark size={35} />}
+                  {!filter && !isFilterLoading && <IoIosCheckmark size={35} />}
+                  {isFilterLoading && (
+                    <LoadingSpinner
+                      size={20}
+                      color="white"
+                    />
+                  )}
                 </Button>
                 <div className="relative w-full">
                   <GlowEffect
@@ -230,7 +254,10 @@ const MobileContent = () => {
                     onOpenChange={setIsOpen}
                   >
                     <AlertDialogTrigger asChild>
-                      <Button className="flex text-sm text-center items-center justify-center gap-2 text-background rounded px-4 py-6 hover:opacity-[85%] w-full relative z-10 cursor-pointer bg-green-700 hover:bg-green-700">
+                      <Button
+                        disabled={isFilterLoading}
+                        className="flex text-sm text-center items-center justify-center gap-2 text-background rounded px-4 py-6 hover:opacity-[85%] w-full relative z-10 cursor-pointer bg-green-700 hover:bg-green-700"
+                      >
                         {t("Create image")}
                         <TbWand
                           size={20}

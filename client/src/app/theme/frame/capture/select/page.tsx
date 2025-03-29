@@ -25,14 +25,12 @@ const SelectPage = () => {
   const {photo, setPhoto, updateVideoData, setSelectedImages} = usePhotoState();
   useEffect(() => {
     if (typeof window === "undefined") return;
+
     if (!photo) {
       window.location.href = ROUTES.HOME;
       return;
     }
-    if (!photo.frameType || !photo.theme || photo.images.length < photo.theme.frame.slotCount) {
-      window.location.href = ROUTES.HOME;
-      return;
-    }
+   
   }, [photo]);
   const {socket, isSocketConnected, isOnline} = useSocket();
   const [videoProcessed, setVideoProcessed] = useState(false);

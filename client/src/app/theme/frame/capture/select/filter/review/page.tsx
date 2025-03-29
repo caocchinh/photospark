@@ -18,10 +18,7 @@ const ReviewPage = () => {
       router.push(ROUTES.HOME);
       return;
     }
-    if (!photo.frameType || !photo.theme || photo.images.length < photo.theme.frame.slotCount || !photo.video.r2_url) {
-      router.push(ROUTES.HOME);
-      return;
-    }
+   
   }, [photo, router]);
   const {navigateTo} = usePreventNavigation();
 

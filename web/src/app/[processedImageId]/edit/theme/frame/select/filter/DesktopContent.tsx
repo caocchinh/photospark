@@ -5,7 +5,6 @@ import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import useImage from "use-image";
 import {Image as KonvaImage, Rect} from "react-konva";
 import {Layer, Stage} from "react-konva";
-import FrameImage from "@/components/FrameImage";
 import {Button} from "@/components/ui/button";
 import {FILTERS, FRAME_HEIGHT, FRAME_WIDTH, IMAGE_HEIGHT, IMAGE_WIDTH, OFFSET_X, OFFSET_Y} from "@/constants/constants";
 import {cn} from "@/lib/utils";
@@ -24,6 +23,7 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import GeneralError from "@/components/GeneralError";
 import {useTranslation} from "react-i18next";
 import {useImageUpload} from "@/hooks/useImageUpload";
+import FrameImageWrapper from "@/components/FrameImageWrapper";
 
 const DesktopContent = () => {
   const {photo} = usePhoto();
@@ -41,6 +41,7 @@ const DesktopContent = () => {
   const filterRef = useRef(filter);
   const dummyLinkRef = useRef<HTMLAnchorElement>(null);
   const uploadAttemptedRef = useRef(false);
+  const [isFilterLoading, setIsFilterLoading] = useState(false);
 
   useEffect(() => {
     filterRef.current = filter;
@@ -104,7 +105,7 @@ const DesktopContent = () => {
                         {photo.selectedImages.map((item, index) => {
                           return (
                             item.href && (
-                              <FrameImage
+                              <FrameImageWrapper
                                 key={item.id}
                                 url={item.href}
                                 y={photo.theme!.frame.slotPositions[index].y}
@@ -113,6 +114,7 @@ const DesktopContent = () => {
                                 width={photo.theme!.frame.slotDimensions.width}
                                 filter={filter || ""}
                                 crossOrigin="anonymous"
+                                setIsFilterLoading={setIsFilterLoading}
                               />
                             )
                           );
@@ -137,7 +139,7 @@ const DesktopContent = () => {
                   </Stage>
                 </div>
                 <div className="flex items-center justify-center flex-col gap-5">
-                  <ScrollArea className=" h-[60vh] w-[100%] ">
+                  <ScrollArea className={cn(" h-[60vh] w-[100%]", isFilterLoading ? "pointer-events-none" : null)}>
                     <div className="flex-wrap flex gap-4 items-center justify-center">
                       {FILTERS.map((item, index) => (
                         <div
@@ -163,17 +165,31 @@ const DesktopContent = () => {
                     </div>
                   </ScrollArea>
                   <Button
-                    className="w-full mt-2 rounded-sm cursor-pointer"
+                    className="w-full mt-2 rounded-sm cursor-pointer flex items-center justify-center gap-2"
                     onClick={selectRandomFilter}
+                    disabled={isFilterLoading}
                   >
                     {t("Random Filter")} - {FILTERS.find((item) => item.value == filter)?.name}
+                    {isFilterLoading && (
+                      <LoadingSpinner
+                        size={20}
+                        color="white"
+                      />
+                    )}
                   </Button>
                   <Button
                     className="w-full flex items-center justify-center gap-1 rounded-sm cursor-pointer"
                     onClick={() => setFilter(null)}
+                    disabled={isFilterLoading}
                   >
                     {t("Reset Filter")}
-                    {!filter && <IoIosCheckmark size={35} />}
+                    {!filter && !isFilterLoading && <IoIosCheckmark size={35} />}
+                    {isFilterLoading && (
+                      <LoadingSpinner
+                        size={20}
+                        color="white"
+                      />
+                    )}
                   </Button>
                   <div className="relative w-full">
                     <GlowEffect
@@ -188,7 +204,10 @@ const DesktopContent = () => {
                       onOpenChange={setIsOpen}
                     >
                       <AlertDialogTrigger asChild>
-                        <Button className="flex text-sm text-center items-center justify-center gap-2 text-background rounded px-4 py-6 hover:opacity-[85%] w-full relative z-10 cursor-pointer bg-green-700 hover:bg-green-700">
+                        <Button
+                          disabled={isFilterLoading}
+                          className="flex text-sm text-center items-center justify-center gap-2 text-background rounded px-4 py-6 hover:opacity-[85%] w-full relative z-10 cursor-pointer bg-green-700 hover:bg-green-700"
+                        >
                           {t("Create image")}
                           <TbWand
                             size={20}

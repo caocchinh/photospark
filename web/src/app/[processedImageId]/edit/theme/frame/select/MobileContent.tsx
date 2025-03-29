@@ -13,7 +13,6 @@ import {FRAME_HEIGHT, FRAME_WIDTH, IMAGE_HEIGHT, IMAGE_WIDTH, OFFSET_X, OFFSET_Y
 import {GlowEffect} from "@/components/ui/glow-effect";
 import {ROUTES} from "@/constants/routes";
 import {Reorder} from "motion/react";
-import FrameImage from "@/components/FrameImage";
 import {FaArrowRight, FaArrowLeft} from "react-icons/fa6";
 import {Drawer, DrawerClose, DrawerContent, DrawerHeader, DrawerTitle} from "@/components/ui/drawer";
 import {ScrollArea} from "@/components/ui/scroll-area";
@@ -24,7 +23,7 @@ import {Sheet} from "@/components/ui/sheet";
 import {IoCheckmark} from "react-icons/io5";
 import {useTranslation} from "react-i18next";
 import {Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog";
-
+import FrameImageWrapper from "@/components/FrameImageWrapper";
 const MobileContent = () => {
   const {photo, setPhoto} = usePhoto();
   const dummyLinkRef = useRef<HTMLAnchorElement>(null);
@@ -254,7 +253,7 @@ const MobileContent = () => {
                             y={OFFSET_Y}
                           >
                             {selectedImage.map((item, index) => (
-                              <FrameImage
+                              <FrameImageWrapper
                                 key={index}
                                 url={item?.href || ""}
                                 y={photo.theme!.frame.slotPositions[index].y}

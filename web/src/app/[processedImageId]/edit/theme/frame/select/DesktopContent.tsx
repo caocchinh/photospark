@@ -13,7 +13,7 @@ import {FRAME_HEIGHT, FRAME_WIDTH, IMAGE_HEIGHT, IMAGE_WIDTH, OFFSET_X, OFFSET_Y
 import {GlowEffect} from "@/components/ui/glow-effect";
 import {ROUTES} from "@/constants/routes";
 import {Reorder} from "motion/react";
-import FrameImage from "@/components/FrameImage";
+import FrameImageWrapper from "@/components/FrameImageWrapper";
 import {FaArrowRight, FaArrowLeft} from "react-icons/fa6";
 import {useTranslation} from "react-i18next";
 import {Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog";
@@ -187,7 +187,7 @@ const DesktopContent = () => {
                         y={OFFSET_Y / isSingle}
                       >
                         {selectedImage.map((item, index) => (
-                          <FrameImage
+                          <FrameImageWrapper
                             key={index}
                             url={item?.href || ""}
                             y={photo.theme!.frame.slotPositions[index].y}

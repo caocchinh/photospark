@@ -21,16 +21,13 @@ import { IoRefresh } from "react-icons/io5";
 const CapturePage = () => {
   const {photo, setPhoto, addPhotoImage, updateVideoData} = usePhotoState();
   useEffect(() => {
-      if (typeof window === "undefined") return;
-      if (!photo) {
-        window.location.href = ROUTES.HOME;
-        return;
-      }
-      if (!photo.theme || !photo.frameType) {
-        window.location.href = ROUTES.HOME;
-        return;
-      }
-     
+    if (typeof window === "undefined") return;
+
+    if (!photo) {
+      window.location.href = ROUTES.HOME;
+      return;
+    }
+   
   }, [photo]);
   const {cameraStream, stopCamera, startCamera} = useCamera();
   const [count, setCount] = useState(CAPTURE_DURATION);

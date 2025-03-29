@@ -2,7 +2,7 @@ import {useRef, useEffect, useState, useCallback} from "react";
 import {Stage as StageElement} from "konva/lib/Stage";
 import {Image as KonvaImage, Rect} from "react-konva";
 import {Layer, Stage} from "react-konva";
-import FrameImage from "@/components/FrameImage";
+import FrameImageWrapper from "@/components/FrameImageWrapper";
 import {FRAME_WIDTH, FRAME_HEIGHT} from "@/constants/constants";
 import {ProcessedImageTable, ImageTable} from "@/drizzle/schema";
 import useImage from "use-image";
@@ -90,7 +90,7 @@ const FrameStage = ({processedImage, images, stageRef, setIsAllImagesLoaded}: Fr
                 slotPositionY != null &&
                 height != null &&
                 width != null && (
-                  <FrameImage
+                  <FrameImageWrapper
                     key={id}
                     url={url}
                     y={slotPositionY}

@@ -19,7 +19,7 @@ const ThemePage = () => {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    if (!photo || !photo.frameType) {
+    if (!photo) {
       window.location.href = ROUTES.HOME;
       return;
     }
