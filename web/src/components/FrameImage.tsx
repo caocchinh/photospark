@@ -148,19 +148,10 @@ const FrameImage = ({
                 },
               });
 
-              const ctx = canvas.getContext("2d");
-              const imageData = ctx?.getImageData(0, 0, canvas.width, canvas.height);
-              const isBlank = !imageData || !imageData.data.some((channel) => channel !== 0);
-
-              if (isBlank) {
-                console.warn("Generated a blank canvas, falling back to standard method");
-                applyFilterWithCanvas(originalImg);
-              } else {
-                setCanvas(canvas);
-                setIsFilterLoading?.(false);
-                setIsLoading(false);
-                if (onLoad) onLoad();
-              }
+              setCanvas(canvas);
+              setIsFilterLoading?.(false);
+              setIsLoading(false);
+              if (onLoad) onLoad();
             } catch (error) {
               console.error("Error in html-to-image processing:", error);
               applyFilterWithCanvas(originalImg);
