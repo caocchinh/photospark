@@ -110,7 +110,25 @@ const FrameImage = ({
 
           const processImage = async () => {
             try {
-              await new Promise((resolve) => setTimeout(resolve, 100));
+              // Wait for container to be properly mounted in the DOM
+              await new Promise<void>((resolve) => {
+                if (document.body.contains(container)) {
+                  resolve();
+                  return;
+                }
+
+                const observer = new MutationObserver(() => {
+                  if (document.body.contains(container)) {
+                    observer.disconnect();
+                    resolve();
+                  }
+                });
+
+                observer.observe(document.body, {
+                  childList: true,
+                  subtree: true,
+                });
+              });
 
               const canvas = await toCanvas(container, {
                 quality: 1.0,
