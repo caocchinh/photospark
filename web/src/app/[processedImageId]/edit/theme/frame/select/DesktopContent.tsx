@@ -228,7 +228,7 @@ const DesktopContent = () => {
                       {photo.images.map((item, index) => (
                         <div
                           key={index}
-                          className="flex items-center justify-center"
+                          className="flex items-center justify-center w-full !h-full"
                           onClick={() => handleSelect(item)}
                         >
                           <Image
@@ -239,7 +239,7 @@ const DesktopContent = () => {
                             crossOrigin="anonymous"
                             priority
                             className={cn(
-                              "rounded border-4 border-transparent hover:border-black hover:cursor-pointer",
+                              "rounded border-4 border-transparent hover:border-black hover:cursor-pointer object-cover w-full !h-full",
                               `w-[${photo.theme!.frame.slotDimensions.width * 1.1}px] h-[${photo.theme!.frame.slotDimensions.height * 1.1}px]`,
                               selectedImage.some((img) => img?.id === item.id) ? "border-rose-500 hover:border-rose-500" : null
                             )}
