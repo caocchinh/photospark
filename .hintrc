@@ -21,7 +21,8 @@
       {
         "ignore": [
           "text-wrap",
-          "text-wrap: nowrap"
+          "text-wrap: nowrap",
+          "-webkit-mask"
         ]
       }
     ],

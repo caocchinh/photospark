@@ -230,7 +230,7 @@ const i18nConfig = {
         "Processing...": "Đang xử lý...",
         "There was an error while ordering!": "Đã xảy ra lỗi khi đặt hàng!",
         "Price table": "Bảng giá",
-        Order: "Đơn hàng",
+        Order: "Đặt hàng",
         "Image printing information": "Thông tin in hình",
         "If you need to print more images, please see the price table below.": "Nếu bạn muốn in thêm hình, vui lòng xem bảng giá dưới đây.",
         "The maximum quantity of prints is": "Số lượng in tối đa là",
