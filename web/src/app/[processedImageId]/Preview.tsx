@@ -83,7 +83,7 @@ const Preview = ({
   return (
     <>
       <NavBar captureDate={processedImage.createdAt} />
-      <div className="flex flex-col items-center justify-center gap-8 p-4 mt-3 h-max w-full relative z-[0] bg-white">
+      <div className="flex flex-col items-center justify-center gap-8 p-4  h-max w-full relative z-[0] bg-white pt-20 preview-page-container">
         <div className="w-[95%] flex items-center justify-end">
           <LanguageBar />
         </div>
@@ -119,7 +119,7 @@ const Preview = ({
             )}
           </div>
 
-          <div className="flex items-center justify-center gap-6 flex-col w-[90%] md:w-[280px]">
+          <div className="flex items-center justify-center gap-6 flex-col w-[90%] md:w-[70%] lg:w-[280px]">
             <div className="relative w-full h-[50px]">
               <div
                 className={cn(

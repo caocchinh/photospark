@@ -9,6 +9,15 @@
   --font-mono: var(--font-geist-mono);
 }
 
+.preview-page-container {
+  padding-top: 30px;
+}
+
+@media (max-width: 470px) {
+  .preview-page-container {
+    padding-top: 90px;
+  }
+}
 .loader {
   width: 40px;
   aspect-ratio: 1;
