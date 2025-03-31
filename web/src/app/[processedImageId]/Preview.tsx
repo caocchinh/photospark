@@ -34,6 +34,7 @@ const Preview = ({
   const router = useRouter();
   const [copied, setCopied] = useState(false);
   const [initialCountDown, setInitialCountDown] = useState(10);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -51,7 +52,6 @@ const Preview = ({
 
   const downloadImage = () => {
     if (!stageRef.current || !isAllImagesLoaded) return;
-
     try {
       const dataURL = stageRef.current.toDataURL({
         pixelRatio: 2,
@@ -66,6 +66,8 @@ const Preview = ({
       document.body.removeChild(link);
     } catch {
       setError(true);
+    } finally {
+      setIsDownloading(false);
     }
   };
 
@@ -124,12 +126,15 @@ const Preview = ({
               <div
                 className={cn(
                   "w-full h-full text-white cursor-pointer text-xl bg-black rounded-sm relative z-10 flex items-center justify-center gap-3",
-                  !isAllImagesLoaded && "pointer-events-none"
+                  !isAllImagesLoaded && "pointer-events-none opacity-50"
                 )}
-                onClick={downloadImage}
+                onClick={() => {
+                  setIsDownloading(true);
+                  downloadImage();
+                }}
               >
                 {isAllImagesLoaded ? t("Download image") : t("Loading image")}
-                {!isAllImagesLoaded ? <LoadingSpinner size={25} /> : <AiOutlineDownload size={27} />}
+                {!isAllImagesLoaded || isDownloading ? <LoadingSpinner size={25} /> : <AiOutlineDownload size={27} />}
               </div>
               {isAllImagesLoaded && (
                 <GlowEffect
