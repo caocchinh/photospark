@@ -140,6 +140,7 @@ const i18nConfig = {
         Understood: "Understood",
         "Developer Information": "Developer Information",
         "Copy Email Address": "Copy Email Address",
+        "Capture day": "Capture day",
       },
     },
     vi: {
@@ -266,6 +267,7 @@ const i18nConfig = {
         Understood: "Đã hiểu",
         "Developer Information": "Thông tin nhà phát triển",
         "Copy Email Address": "Sao chép địa chỉ email",
+        "Capture day": "Ngày chụp",
       },
     },
     fr: {
@@ -395,6 +397,7 @@ const i18nConfig = {
         Understood: "Compris",
         "Developer Information": "Informations sur le développeur",
         "Copy Email Address": "Copier l'adresse email",
+        "Capture day": "Jour de capture",
       },
     },
     cn: {
@@ -522,6 +525,7 @@ const i18nConfig = {
         Understood: "已理解",
         "Developer Information": "开发者信息",
         "Copy Email Address": "复制邮箱地址",
+        "Capture day": "拍摄日期",
       },
     },
     kr: {
@@ -649,6 +653,7 @@ const i18nConfig = {
         Understood: "이해했습니다",
         "Developer Information": "개발자 정보",
         "Copy Email Address": "이메일 주소 복사",
+        "Capture day": "캡쳐 날짜",
       },
     },
   },

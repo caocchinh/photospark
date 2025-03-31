@@ -105,7 +105,8 @@ export const createProcessedImage = async (
   frameURL: string,
   type: ValidFrameType,
   slotCount: number,
-  filter: string
+  filter: string,
+  previousProcessedImageCreationDate?: Date
 ): Promise<{error: boolean}> => {
   if (!id || !isValidUUID(id)) {
     return {error: true};
@@ -123,8 +124,14 @@ export const createProcessedImage = async (
     return {error: true};
   }
 
+  const insertData: InferInsertModel<typeof ProcessedImageTable> = {id, theme, frameURL, type, slotCount, filter};
+
+  if (previousProcessedImageCreationDate) {
+    insertData.createdAt = previousProcessedImageCreationDate;
+  }
+
   try {
-    await db.insert(ProcessedImageTable).values({id, theme, frameURL, type, slotCount, filter});
+    await db.insert(ProcessedImageTable).values(insertData);
     return {error: false};
   } catch (error) {
     console.error("Failed to create image:", error);

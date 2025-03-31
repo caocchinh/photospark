@@ -34,6 +34,7 @@ export interface PhotoOptions<T extends ValidThemeType> {
   id: string | null;
   previousProcessedImageId: string;
   frameType: ValidFrameType | null;
+  previousProcessedImageCreationDate: Date;
 }
 
 export interface ThemeSelectButtonType {

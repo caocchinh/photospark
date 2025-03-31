@@ -1,32 +1,42 @@
 "use client";
 import Image from "next/image";
-import {cn} from "@/lib/utils";
 import {BorderTrail} from "./ui/border-trail";
 import {usePathname} from "next/navigation";
+import {useTranslation} from "react-i18next";
 
-const NavBar = () => {
+const NavBar = ({captureDate}: {captureDate?: Date}) => {
   const pathname = usePathname();
+  const {t} = useTranslation();
   return (
     <>
       {pathname != "/" && (
-        <header className={cn("bg-transparent pt-4 px-5 fixed z-[1] w-max left-0 top-0")}>
-          <nav className=" flex w-max justify-between">
-            <div className="w-max py-2 px-1 shadow-lg rounded-md  bg-card text-card-foreground relative flex items-center justify-center flex-row gap-1">
-              <BorderTrail
-                style={{
-                  boxShadow: "0px 0px 60px 30px rgb(255 255 255 / 50%), 0 0 100px 60px rgb(0 0 0 / 50%), 0 0 140px 90px rgb(0 0 0 / 50%)",
-                }}
-                size={70}
-              />
-
-              <Image
-                src="/logo.png"
-                height={50}
-                width={50}
-                alt="VTEAM Logo"
-              />
+        <header className="bg-transparent py-3 px-2 sm:px-5 fixed z-[1] w-max left-5 top-4 shadow-lg rounded-md  ">
+          <BorderTrail
+            style={{
+              boxShadow: "0px 0px 60px 30px rgb(255 255 255 / 50%), 0 0 100px 60px rgb(0 0 0 / 50%), 0 0 140px 90px rgb(0 0 0 / 50%)",
+            }}
+            size={70}
+          />
+          <div className=" flex w-max justify-center items-center gap-2">
+            <Image
+              src="/logo.png"
+              height={50}
+              width={50}
+              alt="VTEAM Logo"
+            />
+            <div className="sm:flex flex-col hidden">
+              <h2 className="text-sm text-muted-foreground">{t("Capture day")}</h2>
+              <p>
+                {captureDate?.toLocaleString("vi-VN", {
+                  year: "numeric",
+                  month: "2-digit",
+                  day: "2-digit",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </p>
             </div>
-          </nav>
+          </div>
         </header>
       )}
     </>

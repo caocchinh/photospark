@@ -24,7 +24,8 @@ export function useImageUpload(newProcessedImageId: string) {
           photo.theme!.frame.src,
           photo.frameType!,
           photo.theme!.frame.slotCount,
-          filter
+          filter,
+          photo.previousProcessedImageCreationDate
         );
       } catch (error) {
         console.error("Error uploading processed image to database:", error);

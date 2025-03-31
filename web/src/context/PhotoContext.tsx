@@ -13,11 +13,13 @@ export const PhotoProvider = ({
   children,
   images = [],
   previousProcessedImageId = "",
+  previousProcessedImageCreationDate = new Date(),
   videoUrl = "",
 }: {
   children: ReactNode;
   images?: Array<{id: string; href: string}>;
   previousProcessedImageId: string;
+  previousProcessedImageCreationDate: Date;
   videoUrl: string;
 }) => {
   const [photo, setPhoto] = useState<PhotoOptions<ValidThemeType> | undefined>(() => {
@@ -33,6 +35,7 @@ export const PhotoProvider = ({
         frameType: null,
         filters: null,
         previousProcessedImageId: previousProcessedImageId,
+        previousProcessedImageCreationDate: previousProcessedImageCreationDate,
       };
     }
     return undefined;

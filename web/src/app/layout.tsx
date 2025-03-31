@@ -2,7 +2,6 @@ import type {Metadata} from "next";
 import {Geist, Geist_Mono} from "next/font/google";
 import "./globals.css";
 import NextTopLoader from "nextjs-toploader";
-import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
 import I18nClientProvider from "@/context/I18nClientProvider";
 import {Toaster} from "@/components/ui/sonner";
@@ -37,7 +36,6 @@ export default function RootLayout({
           />
         </head>
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-          <NavBar />
           <NextTopLoader
             color="black"
             zIndex={100000}
