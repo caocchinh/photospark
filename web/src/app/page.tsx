@@ -28,7 +28,6 @@ import {ProgressiveBlur} from "@/components/ui/progressive-blur";
 import NavBar from "@/components/NavBar";
 import {TextShimmer} from "@/components/ui/text-shimmer";
 import Link from "next/link";
-import {IoImagesOutline} from "react-icons/io5";
 import {GlowEffect} from "@/components/ui/glow-effect";
 
 export default function HomePage() {
@@ -43,19 +42,14 @@ export default function HomePage() {
           <LanguageBar />
         </div>
         <div className="items-center justify-center flex  flex-col h-full w-full">
-          <div className="flex items-center justify-center gap-3 flex-wrap">
-            <TextShimmer
-              className=" font-semibold text-5xl uppercase text-center [--base-color:black] [--base-gradient-color:gray]"
-              duration={7}
-              spread={10}
-            >
-              VTEAM PHOTOBOOTH
-            </TextShimmer>
-            <IoImagesOutline
-              size={50}
-              className="mt-2 hidden sm:block"
-            />
-          </div>
+          <TextShimmer
+            className=" font-semibold text-5xl uppercase text-center [--base-color:black] [--base-gradient-color:gray]"
+            duration={7}
+            spread={10}
+          >
+            VTEAM PHOTOBOOTH
+          </TextShimmer>
+
           <div className="items-center justify-center flex overflow-x-hidden p-5 gap-4 flex-col lg:flex-row w-full">
             <div className="group relative rounded-lg w-[90%] md:w-[80%]  flex items-center justify-center">
               <Spotlight
