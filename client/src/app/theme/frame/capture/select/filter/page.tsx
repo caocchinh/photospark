@@ -233,7 +233,7 @@ const FilterPage = () => {
     root.render(
       <QRCode
         size={qrSize}
-        value={process.env.NEXT_PUBLIC_QR_DOMAIN! + photo.id}
+        value={process.env.NEXT_PUBLIC_QR_DOMAIN! + "/" + photo.id}
         viewBox={`0 0 ${qrSize} ${qrSize}`}
       />
     );

@@ -8,6 +8,8 @@ const envVariables = z.object({
   NEXT_PUBLIC_SOCKET_URL: z.string(),
   NEXT_PUBLIC_ADMIN_PASSWORD: z.string(),
   NEXT_PUBLIC_DEFAULT_CAMERA: z.string(),
+  R2_PUBLIC_BUCKET_DEVELOPMENT_URL: z.string(),
+  R2_PUBLIC_BUCKET_PRODUCTION_URL: z.string(),
 });
 
 envVariables.parse(process.env);

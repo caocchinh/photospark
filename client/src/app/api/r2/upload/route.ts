@@ -36,7 +36,12 @@ export async function POST(request: NextRequest) {
 
     const result = await r2.send(putObjectCommand);
 
-    const publicUrl = `https://pub-2abc3784ea3543ba9804f812db4aa180.r2.dev/${filename}`;
+    let publicUrl = "";
+    if (process.env.NODE_ENV === "development") {
+      publicUrl = process.env.R2_PUBLIC_BUCKET_DEVELOPMENT_URL + "/" + filename;
+    } else {
+      publicUrl = process.env.R2_PUBLIC_BUCKET_PRODUCTION_URL + "/" + filename;
+    }
 
     return Response.json({
       success: true,

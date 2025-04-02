@@ -22,6 +22,20 @@ const nextConfig: NextConfig = {
           }
         : false,
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: process.env.R2_PUBLIC_BUCKET_DEVELOPMENT_URL!,
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: process.env.R2_PUBLIC_BUCKET_PRODUCTION_URL!,
+        pathname: "/**",
+      },
+    ],
+  },
 };
 
 export default nextConfig;

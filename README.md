@@ -82,6 +82,7 @@ npm run dev
 ```
 
 This will concurrently start:
+
 - Client application at [http://localhost:8080](http://localhost:8080)
 - Socket.IO server on port 6969
 - Web interface
@@ -92,15 +93,19 @@ This will concurrently start:
 This project consists of multiple components working together:
 
 ### 📱 Client (port 8080)
+
 The main photo booth interface where users can take photos, apply filters, and send them to be printed.
 
 ### 🖥️ Server (port 6969)
+
 Socket.IO server that handles printing requests and video processing.
 
 ### 🌐 Web
+
 Additional web interface component.
 
 ### 🛠️ Extras
+
 Administration tools and additional features.
 
 ## 📊 Database Management
@@ -119,6 +124,7 @@ npm run db:studio
 ## 🖨️ Printer Setup
 
 ### Hardware Requirements
+
 - Canon SELPHY CP1500 printer connected via USB-C
 - KP-108IN paper cassette and ink loaded
 
@@ -135,6 +141,7 @@ npm run db:studio
 ## 🎥 Video Processing
 
 The application uses FFmpeg for processing recorded videos:
+
 - Speeds up videos by 2x
 - Compresses for faster loading
 - Converts WebM to MP4 format
@@ -179,12 +186,14 @@ npm run build
 ### Common Issues
 
 #### Webcam Not Working
+
 - Ensure browser has camera permissions
 - Refresh the page
 - Check if webcam is being used by another application
 - Verify webcam drivers are up to date
 
 #### Printer Not Detected
+
 - Verify printer name contains "CP1500"
 - Check USB connection
 - Restart Windows Print Spooler service:
@@ -195,6 +204,7 @@ npm run build
 - Reinstall printer drivers
 
 #### Socket.IO Connection Issues
+
 - Check that both client and server are running
 - Verify port 6969 is not blocked by firewall
 - Check for any CORS issues in browser console
@@ -210,7 +220,7 @@ npm run build
 
 ## ⚠️ Important Notes
 
-- This application does not support mobile devices
+- This application does not support mobile devices for capturing (yet).
 - Enter full screen mode for the best experience
 - Designed to work with Canon SELPHY CP1500 printer only
 - Requires Windows OS for printing functionality

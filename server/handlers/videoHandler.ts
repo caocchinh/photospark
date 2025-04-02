@@ -107,7 +107,12 @@ export const handleProcessVideo = async (socket: Socket, message: VideoMessage, 
 
       await R2.send(uploadCommand);
 
-      const publicUrl = `https://pub-2abc3784ea3543ba9804f812db4aa180.r2.dev/${fileName}`;
+      let publicUrl = "";
+      if (process.env.NODE_ENV === "development") {
+        publicUrl = process.env.R2_PUBLIC_BUCKET_DEVELOPMENT_URL + "/" + fileName;
+      } else {
+        publicUrl = process.env.R2_PUBLIC_BUCKET_PRODUCTION_URL + "/" + fileName;
+      }
 
       logger.info("Video uploaded to R2", {
         jobId: videoJobId,

@@ -69,7 +69,7 @@ const FrameStage = ({processedImage, images, stageRef, onLoadingComplete}: Frame
     root.render(
       <QRCode
         size={qrSize}
-        value={process.env.NEXT_PUBLIC_QR_DOMAIN + processedImage.id}
+        value={process.env.NEXT_PUBLIC_QR_DOMAIN + "/" + processedImage.id}
         viewBox={`0 0 ${qrSize} ${qrSize}`}
       />
     );
