@@ -77,9 +77,7 @@ const FrameImage = ({
     setIsFilterLoading?.(true);
     const originalImg = new Image();
     if (crossOrigin) originalImg.crossOrigin = crossOrigin;
-    const imageUrl = url.includes(
-      process.env.NODE_ENV == "development" ? process.env.R2_PUBLIC_BUCKET_DEVELOPMENT_URL : process.env.R2_PUBLIC_BUCKET_PRODUCTION_URL
-    )
+    const imageUrl = ["r2.dev", process.env.R2_PUBLIC_BUCKET_PRODUCTION_URL].some((bucketUrl) => bucketUrl && url.includes(bucketUrl))
       ? `/api/proxy/image?url=${encodeURIComponent(url)}`
       : url;
     originalImg.src = imageUrl;
