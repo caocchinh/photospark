@@ -31,6 +31,7 @@ export async function GET(request: NextRequest) {
       headers: {
         "Content-Type": contentType || "image/jpeg",
         "Cache-Control": cacheControl,
+        "Access-Control-Allow-Origin": "*",
       },
     });
   } catch (error: unknown) {
