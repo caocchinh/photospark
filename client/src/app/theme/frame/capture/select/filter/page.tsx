@@ -94,11 +94,15 @@ const FilterPage = () => {
               video.src = photo.video.r2_url;
               video.preload = "auto";
               video.onloadeddata = () => resolve(true);
-              video.onerror = () => resolve(false);
+              video.onerror = () => {
+                setPhoto!(undefined);
+                navigateTo(ROUTES.HOME);
+                resolve(false);
+              };
             } else {
-              resolve(false);
               setPhoto!(undefined);
               navigateTo(ROUTES.HOME);
+              resolve(false);
             }
           });
           await videoPreload;
@@ -235,7 +239,7 @@ const FilterPage = () => {
     root.render(
       <QRCode
         size={qrSize}
-        value={process.env.NEXT_PUBLIC_QR_DOMAIN! + "/" + photo.id}
+        value={process.env.NEXT_PUBLIC_QR_DOMAIN + "/" + photo.id}
         viewBox={`0 0 ${qrSize} ${qrSize}`}
       />
     );

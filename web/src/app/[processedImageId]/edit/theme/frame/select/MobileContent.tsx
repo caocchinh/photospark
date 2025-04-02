@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import {Button} from "@/components/ui/button";
@@ -154,12 +155,11 @@ const MobileContent = () => {
                                   className="flex items-center justify-center w-full !h-full"
                                   onClick={() => handleSelect(item)}
                                 >
-                                  <Image
+                                  <img
                                     height={280}
                                     width={280}
                                     src={item.href}
                                     alt="image"
-                                    priority
                                     className={cn(
                                       "rounded border-4 border-transparent hover:border-black hover:cursor-pointer object-cover w-full !h-full",
                                       `w-[${photo.theme!.frame.slotDimensions.width * 1.1}px] h-[${

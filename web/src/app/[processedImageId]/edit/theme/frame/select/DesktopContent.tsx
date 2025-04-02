@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import {Button} from "@/components/ui/button";
@@ -7,7 +8,6 @@ import {useCallback, useMemo, useRef, useState} from "react";
 import {Layer, Rect, Stage} from "react-konva";
 import useImage from "use-image";
 import {Image as KonvaImage} from "react-konva";
-import Image from "next/image";
 import Link from "next/link";
 import {FRAME_HEIGHT, FRAME_WIDTH, IMAGE_HEIGHT, IMAGE_WIDTH, OFFSET_X, OFFSET_Y} from "@/constants/constants";
 import {GlowEffect} from "@/components/ui/glow-effect";
@@ -231,13 +231,12 @@ const DesktopContent = () => {
                           className="flex items-center justify-center w-full !h-full"
                           onClick={() => handleSelect(item)}
                         >
-                          <Image
+                          <img
                             height={280}
                             width={280}
                             src={item.href}
                             alt="image"
                             crossOrigin="anonymous"
-                            priority
                             className={cn(
                               "rounded border-4 border-transparent hover:border-black hover:cursor-pointer object-cover w-full !h-full",
                               `w-[${photo.theme!.frame.slotDimensions.width * 1.1}px] h-[${photo.theme!.frame.slotDimensions.height * 1.1}px]`,
