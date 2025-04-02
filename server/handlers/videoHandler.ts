@@ -97,8 +97,9 @@ export const handleProcessVideo = async (socket: Socket, message: VideoMessage, 
 
     try {
       const fileBuffer = await fs.promises.readFile(processedFilePath);
+
       const uploadCommand = new PutObjectCommand({
-        Bucket: "vcp-photobooth",
+        Bucket: process.env.NODE_ENV === "development" ? process.env.R2_PUBLIC_BUCKET_DEVELOPMENT_NAME : process.env.R2_PUBLIC_BUCKET_PRODUCTION_NAME,
         Key: fileName,
         Body: fileBuffer,
         ContentType: "video/mp4",

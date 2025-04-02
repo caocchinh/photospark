@@ -14,12 +14,18 @@ import {
   VideoErrorMessage,
   ImageErrorMessage,
 } from "./handlers";
-
+import {logger} from "./utils";
 dotenv.config();
 
 const logsDir = path.join(process.cwd(), "logs");
 if (!fs.existsSync(logsDir)) {
   fs.mkdirSync(logsDir, {recursive: true});
+}
+
+if (process.env.NODE_ENV === "development") {
+  logger.info("Print server: Development mode");
+} else if (process.env.NODE_ENV === "production") {
+  logger.info("Print server: Production mode");
 }
 
 const io = new Server(6969, {

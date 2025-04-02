@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
     const buffer = Buffer.from(arrayBuffer);
 
     const putObjectCommand = new PutObjectCommand({
-      Bucket: "vcp-photobooth",
+      Bucket: process.env.NODE_ENV === "development" ? process.env.R2_PUBLIC_BUCKET_DEVELOPMENT_NAME : process.env.R2_PUBLIC_BUCKET_PRODUCTION_NAME,
       Key: filename,
       Body: buffer,
       ContentType: contentType,

@@ -27,13 +27,13 @@ export const SocketProvider = ({children}: {children: React.ReactNode}) => {
     };
     const handleOffline = () => {
       setIsOnline(false);
-      for (let i = 0; i < 19; i++) {
+      for (let i = 0; i < 20; i++) {
         router.push("/");
       }
 
       setTimeout(() => {
         window.location.reload();
-      }, 2000);
+      }, 1000);
     };
 
     setIsOnline(navigator.onLine);
@@ -73,23 +73,23 @@ export const SocketProvider = ({children}: {children: React.ReactNode}) => {
 
     newSocket.on("disconnect", () => {
       console.log("Disconnected from server.");
-      for (let i = 0; i < 19; i++) {
+      for (let i = 0; i < 20; i++) {
         router.push("/");
       }
       setIsSocketConnected(false);
       setTimeout(() => {
         window.location.reload();
-      }, 2000);
+      }, 1000);
     });
 
     newSocket.on("error", (error) => {
       console.error("Socket error:", error);
-      for (let i = 0; i < 19; i++) {
+      for (let i = 0; i < 20; i++) {
         router.push("/");
       }
       setTimeout(() => {
         window.location.reload();
-      }, 2000);
+      }, 1000);
     });
 
     setSocket(newSocket);

@@ -27,7 +27,7 @@ export const SocketProvider = ({children}: {children: React.ReactNode}) => {
       setIsOnline(false);
       setTimeout(() => {
         window.location.reload();
-      }, 2000);
+      }, 1000);
     };
 
     setIsOnline(navigator.onLine);
@@ -70,14 +70,14 @@ export const SocketProvider = ({children}: {children: React.ReactNode}) => {
       setIsSocketConnected(false);
       setTimeout(() => {
         window.location.reload();
-      }, 2000);
+      }, 1000);
     });
 
     newSocket.on("error", (error) => {
       console.error("Socket error:", error);
       setTimeout(() => {
         window.location.reload();
-      }, 2000);
+      }, 1000);
     });
 
     setSocket(newSocket);

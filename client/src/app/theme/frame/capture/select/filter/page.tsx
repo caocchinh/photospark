@@ -36,6 +36,7 @@ const FilterPage = () => {
   }, [photo]);
   const filterRefs = useRef<(HTMLDivElement | null)[]>([]);
   const uploadAttemptedRef = useRef(false);
+  const {setPhoto} = usePhotoState();
   const {t} = useTranslation();
   const [frameImg, frameImgStatus] = useImage(photo ? photo.theme!.frame.src : "");
   const [qrCodeURL, setQrCodeURL] = useState<string>("");
@@ -96,6 +97,7 @@ const FilterPage = () => {
               video.onerror = () => resolve(false);
             } else {
               resolve(false);
+              setPhoto!(undefined);
               navigateTo(ROUTES.HOME);
             }
           });
@@ -106,7 +108,7 @@ const FilterPage = () => {
         }
       );
     }
-  }, [photo, socket, isSocketConnected, printed, isMediaUploaded, navigateTo]);
+  }, [photo, socket, printed, isSocketConnected, isMediaUploaded, setPhoto, navigateTo]);
 
   useEffect(() => {
     async function uploadImageToDatabase() {

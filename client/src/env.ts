@@ -10,6 +10,8 @@ const envVariables = z.object({
   NEXT_PUBLIC_DEFAULT_CAMERA: z.string(),
   R2_PUBLIC_BUCKET_DEVELOPMENT_URL: z.string(),
   R2_PUBLIC_BUCKET_PRODUCTION_URL: z.string(),
+  R2_PUBLIC_BUCKET_DEVELOPMENT_NAME: z.string(),
+  R2_PUBLIC_BUCKET_PRODUCTION_NAME: z.string(),
 });
 
 envVariables.parse(process.env);
