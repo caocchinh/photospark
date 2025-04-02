@@ -110,9 +110,9 @@ export const handleProcessVideo = async (socket: Socket, message: VideoMessage, 
 
       let publicUrl = "";
       if (process.env.NODE_ENV === "development") {
-        publicUrl = process.env.R2_PUBLIC_BUCKET_DEVELOPMENT_URL + "/" + fileName;
+        publicUrl = process.env.NEXT_PUBLIC_R2_PUBLIC_BUCKET_DEVELOPMENT_URL + "/" + fileName;
       } else {
-        publicUrl = process.env.R2_PUBLIC_BUCKET_PRODUCTION_URL + "/" + fileName;
+        publicUrl = process.env.NEXT_PUBLIC_R2_PUBLIC_BUCKET_PRODUCTION_URL + "/" + fileName;
       }
 
       logger.info("Video uploaded to R2", {

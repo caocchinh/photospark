@@ -38,9 +38,9 @@ export async function POST(request: NextRequest) {
 
     let publicUrl = "";
     if (process.env.NODE_ENV === "development") {
-      publicUrl = process.env.R2_PUBLIC_BUCKET_DEVELOPMENT_URL + "/" + filename;
+      publicUrl = process.env.NEXT_PUBLIC_R2_PUBLIC_BUCKET_DEVELOPMENT_URL + "/" + filename;
     } else {
-      publicUrl = process.env.R2_PUBLIC_BUCKET_PRODUCTION_URL + "/" + filename;
+      publicUrl = process.env.NEXT_PUBLIC_R2_PUBLIC_BUCKET_PRODUCTION_URL + "/" + filename;
     }
 
     return Response.json({

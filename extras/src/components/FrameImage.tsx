@@ -26,7 +26,7 @@ const FrameImage = ({
   const loadImage = useCallback(() => {
     if (!url) return setImage(null);
 
-    const imageUrl = ["r2.dev", process.env.R2_PUBLIC_BUCKET_PRODUCTION_URL].some((bucketUrl) => bucketUrl && url.includes(bucketUrl))
+    const imageUrl = ["r2.dev", process.env.NEXT_PUBLIC_R2_PUBLIC_BUCKET_PRODUCTION_URL].some((bucketUrl) => bucketUrl && url.includes(bucketUrl))
       ? `/api/proxy/image?url=${encodeURIComponent(url)}`
       : url;
 

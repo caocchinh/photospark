@@ -2,8 +2,8 @@ import {z} from "zod";
 const envVariables = z.object({
   NEON_DATABASE_URL: z.string(),
   NEXT_PUBLIC_SOCKET_URL: z.string(),
-  R2_PUBLIC_BUCKET_DEVELOPMENT_URL: z.string(),
-  R2_PUBLIC_BUCKET_PRODUCTION_URL: z.string(),
+  NEXT_PUBLIC_R2_PUBLIC_BUCKET_DEVELOPMENT_URL: z.string(),
+  NEXT_PUBLIC_R2_PUBLIC_BUCKET_PRODUCTION_URL: z.string(),
 });
 
 envVariables.parse(process.env);
