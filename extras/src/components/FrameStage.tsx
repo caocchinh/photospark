@@ -142,7 +142,11 @@ const FrameStage = ({processedImage, images, stageRef, onLoadingComplete}: Frame
                 width != null && (
                   <FrameImage
                     key={id}
-                    url={`/api/proxy?url=${encodeURIComponent(url)}`}
+                    url={
+                      ["r2.dev", process.env.NEXT_PUBLIC_R2_PUBLIC_BUCKET_PRODUCTION_URL].some((bucketUrl) => bucketUrl && url.includes(bucketUrl))
+                        ? `/api/proxy?url=${encodeURIComponent(url)}`
+                        : url
+                    }
                     y={slotPositionY}
                     x={slotPositionX + (FRAME_WIDTH / 2) * _index}
                     height={height}

@@ -93,7 +93,11 @@ const Preview = () => {
                 processedImage={processedImage}
                 images={images?.map((image) => ({
                   ...image,
-                  url: `/api/proxy?url=${encodeURIComponent(image.url)}`,
+                  url: ["r2.dev", process.env.NEXT_PUBLIC_R2_PUBLIC_BUCKET_PRODUCTION_URL].some(
+                    (bucketUrl) => bucketUrl && image.url.includes(bucketUrl)
+                  )
+                    ? `/api/proxy?url=${encodeURIComponent(image.url)}`
+                    : image.url,
                 }))}
                 stageRef={stageRef}
                 setIsAllImagesLoaded={setIsAllImagesLoaded}
