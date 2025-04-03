@@ -142,13 +142,12 @@ const FrameStage = ({processedImage, images, stageRef, onLoadingComplete}: Frame
                 width != null && (
                   <FrameImage
                     key={id}
-                    url={url}
+                    url={`/api/proxy?url=${encodeURIComponent(url)}`}
                     y={slotPositionY}
                     x={slotPositionX + (FRAME_WIDTH / 2) * _index}
                     height={height}
                     width={width}
                     filter={processedImage.filter!}
-                    // crossOrigin="anonymous"
                     onLoad={handleImageLoaded}
                   />
                 )

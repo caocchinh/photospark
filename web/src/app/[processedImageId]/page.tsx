@@ -89,7 +89,10 @@ const Preview = () => {
             <div className={cn(!isAllImagesLoaded && "pointer-events-none opacity-0")}>
               <FrameStage
                 processedImage={processedImage}
-                images={images}
+                images={images?.map((image) => ({
+                  ...image,
+                  url: `/api/proxy?url=${encodeURIComponent(image.url)}`,
+                }))}
                 stageRef={stageRef}
                 setIsAllImagesLoaded={setIsAllImagesLoaded}
               />

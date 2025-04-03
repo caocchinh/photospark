@@ -223,8 +223,8 @@ const Print = ({processedImage, images, queue, refreshQueues}: PrintProps) => {
                     <p className="text-lg">{processedImage.id}</p>
                   </div>
                   <div className="flex justify-between w-full">
-                    <p className="font-bold text-xl">Số lượng:</p>
-                    <p className="text-lg">{queue.quantity}</p>
+                    <p className="font-bold text-xl">Số lượng hình thật:</p>
+                    <p className="text-lg">{processedImage.type == "singular" ? queue.quantity : queue.quantity * 2}</p>
                   </div>
                   <div className="flex justify-between w-full">
                     <p className="font-bold text-xl">Ngày đặt:</p>

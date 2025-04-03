@@ -16,7 +16,7 @@ export const OFFSET_Y = (47 / 3) * MULTIPLIER;
 export const QUEUE_TITLE_MAPING = {
   id: "Mã đơn hàng",
   processedImageId: "Mã ảnh",
-  quantity: "Số lượng",
+  quantity: "Số lượng (giấy in)",
   status: "Trạng thái",
   createdAt: "Thời gian đặt",
   price: "Giá",
