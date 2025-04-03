@@ -24,6 +24,7 @@ import {IoCheckmark} from "react-icons/io5";
 import {useTranslation} from "react-i18next";
 import {Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog";
 import FrameImageWrapper from "@/components/FrameImageWrapper";
+
 const MobileContent = () => {
   const {photo, setPhoto} = usePhoto();
   const dummyLinkRef = useRef<HTMLAnchorElement>(null);
@@ -220,7 +221,6 @@ const MobileContent = () => {
                                 <img
                                   src={selectedImage[index]?.href || ""}
                                   alt="image"
-                                  crossOrigin="anonymous"
                                   width={350}
                                   height={350}
                                   className="pointer-events-none object-cover w-full h-full"

@@ -157,7 +157,6 @@ const DesktopContent = () => {
                             src={photo?.selectedImages[0]?.href}
                             alt="filtered image"
                             className={cn(item.filter, "w-full")}
-                            crossOrigin="anonymous"
                           />
                           <p>{item.name}</p>
                         </div>
