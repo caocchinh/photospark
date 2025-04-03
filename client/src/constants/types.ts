@@ -7,7 +7,7 @@ export interface PhotoOptions<T extends ValidThemeType> {
     name: T;
     frame: {
       type: ValidFrameType;
-      src: `/frame/${T}/${T}_${number}.png`;
+      src: `/frame/${T}/${T}_${number}.${string}`;
       thumbnail?: `/frame/${T}/thumbnail/${T}_${number}.${string}`;
       slotCount: number;
       slotDimensions: {
@@ -50,7 +50,7 @@ export interface ThemeSelectButtonType {
 
 export interface FrameOptionType<T extends ValidThemeType = ValidThemeType> {
   type: ValidFrameType;
-  src: `/frame/${T}/${T}_${number}.png`;
+  src: `/frame/${T}/${T}_${number}.${string}`;
   thumbnail?: `/frame/${T}/thumbnail/${T}_${number}.${string}`;
   slotCount: number;
   slotDimensions: {

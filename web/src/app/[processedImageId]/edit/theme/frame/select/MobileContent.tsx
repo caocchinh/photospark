@@ -161,7 +161,7 @@ const MobileContent = () => {
                                     alt="image"
                                     className={cn(
                                       "rounded border-4 border-transparent hover:border-black hover:cursor-pointer object-cover w-full !h-full",
-                                      `w-[${photo.theme!.frame.slotDimensions.width * 1.1}px] h-[${
+                                      `max-w-[${photo.theme!.frame.slotDimensions.width * 1.1}px] max-h-[${
                                         photo.theme!.frame.slotDimensions.height * 1.1
                                       }px] object-cover`,
                                       selectedImage.some((img) => img?.id === item.id) ? "border-rose-500 hover:border-rose-500" : null

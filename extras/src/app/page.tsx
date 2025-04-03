@@ -21,6 +21,7 @@ export default async function Home() {
           >
             Quản lý in ảnh
           </TextShimmer>
+
           <MdOutlinePermMedia size={25} />
         </div>
 

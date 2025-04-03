@@ -95,7 +95,7 @@ export const FrameOptions: {
   prom: [
     {
       type: "singular",
-      src: "/frame/prom/prom_1.png",
+      src: "/frame/prom/prom_1.webp",
       thumbnail: "/frame/prom/thumbnail/prom_1.jpg",
       slotCount: 2,
       slotDimensions: {
@@ -116,7 +116,7 @@ export const FrameOptions: {
     },
     {
       type: "singular",
-      src: "/frame/prom/prom_2.png",
+      src: "/frame/prom/prom_2.webp",
       thumbnail: "/frame/prom/thumbnail/prom_2.jpg",
       slotCount: 2,
       slotDimensions: {
@@ -137,7 +137,7 @@ export const FrameOptions: {
     },
     {
       type: "singular",
-      src: "/frame/prom/prom_3.png",
+      src: "/frame/prom/prom_3.webp",
       thumbnail: "/frame/prom/thumbnail/prom_3.jpg",
       slotCount: 2,
       slotDimensions: {
@@ -158,7 +158,7 @@ export const FrameOptions: {
     },
     {
       type: "singular",
-      src: "/frame/prom/prom_4.png",
+      src: "/frame/prom/prom_4.webp",
       thumbnail: "/frame/prom/thumbnail/prom_4.jpg",
       slotCount: 2,
       slotDimensions: {
@@ -180,7 +180,7 @@ export const FrameOptions: {
 
     {
       type: "singular",
-      src: "/frame/prom/prom_5.png",
+      src: "/frame/prom/prom_5.webp",
       thumbnail: "/frame/prom/thumbnail/prom_5.jpg",
       slotCount: 2,
       slotDimensions: {
@@ -201,7 +201,7 @@ export const FrameOptions: {
     },
     {
       type: "singular",
-      src: "/frame/prom/prom_6.png",
+      src: "/frame/prom/prom_6.webp",
       thumbnail: "/frame/prom/thumbnail/prom_6.jpg",
       slotCount: 2,
       slotDimensions: {
@@ -224,7 +224,7 @@ export const FrameOptions: {
   usagyuun: [
     {
       type: "double",
-      src: "/frame/usagyuun/usagyuun_1.png",
+      src: "/frame/usagyuun/usagyuun_1.webp",
       thumbnail: "/frame/usagyuun/thumbnail/usagyuun_1.png",
       slotCount: 4,
       slotDimensions: {
@@ -255,7 +255,7 @@ export const FrameOptions: {
     },
     {
       type: "double",
-      src: "/frame/usagyuun/usagyuun_2.png",
+      src: "/frame/usagyuun/usagyuun_2.webp",
       thumbnail: "/frame/usagyuun/thumbnail/usagyuun_2.png",
       slotCount: 4,
       slotDimensions: {
@@ -286,7 +286,7 @@ export const FrameOptions: {
     },
     {
       type: "double",
-      src: "/frame/usagyuun/usagyuun_3.png",
+      src: "/frame/usagyuun/usagyuun_3.webp",
       thumbnail: "/frame/usagyuun/thumbnail/usagyuun_3.png",
       slotCount: 4,
       slotDimensions: {
@@ -317,7 +317,7 @@ export const FrameOptions: {
     },
     {
       type: "double",
-      src: "/frame/usagyuun/usagyuun_4.png",
+      src: "/frame/usagyuun/usagyuun_4.webp",
       thumbnail: "/frame/usagyuun/thumbnail/usagyuun_4.png",
       slotCount: 4,
       slotDimensions: {
@@ -348,7 +348,7 @@ export const FrameOptions: {
     },
     {
       type: "double",
-      src: "/frame/usagyuun/usagyuun_5.png",
+      src: "/frame/usagyuun/usagyuun_5.webp",
       thumbnail: "/frame/usagyuun/thumbnail/usagyuun_5.png",
       slotCount: 4,
       slotDimensions: {
@@ -379,7 +379,7 @@ export const FrameOptions: {
     },
     {
       type: "double",
-      src: "/frame/usagyuun/usagyuun_6.png",
+      src: "/frame/usagyuun/usagyuun_6.webp",
       thumbnail: "/frame/usagyuun/thumbnail/usagyuun_6.png",
       slotCount: 4,
       slotDimensions: {
@@ -410,7 +410,7 @@ export const FrameOptions: {
     },
     {
       type: "double",
-      src: "/frame/usagyuun/usagyuun_7.png",
+      src: "/frame/usagyuun/usagyuun_7.webp",
       thumbnail: "/frame/usagyuun/thumbnail/usagyuun_7.png",
       slotCount: 4,
       slotDimensions: {
@@ -441,7 +441,7 @@ export const FrameOptions: {
     },
     {
       type: "double",
-      src: "/frame/usagyuun/usagyuun_8.png",
+      src: "/frame/usagyuun/usagyuun_8.webp",
       thumbnail: "/frame/usagyuun/thumbnail/usagyuun_8.png",
       slotCount: 4,
       slotDimensions: {
