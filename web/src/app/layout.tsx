@@ -5,6 +5,7 @@ import NextTopLoader from "nextjs-toploader";
 import Footer from "@/components/Footer";
 import I18nClientProvider from "@/context/I18nClientProvider";
 import {Toaster} from "@/components/ui/sonner";
+import {LanguageProvider} from "@/context/LanguageContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,24 +29,26 @@ export default function RootLayout({
 }>) {
   return (
     <I18nClientProvider>
-      <html lang="en">
-        <head>
-          <link
-            rel="shortcut icon"
-            href="/favicon.ico"
-          />
-        </head>
-        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-          <NextTopLoader
-            color="black"
-            zIndex={100000}
-            showSpinner={true}
-          />
-          {children}
-          <Toaster />
-          <Footer />
-        </body>
-      </html>
+      <LanguageProvider>
+        <html lang="en">
+          <head>
+            <link
+              rel="shortcut icon"
+              href="/favicon.ico"
+            />
+          </head>
+          <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+            <NextTopLoader
+              color="black"
+              zIndex={100000}
+              showSpinner={true}
+            />
+            {children}
+            <Toaster />
+            <Footer />
+          </body>
+        </html>
+      </LanguageProvider>
     </I18nClientProvider>
   );
 }

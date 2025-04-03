@@ -1,13 +1,17 @@
 "use client";
+
 import Image from "next/image";
 import {BorderTrail} from "./ui/border-trail";
 import {usePathname} from "next/navigation";
 import {useTranslation} from "react-i18next";
 import {cn} from "@/lib/utils";
+import {useLanguage} from "@/context/LanguageContext";
 
 const NavBar = ({captureDate}: {captureDate?: Date}) => {
   const pathname = usePathname();
   const {t} = useTranslation();
+  const {isLanguageInitialized} = useLanguage();
+
   return (
     <>
       {pathname != "/" && (
@@ -26,7 +30,7 @@ const NavBar = ({captureDate}: {captureDate?: Date}) => {
               alt="VTEAM Logo"
             />
             <div className={cn("flex flex-col", !captureDate && "!hidden")}>
-              <h2 className="text-sm text-muted-foreground">{t("Capture day")}</h2>
+              <h2 className="text-sm text-muted-foreground">{isLanguageInitialized && t("Capture day")}</h2>
               <p>
                 {captureDate?.toLocaleString("vi-VN", {
                   year: "numeric",
