@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import {useRef, useState, useEffect} from "react";
@@ -85,7 +86,7 @@ const Preview = () => {
         </div>
 
         <div className="w-full flex flex-col lg:flex-row items-center justify-center gap-8 m-8 mt-3 h-max ">
-          <div className="relative min-w-[300px] w-full md:w-max">
+          <div className="relative min-w-[300px] sm:min-w-[400px] w-full md:w-max">
             <div className={cn(!isAllImagesLoaded && "pointer-events-none opacity-0")}>
               <FrameStage
                 processedImage={processedImage}
@@ -98,22 +99,30 @@ const Preview = () => {
               />
             </div>
             {!isAllImagesLoaded && (
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center gap-2 flex-col">
-                <LoadingSpinner size={100} />
-                <Button
-                  variant="outline"
-                  className="mt-4 cursor-pointer flex items-center gap-2"
-                  disabled={isAllImagesLoaded || initialCountDown > 0}
-                  onClick={() => {
-                    if (initialCountDown <= 0) {
-                      setInitialCountDown(10);
-                      router.refresh();
-                    }
-                  }}
-                >
-                  {t("Reload")}
-                  <LuRefreshCcw className="ml-1 h-4 w-4" />
-                </Button>
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center gap-10 flex-col sm:flex-row h-full">
+                <img
+                  src="/work.gif"
+                  alt="so cute"
+                  className="w-[150px] h-[150px] mb-0 sm:mb-10"
+                />
+                <div className="flex items-center justify-center gap-2 flex-col">
+                  <LoadingSpinner size={100} />
+
+                  <Button
+                    variant="outline"
+                    className="mt-4 cursor-pointer flex items-center gap-2"
+                    disabled={isAllImagesLoaded || initialCountDown > 0}
+                    onClick={() => {
+                      if (initialCountDown <= 0) {
+                        setInitialCountDown(10);
+                        router.refresh();
+                      }
+                    }}
+                  >
+                    {t("Reload")}
+                    <LuRefreshCcw className="ml-1 h-4 w-4" />
+                  </Button>
+                </div>
               </div>
             )}
           </div>

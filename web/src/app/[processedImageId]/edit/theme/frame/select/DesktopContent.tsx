@@ -112,7 +112,7 @@ const DesktopContent = () => {
               frameImgStatus != "loaded" ? "opacity-0 pointer-events-none" : "opacity-100"
             )}
           >
-            <div className={cn("flex items-center justify-evenly w-full h-full", isSelected ? "pointer-events-none" : null)}>
+            <div className={cn("flex items-center justify-evenly w-full h-full gap-10", isSelected ? "pointer-events-none" : null)}>
               <div className="flex flex-col items-center justify-center h-full">
                 <div className="relative h-full flex items-center justify-center">
                   <Reorder.Group

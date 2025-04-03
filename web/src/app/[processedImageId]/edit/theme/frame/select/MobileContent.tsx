@@ -156,8 +156,6 @@ const MobileContent = () => {
                                   onClick={() => handleSelect(item)}
                                 >
                                   <img
-                                    height={280}
-                                    width={280}
                                     src={item.href}
                                     alt="image"
                                     className={cn(
@@ -221,8 +219,6 @@ const MobileContent = () => {
                                 <img
                                   src={selectedImage[index]?.href || ""}
                                   alt="image"
-                                  width={350}
-                                  height={350}
                                   className="pointer-events-none object-cover w-full h-full"
                                 />
                               )}
@@ -282,7 +278,7 @@ const MobileContent = () => {
                     )}
                   </div>
                 </div>
-                <div className="flex flex-col w-full md:w-[35%] gap-5 items-start justify-center ">
+                <div className="flex flex-col w-[95%] mr-0 md:mr-6 md:w-[75%] gap-5 items-start justify-center ">
                   {photo && (
                     <div className="w-full flex gap-4 flex-col items-center justify-center">
                       <Button

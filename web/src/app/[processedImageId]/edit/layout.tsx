@@ -29,7 +29,7 @@ export default function EditLayout({children}: {children: ReactNode}) {
           videoUrl={video?.url || ""}
           previousProcessedImageCreationDate={processedImage?.createdAt}
         >
-          <div className="w-full min-h-screen py-20 relative z-[0] bg-white">
+          <div className="w-full min-h-screen py-22 relative z-[0] bg-white">
             {children}
             {images?.length < NUM_OF_CAPTURE_IMAGE && <FetchError type="image" />}
           </div>

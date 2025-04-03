@@ -93,7 +93,7 @@ const Print = () => {
         href={`/${processedImage.id}/print/${uuid}`}
       />
 
-      <div className="w-full h-full flex items-center justify-center gap-10 flex-wrap m-8 mt-20">
+      <div className="w-full h-full flex items-center justify-center gap-10 flex-wrap mb-8 mt-20">
         <div className="flex flex-col items-center justify-center gap-5 w-[90%] md:w-[50%] lg:w-[40%] h-full">
           <Tabs
             defaultValue="price"

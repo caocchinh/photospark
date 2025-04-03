@@ -12,7 +12,6 @@ const QueueContent = async ({processedImageId, queueId}: {processedImageId: stri
   const [queueResult] = await Promise.all([getQueue(processedImageId, queueId)]);
 
   // Handle error cases after all data is fetched
-
   if (queueResult.error || !queueResult.data) {
     return <FetchError type="queue" />;
   }
@@ -20,7 +19,7 @@ const QueueContent = async ({processedImageId, queueId}: {processedImageId: stri
   const queue = queueResult.data;
 
   return (
-    <div className="min-w-screen min-h-screen flex items-center justify-center bg-white">
+    <div className="flex items-center justify-center bg-white">
       <Queue queue={queue} />
     </div>
   );
