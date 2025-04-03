@@ -113,7 +113,6 @@ const DesktopContent = () => {
                                 height={photo.theme!.frame.slotDimensions.height}
                                 width={photo.theme!.frame.slotDimensions.width}
                                 filter={filter || ""}
-                                crossOrigin="anonymous"
                                 setIsFilterLoading={setIsFilterLoading}
                               />
                             )

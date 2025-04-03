@@ -55,10 +55,17 @@ Configure the environment variables in each `.env` file:
 
 ```
 # Main environment variables to set
-CLOUDFARE_ACCOUNT_ID=your_cloudflare_account_id
-R2_ACCESS_KEY_ID=your_r2_access_key
-R2_SECRET_ACCESS_KEY=your_r2_secret_key
-NEON_DATABASE_URL=your_neon_database_url
+CLOUDFARE_ACCOUNT_ID=
+R2_ACCESS_KEY_ID=
+R2_SECRET_ACCESS_KEY=
+NEON_DATABASE_URL=
+NEXT_PUBLIC_QR_DOMAIN=https://photospark.online
+NEXT_PUBLIC_SOCKET_URL=http://localhost:6969
+NEXT_PUBLIC_ADMIN_PASSWORD=999999999
+NEXT_PUBLIC_R2_PUBLIC_BUCKET_DEVELOPMENT_URL=
+NEXT_PUBLIC_R2_PUBLIC_BUCKET_PRODUCTION_URL=
+R2_PUBLIC_BUCKET_DEVELOPMENT_NAME=
+R2_PUBLIC_BUCKET_PRODUCTION_NAME=
 ```
 
 ### 3. Install Dependencies

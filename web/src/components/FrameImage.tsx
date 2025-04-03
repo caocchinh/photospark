@@ -12,7 +12,6 @@ const FrameImage = ({
   height,
   width,
   filter,
-  crossOrigin,
   onLoad,
   setIsFilterLoading,
 }: {
@@ -22,7 +21,6 @@ const FrameImage = ({
   height: number;
   width: number;
   filter: string;
-  crossOrigin?: string;
   onLoad?: () => void;
   setIsFilterLoading?: (isLoading: boolean) => void;
 }) => {
@@ -76,11 +74,7 @@ const FrameImage = ({
     setIsLoading(true);
     setIsFilterLoading?.(true);
     const originalImg = new Image();
-    if (crossOrigin) originalImg.crossOrigin = crossOrigin;
-    const imageUrl = ["r2.dev", process.env.NEXT_PUBLIC_R2_PUBLIC_BUCKET_PRODUCTION_URL].some((bucketUrl) => bucketUrl && url.includes(bucketUrl))
-      ? `/api/proxy/image?url=${encodeURIComponent(url)}`
-      : url;
-    originalImg.src = imageUrl;
+    originalImg.src = url;
 
     originalImg.onload = () => {
       try {
@@ -105,7 +99,6 @@ const FrameImage = ({
           img.style.height = "100%";
           img.style.objectFit = "contain";
           img.style.filter = filter;
-          if (crossOrigin) img.crossOrigin = crossOrigin;
 
           container.appendChild(img);
           document.body.appendChild(container);
@@ -202,7 +195,7 @@ const FrameImage = ({
       setIsFilterLoading?.(false);
       if (onLoad) onLoad();
     };
-  }, [url, crossOrigin, onLoad, filter, isAppleDeviceDetected, setIsFilterLoading, applyFilterWithCanvas]);
+  }, [url, onLoad, filter, isAppleDeviceDetected, setIsFilterLoading, applyFilterWithCanvas]);
 
   useEffect(() => {
     if (isLoading) {

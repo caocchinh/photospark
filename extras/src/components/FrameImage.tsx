@@ -9,7 +9,6 @@ const FrameImage = ({
   height,
   width,
   filter,
-  crossOrigin,
   onLoad,
 }: {
   url: string;
@@ -18,7 +17,6 @@ const FrameImage = ({
   height: number;
   width: number;
   filter: string;
-  crossOrigin?: string;
   onLoad?: () => void;
 }) => {
   const [image, setImage] = useState<HTMLCanvasElement | null>(null);
@@ -26,13 +24,8 @@ const FrameImage = ({
   const loadImage = useCallback(() => {
     if (!url) return setImage(null);
 
-    const imageUrl = ["r2.dev", process.env.NEXT_PUBLIC_R2_PUBLIC_BUCKET_PRODUCTION_URL].some((bucketUrl) => bucketUrl && url.includes(bucketUrl))
-      ? `/api/proxy/image?url=${encodeURIComponent(url)}`
-      : url;
-
     const img = document.createElement("img");
-    if (crossOrigin) img.crossOrigin = crossOrigin;
-    img.src = imageUrl;
+    img.src = url;
 
     img.onload = () => {
       const canvas = document.createElement("canvas");
@@ -67,11 +60,11 @@ const FrameImage = ({
       setImage(canvas);
       if (onLoad) onLoad();
     };
-  }, [filter, url, crossOrigin, onLoad]);
+  }, [filter, url, onLoad]);
 
   useEffect(() => {
     loadImage();
-  }, [loadImage, url, filter, crossOrigin]);
+  }, [loadImage, url, filter]);
 
   return (
     <KonvaImage

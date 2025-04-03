@@ -10,12 +10,12 @@
 }
 
 .preview-page-container {
-  padding-top: 30px;
+  padding-top: 35px;
 }
 
 @media (max-width: 470px) {
   .preview-page-container {
-    padding-top: 90px;
+    padding-top: 95px;
   }
 }
 .loader {

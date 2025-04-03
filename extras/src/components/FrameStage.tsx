@@ -148,7 +148,7 @@ const FrameStage = ({processedImage, images, stageRef, onLoadingComplete}: Frame
                     height={height}
                     width={width}
                     filter={processedImage.filter!}
-                    crossOrigin="anonymous"
+                    // crossOrigin="anonymous"
                     onLoad={handleImageLoaded}
                   />
                 )

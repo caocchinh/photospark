@@ -236,7 +236,6 @@ const DesktopContent = () => {
                             width={280}
                             src={item.href}
                             alt="image"
-                            crossOrigin="anonymous"
                             className={cn(
                               "rounded border-4 border-transparent hover:border-black hover:cursor-pointer object-cover w-full !h-full",
                               `w-[${photo.theme!.frame.slotDimensions.width * 1.1}px] h-[${photo.theme!.frame.slotDimensions.height * 1.1}px]`,

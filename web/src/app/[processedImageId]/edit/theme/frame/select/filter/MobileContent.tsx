@@ -137,7 +137,6 @@ const MobileContent = () => {
                               width={photo.theme!.frame.slotDimensions.width}
                               filter={filter || ""}
                               setIsFilterLoading={setIsFilterLoading}
-                              crossOrigin="anonymous"
                             />
                           )
                         );

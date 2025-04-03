@@ -11,8 +11,24 @@ import Link from "next/link";
 import {ROUTES} from "@/constants/routes";
 import {useEffect} from "react";
 
-const DesktopContent = dynamic(() => import("./DesktopContent"), {ssr: false});
-const MobileContent = dynamic(() => import("./MobileContent"), {ssr: false});
+const LoadingIndicator = () => (
+  <div className="w-full h-full flex items-center justify-center">
+    <div className="loader2"></div>
+  </div>
+);
+
+const DesktopContentModule = import("./DesktopContent");
+const MobileContentModule = import("./MobileContent");
+
+const DesktopContent = dynamic(() => DesktopContentModule, {
+  ssr: false,
+  loading: () => <LoadingIndicator />,
+});
+
+const MobileContent = dynamic(() => MobileContentModule, {
+  ssr: false,
+  loading: () => <LoadingIndicator />,
+});
 
 const FilterEditPage = () => {
   useReloadConfirm();
