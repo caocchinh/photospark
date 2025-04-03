@@ -1,4 +1,4 @@
-# PhotoBooth CP1500 📸
+# Photospark 📸 (PhotoBooth with Selphy-CP1500 printer)
 
 A modern photo booth application built with Next.js and Socket.IO that offers real-time photo capture, custom frames, Instagram-style filters, and direct printing to Canon SELPHY CP1500 printers.
 
