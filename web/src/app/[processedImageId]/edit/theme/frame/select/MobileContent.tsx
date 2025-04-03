@@ -8,7 +8,6 @@ import {useCallback, useMemo, useRef, useState} from "react";
 import {Layer, Rect, Stage} from "react-konva";
 import useImage from "use-image";
 import {Image as KonvaImage} from "react-konva";
-import Image from "next/image";
 import Link from "next/link";
 import {FRAME_HEIGHT, FRAME_WIDTH, IMAGE_HEIGHT, IMAGE_WIDTH, OFFSET_X, OFFSET_Y} from "@/constants/constants";
 import {GlowEffect} from "@/components/ui/glow-effect";
@@ -218,7 +217,7 @@ const MobileContent = () => {
                               }}
                             >
                               {selectedImage[index]?.href && (
-                                <Image
+                                <img
                                   src={selectedImage[index]?.href || ""}
                                   alt="image"
                                   crossOrigin="anonymous"
