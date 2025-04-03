@@ -1,6 +1,6 @@
 "use client";
 
-import {ImageTable, ProcessedImageTable, QueueTable} from "@/drizzle/schema";
+import {QueueTable} from "@/drizzle/schema";
 import {Button} from "@/components/ui/button";
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import Link from "next/link";
@@ -14,15 +14,10 @@ import {cn} from "@/lib/utils";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
 import {SlidingNumber} from "@/components/ui/sliding-number";
 import {useTranslation} from "react-i18next";
-const Queue = ({
-  processedImage,
-  queue,
-  images,
-}: {
-  processedImage: typeof ProcessedImageTable.$inferSelect;
-  queue: typeof QueueTable.$inferSelect;
-  images?: (typeof ImageTable.$inferSelect)[];
-}) => {
+import {useProcessedImage} from "@/context/ProcssedImageContext";
+
+const Queue = ({queue}: {queue: typeof QueueTable.$inferSelect}) => {
+  const {processedImage, images} = useProcessedImage();
   const stageRef = useRef<StageElement | null>(null);
   const [queueStatus, setQueueStatus] = useState(queue.status);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -63,128 +58,132 @@ const Queue = ({
   }, [refreshable, timeLeft]);
 
   return (
-    <div className="w-full flex items-center justify-center gap-8  m-8 mt-20 flex-wrap">
-      <Card className=" w-[90%] lg:w-[40%]">
-        <CardHeader>
-          <CardTitle>{t("Image printing information")}</CardTitle>
-          <CardDescription>{t("Details about the image printing order")}</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="border rounded-md p-4 flex flex-col gap-2">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className="w-full flex justify-end">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={refreshQueue}
-                      disabled={isRefreshing || !refreshable}
-                      className={cn(
-                        "p-1 h-8 w-full bg-black text-white hover:bg-black self-end hover:text-white",
-                        isRefreshing || !refreshable ? "opacity-50 cursor-not-allowed" : "cursor-pointer flex items-center gap-2 justify-center"
-                      )}
-                    >
-                      <FaSync className={cn(isRefreshing && "animate-spin")} />
-                      {isRefreshing || !refreshable ? (
-                        <h4 className="text-xs flex items-center gap-1 justify-center">
-                          {t("Wait")}
-                          <span>
-                            <SlidingNumber
-                              value={timeLeft}
-                              padStart={true}
-                            />
-                          </span>
-                          {t("seconds to refresh")}
-                        </h4>
-                      ) : (
-                        <h4 className="text-xs">{t("Refresh status")}</h4>
-                      )}
-                    </Button>
+    <>
+      {processedImage && images && (
+        <div className="w-full flex items-center justify-center gap-8  m-8 mt-[90px] flex-wrap">
+          <Card className=" w-[90%] lg:w-[40%]">
+            <CardHeader>
+              <CardTitle>{t("Image printing information")}</CardTitle>
+              <CardDescription>{t("Details about the image printing order")}</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="border rounded-md p-4 flex flex-col gap-2">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="w-full flex justify-end">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={refreshQueue}
+                          disabled={isRefreshing || !refreshable}
+                          className={cn(
+                            "p-1 h-8 w-full bg-black text-white hover:bg-black self-end hover:text-white",
+                            isRefreshing || !refreshable ? "opacity-50 cursor-not-allowed" : "cursor-pointer flex items-center gap-2 justify-center"
+                          )}
+                        >
+                          <FaSync className={cn(isRefreshing && "animate-spin")} />
+                          {isRefreshing || !refreshable ? (
+                            <h4 className="text-xs flex items-center gap-1 justify-center">
+                              {t("Wait")}
+                              <span>
+                                <SlidingNumber
+                                  value={timeLeft}
+                                  padStart={true}
+                                />
+                              </span>
+                              {t("seconds to refresh")}
+                            </h4>
+                          ) : (
+                            <h4 className="text-xs">{t("Refresh status")}</h4>
+                          )}
+                        </Button>
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent>{!refreshable ? `${t("Wait")} ${timeLeft} ${t("seconds to refresh")}` : t("Refresh status")}</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                <div className="flex justify-between items-center mb-2 flex-col gap-3 md:gap-0 md:flex-row">
+                  <h3 className="font-medium">{t("Order status")}</h3>
+                  <div className="flex items-center gap-2 justify-center md:justify-start">
+                    <div
+                      className={`w-3 h-3 rounded-full ${
+                        queueStatus === "pending"
+                          ? "bg-yellow-500"
+                          : queueStatus === "processing"
+                          ? "bg-blue-500"
+                          : queueStatus === "completed"
+                          ? "bg-green-500"
+                          : "bg-red-500"
+                      }`}
+                    ></div>
+                    <span>
+                      {queueStatus === "pending" && t("Waiting for printing")}
+                      {queueStatus === "processing" && t("Printing")}
+                      {queueStatus === "completed" && t("Printed")}
+                      {queueStatus === "failed" && t("Failed")}
+                    </span>
                   </div>
-                </TooltipTrigger>
-                <TooltipContent>{!refreshable ? `${t("Wait")} ${timeLeft} ${t("seconds to refresh")}` : t("Refresh status")}</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            <div className="flex justify-between items-center mb-2 flex-col gap-3 md:gap-0 md:flex-row">
-              <h3 className="font-medium">{t("Order status")}</h3>
-              <div className="flex items-center gap-2 justify-center md:justify-start">
-                <div
-                  className={`w-3 h-3 rounded-full ${
-                    queueStatus === "pending"
-                      ? "bg-yellow-500"
-                      : queueStatus === "processing"
-                      ? "bg-blue-500"
-                      : queueStatus === "completed"
-                      ? "bg-green-500"
-                      : "bg-red-500"
-                  }`}
-                ></div>
-                <span>
-                  {queueStatus === "pending" && t("Waiting for printing")}
-                  {queueStatus === "processing" && t("Printing")}
-                  {queueStatus === "completed" && t("Printed")}
-                  {queueStatus === "failed" && t("Failed")}
-                </span>
-              </div>
-            </div>
+                </div>
 
-            <div className="flex items-center gap-2 justify-center md:justify-start sm:flex-row flex-col">
-              <h3 className="font-medium">{t("Order ID")}: </h3>
-              <span className="font-medium text-center text-rose-500 hover:underline">{queue.id}</span>
-            </div>
-          </div>
+                <div className="flex items-center gap-2 justify-center md:justify-start sm:flex-row flex-col">
+                  <h3 className="font-medium">{t("Order ID")}: </h3>
+                  <span className="font-medium text-center text-rose-500 hover:underline">{queue.id}</span>
+                </div>
+              </div>
 
-          <div className="border rounded-md p-4">
-            <h3 className="font-medium mb-2">{t("Order details")}</h3>
-            <div className="flex flex-col gap-2 items-center justify-center md:justify-start w-full">
-              <div className="flex justify-between w-full">
-                <span>{t("Image type")}:</span>
-                <span className="font-medium text-right">{processedImage.type === "double" ? t("Double image") : t("Single image")}</span>
+              <div className="border rounded-md p-4">
+                <h3 className="font-medium mb-2">{t("Order details")}</h3>
+                <div className="flex flex-col gap-2 items-center justify-center md:justify-start w-full">
+                  <div className="flex justify-between w-full">
+                    <span>{t("Image type")}:</span>
+                    <span className="font-medium text-right">{processedImage.type === "double" ? t("Double image") : t("Single image")}</span>
+                  </div>
+                  <div className="flex justify-between w-full">
+                    <span>{t("Quantity")}:</span>
+                    <span className="font-medium text-right">
+                      {queue.quantity * (processedImage.type === "double" ? 2 : 1)} {t("images")}
+                    </span>
+                  </div>
+                  <div className="flex justify-between w-full">
+                    <span>{t("Price")}:</span>
+                    <span className="font-medium text-right">
+                      {queue.price.toLocaleString("vi-VN")} {t("VND")}
+                    </span>
+                  </div>
+                  <div className="flex justify-between w-full">
+                    <span>{t("Time")}:</span>
+                    <span className="font-medium text-right">{new Date(queue.createdAt).toLocaleString("vi-VN")}</span>
+                  </div>
+                </div>
               </div>
-              <div className="flex justify-between w-full">
-                <span>{t("Quantity")}:</span>
-                <span className="font-medium text-right">
-                  {queue.quantity * (processedImage.type === "double" ? 2 : 1)} {t("images")}
-                </span>
-              </div>
-              <div className="flex justify-between w-full">
-                <span>{t("Price")}:</span>
-                <span className="font-medium text-right">
-                  {queue.price.toLocaleString("vi-VN")} {t("VND")}
-                </span>
-              </div>
-              <div className="flex justify-between w-full">
-                <span>{t("Time")}:</span>
-                <span className="font-medium text-right">{new Date(queue.createdAt).toLocaleString("vi-VN")}</span>
-              </div>
-            </div>
-          </div>
 
-          <div className="border rounded-md p-4 bg-yellow-50">
-            <p className="text-center text-sm">{t("Please meet staff VTEAM and bring the order ID to get help!")}</p>
-          </div>
-        </CardContent>
-        <CardFooter className="flex flex-col gap-2 w-full">
-          <Link
-            href={`/${processedImage.id}/print`}
-            className="w-full"
-          >
-            <Button
-              variant="outline"
-              className="w-full gap-2 cursor-pointer"
-            >
-              <FaArrowLeft /> {t("Back")}
-            </Button>
-          </Link>
-        </CardFooter>
-      </Card>
-      <FrameStage
-        processedImage={processedImage}
-        images={images}
-        stageRef={stageRef}
-      />
-    </div>
+              <div className="border rounded-md p-4 bg-yellow-50">
+                <p className="text-center text-sm">{t("Please meet staff VTEAM and bring the order ID to get help!")}</p>
+              </div>
+            </CardContent>
+            <CardFooter className="flex flex-col gap-2 w-full">
+              <Link
+                href={`/${processedImage.id}/print`}
+                className="w-full"
+              >
+                <Button
+                  variant="outline"
+                  className="w-full gap-2 cursor-pointer"
+                >
+                  <FaArrowLeft /> {t("Back")}
+                </Button>
+              </Link>
+            </CardFooter>
+          </Card>
+          <FrameStage
+            processedImage={processedImage}
+            images={images}
+            stageRef={stageRef}
+          />
+        </div>
+      )}
+    </>
   );
 };
 

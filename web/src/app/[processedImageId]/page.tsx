@@ -1,62 +1,200 @@
-import {Suspense} from "react";
-import {getImages, getProcessedImage, getVideo} from "@/server/actions";
-import Preview from "./Preview";
-import ImageNotFoundError from "@/components/ImageNotFoundError";
-import FetchError from "@/components/FetchError";
-import DatabaseFetchError from "@/components/DatabaseFetchError";
-import PageLoader from "@/components/PageLoader/PageLoader";
+"use client";
 
-type Params = Promise<{processedImageId: string}>;
+import {useRef, useState, useEffect} from "react";
+import {Stage as StageElement} from "konva/lib/Stage";
+import {cn, generateTimestampFilename} from "@/lib/utils";
+import Link from "next/link";
+import {GlowEffect} from "@/components/ui/glow-effect";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import {AiOutlineDownload} from "react-icons/ai";
+import {MdModeEdit} from "react-icons/md";
+import {IoCopySharp} from "react-icons/io5";
+import FrameStage from "@/components/FrameStage";
+import GeneralError from "@/components/GeneralError";
+import {Button} from "@/components/ui/button";
+import {LuRefreshCcw, LuLink} from "react-icons/lu";
+import LanguageBar from "@/components/LanguageBar";
+import {useTranslation} from "react-i18next";
+import {useRouter} from "next/navigation";
+import NavBar from "@/components/NavBar";
+import {useProcessedImage} from "@/context/ProcssedImageContext";
 
-const PreviewContent = async ({processedImageId}: {processedImageId: string}) => {
-  // Fetch all data in parallel and wait for all queries to complete
-  const [processedImageResult, imagesResult, videoResult] = await Promise.all([
-    getProcessedImage(processedImageId),
-    getImages(processedImageId),
-    getVideo(processedImageId),
-  ]);
+const Preview = () => {
+  const {processedImage, images, video} = useProcessedImage();
+  const {t} = useTranslation();
+  const stageRef = useRef<StageElement | null>(null);
+  const [error, setError] = useState(false);
+  const [isAllImagesLoaded, setIsAllImagesLoaded] = useState(false);
+  const router = useRouter();
+  const [copied, setCopied] = useState(false);
+  const [initialCountDown, setInitialCountDown] = useState(10);
+  const [isDownloading, setIsDownloading] = useState(false);
 
-  // Handle error cases after all data is fetched
-  if (processedImageResult.error || !processedImageResult.data) {
-    return <ImageNotFoundError />;
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (initialCountDown > 0 && !isAllImagesLoaded) {
+        setInitialCountDown((prev) => prev - 1);
+        console.log(initialCountDown);
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [initialCountDown, isAllImagesLoaded]);
+
+  if (!processedImage) {
+    return null;
   }
 
-  if (imagesResult.error || !imagesResult.data) {
-    return <ImageNotFoundError />;
-  }
+  const downloadImage = () => {
+    if (!stageRef.current || !isAllImagesLoaded) return;
+    try {
+      const dataURL = stageRef.current.toDataURL({
+        pixelRatio: 2,
+        mimeType: "image/png",
+      });
 
-  const processedImage = processedImageResult.data;
-  const images = imagesResult.data;
-  const video = videoResult.data;
+      const link = document.createElement("a");
+      link.download = generateTimestampFilename("VTEAM", "png");
+      link.href = dataURL;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch {
+      setError(true);
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
-  const availableImageCount = images?.filter((image) => image.slotPositionX != null && image.slotPositionY != null).length || 0;
+  const downloadVideo = () => {
+    if (!video?.url) return;
+
+    const link = document.createElement("a");
+    link.href = video.url;
+    link.target = "_blank";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
-    <div className="w-full min-h-screen flex items-center justify-center bg-white bg-no-repeat bg-cover">
-      <Preview
-        processedImage={processedImage}
-        images={images}
-        video={video!}
-      />
-      {availableImageCount < processedImage.slotCount && <FetchError type="image" />}
-      {(videoResult.error || !video) && <FetchError type="video" />}
-    </div>
+    <>
+      <NavBar captureDate={processedImage.createdAt} />
+      <div className="flex flex-col items-center justify-center gap-8 p-4  h-max w-full relative z-[0] bg-white pt-20 preview-page-container">
+        <div className="w-[95%] flex items-center justify-end">
+          <LanguageBar />
+        </div>
+
+        <div className="w-full flex flex-col lg:flex-row items-center justify-center gap-8 m-8 mt-3 h-max ">
+          <div className="relative min-w-[300px] w-full md:w-max">
+            <div className={cn(!isAllImagesLoaded && "pointer-events-none opacity-0")}>
+              <FrameStage
+                processedImage={processedImage}
+                images={images}
+                stageRef={stageRef}
+                setIsAllImagesLoaded={setIsAllImagesLoaded}
+              />
+            </div>
+            {!isAllImagesLoaded && (
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center gap-2 flex-col">
+                <LoadingSpinner size={100} />
+                <Button
+                  variant="outline"
+                  className="mt-4 cursor-pointer flex items-center gap-2"
+                  disabled={isAllImagesLoaded || initialCountDown > 0}
+                  onClick={() => {
+                    if (initialCountDown <= 0) {
+                      setInitialCountDown(10);
+                      router.refresh();
+                    }
+                  }}
+                >
+                  {t("Reload")}
+                  <LuRefreshCcw className="ml-1 h-4 w-4" />
+                </Button>
+              </div>
+            )}
+          </div>
+
+          <div className="flex items-center justify-center gap-6 flex-col w-[90%] md:w-[70%] lg:w-[280px]">
+            <div className="relative w-full h-[50px]">
+              <div
+                className={cn(
+                  "w-full h-full text-white cursor-pointer text-xl bg-black rounded-sm relative z-10 flex items-center justify-center gap-3",
+                  !isAllImagesLoaded && "pointer-events-none opacity-50"
+                )}
+                onClick={() => {
+                  setIsDownloading(true);
+                  downloadImage();
+                }}
+              >
+                {isAllImagesLoaded ? t("Download image") : t("Loading image")}
+                {!isAllImagesLoaded || isDownloading ? <LoadingSpinner size={25} /> : <AiOutlineDownload size={27} />}
+              </div>
+              {isAllImagesLoaded && (
+                <GlowEffect
+                  colors={["#0894FF", "#C959DD", "#FF2E54", "#FF9004"]}
+                  mode="static"
+                  blur="medium"
+                  className="z-[0]"
+                />
+              )}
+            </div>
+
+            {video?.url && (
+              <div
+                className="w-full h-[50px] text-white bg-black cursor-pointer text-xl rounded-sm flex items-center justify-center gap-3"
+                onClick={downloadVideo}
+              >
+                {t("Download video")}
+                <AiOutlineDownload size={27} />
+              </div>
+            )}
+            <div
+              className="w-full h-[50px] text-white bg-black cursor-pointer text-xl rounded-sm flex items-center justify-center gap-3"
+              onClick={() => {
+                navigator.clipboard.writeText(window.location.href);
+                setCopied(true);
+                setTimeout(() => {
+                  setCopied(false);
+                }, 2000);
+              }}
+            >
+              {copied ? t("Copied!") : t("Copy image link")}
+              <LuLink size={27} />
+            </div>
+            <div className="w-full h-[50px] text-white cursor-pointer text-xl bg-[#f97316] hover:opacity-90 hover:bg-[#f97316] rounded-sm flex items-center justify-center gap-3">
+              <Link
+                href={`/${processedImage.id}/edit`}
+                className="flex items-center justify-center gap-2 h-full w-full"
+              >
+                {t("Edit image")}
+                <MdModeEdit
+                  size={27}
+                  color="white"
+                />
+              </Link>
+            </div>
+
+            <div className="w-full h-[50px] text-white cursor-pointer text-xl bg-[#f97316] hover:opacity-90 hover:bg-[#f97316] rounded-sm flex items-center justify-center gap-3">
+              <Link
+                href={`/${processedImage.id}/print`}
+                className="flex items-center justify-center gap-2 h-full w-full"
+              >
+                {t("Print more")}
+                <IoCopySharp
+                  size={22}
+                  color="white"
+                />
+              </Link>
+            </div>
+          </div>
+        </div>
+        <GeneralError
+          error={error}
+          message={t("Error while downloading image!")}
+        />
+      </div>
+    </>
   );
 };
-
-const PreviewPage = async (props: {params: Params}) => {
-  const params = await props.params;
-  const processedImageId = params.processedImageId;
-
-  try {
-    return (
-      <Suspense fallback={<PageLoader />}>
-        <PreviewContent processedImageId={processedImageId} />
-      </Suspense>
-    );
-  } catch {
-    return <DatabaseFetchError />;
-  }
-};
-
-export default PreviewPage;
+export default Preview;
