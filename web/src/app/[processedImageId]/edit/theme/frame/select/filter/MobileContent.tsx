@@ -27,6 +27,7 @@ import {useTranslation} from "react-i18next";
 import {useImageUpload} from "@/hooks/useImageUpload";
 import GeneralError from "@/components/GeneralError";
 import FrameImageWrapper from "@/components/FrameImageWrapper";
+import Image from "next/image";
 
 const MobileContent = () => {
   const {photo} = usePhoto();
@@ -335,6 +336,12 @@ const MobileContent = () => {
           message={t("An error occurred while creating the image!")}
         />
       )}
+      <Image
+        src={photo?.theme?.frame?.src || ""}
+        alt="Frame"
+        className="hidden"
+        priority
+      />
     </>
   );
 };

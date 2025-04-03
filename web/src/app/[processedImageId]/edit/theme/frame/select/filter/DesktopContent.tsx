@@ -24,6 +24,7 @@ import GeneralError from "@/components/GeneralError";
 import {useTranslation} from "react-i18next";
 import {useImageUpload} from "@/hooks/useImageUpload";
 import FrameImageWrapper from "@/components/FrameImageWrapper";
+import Image from "next/image";
 
 const DesktopContent = () => {
   const {photo} = usePhoto();
@@ -286,6 +287,12 @@ const DesktopContent = () => {
           message={t("An error occurred while creating the image!")}
         />
       )}
+      <Image
+        src={photo?.theme?.frame?.src || ""}
+        alt="Frame"
+        priority
+        className="hidden"
+      />
     </>
   );
 };

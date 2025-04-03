@@ -19,6 +19,7 @@ import {useTranslation} from "react-i18next";
 import {useRouter} from "next/navigation";
 import NavBar from "@/components/NavBar";
 import {useProcessedImage} from "@/context/ProcssedImageContext";
+import Image from "next/image";
 
 const Preview = () => {
   const {processedImage, images, video} = useProcessedImage();
@@ -206,6 +207,12 @@ const Preview = () => {
           message={t("Error while downloading image!")}
         />
       </div>
+      <Image
+        src={processedImage.frameURL || ""}
+        alt="Frame"
+        priority
+        className="hidden"
+      />
     </>
   );
 };

@@ -24,6 +24,7 @@ import {IoCheckmark} from "react-icons/io5";
 import {useTranslation} from "react-i18next";
 import {Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog";
 import FrameImageWrapper from "@/components/FrameImageWrapper";
+import Image from "next/image";
 
 const MobileContent = () => {
   const {photo, setPhoto} = usePhoto();
@@ -375,6 +376,12 @@ const MobileContent = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      <Image
+        src={photo?.theme?.frame?.src || ""}
+        alt="Frame"
+        className="hidden"
+        priority
+      />
     </>
   );
 };

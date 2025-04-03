@@ -17,6 +17,7 @@ import FrameImageWrapper from "@/components/FrameImageWrapper";
 import {FaArrowRight, FaArrowLeft} from "react-icons/fa6";
 import {useTranslation} from "react-i18next";
 import {Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog";
+import Image from "next/image";
 
 const DesktopContent = () => {
   const {photo, setPhoto} = usePhoto();
@@ -321,6 +322,12 @@ const DesktopContent = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      <Image
+        src={photo?.theme?.frame?.src || ""}
+        alt="Frame"
+        priority
+        className="hidden"
+      />
     </>
   );
 };
