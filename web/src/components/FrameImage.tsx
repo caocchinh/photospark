@@ -106,7 +106,6 @@ const FrameImage = ({
 
           const processImage = async () => {
             try {
-              await img.decode();
               // Wait for container to be properly mounted in the DOM
               await new Promise<void>((resolve) => {
                 if (document.body.contains(container)) {
@@ -126,6 +125,7 @@ const FrameImage = ({
                   subtree: true,
                 });
               });
+              await img.decode();
 
               const canvas = await toCanvas(container, {
                 quality: 1.0,
