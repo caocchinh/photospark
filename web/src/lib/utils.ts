@@ -32,3 +32,10 @@ export function findSwappedIndices(arr1: number[], arr2: number[]) {
     toIndex: idx2,
   };
 }
+
+export function isEmbeddedBrowser() {
+  const userAgent = navigator.userAgent || "";
+  const embeddedBrowserPatterns = ["FBAN", "FBAV", "Instagram", "TikTok", "Snapchat", "Twitter", "Line", "WeChat", "QQBrowser"];
+  const embeddedBrowserRegex = new RegExp(embeddedBrowserPatterns.join("|"), "i");
+  return embeddedBrowserRegex.test(userAgent);
+}

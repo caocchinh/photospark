@@ -25,7 +25,7 @@ const GeneralError = ({error, message}: {error: boolean; message: string}) => {
           className="text-red-500"
           size={100}
         />
-        <AlertDialogDescription className="text-2xl">{message}</AlertDialogDescription>
+        <AlertDialogDescription className="text-2xl text-center">{message}</AlertDialogDescription>
         <AlertDialogFooter>
           <Button
             onClick={() => window.location.reload()}

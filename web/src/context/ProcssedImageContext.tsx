@@ -1,7 +1,9 @@
 "use client";
+import GeneralError from "@/components/GeneralError";
 import {ImageTable, ProcessedImageTable, VideoTable} from "@/drizzle/schema";
-import {createContext, ReactNode, useContext} from "react";
-
+import {isEmbeddedBrowser} from "@/lib/utils";
+import {createContext, ReactNode, useContext, useEffect, useState} from "react";
+import {useTranslation} from "react-i18next";
 interface ProcessedImageContextType {
   processedImage?: typeof ProcessedImageTable.$inferSelect;
   images?: Array<typeof ImageTable.$inferSelect>;
@@ -21,7 +23,25 @@ export const ProcessedImageProvider = ({
   images: Array<typeof ImageTable.$inferSelect>;
   video?: typeof VideoTable.$inferSelect;
 }) => {
-  return <ProcessedImageContext.Provider value={{processedImage, images, video}}>{children}</ProcessedImageContext.Provider>;
+  const [isEmbededBrowser, setIsEmbededBrowser] = useState(false);
+  const {t} = useTranslation();
+  useEffect(() => {
+    if (!navigator || !navigator.userAgent || typeof window === "undefined") {
+      return;
+    }
+    setIsEmbededBrowser(isEmbeddedBrowser());
+  }, []);
+
+  return (
+    <ProcessedImageContext.Provider value={{processedImage, images, video}}>
+      {children}
+
+      <GeneralError
+        error={isEmbededBrowser}
+        message={t("This application is not optimized for embeded browser. Please open the link in an external browser.")}
+      />
+    </ProcessedImageContext.Provider>
+  );
 };
 
 export const useProcessedImage = () => useContext(ProcessedImageContext);
