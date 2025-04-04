@@ -86,7 +86,7 @@ const FrameImage = ({
           container.style.width = `${originalImg.naturalWidth}px`;
           container.style.height = `${originalImg.naturalHeight}px`;
           container.style.pointerEvents = "none";
-          container.style.zIndex = "10";
+          container.style.zIndex = "-1";
           container.style.overflow = "hidden";
           container.style.visibility = "visible";
           container.style.opacity = "1";
@@ -134,8 +134,24 @@ const FrameImage = ({
                 includeQueryParams: true,
                 canvasWidth: originalImg.naturalWidth,
                 canvasHeight: originalImg.naturalHeight,
+                fetchRequestInit: {
+                  cache: "no-store",
+                  headers: {
+                    "Cache-Control": "no-cache, no-store, must-revalidate",
+                    Pragma: "no-cache",
+                    Expires: "0",
+                  },
+                },
               });
-
+              const canvas2 = document.createElement("canvas");
+              const context = canvas2.getContext("2d");
+              canvas2.width = originalImg.naturalWidth;
+              canvas2.height = originalImg.naturalHeight;
+              if (context) {
+                context.filter = filter;
+                context.drawImage(canvas, 0, 0);
+              }
+              document.body.appendChild(canvas2);
               setCanvas(canvas);
               setIsFilterLoading?.(false);
               setIsLoading(false);
