@@ -54,9 +54,16 @@ export const openInExternalBrowser = (url: string) => {
   // iOS
   if (isAppleDevice()) {
     window.location.href = `x-web-search://${url}`;
+
     return;
   } else {
-    window.location.href = `intent:${url}#Intent;scheme=https;package=com.android.chrome;end`;
+    window.location.href =
+      `intent://${url.replace(/^https?:\/\//, "")}#Intent;` +
+      `action=android.intent.action.VIEW;` +
+      `category=android.intent.category.BROWSABLE;` +
+      `package=com.android.chrome;` +
+      `S.browser_fallback_url=${encodeURIComponent(url)};` +
+      "end";
     return;
   }
 };
