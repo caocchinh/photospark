@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import {Button} from "@/components/ui/button";
 import {ImageTable, ProcessedImageTable, VideoTable} from "@/drizzle/schema";
-import {isEmbeddedBrowser, openInExternalBrowser} from "@/lib/utils";
+import {isAppleDevice, isEmbeddedBrowser, openInExternalBrowser} from "@/lib/utils";
 import {createContext, ReactNode, useContext, useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {MdWarning} from "react-icons/md";
@@ -67,9 +67,10 @@ export const ProcessedImageProvider = ({
                 openInExternalBrowser(window.location.href);
               }}
             >
-              {t("Open in external browser")}
+              {isAppleDevice() ? t("Open in Safari") : t("Open in Chrome")}
               <RiExternalLinkLine />
             </Button>
+            <h5 className="font-light text-center text-red-500 text-sm">{t("If button doesn't work, please open manually!")}</h5>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

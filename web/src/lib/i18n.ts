@@ -145,6 +145,9 @@ const i18nConfig = {
         "This application is not optimized for embeded browser. Please open the link in an external browser.":
           "This application is not optimized for embeded browser. Please open the link in an external browser.",
         "Open in external browser": "Open in external browser",
+        "Open in Safari": "Open in Safari",
+        "Open in Chrome": "Open in Chrome",
+        "If button doesn't work, please open manually!": "If button doesn't work, please open manually!",
       },
     },
     vi: {
@@ -277,6 +280,9 @@ const i18nConfig = {
         "This application is not optimized for embeded browser. Please open the link in an external browser.":
           "Ứng dụng này không được tối ưu hóa cho trình duyệt nhúng. Vui lòng mở liên kết bằng trình duyệt bên ngoài.",
         "Open in external browser": "Mở trong trình duyệt bên ngoài",
+        "Open in Safari": "Mở bằng Safari",
+        "Open in Chrome": "Mở bằng Chrome",
+        "If button doesn't work, please open manually!": "Nếu nút không hoạt động, vui lòng mở thủ công!",
       },
     },
     fr: {
@@ -411,6 +417,9 @@ const i18nConfig = {
         "This application is not optimized for embeded browser. Please open the link in an external browser.":
           "Cette application n'est pas optimisée pour le navigateur intégré. Veuillez ouvrir le lien dans un navigateur externe.",
         "Open in external browser": "Ouvrir dans un navigateur externe",
+        "Open in Safari": "Ouvrir dans Safari",
+        "Open in Chrome": "Ouvrir dans Chrome",
+        "If button doesn't work, please open manually!": "Si le bouton ne fonctionne pas, veuillez ouvrir manuellement!",
       },
     },
     cn: {
@@ -543,6 +552,9 @@ const i18nConfig = {
         "This application is not optimized for embeded browser. Please open the link in an external browser.":
           "此应用程序未针对嵌入式浏览器进行优化。请在外部浏览器中打开链接。",
         "Open in external browser": "在外部浏览器中打开",
+        "Open in Safari": "在Safari中打开",
+        "Open in Chrome": "在Chrome中打开",
+        "If button doesn't work, please open manually!": "如果按钮不起作用，请手动打开！",
       },
     },
     kr: {
@@ -675,6 +687,9 @@ const i18nConfig = {
         "This application is not optimized for embeded browser. Please open the link in an external browser.":
           "이 애플리케이션은 내장 브라우저에 최적화되어 있지 않습니다. 외부 브라우저에서 링크를 여세요.",
         "Open in external browser": "외부 브라우저에서 열기",
+        "Open in Safari": "Safari에서 열기",
+        "Open in Chrome": "Chrome에서 열기",
+        "If button doesn't work, please open manually!": "버튼이 작동하지 않으면 수동으로 여세요!",
       },
     },
   },

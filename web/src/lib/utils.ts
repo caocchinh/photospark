@@ -51,43 +51,12 @@ export const isAppleDevice = () => {
 };
 
 export const openInExternalBrowser = (url: string) => {
-  // List of intent schemes to try
-  const androidSchemes = [
-    `intent:${url}#Intent;scheme=https;package=com.android.chrome;end`, // Chrome
-    `intent:${url}#Intent;scheme=https;package=com.sec.android.app.sbrowser;end`, // Samsung Browser
-    `intent:${url}#Intent;scheme=https;package=com.opera.browser;end`, // Opera
-    `intent:${url}#Intent;scheme=https;package=org.mozilla.firefox;end`, // Firefox
-    `market://details?id=com.android.chrome`, // Play Store fallback
-  ];
-
-  // iOS schemes
-  const iosSchemes = [`x-web-search://${url}`, `x-web-browser://${url}`, `googlechrome://${url}`, `firefox://${url}`, `opera-http://${url}`];
-
-  const trySchemes = (schemes: string[]) => {
-    let i = 0;
-    const tryNextScheme = () => {
-      if (i >= schemes.length) {
-        // Last resort: direct URL
-        window.open(url, "_system");
-        window.location.href = url;
-        return;
-      }
-
-      const scheme = schemes[i++];
-      const link = document.createElement("a");
-      link.href = scheme;
-      link.click();
-
-      // Try next scheme after a short delay
-      setTimeout(tryNextScheme, 300);
-    };
-
-    tryNextScheme();
-  };
-
+  // iOS
   if (isAppleDevice()) {
-    trySchemes(iosSchemes);
+    window.location.href = `x-web-search://${url}`;
+    return;
   } else {
-    trySchemes(androidSchemes);
+    window.location.href = `intent:${url}#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=${encodeURIComponent(url)};end`;
+    return;
   }
 };
