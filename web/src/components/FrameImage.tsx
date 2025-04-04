@@ -77,7 +77,6 @@ const FrameImage = ({
     originalImg.src = url;
 
     originalImg.onload = async () => {
-      await originalImg.decode();
       try {
         if (filter && isAppleDeviceDetected()) {
           const container = document.createElement("div");
