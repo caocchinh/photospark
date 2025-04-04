@@ -83,8 +83,8 @@ const FrameImage = ({
           container.style.position = "fixed";
           container.style.top = "0";
           container.style.left = "0";
-          container.style.width = `${originalImg.naturalWidth / 2}px`;
-          container.style.height = `${originalImg.naturalHeight / 2}px`;
+          container.style.width = `${originalImg.naturalWidth}px`;
+          container.style.height = `${originalImg.naturalHeight}px`;
           container.style.pointerEvents = "none";
           container.style.zIndex = "10";
           container.style.overflow = "hidden";
@@ -94,8 +94,8 @@ const FrameImage = ({
           const img = document.createElement("img");
           img.src = originalImg.src;
 
-          img.width = originalImg.naturalWidth / 2;
-          img.height = originalImg.naturalHeight / 2;
+          img.width = originalImg.naturalWidth;
+          img.height = originalImg.naturalHeight;
           img.style.width = "100%";
           img.style.height = "100%";
           img.style.objectFit = "contain";
@@ -134,14 +134,6 @@ const FrameImage = ({
                 includeQueryParams: true,
                 canvasWidth: originalImg.naturalWidth,
                 canvasHeight: originalImg.naturalHeight,
-                fetchRequestInit: {
-                  cache: "no-store",
-                  headers: {
-                    "Cache-Control": "no-cache, no-store, must-revalidate",
-                    Pragma: "no-cache",
-                    Expires: "0",
-                  },
-                },
               });
 
               setCanvas(canvas);
