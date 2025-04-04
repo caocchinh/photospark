@@ -91,14 +91,32 @@ const FilterPage = () => {
           const videoPreload = new Promise((resolve) => {
             if (photo.video.r2_url) {
               const video = document.createElement("video");
-              video.src = photo.video.r2_url;
-              video.preload = "auto";
-              video.onloadeddata = () => resolve(true);
+              let isTimeout = false;
+
+              const timeout = setTimeout(() => {
+                isTimeout = true;
+                console.warn("Video loading is taking too long (>10s)");
+                setPhoto!(undefined);
+                navigateTo(ROUTES.HOME);
+                resolve(false);
+              }, 10000);
+
+              video.onloadeddata = () => {
+                if (!isTimeout) {
+                  clearTimeout(timeout);
+                  resolve(true);
+                }
+              };
+
               video.onerror = () => {
+                clearTimeout(timeout);
                 setPhoto!(undefined);
                 navigateTo(ROUTES.HOME);
                 resolve(false);
               };
+
+              video.src = photo.video.r2_url;
+              video.preload = "auto";
             } else {
               setPhoto!(undefined);
               navigateTo(ROUTES.HOME);

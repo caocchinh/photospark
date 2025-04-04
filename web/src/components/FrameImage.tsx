@@ -124,6 +124,7 @@ const FrameImage = ({
                   subtree: true,
                 });
               });
+              await new Promise((resolve) => setTimeout(resolve, 50)); //More delay for better consistency
 
               const canvas = await toCanvas(container, {
                 quality: 1.0,
