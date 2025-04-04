@@ -76,7 +76,8 @@ const FrameImage = ({
     const originalImg = new Image();
     originalImg.src = url;
 
-    originalImg.onload = () => {
+    originalImg.onload = async () => {
+      await originalImg.decode();
       try {
         if (filter && isAppleDeviceDetected()) {
           const container = document.createElement("div");
@@ -125,7 +126,6 @@ const FrameImage = ({
                   subtree: true,
                 });
               });
-              await img.decode();
 
               const canvas = await toCanvas(container, {
                 quality: 1.0,
@@ -162,7 +162,8 @@ const FrameImage = ({
             }
           };
 
-          img.onload = () => {
+          img.onload = async () => {
+            await img.decode();
             processImage();
           };
         } else {
