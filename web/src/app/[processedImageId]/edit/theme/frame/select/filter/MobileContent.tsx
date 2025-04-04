@@ -30,7 +30,7 @@ import FrameImageWrapper from "@/components/FrameImageWrapper";
 import Head from "next/head";
 
 const MobileContent = () => {
-  const {photo} = usePhoto();
+  const {photo, setPhoto} = usePhoto();
   const filterRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const {t} = useTranslation();
@@ -42,16 +42,31 @@ const MobileContent = () => {
   const dummyLinkRef = useRef<HTMLAnchorElement>(null);
 
   const [frameImg, frameImgStatus] = useImage(photo?.theme?.frame?.src || "", "anonymous");
-  const [filter, setFilter] = useState<string | null>(null);
+  const [filter, setFilter] = useState<string | null>(photo && photo.filter ? photo.filter : null);
   const stageRef = useRef<StageElement | null>(null);
   const filterRef = useRef(filter);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const uploadAttemptedRef = useRef(false);
   const [isFilterLoading, setIsFilterLoading] = useState(false);
 
+  const handleContextSelect = useCallback(
+    async (filter: string | null) => {
+      setPhoto!((prevStyle) => {
+        if (prevStyle) {
+          return {
+            ...prevStyle,
+            filter,
+          };
+        }
+      });
+    },
+    [setPhoto]
+  );
+
   useEffect(() => {
     filterRef.current = filter;
-  }, [filter]);
+    handleContextSelect(filterRef.current);
+  }, [filter, handleContextSelect]);
 
   const getCurrentFilterIndex = useCallback(() => {
     return FILTERS.findIndex((item) => item.value === filter);
@@ -135,6 +150,7 @@ const MobileContent = () => {
                     >
                       {photo.selectedImages.map((item, index) => {
                         return (
+                          item &&
                           item.href && (
                             <FrameImageWrapper
                               key={item.id}

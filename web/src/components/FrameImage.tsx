@@ -190,7 +190,7 @@ const FrameImage = ({
     originalImg.src = url;
 
     originalImg.onload = async () => {
-      if (filter && isAppleDeviceDetected()) {
+      if (filter != "" && isAppleDeviceDetected()) {
         loadIOSImage(0);
       } else {
         applyFilterWithCanvas(originalImg);

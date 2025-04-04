@@ -33,7 +33,7 @@ export const PhotoProvider = ({
         },
         id: null,
         frameType: null,
-        filters: null,
+        filter: null,
         previousProcessedImageId: previousProcessedImageId,
         previousProcessedImageCreationDate: previousProcessedImageCreationDate,
       };

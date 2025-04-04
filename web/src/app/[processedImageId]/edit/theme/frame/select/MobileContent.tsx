@@ -4,7 +4,7 @@
 import {Button} from "@/components/ui/button";
 import {usePhoto} from "@/context/PhotoContext";
 import {cn, findSwappedIndices} from "@/lib/utils";
-import {useCallback, useMemo, useRef, useState} from "react";
+import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {Layer, Rect, Stage} from "react-konva";
 import useImage from "use-image";
 import {Image as KonvaImage} from "react-konva";
@@ -54,12 +54,27 @@ const MobileContent = () => {
           };
         }
       });
-      if (dummyLinkRef.current) {
-        dummyLinkRef.current.click();
-      }
     },
     [setPhoto]
   );
+
+  useEffect(() => {
+    if (setPhoto && photo!.selectedImages.length == 0) {
+      setPhoto((prevStyle) => {
+        if (prevStyle) {
+          return {
+            ...prevStyle,
+            selectedImages: Array.from({length: photo?.theme?.frame?.slotCount || 0}, () => null),
+          };
+        }
+        return prevStyle;
+      });
+    }
+  }, [photo, setPhoto]);
+
+  useEffect(() => {
+    handleContextSelect(selectedImage as Array<{id: string; href: string}>);
+  }, [handleContextSelect, selectedImage]);
 
   const handleSelect = useCallback(
     (image: {id: string; href: string} | null) => {
@@ -255,17 +270,20 @@ const MobileContent = () => {
                             x={OFFSET_X}
                             y={OFFSET_Y}
                           >
-                            {selectedImage.map((item, index) => (
-                              <FrameImageWrapper
-                                key={index}
-                                url={item?.href || ""}
-                                y={photo.theme!.frame.slotPositions[index].y}
-                                x={photo.theme!.frame.slotPositions[index].x + (FRAME_WIDTH / 2) * _index}
-                                filter={""}
-                                height={photo.theme!.frame.slotDimensions.height}
-                                width={photo.theme!.frame.slotDimensions.width}
-                              />
-                            ))}
+                            {selectedImage.map(
+                              (item, index) =>
+                                item && (
+                                  <FrameImageWrapper
+                                    key={index}
+                                    url={item.href || ""}
+                                    y={photo.theme!.frame.slotPositions[index].y}
+                                    x={photo.theme!.frame.slotPositions[index].x + (FRAME_WIDTH / 2) * _index}
+                                    filter={photo.filter ? photo.filter : ""}
+                                    height={photo.theme!.frame.slotDimensions.height}
+                                    width={photo.theme!.frame.slotDimensions.width}
+                                  />
+                                )
+                            )}
                           </Layer>
                         ))}
                         {Array.from({length: photo.frameType == "singular" ? 1 : 2}, (_, index) => (
@@ -325,7 +343,7 @@ const MobileContent = () => {
                           onClick={() => {
                             if (photo.theme!.frame.slotCount - filteredSelectedImages.length == 0 && !isSelected) {
                               setIsSelected(true);
-                              handleContextSelect(filteredSelectedImages as Array<{id: string; href: string}>);
+                              dummyLinkRef.current?.click();
                             } else if (photo.theme!.frame.slotCount - filteredSelectedImages.length != 0) {
                               setIsDialogOpen(true);
                             }

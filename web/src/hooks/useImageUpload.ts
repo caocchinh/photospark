@@ -34,7 +34,7 @@ export function useImageUpload(newProcessedImageId: string) {
       }
 
       for (const image of photo.images) {
-        const slotPosition = photo.selectedImages.findIndex((selectedImage) => selectedImage.id == image.id);
+        const slotPosition = photo.selectedImages.findIndex((selectedImage) => selectedImage!.id == image.id);
         try {
           const imageResponse = await createImage(
             image.href,

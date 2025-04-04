@@ -27,7 +27,7 @@ import FrameImageWrapper from "@/components/FrameImageWrapper";
 import Head from "next/head";
 
 const DesktopContent = () => {
-  const {photo} = usePhoto();
+  const {photo, setPhoto} = usePhoto();
   const filterRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const NEW_PROCESSED_IMAGE_ID = useMemo(() => {
@@ -37,16 +37,48 @@ const DesktopContent = () => {
   const {uploadImageToDatabase, isMediaUploaded, isUploading, error} = useImageUpload(NEW_PROCESSED_IMAGE_ID);
   const {t} = useTranslation();
   const [frameImg, frameImgStatus] = useImage(photo?.theme?.frame?.src || "", "anonymous");
-  const [filter, setFilter] = useState<string | null>(null);
+  const [filter, setFilter] = useState<string | null>(photo && photo.filter ? photo.filter : null);
   const stageRef = useRef<StageElement | null>(null);
   const filterRef = useRef(filter);
   const dummyLinkRef = useRef<HTMLAnchorElement>(null);
   const uploadAttemptedRef = useRef(false);
   const [isFilterLoading, setIsFilterLoading] = useState(false);
+  const initialRender = useRef(false);
+
+  const handleContextSelect = useCallback(
+    async (filter: string | null) => {
+      setPhoto!((prevStyle) => {
+        if (prevStyle) {
+          return {
+            ...prevStyle,
+            filter,
+          };
+        }
+      });
+    },
+    [setPhoto]
+  );
 
   useEffect(() => {
     filterRef.current = filter;
+    handleContextSelect(filterRef.current);
+  }, [filter, handleContextSelect]);
+
+  const getCurrentFilterIndex = useCallback(() => {
+    return FILTERS.findIndex((item) => item.value === filter);
   }, [filter]);
+
+  useEffect(() => {
+    if (initialRender.current) return;
+    initialRender.current = true;
+    const currentFilterIndex = getCurrentFilterIndex();
+    setTimeout(() => {
+      filterRefs.current[currentFilterIndex]?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }, 50);
+  }, [getCurrentFilterIndex]);
 
   const handleImageUpload = useCallback(async () => {
     if (uploadAttemptedRef.current) return;
@@ -112,6 +144,7 @@ const DesktopContent = () => {
                       >
                         {photo.selectedImages.map((item, index) => {
                           return (
+                            item &&
                             item.href && (
                               <FrameImageWrapper
                                 key={item.id}

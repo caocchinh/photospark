@@ -20,6 +20,7 @@ const LayoutEditPage = () => {
         ...prev,
         frameType: type,
         selectedImages: [],
+        filter: null,
       };
     });
   };

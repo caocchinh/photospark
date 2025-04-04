@@ -37,7 +37,7 @@ const FilterEditPage = () => {
   const {t} = useTranslation();
 
   useEffect(() => {
-    if (!photo?.frameType || !photo?.theme || photo.selectedImages.length == 0) {
+    if (!photo?.frameType || !photo?.theme || photo.selectedImages.filter((item) => item != null).length != photo.theme.frame.slotCount) {
       window.location.href = `/${photo?.previousProcessedImageId}${ROUTES.HOME}`;
       return;
     }

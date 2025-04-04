@@ -27,7 +27,7 @@ export interface PhotoOptions<T extends ValidThemeType> {
   selectedImages: Array<{
     id: string;
     href: string;
-  }>;
+  } | null>;
   video: {
     r2_url: string | null;
   };
@@ -35,6 +35,7 @@ export interface PhotoOptions<T extends ValidThemeType> {
   previousProcessedImageId: string;
   frameType: ValidFrameType | null;
   previousProcessedImageCreationDate: Date;
+  filter: string | null;
 }
 
 export interface ThemeSelectButtonType {

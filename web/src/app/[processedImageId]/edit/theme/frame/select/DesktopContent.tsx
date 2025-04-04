@@ -4,7 +4,7 @@
 import {Button} from "@/components/ui/button";
 import {usePhoto} from "@/context/PhotoContext";
 import {cn, findSwappedIndices} from "@/lib/utils";
-import {useCallback, useMemo, useRef, useState} from "react";
+import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {Layer, Rect, Stage} from "react-konva";
 import useImage from "use-image";
 import {Image as KonvaImage} from "react-konva";
@@ -23,14 +23,13 @@ const DesktopContent = () => {
   const {photo, setPhoto} = usePhoto();
 
   const [frameImg, frameImgStatus] = useImage(photo?.theme?.frame?.src || "");
-  const dummyLinkRef = useRef<HTMLAnchorElement>(null);
   const {t} = useTranslation();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<Array<{id: string; href: string} | null>>(
-    photo?.selectedImages && photo.selectedImages.length > 0
-      ? [...photo.selectedImages]
-      : Array.from({length: photo?.theme?.frame?.slotCount || 0}, () => null)
+    photo && photo.selectedImages.length > 0 ? [...photo.selectedImages] : Array.from({length: photo?.theme?.frame?.slotCount || 0}, () => null)
   );
+  const dummyLinkRef = useRef<HTMLAnchorElement>(null);
+
   const [lastRemovedImage, setLastRemovedImage] = useState<number>(photo?.theme?.frame?.slotCount ? photo.theme.frame.slotCount - 1 : 0);
   const isSingle = useMemo(() => {
     if (!photo) return 1;
@@ -50,12 +49,27 @@ const DesktopContent = () => {
           };
         }
       });
-      if (dummyLinkRef.current) {
-        dummyLinkRef.current.click();
-      }
     },
     [setPhoto]
   );
+
+  useEffect(() => {
+    if (setPhoto && photo!.selectedImages.length == 0) {
+      setPhoto((prevStyle) => {
+        if (prevStyle) {
+          return {
+            ...prevStyle,
+            selectedImages: Array.from({length: photo?.theme?.frame?.slotCount || 0}, () => null),
+          };
+        }
+        return prevStyle;
+      });
+    }
+  }, [photo, setPhoto]);
+
+  useEffect(() => {
+    handleContextSelect(selectedImage as Array<{id: string; href: string}>);
+  }, [handleContextSelect, selectedImage]);
 
   const handleSelect = useCallback(
     (image: {id: string; href: string} | null) => {
@@ -194,17 +208,20 @@ const DesktopContent = () => {
                         x={OFFSET_X / isSingle}
                         y={OFFSET_Y / isSingle}
                       >
-                        {selectedImage.map((item, index) => (
-                          <FrameImageWrapper
-                            key={index}
-                            url={item?.href || ""}
-                            y={photo.theme!.frame.slotPositions[index].y}
-                            x={photo.theme!.frame.slotPositions[index].x}
-                            filter={""}
-                            height={photo.theme!.frame.slotDimensions.height}
-                            width={photo.theme!.frame.slotDimensions.width}
-                          />
-                        ))}
+                        {selectedImage.map(
+                          (item, index) =>
+                            item && (
+                              <FrameImageWrapper
+                                key={index}
+                                url={item.href || ""}
+                                y={photo.theme!.frame.slotPositions[index].y}
+                                x={photo.theme!.frame.slotPositions[index].x}
+                                filter={photo.filter ? photo.filter : ""}
+                                height={photo.theme!.frame.slotDimensions.height}
+                                width={photo.theme!.frame.slotDimensions.width}
+                              />
+                            )
+                        )}
                       </Layer>
                       <Layer
                         x={OFFSET_X / isSingle}
@@ -269,11 +286,11 @@ const DesktopContent = () => {
                         />
                       )}
                       <Button
-                        className="relative bg-green-700 hover:bg-green-700 w-full py-6 px-2 cursor-pointer"
+                        className="relative z-10 bg-green-700 hover:bg-green-700  w-full py-6 px-2 cursor-pointer"
                         onClick={() => {
                           if (photo.theme!.frame.slotCount - filteredSelectedImages.length == 0 && !isSelected) {
                             setIsSelected(true);
-                            handleContextSelect(filteredSelectedImages as Array<{id: string; href: string}>);
+                            dummyLinkRef.current?.click();
                           } else if (photo.theme!.frame.slotCount - filteredSelectedImages.length != 0) {
                             setIsDialogOpen(true);
                           }
