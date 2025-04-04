@@ -71,124 +71,128 @@ const FrameImage = ({
       return;
     }
 
+    function loadIOSImage(retryCount: number) {
+      const maxRetries = 10;
+      try {
+        const container = document.createElement("div");
+        container.style.position = "fixed";
+        container.style.top = "0";
+        container.style.left = "0";
+        container.style.width = `${originalImg.naturalWidth}px`;
+        container.style.height = `${originalImg.naturalHeight}px`;
+        container.style.pointerEvents = "none";
+        container.style.zIndex = "10";
+        container.style.overflow = "hidden";
+        container.style.visibility = "visible";
+        container.style.opacity = "1";
+
+        const img = document.createElement("img");
+        img.src = originalImg.src;
+
+        img.width = originalImg.naturalWidth;
+        img.height = originalImg.naturalHeight;
+        img.style.width = "100%";
+        img.style.height = "100%";
+        img.style.objectFit = "contain";
+        img.style.filter = filter;
+
+        container.appendChild(img);
+        document.body.appendChild(container);
+
+        const processImage = async () => {
+          if (retryCount > maxRetries) {
+            applyFilterWithCanvas(originalImg);
+            if (document.body.contains(container)) {
+              document.body.removeChild(container);
+            }
+            setIsFilterLoading?.(false);
+            setIsLoading(false);
+            if (onLoad) onLoad();
+            return;
+          }
+          try {
+            // Wait for container to be properly mounted in the DOM
+            await new Promise<void>((resolve) => {
+              if (document.body.contains(container)) {
+                resolve();
+                return;
+              }
+
+              const observer = new MutationObserver(() => {
+                if (document.body.contains(container)) {
+                  observer.disconnect();
+                  resolve();
+                }
+              });
+
+              observer.observe(document.body, {
+                childList: true,
+                subtree: true,
+              });
+            });
+
+            const canvas = await toCanvas(container, {
+              quality: 1.0,
+              pixelRatio: 1,
+              cacheBust: true,
+              skipAutoScale: true,
+              includeQueryParams: true,
+              canvasWidth: originalImg.naturalWidth,
+              canvasHeight: originalImg.naturalHeight,
+            });
+
+            const context = canvas.getContext("2d");
+            if (!context) {
+              if (document.body.contains(container)) {
+                document.body.removeChild(container);
+              }
+              loadIOSImage(retryCount + 1);
+              return;
+            }
+
+            const pixelBuffer = new Uint32Array(context.getImageData(0, 0, canvas.width, canvas.height).data.buffer);
+
+            if (!pixelBuffer.some((color) => color !== 0)) {
+              if (document.body.contains(container)) {
+                document.body.removeChild(container);
+              }
+              loadIOSImage(retryCount + 1);
+              return;
+            }
+
+            setCanvas(canvas);
+            setIsFilterLoading?.(false);
+            setIsLoading(false);
+            if (onLoad) onLoad();
+          } catch (error) {
+            console.error("Error in html-to-image processing:", error);
+            applyFilterWithCanvas(originalImg);
+          } finally {
+            if (document.body.contains(container)) {
+              document.body.removeChild(container);
+            }
+          }
+        };
+
+        img.onload = async () => {
+          await img.decode();
+          processImage();
+        };
+      } catch (error) {
+        console.error("Error in image processing:", error);
+        applyFilterWithCanvas(originalImg);
+      }
+    }
+
     setIsLoading(true);
     setIsFilterLoading?.(true);
     const originalImg = new Image();
     originalImg.src = url;
 
     originalImg.onload = async () => {
-      const maxRetries = 10;
-      let retryCount = 0;
-      try {
-        if (filter && isAppleDeviceDetected()) {
-          const container = document.createElement("div");
-          container.style.position = "fixed";
-          container.style.top = "0";
-          container.style.left = "0";
-          container.style.width = `${originalImg.naturalWidth}px`;
-          container.style.height = `${originalImg.naturalHeight}px`;
-          container.style.pointerEvents = "none";
-          container.style.zIndex = "-1";
-          container.style.overflow = "hidden";
-          container.style.visibility = "visible";
-          container.style.opacity = "1";
-
-          const img = document.createElement("img");
-          img.src = originalImg.src;
-
-          img.width = originalImg.naturalWidth;
-          img.height = originalImg.naturalHeight;
-          img.style.width = "100%";
-          img.style.height = "100%";
-          img.style.objectFit = "contain";
-          img.style.filter = filter;
-
-          container.appendChild(img);
-          document.body.appendChild(container);
-
-          const processImage = async () => {
-            if (retryCount > maxRetries) {
-              applyFilterWithCanvas(originalImg);
-              if (document.body.contains(container)) {
-                document.body.removeChild(container);
-              }
-              setIsFilterLoading?.(false);
-              setIsLoading(false);
-              if (onLoad) onLoad();
-              return;
-            }
-            try {
-              // Wait for container to be properly mounted in the DOM
-              await new Promise<void>((resolve) => {
-                if (document.body.contains(container)) {
-                  resolve();
-                  return;
-                }
-
-                const observer = new MutationObserver(() => {
-                  if (document.body.contains(container)) {
-                    observer.disconnect();
-                    resolve();
-                  }
-                });
-
-                observer.observe(document.body, {
-                  childList: true,
-                  subtree: true,
-                });
-              });
-
-              const canvas = await toCanvas(container, {
-                quality: 1.0,
-                pixelRatio: 1,
-                cacheBust: true,
-                skipAutoScale: true,
-                includeQueryParams: true,
-                canvasWidth: originalImg.naturalWidth,
-                canvasHeight: originalImg.naturalHeight,
-              });
-
-              const context = canvas.getContext("2d");
-              if (!context) {
-                retryCount++;
-                processImage();
-                return;
-              }
-
-              const pixelBuffer = new Uint32Array(context.getImageData(0, 0, canvas.width, canvas.height).data.buffer);
-
-              if (!pixelBuffer.some((color) => color !== 0)) {
-                retryCount++;
-                processImage();
-                return;
-              }
-
-              setCanvas(canvas);
-              setIsFilterLoading?.(false);
-              setIsLoading(false);
-              if (onLoad) onLoad();
-            } catch (error) {
-              console.error("Error in html-to-image processing:", error);
-              applyFilterWithCanvas(originalImg);
-              if (document.body.contains(container)) {
-                document.body.removeChild(container);
-              }
-            } finally {
-              if (document.body.contains(container)) {
-                document.body.removeChild(container);
-              }
-            }
-          };
-
-          img.onload = async () => {
-            await img.decode();
-            processImage();
-          };
-        } else {
-          applyFilterWithCanvas(originalImg);
-        }
-      } catch (error) {
-        console.error("Error in image processing:", error);
+      if (filter && isAppleDeviceDetected()) {
+        loadIOSImage(0);
+      } else {
         applyFilterWithCanvas(originalImg);
       }
     };
