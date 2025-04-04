@@ -143,15 +143,9 @@ const FrameImage = ({
                   },
                 },
               });
-              const canvas2 = document.createElement("canvas");
-              const context = canvas2.getContext("2d");
-              canvas2.width = originalImg.naturalWidth;
-              canvas2.height = originalImg.naturalHeight;
-              if (context) {
-                context.filter = filter;
-                context.drawImage(canvas, 0, 0);
-              }
-              document.body.appendChild(canvas2);
+
+              await new Promise((resolve) => setTimeout(resolve, 5000)); //More delay for better consistency
+
               setCanvas(canvas);
               setIsFilterLoading?.(false);
               setIsLoading(false);
