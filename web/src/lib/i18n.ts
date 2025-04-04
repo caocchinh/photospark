@@ -144,6 +144,7 @@ const i18nConfig = {
         Demo: "Demo",
         "This application is not optimized for embeded browser. Please open the link in an external browser.":
           "This application is not optimized for embeded browser. Please open the link in an external browser.",
+        "Open in external browser": "Open in external browser",
       },
     },
     vi: {
@@ -275,6 +276,7 @@ const i18nConfig = {
         Demo: "Mẫu",
         "This application is not optimized for embeded browser. Please open the link in an external browser.":
           "Ứng dụng này không được tối ưu hóa cho trình duyệt nhúng. Vui lòng mở liên kết bằng trình duyệt bên ngoài.",
+        "Open in external browser": "Mở trong trình duyệt bên ngoài",
       },
     },
     fr: {
@@ -408,6 +410,7 @@ const i18nConfig = {
         Demo: "Démo",
         "This application is not optimized for embeded browser. Please open the link in an external browser.":
           "Cette application n'est pas optimisée pour le navigateur intégré. Veuillez ouvrir le lien dans un navigateur externe.",
+        "Open in external browser": "Ouvrir dans un navigateur externe",
       },
     },
     cn: {
@@ -539,6 +542,7 @@ const i18nConfig = {
         Demo: "Demo",
         "This application is not optimized for embeded browser. Please open the link in an external browser.":
           "此应用程序未针对嵌入式浏览器进行优化。请在外部浏览器中打开链接。",
+        "Open in external browser": "在外部浏览器中打开",
       },
     },
     kr: {
@@ -670,6 +674,7 @@ const i18nConfig = {
         Demo: "데모",
         "This application is not optimized for embeded browser. Please open the link in an external browser.":
           "이 애플리케이션은 내장 브라우저에 최적화되어 있지 않습니다. 외부 브라우저에서 링크를 여세요.",
+        "Open in external browser": "외부 브라우저에서 열기",
       },
     },
   },
