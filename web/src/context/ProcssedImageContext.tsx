@@ -12,6 +12,7 @@ import {ImageTable, ProcessedImageTable, VideoTable} from "@/drizzle/schema";
 import {isAppleDevice, isEmbeddedBrowser, openInExternalBrowser} from "@/lib/utils";
 import {createContext, ReactNode, useContext, useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
+import {LuLink} from "react-icons/lu";
 import {MdWarning} from "react-icons/md";
 import {RiExternalLinkLine} from "react-icons/ri";
 
@@ -35,6 +36,7 @@ export const ProcessedImageProvider = ({
   video?: typeof VideoTable.$inferSelect;
 }) => {
   const [isEmbededBrowser, setIsEmbededBrowser] = useState(false);
+  const [copied, setCopied] = useState(false);
   const {t} = useTranslation();
   useEffect(() => {
     if (!navigator || !navigator.userAgent || typeof window === "undefined") {
@@ -70,6 +72,20 @@ export const ProcessedImageProvider = ({
               {isAppleDevice() ? t("Open in Safari") : t("Open in Chrome")}
               <RiExternalLinkLine />
             </Button>
+            <Button
+              className="flex items-center justify-center gap-2 cursor-pointer"
+              onClick={() => {
+                navigator.clipboard.writeText(window.location.href);
+                setCopied(true);
+                setTimeout(() => {
+                  setCopied(false);
+                }, 2000);
+              }}
+            >
+              {copied ? t("Copied!") : t("Copy image link")}
+              <LuLink />
+            </Button>
+
             <h5 className="font-light text-center text-red-500 text-sm">
               {isAppleDevice()
                 ? t("If button doesn't work, please open manually!")
