@@ -76,7 +76,7 @@ const FrameImage = ({
     const originalImg = new Image();
     originalImg.src = url;
 
-    originalImg.onload = async () => {
+    originalImg.onload = () => {
       try {
         if (filter && isAppleDeviceDetected()) {
           const container = document.createElement("div");
@@ -93,7 +93,7 @@ const FrameImage = ({
 
           const img = document.createElement("img");
           img.src = originalImg.src;
-          await img.decode();
+
           img.width = originalImg.naturalWidth;
           img.height = originalImg.naturalHeight;
           img.style.width = "100%";
@@ -106,6 +106,7 @@ const FrameImage = ({
 
           const processImage = async () => {
             try {
+              await img.decode();
               // Wait for container to be properly mounted in the DOM
               await new Promise<void>((resolve) => {
                 if (document.body.contains(container)) {
