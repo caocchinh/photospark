@@ -58,7 +58,7 @@ export const openInExternalBrowser = (url: string) => {
     return;
   } else {
     window.location.href =
-      `intent://${url.replace(/^https?:\/\//, "")}#Intent;` +
+      `intent:${url}#Intent;` +
       `action=android.intent.action.VIEW;` +
       `category=android.intent.category.BROWSABLE;` +
       `package=com.android.chrome;` +
