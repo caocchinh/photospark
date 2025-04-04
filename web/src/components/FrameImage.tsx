@@ -76,7 +76,7 @@ const FrameImage = ({
     const originalImg = new Image();
     originalImg.src = url;
 
-    originalImg.onload = () => {
+    originalImg.onload = async () => {
       try {
         if (filter && isAppleDeviceDetected()) {
           const container = document.createElement("div");
@@ -93,6 +93,7 @@ const FrameImage = ({
 
           const img = document.createElement("img");
           img.src = originalImg.src;
+          await img.decode();
           img.width = originalImg.naturalWidth;
           img.height = originalImg.naturalHeight;
           img.style.width = "100%";
@@ -124,7 +125,6 @@ const FrameImage = ({
                   subtree: true,
                 });
               });
-              await new Promise((resolve) => setTimeout(resolve, 150)); //More delay for better consistency
 
               const canvas = await toCanvas(container, {
                 quality: 1.0,
