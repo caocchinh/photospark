@@ -160,7 +160,7 @@ const MobileContent = () => {
                                     src={item.href}
                                     alt="image"
                                     className={cn(
-                                      "rounded border-4 border-transparent hover:border-black hover:cursor-pointer object-cover w-full !h-full",
+                                      "rounded border-4 border-transparent hover:border-black hover:cursor-pointer object-cover w-full",
                                       `max-w-[${photo.theme!.frame.slotDimensions.width * 1.1}px] max-h-[${
                                         photo.theme!.frame.slotDimensions.height * 1.1
                                       }px] object-cover`,
