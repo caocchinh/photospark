@@ -8,7 +8,6 @@ import Image from "next/image";
 import Link from "next/link";
 import {useCallback, useEffect, useRef, useState, useMemo} from "react";
 import {FaArrowLeft, FaArrowRight} from "react-icons/fa6";
-import {useRouter} from "next/navigation";
 import {GlowEffect} from "@/components/ui/glow-effect";
 import {ValidThemeType} from "@/constants/types";
 import {ROUTES} from "@/constants/routes";
@@ -21,7 +20,6 @@ import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger
 const FrameEditpage = () => {
   useReloadConfirm();
   const {photo, setPhoto} = usePhoto();
-  const router = useRouter();
   const [api, setApi] = useState<CarouselApi>();
   const filteredFrames = useMemo(() => {
     if (!photo || !photo.theme) return [];
@@ -35,8 +33,8 @@ const FrameEditpage = () => {
   useEffect(() => {
     if (!photo?.frameType || !photo?.theme) {
       window.location.href = `/${photo?.previousProcessedImageId}${ROUTES.HOME}`;
-      return
-    };
+      return;
+    }
   }, [photo]);
 
   const handleFrameChange = useCallback(
@@ -51,7 +49,6 @@ const FrameEditpage = () => {
             name: prevStyle.theme.name,
             frame: frameAttribute,
           },
-          selectedImages: [],
         };
       });
     },
@@ -107,26 +104,6 @@ const FrameEditpage = () => {
       api.off("select", handleAPISelect);
     };
   }, [api, filteredFrames, handleCarouselItemClick, handleFrameChange, photo]);
-
-  const handleFrameChosen = useCallback(
-    async (e: React.MouseEvent<HTMLAnchorElement>) => {
-      e.preventDefault();
-
-      if (!photo || !photo.theme || !setPhoto) return;
-
-      setChosen(true);
-      setPhoto((prevStyle) => {
-        if (prevStyle) {
-          return {...prevStyle};
-        }
-        return prevStyle;
-      });
-
-      router.push(`/${photo?.previousProcessedImageId}/${ROUTES.SELECT}`);
-      return;
-    },
-    [photo, setPhoto, router, setChosen]
-  );
 
   return (
     <>
@@ -255,7 +232,7 @@ const FrameEditpage = () => {
                 className={cn(
                   "flex text-center items-center justify-center gap-2 text-background rounded px-4 py-2 hover:opacity-[85%] w-full bg-green-700 z-10 relative"
                 )}
-                onClick={handleFrameChosen}
+                onClick={() => setChosen(true)}
               >
                 {t("Choose images")}
                 <FaArrowRight />

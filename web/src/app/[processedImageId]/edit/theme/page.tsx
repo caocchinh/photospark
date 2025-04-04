@@ -10,7 +10,7 @@ import {ValidThemeType} from "@/constants/types";
 import {useTranslation} from "react-i18next";
 import {useReloadConfirm} from "@/hooks/useReloadConfirm";
 import {Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbSeparator} from "@/components/ui/breadcrumb";
-import { ROUTES } from "@/constants/routes";
+import {ROUTES} from "@/constants/routes";
 
 const ThemePage = () => {
   useReloadConfirm();
@@ -19,9 +19,10 @@ const ThemePage = () => {
   useEffect(() => {
     if (!photo?.frameType) {
       window.location.href = `/${photo?.previousProcessedImageId}${ROUTES.HOME}`;
-      return
-    };
+      return;
+    }
   }, [photo]);
+
   const handleThemeChange = (name: ValidThemeType) => {
     if (!setPhoto || !photo) return;
     setPhoto((prev) => {

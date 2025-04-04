@@ -11,6 +11,7 @@ import {Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbSeparator} from "@
 const LayoutEditPage = () => {
   const {photo, setPhoto} = usePhoto();
   const {t} = useTranslation();
+
   const handleTypeChange = (type: ValidFrameType) => {
     if (!setPhoto) return;
     setPhoto((prev) => {
@@ -18,6 +19,7 @@ const LayoutEditPage = () => {
       return {
         ...prev,
         frameType: type,
+        selectedImages: [],
       };
     });
   };
