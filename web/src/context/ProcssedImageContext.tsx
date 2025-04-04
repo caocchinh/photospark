@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import {Button} from "@/components/ui/button";
 import {ImageTable, ProcessedImageTable, VideoTable} from "@/drizzle/schema";
-import {isEmbeddedBrowser} from "@/lib/utils";
+import {isEmbeddedBrowser, openInExternalBrowser} from "@/lib/utils";
 import {createContext, ReactNode, useContext, useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {MdWarning} from "react-icons/md";
@@ -60,16 +60,15 @@ export const ProcessedImageProvider = ({
             {t("This application is not optimized for embeded browser. Please open the link in an external browser.")}
           </AlertDialogDescription>
           <AlertDialogFooter>
-            <Button asChild>
-              <a
-                href={window.location.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 cursor-pointer"
-              >
-                {t("Open in external browser")}
-                <RiExternalLinkLine />
-              </a>
+            <Button
+              className="flex items-center justify-center gap-2 cursor-pointer"
+              onClick={(e) => {
+                e.preventDefault();
+                openInExternalBrowser(window.location.href);
+              }}
+            >
+              {t("Open in external browser")}
+              <RiExternalLinkLine />
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

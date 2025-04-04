@@ -4,6 +4,7 @@ import {Image as KonvaImage} from "react-konva";
 import {useState, useEffect, useCallback} from "react";
 import {useTranslation} from "react-i18next";
 import {toCanvas} from "html-to-image";
+import {isAppleDevice} from "@/lib/utils";
 
 const FrameImage = ({
   url,
@@ -27,16 +28,6 @@ const FrameImage = ({
   const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const {t} = useTranslation();
-
-  const isAppleDevice = useCallback(() => {
-    if (typeof window === "undefined") return false;
-
-    const isAppleVendor = /apple/i.test(navigator.vendor);
-    const isApplePlatform = /Mac|iPad|iPhone|iPod/.test(navigator.platform);
-    const isAppleUserAgent = /Mac|iPad|iPhone|iPod/.test(navigator.userAgent);
-
-    return isAppleVendor || isApplePlatform || isAppleUserAgent || navigator.platform === "MacIntel" || navigator.userAgent.includes("Macintosh");
-  }, []);
 
   const applyFilterWithCanvas = useCallback(
     (originalImg: HTMLImageElement) => {
@@ -62,7 +53,7 @@ const FrameImage = ({
 
   const isAppleDeviceDetected = useCallback(() => {
     return typeof window !== "undefined" ? isAppleDevice() : false;
-  }, [isAppleDevice]);
+  }, []);
 
   useEffect(() => {
     if (typeof window === "undefined") return;

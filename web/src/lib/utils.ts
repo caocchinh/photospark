@@ -39,3 +39,24 @@ export function isEmbeddedBrowser() {
   const embeddedBrowserRegex = new RegExp(embeddedBrowserPatterns.join("|"), "i");
   return embeddedBrowserRegex.test(userAgent);
 }
+
+export const isAppleDevice = () => {
+  if (typeof window === "undefined") return false;
+
+  const isAppleVendor = /apple/i.test(navigator.vendor);
+  const isApplePlatform = /Mac|iPad|iPhone|iPod/.test(navigator.platform);
+  const isAppleUserAgent = /Mac|iPad|iPhone|iPod/.test(navigator.userAgent);
+
+  return isAppleVendor || isApplePlatform || isAppleUserAgent || navigator.platform === "MacIntel" || navigator.userAgent.includes("Macintosh");
+};
+
+export const openInExternalBrowser = (url: string) => {
+  // iOS
+  if (isAppleDevice()) {
+    window.location.href = `x-web-search://${url}`;
+    return;
+  } else {
+    window.location.href = `intent:${url}#Intent;scheme=https;package=com.android.chrome;end`;
+    return;
+  }
+};
