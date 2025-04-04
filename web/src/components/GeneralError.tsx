@@ -12,7 +12,7 @@ import {MdWarning} from "react-icons/md";
 import {IoRefresh} from "react-icons/io5";
 import {useTranslation} from "react-i18next";
 
-const GeneralError = ({error, message}: {error: boolean; message: string}) => {
+const GeneralError = ({error, message, showRefreshButton = true}: {error: boolean; message: string; showRefreshButton?: boolean}) => {
   const {t} = useTranslation();
 
   return (
@@ -26,15 +26,17 @@ const GeneralError = ({error, message}: {error: boolean; message: string}) => {
           size={100}
         />
         <AlertDialogDescription className="text-2xl text-center">{message}</AlertDialogDescription>
-        <AlertDialogFooter>
-          <Button
-            onClick={() => window.location.reload()}
-            className="flex items-center justify-center gap-2 cursor-pointer"
-          >
-            {t("Refresh the application")}
-            <IoRefresh />
-          </Button>
-        </AlertDialogFooter>
+        {showRefreshButton && (
+          <AlertDialogFooter>
+            <Button
+              onClick={() => window.location.reload()}
+              className="flex items-center justify-center gap-2 cursor-pointer"
+            >
+              {t("Refresh the application")}
+              <IoRefresh />
+            </Button>
+          </AlertDialogFooter>
+        )}
       </AlertDialogContent>
     </AlertDialog>
   );

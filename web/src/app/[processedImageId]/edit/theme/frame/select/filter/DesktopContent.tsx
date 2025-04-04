@@ -24,7 +24,7 @@ import GeneralError from "@/components/GeneralError";
 import {useTranslation} from "react-i18next";
 import {useImageUpload} from "@/hooks/useImageUpload";
 import FrameImageWrapper from "@/components/FrameImageWrapper";
-import Image from "next/image";
+import Head from "next/head";
 
 const DesktopContent = () => {
   const {photo} = usePhoto();
@@ -69,6 +69,13 @@ const DesktopContent = () => {
 
   return (
     <>
+      <Head>
+        <link
+          rel="preload"
+          href={photo!.theme?.frame?.src}
+          as="image"
+        />
+      </Head>
       <div className="relative w-full h-full">
         {frameImgStatus != "loaded" && (
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
@@ -287,12 +294,6 @@ const DesktopContent = () => {
           message={t("An error occurred while creating the image!")}
         />
       )}
-      <Image
-        src={photo?.theme?.frame?.src || ""}
-        alt="Frame"
-        priority
-        className="hidden"
-      />
     </>
   );
 };

@@ -60,7 +60,7 @@ const Queue = ({queue}: {queue: typeof QueueTable.$inferSelect}) => {
   return (
     <>
       {processedImage && images && (
-        <div className="w-full flex items-center justify-center gap-8 mb-8 mt-[90px] flex-wrap">
+        <div className="w-full flex items-center justify-center gap-8 py-8 flex-wrap">
           <Card className=" w-[90%] lg:w-[40%]">
             <CardHeader>
               <CardTitle>{t("Image printing information")}</CardTitle>

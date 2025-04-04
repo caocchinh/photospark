@@ -24,7 +24,7 @@ import {IoCheckmark} from "react-icons/io5";
 import {useTranslation} from "react-i18next";
 import {Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog";
 import FrameImageWrapper from "@/components/FrameImageWrapper";
-import Image from "next/image";
+import Head from "next/head";
 
 const MobileContent = () => {
   const {photo, setPhoto} = usePhoto();
@@ -104,6 +104,13 @@ const MobileContent = () => {
 
   return (
     <>
+      <Head>
+        <link
+          rel="preload"
+          href={photo!.theme?.frame?.src}
+          as="image"
+        />
+      </Head>
       {photo && photo.theme && (
         <div className="relative w-full h-full">
           {frameImgStatus != "loaded" && (
@@ -376,12 +383,6 @@ const MobileContent = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      <Image
-        src={photo?.theme?.frame?.src || ""}
-        alt="Frame"
-        className="hidden"
-        priority
-      />
     </>
   );
 };

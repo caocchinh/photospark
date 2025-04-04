@@ -19,7 +19,7 @@ import {useTranslation} from "react-i18next";
 import {useRouter} from "next/navigation";
 import NavBar from "@/components/NavBar";
 import {useProcessedImage} from "@/context/ProcssedImageContext";
-import Image from "next/image";
+import Head from "next/head";
 
 const Preview = () => {
   const {processedImage, images, video} = useProcessedImage();
@@ -80,6 +80,13 @@ const Preview = () => {
 
   return (
     <>
+      <Head>
+        <link
+          rel="preload"
+          href={processedImage.frameURL}
+          as="image"
+        />
+      </Head>
       <NavBar captureDate={processedImage.createdAt} />
       <div className="flex flex-col items-center justify-center gap-8 p-4  h-max w-full relative z-[0] bg-white pt-20 preview-page-container">
         <div className="w-[95%] flex items-center justify-end">
@@ -211,12 +218,6 @@ const Preview = () => {
           message={t("Error while downloading image!")}
         />
       </div>
-      <Image
-        src={processedImage.frameURL || ""}
-        alt="Frame"
-        priority
-        className="hidden"
-      />
     </>
   );
 };

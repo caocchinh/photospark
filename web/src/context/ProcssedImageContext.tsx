@@ -37,6 +37,7 @@ export const ProcessedImageProvider = ({
       {children}
 
       <GeneralError
+        showRefreshButton={false}
         error={isEmbededBrowser}
         message={t("This application is not optimized for embeded browser. Please open the link in an external browser.")}
       />

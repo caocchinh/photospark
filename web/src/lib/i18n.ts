@@ -213,6 +213,7 @@ const i18nConfig = {
         Quantity: "Số lượng",
         Price: "Giá",
         Time: "Thời gian",
+        "Details about the image printing order": "Chi tiết đơn hàng in hình",
         Back: "Quay lại",
         "Please meet staff VTEAM and bring the order ID to get help!": "Hãy gặp staff VTEAM và đưa mã đơn hàng để được hỗ trợ!",
         Failed: "Thất bại",
