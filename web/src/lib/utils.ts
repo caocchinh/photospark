@@ -56,7 +56,7 @@ export const openInExternalBrowser = (url: string) => {
     window.location.href = `x-web-search://${url}`;
     return;
   } else {
-    window.location.href = `intent:${url}#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=${encodeURIComponent(url)};end`;
+    window.location.href = `intent:${url}#Intent;scheme=https;package=com.android.chrome;end`;
     return;
   }
 };

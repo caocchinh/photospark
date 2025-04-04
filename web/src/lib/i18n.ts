@@ -148,6 +148,8 @@ const i18nConfig = {
         "Open in Safari": "Open in Safari",
         "Open in Chrome": "Open in Chrome",
         "If button doesn't work, please open manually!": "If button doesn't work, please open manually!",
+        "If Chrome hasn't been installed, please open external browser manually!":
+          "If Chrome hasn't been installed, please open external browser manually!",
       },
     },
     vi: {
@@ -283,6 +285,8 @@ const i18nConfig = {
         "Open in Safari": "Mở bằng Safari",
         "Open in Chrome": "Mở bằng Chrome",
         "If button doesn't work, please open manually!": "Nếu nút không hoạt động, vui lòng mở thủ công!",
+        "If Chrome hasn't been installed, please open external browser manually!":
+          "Nếu Chrome chưa được cài đặt, vui lòng mở trình duyệt bên ngoài thủ công!",
       },
     },
     fr: {
@@ -420,6 +424,8 @@ const i18nConfig = {
         "Open in Safari": "Ouvrir dans Safari",
         "Open in Chrome": "Ouvrir dans Chrome",
         "If button doesn't work, please open manually!": "Si le bouton ne fonctionne pas, veuillez ouvrir manuellement!",
+        "If Chrome hasn't been installed, please open external browser manually!":
+          "Si Chrome n'a pas été installé, veuillez ouvrir le navigateur externe manuellement!",
       },
     },
     cn: {
@@ -555,6 +561,7 @@ const i18nConfig = {
         "Open in Safari": "在Safari中打开",
         "Open in Chrome": "在Chrome中打开",
         "If button doesn't work, please open manually!": "如果按钮不起作用，请手动打开！",
+        "If Chrome hasn't been installed, please open external browser manually!": "如果尚未安装Chrome，请手动打开外部浏览器！",
       },
     },
     kr: {
@@ -690,6 +697,7 @@ const i18nConfig = {
         "Open in Safari": "Safari에서 열기",
         "Open in Chrome": "Chrome에서 열기",
         "If button doesn't work, please open manually!": "버튼이 작동하지 않으면 수동으로 여세요!",
+        "If Chrome hasn't been installed, please open external browser manually!": "Chrome이 설치되지 않은 경우 외부 브라우저를 수동으로 여세요!",
       },
     },
   },

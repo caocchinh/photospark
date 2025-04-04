@@ -70,7 +70,11 @@ export const ProcessedImageProvider = ({
               {isAppleDevice() ? t("Open in Safari") : t("Open in Chrome")}
               <RiExternalLinkLine />
             </Button>
-            <h5 className="font-light text-center text-red-500 text-sm">{t("If button doesn't work, please open manually!")}</h5>
+            <h5 className="font-light text-center text-red-500 text-sm">
+              {isAppleDevice()
+                ? t("If button doesn't work, please open manually!")
+                : t("If Chrome hasn't been installed, please open external browser manually!")}
+            </h5>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
