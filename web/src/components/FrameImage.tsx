@@ -86,7 +86,7 @@ const FrameImage = ({
           container.style.width = `${originalImg.naturalWidth}px`;
           container.style.height = `${originalImg.naturalHeight}px`;
           container.style.pointerEvents = "none";
-          container.style.zIndex = "-1";
+          container.style.zIndex = "10";
           container.style.overflow = "hidden";
           container.style.visibility = "visible";
           container.style.opacity = "1";
@@ -125,8 +125,6 @@ const FrameImage = ({
                   subtree: true,
                 });
               });
-
-              await new Promise((resolve) => setTimeout(resolve, 5000)); //More delay for better consistency
 
               const canvas = await toCanvas(container, {
                 quality: 1.0,
