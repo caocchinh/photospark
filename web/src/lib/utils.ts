@@ -53,7 +53,7 @@ export const isAppleDevice = () => {
 export const openInExternalBrowser = (url: string) => {
   // iOS
   if (isAppleDevice()) {
-    window.location.href = `x-web-search://${url}`;
+    window.location.href = `x-safari-${url}`;
     return;
   } else {
     window.location.href = `intent:${url}#Intent;package=com.android.chrome;end`;
