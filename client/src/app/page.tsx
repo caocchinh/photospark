@@ -20,9 +20,10 @@ import {Label} from "@/components/ui/label";
 import CameraSetting from "@/components/CameraSetting";
 import {RxCross1} from "react-icons/rx";
 import Cooldown from "@/components/Cooldown";
-import {LANGUAGE_LIST} from "@/constants/constants";
+import {CLICK_SOUND_URL, CLICK_SOUND_VOUME, LANGUAGE_LIST} from "@/constants/constants";
 import {usePhotoState} from "@/context/PhotoStateContext";
 import {useCountdown} from "@/context/CountdownContext";
+import useSound from "use-sound";
 
 const LayoutPage = () => {
   const {photo, updateFrameType} = usePhotoState();
@@ -37,6 +38,7 @@ const LayoutPage = () => {
     const defaultLang = LANGUAGE_LIST.find((lang) => lang.value === i18n.language);
     return defaultLang?.label ?? "English";
   });
+  const [playClick] = useSound(CLICK_SOUND_URL, {volume: CLICK_SOUND_VOUME});
 
   const handleLanguageSelect = useCallback(
     (currentValue: string) => {
@@ -71,6 +73,7 @@ const LayoutPage = () => {
               role="combobox"
               aria-expanded={isOpen}
               className="w-[200px] justify-between self-end"
+              onMouseDown={() => playClick()}
             >
               <div className="flex items-center gap-2 justify-center">
                 {language ? LANGUAGE_LIST.find((_language) => _language.label === language)?.label : t("Select language...")}
@@ -93,6 +96,7 @@ const LayoutPage = () => {
                       key={_language.value}
                       value={_language.label}
                       onSelect={handleLanguageSelect}
+                      onMouseDown={() => playClick()}
                     >
                       {_language.label}
                       <Image
@@ -133,6 +137,7 @@ const LayoutPage = () => {
         <Popover>
           <PopoverTrigger asChild>
             <Button
+              onMouseDown={() => playClick()}
               variant="outline"
               className="absolute top-0 right-0 z-50"
             >
@@ -175,6 +180,7 @@ const LayoutPage = () => {
                   {password.length > 0 && (
                     <RxCross1
                       className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer text-red-500"
+                      onMouseDown={() => playClick()}
                       onClick={() => {
                         setPassword("");
                         setIsWrongPassword(false);
@@ -185,6 +191,7 @@ const LayoutPage = () => {
                 <Card className="flex items-center justify-center border w-full h-full flex-wrap p-2 gap-2">
                   {Array.from({length: 9}).map((_, index) => (
                     <div
+                      onMouseDown={() => playClick()}
                       onClick={() => {
                         setPassword(password + (index + 1));
                         setIsWrongPassword(false);
@@ -198,6 +205,7 @@ const LayoutPage = () => {
                 </Card>
 
                 <Button
+                  onMouseDown={() => playClick()}
                   type="submit"
                   className={cn(isWrongPassword ? "bg-red-500 hover:bg-red-600" : "")}
                 >

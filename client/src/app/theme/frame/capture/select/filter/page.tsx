@@ -6,7 +6,18 @@ import {Image as KonvaImage, Rect} from "react-konva";
 import {Layer, Stage} from "react-konva";
 import FrameImage from "@/components/FrameImage";
 import {Button} from "@/components/ui/button";
-import {FILTER_SELECT_DURATION, FILTERS, FRAME_HEIGHT, FRAME_WIDTH, IMAGE_HEIGHT, IMAGE_WIDTH, OFFSET_X, OFFSET_Y} from "@/constants/constants";
+import {
+  CLICK_SOUND_URL,
+  CLICK_SOUND_VOUME,
+  FILTER_SELECT_DURATION,
+  FILTERS,
+  FRAME_HEIGHT,
+  FRAME_WIDTH,
+  IMAGE_HEIGHT,
+  IMAGE_WIDTH,
+  OFFSET_X,
+  OFFSET_Y,
+} from "@/constants/constants";
 import {cn} from "@/lib/utils";
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {Stage as StageElement} from "konva/lib/Stage";
@@ -23,6 +34,7 @@ import {ROUTES} from "@/constants/routes";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import {IoIosCheckmark} from "react-icons/io";
 import {usePhotoState} from "@/context/PhotoStateContext";
+import useSound from "use-sound";
 
 const FilterPage = () => {
   const {photo} = usePhotoState();
@@ -49,6 +61,8 @@ const FilterPage = () => {
   const [printed, setPrinted] = useState(false);
   const {navigateTo} = usePreventNavigation();
   const filterRef = useRef(filter);
+  const [playClick] = useSound(CLICK_SOUND_URL, {volume: CLICK_SOUND_VOUME});
+
   usePreventNavigation();
 
   useEffect(() => {
@@ -392,6 +406,7 @@ const FilterPage = () => {
                   <div className="flex-wrap flex gap-4 items-center justify-center">
                     {FILTERS.map((item, index) => (
                       <div
+                        onMouseDown={() => playClick()}
                         ref={(el) => {
                           filterRefs.current[index] = el;
                         }}
@@ -416,18 +431,23 @@ const FilterPage = () => {
                   <Button
                     className="w-full mt-2 font-light"
                     onClick={selectRandomFilter}
+                    onMouseDown={() => playClick()}
                   >
                     {t("Random filter")} - {FILTERS.find((item) => item.value == filter)?.name}
                   </Button>
                   <Button
                     className="w-full mt-2 flex items-center justify-center gap-1 font-light"
                     onClick={() => setFilter(null)}
+                    onMouseDown={() => playClick()}
                   >
                     {t("Reset filter")}
                     {!filter && <IoIosCheckmark size={35} />}
                   </Button>
                 </div>
-                <div className="relative w-full">
+                <div
+                  className="relative w-full"
+                  onMouseDown={() => playClick()}
+                >
                   <GlowEffect
                     colors={["#FF5733", "#33FF57", "#3357FF", "#F1C40F"]}
                     mode="colorShift"

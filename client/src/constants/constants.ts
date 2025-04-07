@@ -14,6 +14,10 @@ export const FILTER_SELECT_DURATION = 25;
 
 export const IMAGE_SELECT_DURATION = 30;
 
+export const CLICK_SOUND_URL = "/sound/click.mp3";
+
+export const CLICK_SOUND_VOUME = 1;
+
 export const ThemeSelectButton: ThemeSelectButtonType[] = [
   {
     title: "PROM",

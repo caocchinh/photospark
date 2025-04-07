@@ -1,6 +1,6 @@
 "use client";
 import {Carousel, CarouselContent, CarouselItem, type CarouselApi} from "@/components/ui/carousel";
-import {FrameOptions} from "@/constants/constants";
+import {CLICK_SOUND_URL, CLICK_SOUND_VOUME, FrameOptions} from "@/constants/constants";
 import {cn} from "@/lib/utils";
 import {WheelGesturesPlugin} from "embla-carousel-wheel-gestures";
 import Image from "next/image";
@@ -19,9 +19,12 @@ import {Spotlight} from "@/components/ui/spotlight";
 import {PiVideoCameraLight} from "react-icons/pi";
 import {usePhotoState} from "@/context/PhotoStateContext";
 import {useCountdown} from "@/context/CountdownContext";
+import useSound from "use-sound";
 
 const LayoutPage = () => {
   const {photo, setPhoto, updatePhotoQuantity, updateFrame} = usePhotoState();
+  const [playClick] = useSound(CLICK_SOUND_URL, {volume: CLICK_SOUND_VOUME});
+
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -29,7 +32,6 @@ const LayoutPage = () => {
       window.location.href = ROUTES.HOME;
       return;
     }
-   
   }, [photo]);
   const router = useRouter();
   const {autoSelectCountdownTimer} = useCountdown();
@@ -164,6 +166,7 @@ const LayoutPage = () => {
                   size={64}
                 />
                 <IoIosArrowBack
+                  onMouseDown={() => playClick()}
                   size={60}
                   className="text-primary hover:cursor-pointer carousel-pointer"
                   onClick={handleLeftClick}
@@ -199,6 +202,7 @@ const LayoutPage = () => {
                   </CarouselContent>
                 </Carousel>
                 <IoIosArrowForward
+                  onMouseDown={() => playClick()}
                   size={60}
                   className="text-primary hover:cursor-pointer carousel-pointer"
                   onClick={handleRightClick}
@@ -216,6 +220,7 @@ const LayoutPage = () => {
                   <CarouselContent className="p-2">
                     {filteredFrames.map((item, index) => (
                       <CarouselItem
+                        onMouseDown={() => playClick()}
                         key={index}
                         className={cn("flex items-center justify-center cursor-pointer", item.type == "singular" ? " basis-1/4" : "basis-[15%]")}
                         onClick={() => {
@@ -261,6 +266,7 @@ const LayoutPage = () => {
                       const quantiy = (index + 1) * (photo.frameType == "singular" ? 1 : 2);
                       return (
                         <div
+                          onMouseDown={() => playClick()}
                           className={cn(
                             " text-2xl text-white w-[90px] hover:cursor-pointer h-[90px] flex items-center justify-center mb-3 rounded-lg border bg-black"
                           )}
@@ -281,6 +287,7 @@ const LayoutPage = () => {
                     if (!thumbnail) return null;
                     return (
                       <div
+                        onMouseDown={() => playClick()}
                         ref={(el) => {
                           thumbnailRefs.current[index] = el;
                         }}
@@ -313,18 +320,23 @@ const LayoutPage = () => {
                 <Link
                   href={ROUTES.THEME}
                   className="flex  text-center font-light items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-2 hover:opacity-[85%] w-full"
+                  onMouseDown={() => playClick()}
                 >
                   <FaArrowLeft />
                   {t("Choose another theme")}
                 </Link>
                 <Link
+                  onMouseDown={() => playClick()}
                   href={ROUTES.HOME}
                   className="flex text-center items-center font-light justify-center gap-2 bg-foreground text-background rounded px-4 py-2 hover:opacity-[85%] w-full"
                 >
                   <FaArrowLeft />
                   {t("Choose another layout")}
                 </Link>
-                <div className="relative">
+                <div
+                  className="relative"
+                  onMouseDown={() => playClick()}
+                >
                   <GlowEffect
                     colors={["#FF5733", "#33FF57", "#3357FF", "#F1C40F"]}
                     mode="colorShift"

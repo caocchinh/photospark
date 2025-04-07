@@ -8,7 +8,17 @@ import useImage from "use-image";
 import {Image as KonvaImage} from "react-konva";
 import Image from "next/image";
 import FrameImage from "@/components/FrameImage";
-import {FRAME_HEIGHT, FRAME_WIDTH, IMAGE_HEIGHT, IMAGE_WIDTH, OFFSET_X, OFFSET_Y, IMAGE_SELECT_DURATION} from "@/constants/constants";
+import {
+  FRAME_HEIGHT,
+  FRAME_WIDTH,
+  IMAGE_HEIGHT,
+  IMAGE_WIDTH,
+  OFFSET_X,
+  OFFSET_Y,
+  IMAGE_SELECT_DURATION,
+  CLICK_SOUND_URL,
+  CLICK_SOUND_VOUME,
+} from "@/constants/constants";
 import {uploadImageToR2} from "@/lib/r2";
 import {MdOutlineCloudDone} from "react-icons/md";
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -20,9 +30,12 @@ import usePreventNavigation from "@/hooks/usePreventNavigation";
 import {ROUTES} from "@/constants/routes";
 import {Reorder} from "motion/react";
 import {usePhotoState} from "@/context/PhotoStateContext";
+import useSound from "use-sound";
 
 const SelectPage = () => {
   const {photo, setPhoto, updateVideoData, setSelectedImages} = usePhotoState();
+  const [playClick] = useSound(CLICK_SOUND_URL, {volume: CLICK_SOUND_VOUME});
+
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -258,6 +271,7 @@ const SelectPage = () => {
                       }}
                       onClick={() => {
                         if (selectedImage[index] && !isDragging) {
+                          playClick();
                           handleSelect(selectedImage[index]);
                         }
                       }}
@@ -339,6 +353,7 @@ const SelectPage = () => {
                         "bg-gray-200 rounded border-4 border-transparent hover:border-black hover:cursor-pointer",
                         selectedImage.some((img) => img?.id === item.id) ? "border-rose-500 hover:border-rose-500" : null
                       )}
+                      onMouseDown={() => playClick()}
                       onClick={() => handleSelect(item)}
                     >
                       <Image
@@ -358,7 +373,10 @@ const SelectPage = () => {
               )}
             </div>
             {photo && (
-              <div className="relative w-full h-full">
+              <div
+                className="relative w-full h-full"
+                onMouseDown={() => playClick()}
+              >
                 {(photo.theme!.frame.slotCount - filteredSelectedImages.length == 0 || isTimeOver) && (
                   <GlowEffect
                     colors={["#FF5733", "#33FF57", "#3357FF", "#F1C40F"]}

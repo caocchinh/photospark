@@ -1,6 +1,6 @@
 "use client";
 import {CardContent, CardTitle} from "@/components/ui/card";
-import {FrameOptions, ThemeSelectButton} from "@/constants/constants";
+import {CLICK_SOUND_URL, CLICK_SOUND_VOUME, FrameOptions, ThemeSelectButton} from "@/constants/constants";
 import {usePhotoState} from "@/context/PhotoStateContext";
 import Image from "next/image";
 import React, {useEffect} from "react";
@@ -13,9 +13,12 @@ import DoubleLayout from "@/components/layout-image/DoubleLayout";
 import {cn} from "@/lib/utils";
 import {ValidThemeType} from "@/constants/types";
 import {useCountdown} from "@/context/CountdownContext";
+import useSound from "use-sound";
 
 const ThemePage = () => {
   const {photo, setPhoto} = usePhotoState();
+  const [playClick] = useSound(CLICK_SOUND_URL, {volume: CLICK_SOUND_VOUME});
+
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -23,7 +26,6 @@ const ThemePage = () => {
       window.location.href = ROUTES.HOME;
       return;
     }
-   
   }, [photo]);
   const {autoSelectCountdownTimer} = useCountdown();
   const {t} = useTranslation();
@@ -54,6 +56,7 @@ const ThemePage = () => {
               <CardTitle className="text-5xl uppercase">{t("Current layout")}</CardTitle>
               {photo.frameType == "singular" ? <SingularLayout /> : <DoubleLayout />}
               <Link
+                onMouseDown={() => playClick()}
                 href={ROUTES.HOME}
                 className="w-full self-start ext-white py-2 rounded flex items-center justify-center gap-2 bg-black text-white"
               >
@@ -68,6 +71,7 @@ const ThemePage = () => {
                   const hasMatchingFrame = FrameOptions[item.theme].some((frame) => frame.type === photo.frameType);
                   return hasMatchingFrame ? (
                     <Link
+                      onMouseDown={() => playClick()}
                       href={ROUTES.FRAME}
                       onClick={() => handleThemeChange(item.theme)}
                       key={index}

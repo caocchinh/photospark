@@ -14,9 +14,9 @@ import {usePhotoState} from "@/context/PhotoStateContext";
 import {useCamera} from "@/context/CameraContext";
 import {useSocket} from "@/context/SocketContext";
 import {MdWarning} from "react-icons/md";
-import { useTranslation } from "react-i18next";
-import { Button } from "@/components/ui/button";
-import { IoRefresh } from "react-icons/io5";
+import {useTranslation} from "react-i18next";
+import {Button} from "@/components/ui/button";
+import {IoRefresh} from "react-icons/io5";
 
 const CapturePage = () => {
   const {photo, setPhoto, addPhotoImage, updateVideoData} = usePhotoState();
@@ -27,7 +27,6 @@ const CapturePage = () => {
       window.location.href = ROUTES.HOME;
       return;
     }
-   
   }, [photo]);
   const {cameraStream, stopCamera, startCamera} = useCamera();
   const [count, setCount] = useState(CAPTURE_DURATION);
@@ -46,7 +45,7 @@ const CapturePage = () => {
       setIsVideoRefReady(true);
     }
   }, []);
-  const [playCameraShutterSound] = useSound("/shutter.mp3", {volume: 1});
+  const [playCameraShutterSound] = useSound("/sound/shutter.mp3", {volume: 1});
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
 
   const {navigateTo} = usePreventNavigation();
@@ -201,16 +200,16 @@ const CapturePage = () => {
   useEffect(() => {
     const getVideo = async () => {
       if (videoRef.current && isVideoRefReady) {
-        try{
+        try {
           if (!cameraStream) {
             await startCamera();
             return;
           }
           setIsCameraError(false);
-        }catch{
+        } catch {
           setIsCameraError(true);
         }
-       
+
         try {
           videoRef.current.srcObject = cameraStream;
 
@@ -309,20 +308,20 @@ const CapturePage = () => {
           {isCameraError && (
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full flex items-center justify-center">
               <div className="flex items-center justify-center flex-col gap-3">
-              <MdWarning
-                className="text-red-500"
-                size={130}
-              />
-              <p className="text-red-500 text-4xl uppercase font-semibold">{t("Error loading camera")}!</p>
-              <Button
-            variant="outline"
-            onClick={() => window.location.reload()}
-            className="flex items-center justify-center gap-2 cursor-pointer w-full"
-          >
-            {t("Refresh the application")}
-            <IoRefresh />
-          </Button>
-            </div>
+                <MdWarning
+                  className="text-red-500"
+                  size={130}
+                />
+                <p className="text-red-500 text-4xl uppercase font-semibold">{t("Error loading camera")}!</p>
+                <Button
+                  variant="outline"
+                  onClick={() => window.location.reload()}
+                  className="flex items-center justify-center gap-2 cursor-pointer w-full"
+                >
+                  {t("Refresh the application")}
+                  <IoRefresh />
+                </Button>
+              </div>
             </div>
           )}
           <div

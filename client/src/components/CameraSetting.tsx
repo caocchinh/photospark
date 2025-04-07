@@ -20,8 +20,11 @@ import CameraLoading from "./CameraLoading";
 import {useCountdown} from "@/context/CountdownContext";
 import {useCamera} from "@/context/CameraContext";
 import {usePhotoState} from "@/context/PhotoStateContext";
+import {CLICK_SOUND_URL, CLICK_SOUND_VOUME} from "@/constants/constants";
+import useSound from "use-sound";
 
 const CameraSetting = () => {
+  const [playClick] = useSound(CLICK_SOUND_URL, {volume: CLICK_SOUND_VOUME});
   const {t} = useTranslation();
   const {setCamera, camera, availableCameras, cameraStream, startCamera, stopCamera} = useCamera();
   const {setShouldRunCountdown, autoSelectCountdownTimer} = useCountdown();
@@ -87,6 +90,7 @@ const CameraSetting = () => {
     >
       <AlertDialogTrigger asChild>
         <Button
+          onMouseDown={() => playClick()}
           variant="outline"
           className="flex items-center justify-center gap-1 w-full"
           disabled={autoSelectCountdownTimer <= 1}
@@ -106,7 +110,7 @@ const CameraSetting = () => {
               camera && videoRefReady && cameraStream && !isError ? "opacity-100 block" : "opacity-0 absolute"
             )}
           />
-          {!(camera && videoRefReady && cameraStream ) && !isError && isOpen && <CameraLoading />}
+          {!(camera && videoRefReady && cameraStream) && !isError && isOpen && <CameraLoading />}
           {isError && (
             <div className="flex items-center justify-center flex-col gap-3">
               <MdWarning
@@ -134,13 +138,14 @@ const CameraSetting = () => {
               }}
             >
               <SelectTrigger className="w-full relative z-[10]">
-                <SelectValue placeholder={camera?.label}/>
+                <SelectValue placeholder={camera?.label} />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
                   <SelectLabel>{t("Available cameras")}</SelectLabel>
                   {availableCameras.map((device) => (
                     <SelectItem
+                      onMouseDown={() => playClick()}
                       key={device.deviceId}
                       value={device.deviceId}
                     >
@@ -155,7 +160,8 @@ const CameraSetting = () => {
 
         <AlertDialogFooter className="w-full">
           <AlertDialogAction
-            disabled={!(camera && videoRefReady && cameraStream)&& !isError}
+            onMouseDown={() => playClick()}
+            disabled={!(camera && videoRefReady && cameraStream) && !isError}
             className="bg-green-700 hover:bg-green-800 w-full"
             onClick={() => {
               stopCamera();
