@@ -116,7 +116,7 @@ const DesktopContent = () => {
       {photo && photo.theme && (
         <div className="relative w-full h-full">
           {frameImgStatus != "loaded" && (
-            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+            <div className="absolute -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2">
               <div className="loader"></div>
             </div>
           )}
@@ -128,7 +128,7 @@ const DesktopContent = () => {
           >
             <div className={cn("flex items-center justify-evenly w-full h-full gap-10", isSelected ? "pointer-events-none" : null)}>
               <div className="flex flex-col items-center justify-center h-full">
-                <div className="relative h-full flex items-center justify-center">
+                <div className="relative flex items-center justify-center h-full">
                   <Reorder.Group
                     values={slots}
                     onReorder={(newSlotOrder) => {
@@ -142,7 +142,7 @@ const DesktopContent = () => {
                       });
                     }}
                     as="div"
-                    className="flex absolute flex-col z-50"
+                    className="absolute z-50 flex flex-col"
                     style={{
                       gap:
                         isSingle == 2 && photo
@@ -177,7 +177,7 @@ const DesktopContent = () => {
                             width: FRAME_WIDTH / isSingle,
                             height: photo ? photo.theme!.frame.slotDimensions.height : 0,
                           }}
-                          className="hover:cursor-grab active:cursor-grabbing z-50 bg-transparent"
+                          className="z-50 bg-transparent hover:cursor-grab active:cursor-grabbing"
                         ></div>
                       </Reorder.Item>
                     ))}
@@ -224,13 +224,13 @@ const DesktopContent = () => {
               </div>
               <div className="flex flex-col w-[60%] gap-5 items-start justify-center ">
                 {photo && (
-                  <div className="flex gap-2 w-full item-center justify-center ">
-                    <h1 className="text-5xl font-semibold mb-4 flex gap-2 uppercase">{t("Choose images")}</h1>
+                  <div className="flex justify-center w-full gap-2 item-center ">
+                    <h1 className="flex gap-2 mb-4 text-5xl font-semibold uppercase">{t("Choose images")}</h1>
                   </div>
                 )}
 
                 <div
-                  className="grid gap-2 items-center justify-center justify-items-center w-full"
+                  className="grid items-center justify-center w-full gap-2 justify-items-center"
                   id="image-grid"
                 >
                   {photo && (
@@ -258,7 +258,7 @@ const DesktopContent = () => {
                   )}
                 </div>
                 {photo && (
-                  <div className="w-full flex gap-4 flex-col items-center justify-center">
+                  <div className="flex flex-col items-center justify-center w-full gap-4">
                     <div className="relative w-full h-full active:opacity-80">
                       {photo.theme!.frame.slotCount - filteredSelectedImages.length == 0 && (
                         <GlowEffect
@@ -271,7 +271,7 @@ const DesktopContent = () => {
                         />
                       )}
                       <Button
-                        className="relative z-10 bg-green-700 hover:bg-green-700  w-full py-6 px-2 cursor-pointer"
+                        className="relative z-10 w-full px-2 py-6 bg-green-700 cursor-pointer hover:bg-green-700"
                         onClick={() => {
                           if (photo.theme!.frame.slotCount - filteredSelectedImages.length == 0 && !isSelected) {
                             setIsSelected(true);
@@ -292,7 +292,7 @@ const DesktopContent = () => {
                       <Link
                         onClick={() => setIsSelected(true)}
                         href={`/${photo?.previousProcessedImageId}/${ROUTES.FRAME}`}
-                        className="flex items-center justify-center gap-2 text-2xl px-14 py-6 w-full"
+                        className="flex items-center justify-center w-full gap-2 py-6 text-2xl px-14"
                       >
                         <FaArrowLeft />
                         {t("Choose another frame")}
@@ -315,7 +315,7 @@ const DesktopContent = () => {
         onOpenChange={setIsDialogOpen}
       >
         <DialogContent>
-          <DialogHeader className="flex items-center justify-center gap-3 flex-col">
+          <DialogHeader className="flex flex-col items-center justify-center gap-3">
             <DialogTitle>{t("Please choose images")}</DialogTitle>
             <DialogDescription>{t("You need to choose images to continue")}</DialogDescription>
           </DialogHeader>

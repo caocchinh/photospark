@@ -120,12 +120,12 @@ const Print = () => {
               value="price"
               className="h-full"
             >
-              <Card className="h-full w-full flex flex-col items-stretch justify-center">
+              <Card className="flex flex-col items-stretch justify-center w-full h-full">
                 <CardHeader className="w-full">
                   <CardTitle>{t("Price")}</CardTitle>
                   <CardDescription>{t("If you need to print more images, please see the price table below.")}</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-2 w-full">
+                <CardContent className="w-full space-y-2">
                   <Table>
                     <TableCaption>{t("Please meet staff VTEAM to print more images!")}</TableCaption>
                     <TableHeader>
@@ -166,7 +166,7 @@ const Print = () => {
                 </CardContent>
                 <CardFooter className="w-full">
                   <Button
-                    className="w-full flex items-center justify-center gap-2 cursor-pointer"
+                    className="flex items-center justify-center w-full gap-2 cursor-pointer"
                     onClick={() => handleTabChange("order")}
                   >
                     {t("Order")} <FaArrowRight />
@@ -185,7 +185,7 @@ const Print = () => {
                     {t("The maximum quantity of prints is")} {MAX_PRINT_QUANTITY * (processedImage.type === "double" ? 2 : 1)} {t("images")}
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-2 w-full flex flex-col items-center justify-center gap-4">
+                <CardContent className="flex flex-col items-center justify-center w-full gap-4 space-y-2">
                   <Label
                     htmlFor="print-quantity"
                     className="text-2xl"
@@ -207,13 +207,13 @@ const Print = () => {
                 </CardContent>
                 <CardFooter className="w-full">
                   <Button
-                    className="w-full flex items-center justify-center gap-2 cursor-pointer"
+                    className="flex items-center justify-center w-full gap-2 cursor-pointer"
                     onClick={handleCreateQueue}
                     disabled={isLoading}
                   >
                     {isLoading ? (
                       <div className="flex items-center gap-2">
-                        <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"></span>
+                        <span className="w-4 h-4 border-2 border-current rounded-full animate-spin border-t-transparent"></span>
                         {t("Processing...")}
                       </div>
                     ) : (

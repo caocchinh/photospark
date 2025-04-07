@@ -48,20 +48,44 @@ export const CameraProvider = ({children}: {children: ReactNode}) => {
           console.error("No video devices found");
           return;
         }
-
-        const defaultCamera = availableVideoDevices.find(
-          (device) =>
-            device.label &&
-            process.env.NEXT_PUBLIC_DEFAULT_CAMERA &&
-            device.label.toLowerCase().includes(process.env.NEXT_PUBLIC_DEFAULT_CAMERA.toLowerCase())
-        );
-
-        setCamera({
-          deviceId: defaultCamera?.deviceId || availableVideoDevices[0].deviceId,
-          label: defaultCamera?.label || availableVideoDevices[0].label,
-        });
-
         setAvailableCameras(availableVideoDevices);
+
+        if (typeof window !== "undefined") {
+          const selectedCameraId = localStorage.getItem("selectedCameraId");
+          if (selectedCameraId) {
+            const existingCamera = availableVideoDevices.find((device) => device.deviceId === selectedCameraId);
+            if (existingCamera) {
+              setCamera({
+                deviceId: existingCamera.deviceId,
+                label: existingCamera?.label,
+              });
+              return;
+            }
+          }
+          const isDefaultCameraExist = availableVideoDevices.find(
+            (device) =>
+              device.label &&
+              process.env.NEXT_PUBLIC_DEFAULT_CAMERA &&
+              device.label.toLowerCase().includes(process.env.NEXT_PUBLIC_DEFAULT_CAMERA.toLowerCase())
+          );
+          if (isDefaultCameraExist) {
+            setCamera({
+              deviceId: isDefaultCameraExist.deviceId,
+              label: isDefaultCameraExist.label,
+            });
+            return;
+          }
+
+          if (availableVideoDevices.length > 0) {
+            const defaultCamera = availableVideoDevices[0];
+            setCamera({
+              deviceId: defaultCamera.deviceId,
+              label: defaultCamera.label,
+            });
+            return;
+          }
+          setCamera(null);
+        }
       } catch (error) {
         console.error("Error enumerating devices:", error);
       }

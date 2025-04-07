@@ -14,7 +14,7 @@ const NetworkStatus = () => {
   return (
     <AlertDialog open={!isOnline}>
       <AlertDialogContent className="flex flex-col items-center justify-center gap-4 border border-red-500 z-[999]">
-        <AlertDialogTitle className="text-red-600 text-4xl font-semibold flex gap-2 items-center justify-center flex-col uppercase text-center">
+        <AlertDialogTitle className="flex flex-col items-center justify-center gap-2 text-4xl font-semibold text-center text-red-600 uppercase">
           {t("No Internet Connection")}
           <MdWifiOff size={100} />
         </AlertDialogTitle>
@@ -23,7 +23,7 @@ const NetworkStatus = () => {
           <Button
             variant="outline"
             onClick={() => window.location.reload()}
-            className="flex items-center justify-center gap-2 cursor-pointer w-full"
+            className="flex items-center justify-center w-full gap-2 cursor-pointer"
           >
             {t("Refresh the application")}
             <IoRefresh />

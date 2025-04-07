@@ -69,7 +69,7 @@ const FrameStage = ({processedImage, images, stageRef, setIsAllImagesLoaded}: Fr
         height: FRAME_HEIGHT * scale,
         transformOrigin: "center",
       }}
-      className="w-full lg:w-max h-full flex items-center justify-center"
+      className="flex items-center justify-center w-full h-full lg:w-max"
     >
       <Stage
         ref={stageRef}

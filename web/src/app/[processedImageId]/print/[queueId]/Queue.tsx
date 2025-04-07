@@ -60,18 +60,18 @@ const Queue = ({queue}: {queue: typeof QueueTable.$inferSelect}) => {
   return (
     <>
       {processedImage && images && (
-        <div className="w-full flex items-center justify-center gap-8 py-8 flex-wrap">
+        <div className="flex flex-wrap items-center justify-center w-full gap-8 py-8">
           <Card className=" w-[90%] lg:w-[40%]">
             <CardHeader>
               <CardTitle>{t("Image printing information")}</CardTitle>
               <CardDescription>{t("Details about the image printing order")}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="border rounded-md p-4 flex flex-col gap-2">
+              <div className="flex flex-col gap-2 p-4 border rounded-md">
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <div className="w-full flex justify-end">
+                      <div className="flex justify-end w-full">
                         <Button
                           variant="ghost"
                           size="sm"
@@ -84,7 +84,7 @@ const Queue = ({queue}: {queue: typeof QueueTable.$inferSelect}) => {
                         >
                           <FaSync className={cn(isRefreshing && "animate-spin")} />
                           {isRefreshing || !refreshable ? (
-                            <h4 className="text-xs flex items-center gap-1 justify-center">
+                            <h4 className="flex items-center justify-center gap-1 text-xs">
                               {t("Wait")}
                               <span>
                                 <SlidingNumber
@@ -103,9 +103,9 @@ const Queue = ({queue}: {queue: typeof QueueTable.$inferSelect}) => {
                     <TooltipContent>{!refreshable ? `${t("Wait")} ${timeLeft} ${t("seconds to refresh")}` : t("Refresh status")}</TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
-                <div className="flex justify-between items-center mb-2 flex-col gap-3 md:gap-0 md:flex-row">
+                <div className="flex flex-col items-center justify-between gap-3 mb-2 md:gap-0 md:flex-row">
                   <h3 className="font-medium">{t("Order status")}</h3>
-                  <div className="flex items-center gap-2 justify-center md:justify-start">
+                  <div className="flex items-center justify-center gap-2 md:justify-start">
                     <div
                       className={`w-3 h-3 rounded-full ${
                         queueStatus === "pending"
@@ -126,15 +126,15 @@ const Queue = ({queue}: {queue: typeof QueueTable.$inferSelect}) => {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 justify-center md:justify-start sm:flex-row flex-col">
+                <div className="flex flex-col items-center justify-center gap-2 md:justify-start sm:flex-row">
                   <h3 className="font-medium">{t("Order ID")}: </h3>
                   <span className="font-medium text-center text-rose-500 hover:underline">{queue.id}</span>
                 </div>
               </div>
 
-              <div className="border rounded-md p-4">
-                <h3 className="font-medium mb-2">{t("Order details")}</h3>
-                <div className="flex flex-col gap-2 items-center justify-center md:justify-start w-full">
+              <div className="p-4 border rounded-md">
+                <h3 className="mb-2 font-medium">{t("Order details")}</h3>
+                <div className="flex flex-col items-center justify-center w-full gap-2 md:justify-start">
                   <div className="flex justify-between w-full">
                     <span>{t("Image type")}:</span>
                     <span className="font-medium text-right">{processedImage.type === "double" ? t("Double image") : t("Single image")}</span>
@@ -158,11 +158,11 @@ const Queue = ({queue}: {queue: typeof QueueTable.$inferSelect}) => {
                 </div>
               </div>
 
-              <div className="border rounded-md p-4 bg-yellow-50">
-                <p className="text-center text-sm">{t("Please meet staff VTEAM and bring the order ID to get help!")}</p>
+              <div className="p-4 border rounded-md bg-yellow-50">
+                <p className="text-sm text-center">{t("Please meet staff VTEAM and bring the order ID to get help!")}</p>
               </div>
             </CardContent>
-            <CardFooter className="flex flex-col gap-2 w-full">
+            <CardFooter className="flex flex-col w-full gap-2">
               <Link
                 href={`/${processedImage.id}/print`}
                 className="w-full"

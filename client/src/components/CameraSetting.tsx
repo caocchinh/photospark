@@ -147,6 +147,9 @@ const CameraSetting = () => {
                 if (device) {
                   stopCamera();
                   setCamera!({deviceId: device.deviceId, label: device.label});
+                  if (typeof window != "undefined") {
+                    localStorage.setItem("selectedCameraId", device.deviceId);
+                  }
                 }
               }}
             >

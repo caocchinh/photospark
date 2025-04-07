@@ -33,10 +33,10 @@ const CapturePage = () => {
   const [isCameraError, setIsCameraError] = useState(false);
   const [isCountingDown, setIsCountingDown] = useState(false);
   const [cycles, setCycles] = useState(1);
-  const [videoIntrinsicSize, setVideoIntrinsicSize] = useState<{width: number; height: number} | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const {isSocketConnected, isOnline} = useSocket();
   const {t} = useTranslation();
+  const [videoIntrinsicSize, setVideoIntrinsicSize] = useState<{width: number; height: number} | null>(null);
 
   const [isVideoRefReady, setIsVideoRefReady] = useState(false);
   const setVideoRef = useCallback((node: HTMLVideoElement | null) => {
@@ -142,60 +142,73 @@ const CapturePage = () => {
     }
   }, [addPhotoImage, cycles, mediaRecorder, navigateTo, photo, setPhoto, stopCamera, videoIntrinsicSize]);
 
-  const handleRecording = useCallback(() => {
-    if (!videoRef.current?.srcObject) return;
+  const handleRecording = useCallback(
+    ({width, height}: {width: number; height: number}) => {
+      if (!videoRef.current?.srcObject) return;
 
-    const stream = videoRef.current.srcObject as MediaStream;
+      const stream = videoRef.current.srcObject as MediaStream;
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d", {
+        colorSpace: "display-p3",
+        willReadFrequently: true,
+      });
 
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d", {
-      colorSpace: "display-p3",
-      willReadFrequently: true,
-    });
-    const videoTrack = stream.getVideoTracks()[0];
-    const {width, height} = videoTrack.getSettings();
+      canvas.width = width;
+      canvas.height = height;
 
-    canvas.width = width!;
-    canvas.height = height!;
+      const flippedStream = canvas.captureStream(120);
 
-    const flippedStream = canvas.captureStream(120);
+      const drawVideo = () => {
+        if (videoRef.current && ctx) {
+          ctx.save();
+          ctx.scale(-1, 1);
+          ctx.translate(-canvas.width, 0);
+          ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+          ctx.restore();
+        }
+        requestAnimationFrame(drawVideo);
+      };
+      drawVideo();
 
-    const drawVideo = () => {
-      if (videoRef.current && ctx) {
-        ctx.save();
-        ctx.scale(-1, 1);
-        ctx.translate(-canvas.width, 0);
-        ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
-        ctx.restore();
+      const recorder = new MediaRecorder(flippedStream, {
+        mimeType: "video/webm;codecs=vp8",
+        videoBitsPerSecond: 11111111,
+      });
+
+      let chunks: Blob[] = [];
+
+      recorder.ondataavailable = (event) => {
+        if (event.data && event.data.size > 0 && isOnline && isSocketConnected) {
+          chunks.push(event.data);
+        }
+      };
+
+      recorder.onstop = () => {
+        const videoBlob = new Blob(chunks, {type: "video/webm"});
+        if (videoBlob.size > 0) {
+          updateVideoData(videoBlob, null);
+        }
+        chunks = [];
+
+        if (recorder) {
+          recorder.stop();
+        }
+        stream.getTracks().forEach((track) => track.stop());
+      };
+
+      setMediaRecorder(recorder);
+      recorder.start(100);
+    },
+    [isOnline, isSocketConnected, updateVideoData]
+  );
+
+  useEffect(() => {
+    return () => {
+      if (videoRef.current) {
+        videoRef.current.srcObject = null;
       }
-      requestAnimationFrame(drawVideo);
     };
-    drawVideo();
-
-    const recorder = new MediaRecorder(flippedStream, {
-      mimeType: "video/webm;codecs=vp8",
-      videoBitsPerSecond: 11111111,
-    });
-
-    let chunks: Blob[] = [];
-
-    recorder.ondataavailable = (event) => {
-      if (event.data && event.data.size > 0 && isOnline && isSocketConnected && cycles != NUM_OF_CAPTURE_IMAGE) {
-        chunks.push(event.data);
-      }
-    };
-
-    recorder.onstop = () => {
-      const videoBlob = new Blob(chunks, {type: "video/webm"});
-      if (videoBlob.size > 0) {
-        updateVideoData(videoBlob, null);
-      }
-      chunks = [];
-    };
-
-    setMediaRecorder(recorder);
-    recorder.start(100);
-  }, [cycles, isOnline, isSocketConnected, updateVideoData]);
+  }, []);
 
   useEffect(() => {
     const getVideo = async () => {
@@ -222,7 +235,10 @@ const CapturePage = () => {
               console.log("Video playback started from camera");
               setTimeout(() => {
                 setIsCountingDown(true);
-                handleRecording();
+                handleRecording({
+                  width: videoRef.current!.videoWidth,
+                  height: videoRef.current!.videoHeight,
+                });
               }, 2500);
             });
           };
@@ -237,6 +253,8 @@ const CapturePage = () => {
   }, [isCountingDown, handleRecording, cameraStream, isVideoRefReady, startCamera, cycles]);
 
   useEffect(() => {
+    let timer: NodeJS.Timeout | undefined = undefined;
+
     if (
       cycles == NUM_OF_CAPTURE_IMAGE &&
       count <= 0 &&
@@ -251,8 +269,8 @@ const CapturePage = () => {
       navigateTo(ROUTES.SELECT);
       return;
     }
-    const timer = setInterval(async () => {
-      if (isCountingDown && isSocketConnected && isOnline) {
+    if (isCountingDown && isSocketConnected && isOnline) {
+      timer = setTimeout(() => {
         if (count > 0 && cycles <= NUM_OF_CAPTURE_IMAGE) {
           setCount((prevCount) => prevCount - 1);
           if (count == 1) {
@@ -275,10 +293,13 @@ const CapturePage = () => {
           stopCamera();
           return;
         }
+      }, 1000);
+    }
+    return () => {
+      if (timer) {
+        clearTimeout(timer);
       }
-    }, 1000);
-
-    return () => clearInterval(timer);
+    };
   }, [
     count,
     cycles,
@@ -297,26 +318,26 @@ const CapturePage = () => {
   ]);
 
   return (
-    <div className="relative w-full h-full flex items-center justify-center">
+    <div className="relative flex items-center justify-center w-full h-full">
       {photo && (
         <>
           {!isCountingDown && !isCameraError && cycles == 1 && (
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full flex items-center justify-center">
+            <div className="absolute flex items-center justify-center w-full h-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
               <CameraLoading />
             </div>
           )}
           {isCameraError && (
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full flex items-center justify-center">
-              <div className="flex items-center justify-center flex-col gap-3">
+            <div className="absolute flex items-center justify-center w-full h-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+              <div className="flex flex-col items-center justify-center gap-3">
                 <MdWarning
                   className="text-red-500"
                   size={130}
                 />
-                <p className="text-red-500 text-4xl uppercase font-semibold">{t("Error loading camera")}!</p>
+                <p className="text-4xl font-semibold text-red-500 uppercase">{t("Error loading camera")}!</p>
                 <Button
                   variant="outline"
                   onClick={() => window.location.reload()}
-                  className="flex items-center justify-center gap-2 cursor-pointer w-full"
+                  className="flex items-center justify-center w-full gap-2 cursor-pointer"
                 >
                   {t("Refresh the application")}
                   <IoRefresh />
@@ -360,17 +381,17 @@ const CapturePage = () => {
               )}
             </div>
 
-            <div className="mt-3 relative">
-              <div className="flex items-center justify-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                <span className="font-bold text-4xl">
+            <div className="relative mt-3">
+              <div className="absolute flex items-center justify-center -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+                <span className="text-4xl font-bold">
                   <SlidingNumber
                     value={cycles}
                     padStart={false}
                   />
                 </span>
-                <h1 className="font-bold text-4xl text-center">/{NUM_OF_CAPTURE_IMAGE}</h1>
+                <h1 className="text-4xl font-bold text-center">/{NUM_OF_CAPTURE_IMAGE}</h1>
               </div>
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+              <div className="absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
                 <CountdownCircleTimer
                   isPlaying={isCountingDown && isSocketConnected && isOnline && cycles < NUM_OF_CAPTURE_IMAGE}
                   strokeWidth={9}

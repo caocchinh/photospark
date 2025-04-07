@@ -75,7 +75,7 @@ const LayoutPage = () => {
               className="w-[200px] justify-between self-end"
               onMouseDown={() => playClick()}
             >
-              <div className="flex items-center gap-2 justify-center">
+              <div className="flex items-center justify-center gap-2">
                 {language ? LANGUAGE_LIST.find((_language) => _language.label === language)?.label : t("Select language...")}
                 <Image
                   src={LANGUAGE_LIST.find((_language) => _language.label === language)?.image_src ?? ""}
@@ -114,7 +114,7 @@ const LayoutPage = () => {
           </PopoverContent>
         </Popover>
 
-        <CardTitle className="text-5xl uppercase mb-8">{t("Choose a layout")}</CardTitle>
+        <CardTitle className="mb-8 text-5xl uppercase">{t("Choose a layout")}</CardTitle>
         <CardContent className="flex items-center justify-center gap-12 w-[90%]">
           <Link
             href={ROUTES.THEME}
@@ -153,7 +153,7 @@ const LayoutPage = () => {
               <CameraSetting />
             ) : (
               <form
-                className="flex flex-col gap-4 w-full h-full"
+                className="flex flex-col w-full h-full gap-4"
                 onSubmit={(e) => {
                   e.preventDefault();
                   setIsPasswordCorrect(password === process.env.NEXT_PUBLIC_ADMIN_PASSWORD);
@@ -179,7 +179,7 @@ const LayoutPage = () => {
                   />
                   {password.length > 0 && (
                     <RxCross1
-                      className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer text-red-500"
+                      className="absolute text-red-500 -translate-y-1/2 cursor-pointer right-2 top-1/2"
                       onMouseDown={() => playClick()}
                       onClick={() => {
                         setPassword("");
@@ -188,7 +188,7 @@ const LayoutPage = () => {
                     />
                   )}
                 </div>
-                <Card className="flex items-center justify-center border w-full h-full flex-wrap p-2 gap-2">
+                <Card className="flex flex-wrap items-center justify-center w-full h-full gap-2 p-2 border">
                   {Array.from({length: 9}).map((_, index) => (
                     <div
                       onMouseDown={() => playClick()}

@@ -13,14 +13,19 @@ const Cooldown = () => {
   const {photo} = usePhotoState();
 
   useEffect(() => {
-    if (!photo) {
-      if (timeLeft > 0) {
-        const timeLeftr = setTimeout(() => {
-          setTimeLeft(timeLeft - 1);
-        }, 1000);
-        return () => clearTimeout(timeLeftr);
-      }
+    let timer: NodeJS.Timeout | undefined = undefined;
+
+    if (!photo && timeLeft > 0) {
+      timer = setTimeout(() => {
+        setTimeLeft(timeLeft - 1);
+      }, 1000);
     }
+
+    return () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    };
   }, [timeLeft, photo]);
 
   return (

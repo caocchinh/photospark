@@ -6,14 +6,14 @@ import {useTranslation} from "react-i18next";
 const CameraLoading = () => {
   const {t} = useTranslation();
   return (
-    <div className="flex items-center justify-center gap-8 flex-col w-full">
+    <div className="flex flex-col items-center justify-center w-full gap-8">
       <div className="relative">
         <LoadingSpinner
           size={200}
           color="black"
         />
         <ImCamera
-          className="text-4xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+          className="absolute text-4xl -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
           size={80}
         />
       </div>

@@ -11,7 +11,7 @@ export const revalidate = 0;
 export default async function Home() {
   const availableQueues = await getAllQueues();
   return (
-    <div className="w-full min-h-screen mx-auto p-10 pt-0 flex flex-col gap-8 items-center justify-center">
+    <div className="flex flex-col items-center justify-center w-full min-h-screen gap-8 p-10 pt-0 mx-auto">
       <div className="flex flex-col items-center justify-center">
         <div className="flex items-center justify-center gap-2">
           <TextShimmer
@@ -25,7 +25,7 @@ export default async function Home() {
           <MdOutlinePermMedia size={25} />
         </div>
 
-        <p className="text-center text-rose-500 mb-2">Hãy chắc chắn khách hàng đã trả tiền trước khi in ảnh!</p>
+        <p className="mb-2 text-center text-rose-500">Hãy chắc chắn khách hàng đã trả tiền trước khi in ảnh!</p>
       </div>
       {!availableQueues && <div>Loading</div>}
 

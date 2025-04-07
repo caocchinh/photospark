@@ -58,7 +58,7 @@ const LanguageBar = () => {
           aria-expanded={isOpen}
           className="w-[200px] justify-between cursor-pointer"
         >
-          <div className="flex items-center gap-2 justify-center">
+          <div className="flex items-center justify-center gap-2">
             {language ? LANGUAGE_LIST.find((_language) => _language.label === language)?.label : t("Select language...")}
             <Image
               src={LANGUAGE_LIST.find((_language) => _language.label === language)?.image_src ?? ""}

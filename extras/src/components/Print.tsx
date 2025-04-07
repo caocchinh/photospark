@@ -186,7 +186,7 @@ const Print = ({processedImage, images, queue, refreshQueues}: PrintProps) => {
             size={25}
             onClick={() => setIsDialogOpen(false)}
           />
-          <AlertDialogHeader className="text-center flex items-center justify-center">
+          <AlertDialogHeader className="flex items-center justify-center text-center">
             <AlertDialogTitle className="">
               <TextShimmer
                 className=" text-center uppercase text-2xl  [--base-color:black] [--base-gradient-color:gray]"
@@ -196,7 +196,7 @@ const Print = ({processedImage, images, queue, refreshQueues}: PrintProps) => {
                 Hãy kiểm tra lại kỹ thông tin trước khi in
               </TextShimmer>
             </AlertDialogTitle>
-            <AlertDialogDescription className="text-center text-red-500 text-xl">Khi đã in, không thể hủy được!</AlertDialogDescription>
+            <AlertDialogDescription className="text-xl text-center text-red-500">Khi đã in, không thể hủy được!</AlertDialogDescription>
           </AlertDialogHeader>
           <div className="flex flex-row items-center justify-center">
             <div className="relative h-[550px] bottom-[75px]">
@@ -209,34 +209,34 @@ const Print = ({processedImage, images, queue, refreshQueues}: PrintProps) => {
             </div>
             <Card className="w-[500px] h-[545px] rounded-sm">
               <CardHeader className="flex flex-row items-center justify-center gap-1">
-                <CardTitle className="text-center uppercase text-xl">Thông tin đơn hàng</CardTitle>
+                <CardTitle className="text-xl text-center uppercase">Thông tin đơn hàng</CardTitle>
                 <PiCubeLight size={25} />
               </CardHeader>
-              <CardContent className="flex flex-col items-center justify-between h-full w-full gap-5">
+              <CardContent className="flex flex-col items-center justify-between w-full h-full gap-5">
                 <div className="flex flex-col items-center justify-center w-full gap-5">
                   <div className="flex justify-between w-full">
-                    <p className="font-bold text-xl">Mã hàng:</p>
+                    <p className="text-xl font-bold">Mã hàng:</p>
                     <p className="text-lg">{queue.id}</p>
                   </div>
                   <div className="flex justify-between w-full">
-                    <p className="font-bold text-xl">Mã hình:</p>
+                    <p className="text-xl font-bold">Mã hình:</p>
                     <p className="text-lg">{processedImage.id}</p>
                   </div>
                   <div className="flex justify-between w-full">
-                    <p className="font-bold text-xl">Số lượng hình thật:</p>
+                    <p className="text-xl font-bold">Số lượng hình thật:</p>
                     <p className="text-lg">{processedImage.type == "singular" ? queue.quantity : queue.quantity * 2}</p>
                   </div>
                   <div className="flex justify-between w-full">
-                    <p className="font-bold text-xl">Ngày đặt:</p>
+                    <p className="text-xl font-bold">Ngày đặt:</p>
                     <p className="text-lg">{formatVietnameseDateUTC7(queue.createdAt)}</p>
                   </div>
                   <div className="flex justify-between w-full">
-                    <p className="font-bold text-xl">Giá:</p>
+                    <p className="text-xl font-bold">Giá:</p>
                     <p className="text-lg">{queue.price.toLocaleString("vi-VN")} VNĐ</p>
                   </div>
                 </div>
-                <div className="border rounded-md p-4 bg-yellow-50 flex-1 w-full flex items-center justify-center">
-                  <p className="text-center text-lg">Sau khi in, vui lòng kiểm tra lại số lượng.</p>
+                <div className="flex items-center justify-center flex-1 w-full p-4 border rounded-md bg-yellow-50">
+                  <p className="text-lg text-center">Sau khi in, vui lòng kiểm tra lại số lượng.</p>
                 </div>
                 <AlertDialog open={isAlreadyPrintedDialogOpen}>
                   <AlertDialogTrigger asChild>
@@ -276,7 +276,7 @@ const Print = ({processedImage, images, queue, refreshQueues}: PrintProps) => {
                           setIsDialogOpen(false);
                           setIsAlreadyPrintedDialogOpen(false);
                         }}
-                        className="cursor-pointer bg-red-500 hover:bg-red-600 hover:text-white text-white"
+                        className="text-white bg-red-500 cursor-pointer hover:bg-red-600 hover:text-white"
                       >
                         Hủy
                       </AlertDialogCancel>
@@ -294,7 +294,7 @@ const Print = ({processedImage, images, queue, refreshQueues}: PrintProps) => {
           </div>
           <AlertDialogFooter className="w-full">
             <AlertDialogCancel
-              className="w-full cursor-pointer bg-red-500 hover:bg-red-600 hover:text-white text-white"
+              className="w-full text-white bg-red-500 cursor-pointer hover:bg-red-600 hover:text-white"
               disabled={isPrinting}
             >
               Hủy

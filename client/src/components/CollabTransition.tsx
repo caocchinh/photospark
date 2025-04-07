@@ -154,7 +154,7 @@ const CollabTransition = () => {
           </motion.pattern>
 
           <text
-            className="text-6xl font-bold w-full"
+            className="w-full text-6xl font-bold"
             textAnchor="middle"
             x="50%"
             y="50%"

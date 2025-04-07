@@ -121,7 +121,7 @@ const MobileContent = () => {
       {photo && photo.theme && (
         <div className="relative w-full h-full">
           {frameImgStatus != "loaded" && (
-            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+            <div className="absolute -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2">
               <div className="loader"></div>
             </div>
           )}
@@ -132,21 +132,21 @@ const MobileContent = () => {
             )}
           >
             <div className={cn("flex items-center flex-col justify-evenly w-full h-full", isSelected ? "pointer-events-none" : null)}>
-              <h1 className="text-5xl font-semibold mb-4 flex gap-2 uppercase text-center mobile-frame-title">{t("Choose images")}</h1>
+              <h1 className="flex gap-2 mb-4 text-5xl font-semibold text-center uppercase mobile-frame-title">{t("Choose images")}</h1>
 
-              <div className="flex flex-col md:flex-row items-center justify-center w-full h-full gap-6">
-                <div className="relative h-full w-full flex items-center justify-center">
+              <div className="flex flex-col items-center justify-center w-full h-full gap-6 md:flex-row">
+                <div className="relative flex items-center justify-center w-full h-full">
                   <Drawer
                     open={isDrawerOpen}
                     onOpenChange={setIsDrawerOpen}
                   >
                     <DrawerContent className="h-[95vh] min-w-screen flex items-center justify-start flex-col">
                       <DrawerHeader className="w-[80%] flex items-center justify-center gap-2">
-                        <DrawerTitle className="text-xl font-semibold uppercase text-center">{t("Click on the image to choose")}</DrawerTitle>
+                        <DrawerTitle className="text-xl font-semibold text-center uppercase">{t("Click on the image to choose")}</DrawerTitle>
                         <Button
                           disabled={selectedImage.filter((img) => img !== null).length != photo.theme?.frame.slotCount}
                           onClick={() => setIsSheetOpen(true)}
-                          className="w-full flex items-center justify-center gap-2 text-sm px-14 py-3 rounded-sm cursor-pointer"
+                          className="flex items-center justify-center w-full gap-2 py-3 text-sm rounded-sm cursor-pointer px-14"
                         >
                           <GoArrowSwitch className="rotate-90" />
                           {t("Change image position")}
@@ -155,7 +155,7 @@ const MobileContent = () => {
                           className="w-full"
                           asChild
                         >
-                          <Button className="w-full rounded-sm bg-green-600 hover:bg-green-700 cursor-pointer">
+                          <Button className="w-full bg-green-600 rounded-sm cursor-pointer hover:bg-green-700">
                             {t("Finish")} <IoCheckmark size={25} />
                           </Button>
                         </DrawerClose>
@@ -195,10 +195,10 @@ const MobileContent = () => {
                   >
                     <SheetContent className="sm:!max-w-sm flex flex-col items-center justify-center">
                       <SheetHeader className="!pb-0">
-                        <SheetTitle className="text-2xl font-semibold uppercase text-center flex items-center justify-center">
+                        <SheetTitle className="flex items-center justify-center text-2xl font-semibold text-center uppercase">
                           {t("Change image position")}
                         </SheetTitle>
-                        <SheetDescription className="text-red-500 text-lg text-center">{t("Drag image to change position")}</SheetDescription>
+                        <SheetDescription className="text-lg text-center text-red-500">{t("Drag image to change position")}</SheetDescription>
                       </SheetHeader>
                       <Reorder.Group
                         values={slots}
@@ -213,7 +213,7 @@ const MobileContent = () => {
                           });
                         }}
                         as="div"
-                        className="grid grid-cols-1 gap-5 items-center justify-center p-4 pt-0"
+                        className="grid items-center justify-center grid-cols-1 gap-5 p-4 pt-0"
                       >
                         {slots.map((slotIndex, index) => (
                           <Reorder.Item
@@ -225,7 +225,7 @@ const MobileContent = () => {
                             draggable={true}
                           >
                             <div
-                              className="hover:cursor-grab active:cursor-grabbing z-50 flex items-center justify-center"
+                              className="z-50 flex items-center justify-center hover:cursor-grab active:cursor-grabbing"
                               style={{
                                 width: photo.theme!.frame.slotDimensions.width,
                               }}
@@ -234,7 +234,7 @@ const MobileContent = () => {
                                 <img
                                   src={selectedImage[index]?.href || ""}
                                   alt="image"
-                                  className="pointer-events-none object-cover w-full h-full"
+                                  className="object-cover w-full h-full pointer-events-none"
                                 />
                               )}
                             </div>
@@ -290,10 +290,10 @@ const MobileContent = () => {
                 </div>
                 <div className="flex flex-col w-[95%] mr-0 md:mr-6 md:w-[75%] gap-5 items-start justify-center ">
                   {photo && (
-                    <div className="w-full flex gap-4 flex-col items-center justify-center">
+                    <div className="flex flex-col items-center justify-center w-full gap-4">
                       <Button
                         onClick={() => setIsDrawerOpen(true)}
-                        className="w-full flex items-center justify-center gap-2 text-sm px-14 py-6 cursor-pointer active:opacity-80"
+                        className="flex items-center justify-center w-full gap-2 py-6 text-sm cursor-pointer px-14 active:opacity-80"
                       >
                         <IoMdImages />
                         {t("Choose images")}
@@ -306,12 +306,12 @@ const MobileContent = () => {
                             setIsDialogOpen(true);
                           }
                         }}
-                        className="w-full flex items-center justify-center gap-2 text-sm px-14 py-6 cursor-pointer active:opacity-80"
+                        className="flex items-center justify-center w-full gap-2 py-6 text-sm cursor-pointer px-14 active:opacity-80"
                       >
                         <GoArrowSwitch className="rotate-90" />
                         {t("Change image position")}
                       </Button>
-                      <div className="relative w-full h-full  active:opacity-80">
+                      <div className="relative w-full h-full active:opacity-80">
                         {photo.theme!.frame.slotCount - filteredSelectedImages.length == 0 && (
                           <GlowEffect
                             colors={["#FF5733", "#33FF57", "#3357FF", "#F1C40F"]}
@@ -323,7 +323,7 @@ const MobileContent = () => {
                           />
                         )}
                         <Button
-                          className="relative bg-green-700 hover:bg-green-700 w-full py-6 px-2 cursor-pointer"
+                          className="relative w-full px-2 py-6 bg-green-700 cursor-pointer hover:bg-green-700"
                           onClick={() => {
                             if (photo.theme!.frame.slotCount - filteredSelectedImages.length == 0 && !isSelected) {
                               setIsSelected(true);
@@ -339,12 +339,12 @@ const MobileContent = () => {
                       </div>
                       <Button
                         asChild
-                        className="relative  active:opacity-80"
+                        className="relative active:opacity-80"
                         onClick={() => setIsSelected(true)}
                       >
                         <Link
                           href={`/${photo?.previousProcessedImageId}/${ROUTES.FRAME}`}
-                          className="flex items-center justify-center gap-2 text-2xl px-14 py-6 w-full"
+                          className="flex items-center justify-center w-full gap-2 py-6 text-2xl px-14"
                         >
                           <FaArrowLeft />
                           {t("Choose another frame")}
@@ -368,7 +368,7 @@ const MobileContent = () => {
         onOpenChange={setIsDialogOpen}
       >
         <DialogContent>
-          <DialogHeader className="flex items-center justify-center flex-col gap-3">
+          <DialogHeader className="flex flex-col items-center justify-center gap-3">
             <DialogTitle>{t("Please choose images")}</DialogTitle>
             <DialogDescription>{t("You need to choose images to continue")}</DialogDescription>
           </DialogHeader>

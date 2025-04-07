@@ -13,7 +13,7 @@ import {useEffect, Suspense} from "react";
 import Head from "next/head";
 
 const LoadingIndicator = () => (
-  <div className="w-full h-full flex items-center justify-center">
+  <div className="flex items-center justify-center w-full h-full">
     <div className="loader2"></div>
   </div>
 );
@@ -63,7 +63,7 @@ const SelectEditPage = () => {
             <BreadcrumbItem>
               <DropdownMenu>
                 <DropdownMenuTrigger className="flex items-center gap-1 cursor-pointer">
-                  <BreadcrumbEllipsis className="h-4 w-4" />
+                  <BreadcrumbEllipsis className="w-4 h-4" />
                   <span className="sr-only">Toggle menu</span>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start">

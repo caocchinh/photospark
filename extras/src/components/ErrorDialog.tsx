@@ -6,7 +6,7 @@ const ErrorDialog = () => {
     <Dialog defaultOpen>
       <DialogContent className="flex flex-col items-center justify-center gap-4 border border-red-500">
         <DialogHeader>
-          <DialogTitle className="text-red-600 text-4xl font-bold uppercase">Đã có lỗi xảy ra</DialogTitle>
+          <DialogTitle className="text-4xl font-bold text-red-600 uppercase">Đã có lỗi xảy ra</DialogTitle>
         </DialogHeader>
         <MdWarning
           className="text-red-500"

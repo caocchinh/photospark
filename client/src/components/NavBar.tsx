@@ -51,7 +51,7 @@ const NavBar = () => {
 
   return (
     <header className={cn("bg-transparent pt-4 px-5 fixed z-50 w-max left-0 top-0", hideNavBar ? "hidden" : null)}>
-      <nav className=" flex w-max justify-between">
+      <nav className="flex justify-between w-max">
         <div
           className={cn(
             "w-max  shadow-lg rounded-md  bg-card text-card-foreground relative flex items-center justify-center flex-row gap-1",

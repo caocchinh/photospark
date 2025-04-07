@@ -39,13 +39,17 @@ const Preview = () => {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (initialCountDown > 0 && !isAllImagesLoaded) {
+    let timer: NodeJS.Timeout | undefined = undefined;
+
+    if (initialCountDown > 0 && !isAllImagesLoaded) {
+      timer = setTimeout(() => {
         setInitialCountDown((prev) => prev - 1);
         console.log(initialCountDown);
-      }
-    }, 1000);
-    return () => clearInterval(interval);
+      }, 1000);
+    }
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
   }, [initialCountDown, isAllImagesLoaded]);
 
   if (!processedImage) {
@@ -114,7 +118,7 @@ const Preview = () => {
           <LanguageBar />
         </div>
 
-        <div className="w-full flex flex-col lg:flex-row items-center justify-center gap-8 m-8 mt-3 h-max ">
+        <div className="flex flex-col items-center justify-center w-full gap-8 m-8 mt-3 lg:flex-row h-max ">
           <div className="relative min-w-[300px] sm:min-w-[400px] w-full md:w-max">
             <div className={cn(!isAllImagesLoaded && "pointer-events-none opacity-0")}>
               <FrameStage
@@ -132,18 +136,18 @@ const Preview = () => {
               />
             </div>
             {!isAllImagesLoaded && (
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center gap-10 flex-col sm:flex-row h-full">
+              <div className="absolute flex flex-col items-center justify-center h-full gap-10 -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 sm:flex-row">
                 <img
                   src="/work.gif"
                   alt="so cute"
                   className="w-[150px] h-[150px] mb-0 sm:mb-10"
                 />
-                <div className="flex items-center justify-center gap-2 flex-col">
+                <div className="flex flex-col items-center justify-center gap-2">
                   <LoadingSpinner size={100} />
 
                   <Button
                     variant="outline"
-                    className="mt-4 cursor-pointer flex items-center gap-2"
+                    className="flex items-center gap-2 mt-4 cursor-pointer"
                     disabled={isAllImagesLoaded || initialCountDown > 0}
                     onClick={() => {
                       if (initialCountDown <= 0) {
@@ -153,7 +157,7 @@ const Preview = () => {
                     }}
                   >
                     {t("Reload")}
-                    <LuRefreshCcw className="ml-1 h-4 w-4" />
+                    <LuRefreshCcw className="w-4 h-4 ml-1" />
                   </Button>
                 </div>
               </div>
@@ -185,7 +189,7 @@ const Preview = () => {
                     {!isAllImagesLoaded || isDownloading ? <LoadingSpinner size={25} /> : <AiOutlineDownload size={27} />}
                   </div>
                 </PopoverTrigger>
-                <PopoverContent className="flex items-center justify-center gap-4 p-4 flex-col">
+                <PopoverContent className="flex flex-col items-center justify-center gap-4 p-4">
                   <h3 className="text-xl font-light">{t("Download options")}</h3>
                   <Button
                     className="w-full cursor-pointer"
@@ -233,7 +237,7 @@ const Preview = () => {
                   <IoQrCodeSharp size={27} />
                 </div>
               </DialogTrigger>
-              <DialogContent className="flex items-center justify-center gap-2 w-max p-9 flex-col">
+              <DialogContent className="flex flex-col items-center justify-center gap-2 w-max p-9">
                 <DialogTitle className="sr-only">{t("QR Code")}</DialogTitle>
                 <QRCodeCanvas
                   ref={qrRef}
@@ -255,7 +259,7 @@ const Preview = () => {
                   }}
                 />
                 <Button
-                  className="cursor-pointer flex items-center gap-2 mt-3 w-full rounded-sm active:opacity-80"
+                  className="flex items-center w-full gap-2 mt-3 rounded-sm cursor-pointer active:opacity-80"
                   onClick={() => {
                     if (qrRef.current) {
                       const canvas = qrRef.current;
@@ -289,7 +293,7 @@ const Preview = () => {
             <div className="w-full h-[50px] text-white cursor-pointer text-xl bg-[#f97316] active:opacity-80 hover:opacity-90 hover:bg-[#f97316] rounded-sm flex items-center justify-center gap-3">
               <Link
                 href={`/${processedImage.id}/edit`}
-                className="flex items-center justify-center gap-2 h-full w-full "
+                className="flex items-center justify-center w-full h-full gap-2 "
               >
                 {t("Edit image")}
                 <MdModeEdit
@@ -302,7 +306,7 @@ const Preview = () => {
             <div className="w-full h-[50px] text-white cursor-pointer text-xl bg-[#f97316] active:opacity-80 hover:opacity-90 hover:bg-[#f97316] rounded-sm flex items-center justify-center gap-3">
               <Link
                 href={`/${processedImage.id}/print`}
-                className="flex items-center justify-center gap-2 h-full w-full"
+                className="flex items-center justify-center w-full h-full gap-2"
               >
                 {t("Print more")}
                 <IoCopySharp

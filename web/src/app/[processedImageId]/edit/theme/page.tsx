@@ -69,7 +69,7 @@ const ThemePage = () => {
       {photo && photo.frameType && (
         <div className="flex flex-col items-center justify-center w-full gap-12">
           <div className="flex flex-col items-center justify-center gap-8 w-[80%]">
-            <CardTitle className="text-5xl font-semibold uppercase text-center">{t("Choose a theme")}</CardTitle>
+            <CardTitle className="text-5xl font-semibold text-center uppercase">{t("Choose a theme")}</CardTitle>
             <CardContent className="flex items-center justify-center gap-8 flex-wrap w-[90%]">
               {ThemeSelectButton.map((item, index) => {
                 const hasMatchingFrame = FrameOptions[item.theme].some((frame) => frame.type === photo.frameType);
@@ -88,7 +88,7 @@ const ThemePage = () => {
                         width={220}
                         alt={item.title}
                         src={item.image_src}
-                        className="rounded w-full h-full"
+                        className="w-full h-full rounded"
                         style={item.style}
                       />
                     </div>

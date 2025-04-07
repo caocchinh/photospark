@@ -138,13 +138,13 @@ const Table = ({availableQueues}: {availableQueues: (typeof QueueTable.$inferSel
       <NetworkStatus />
       <div className="w-[100%] items-start justify-center flex gap-8">
         <div className="flex items-start justify-between flex-col w-[50%]">
-          <div className="flex items-center gap-2 w-full">
+          <div className="flex items-center w-full gap-2">
             <div className="flex items-center gap-2 ">
               <div
                 className="flex items-center gap-2 cursor-pointer"
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               >
-                <Search className="h-4 w-4 text-muted-foreground cursor-pointer" />
+                <Search className="w-4 h-4 cursor-pointer text-muted-foreground" />
                 <Label className="text-sm font-medium cursor-pointer">Lọc theo:</Label>
               </div>
               <DropdownMenu
@@ -154,10 +154,10 @@ const Table = ({availableQueues}: {availableQueues: (typeof QueueTable.$inferSel
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="ghost"
-                    className="border border-slate-300 cursor-pointer"
+                    className="border cursor-pointer border-slate-300"
                   >
                     {QUEUE_TITLE_MAPING[selectedFilterColumn as keyof typeof QUEUE_TITLE_MAPING]}
-                    <ChevronDown className="ml-2 h-4 w-4" />
+                    <ChevronDown className="w-4 h-4 ml-2" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
@@ -176,7 +176,7 @@ const Table = ({availableQueues}: {availableQueues: (typeof QueueTable.$inferSel
               </DropdownMenu>
             </div>
             <Button
-              className="cursor-pointer flex items-center gap-2"
+              className="flex items-center gap-2 cursor-pointer"
               variant="outline"
               onClick={refreshQueues}
               disabled={isRefreshing || !isSocketConnected || isRefreshButtonDisabled}
@@ -239,7 +239,7 @@ const Table = ({availableQueues}: {availableQueues: (typeof QueueTable.$inferSel
                 <LoadingSpinner size={100} />
                 <Button
                   variant="outline"
-                  className="mt-4 cursor-pointer flex items-center gap-2"
+                  className="flex items-center gap-2 mt-4 cursor-pointer"
                   onClick={async () => {
                     try {
                       setImageLoaded(false);
@@ -268,7 +268,7 @@ const Table = ({availableQueues}: {availableQueues: (typeof QueueTable.$inferSel
                   }}
                 >
                   Tải lại hình
-                  <LuRefreshCcw className="ml-1 h-4 w-4" />
+                  <LuRefreshCcw className="w-4 h-4 ml-1" />
                 </Button>
               </div>
             )}

@@ -7,7 +7,7 @@ const ErrorDialog = () => {
     <Dialog defaultOpen>
       <DialogContent className="flex flex-col items-center justify-center gap-4 border border-red-500">
         <DialogHeader>
-          <DialogTitle className="text-red-600 text-4xl font-semibold uppercase">{t("An error occurred")}</DialogTitle>
+          <DialogTitle className="text-4xl font-semibold text-red-600 uppercase">{t("An error occurred")}</DialogTitle>
         </DialogHeader>
         <MdWarning
           className="text-red-500"

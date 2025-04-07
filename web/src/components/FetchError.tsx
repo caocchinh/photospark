@@ -19,7 +19,7 @@ const FetchError = ({type}: {type: "image" | "video" | "queue"}) => {
     <Dialog defaultOpen={true}>
       <DialogContent className="flex flex-col items-center justify-center gap-4 border border-red-500 min-h-[330px]">
         <div className="flex flex-col items-center justify-center gap-4">
-          <DialogTitle className="text-red-500 text-3xl font-semibold text-center uppercase">
+          <DialogTitle className="text-3xl font-semibold text-center text-red-500 uppercase">
             {t("Error loading")} {getErrorTypeText()}
           </DialogTitle>
           {type === "image" && <MdOutlineHideImage size={100} />}
@@ -27,16 +27,16 @@ const FetchError = ({type}: {type: "image" | "video" | "queue"}) => {
           {type === "queue" && <PiPrinter size={100} />}
           <DialogDescription className="text-xl text-center w-[90%]">{t("Please try again later, or contact VTEAM for support!")}</DialogDescription>
         </div>
-        <div className="flex items-center justify-center gap-4 w-full">
+        <div className="flex items-center justify-center w-full gap-4">
           <Button
             onClick={() => window.location.reload()}
-            className="flex items-center justify-center gap-2 cursor-pointer w-1/2 bg-red-500 text-white"
+            className="flex items-center justify-center w-1/2 gap-2 text-white bg-red-500 cursor-pointer"
           >
             {t("Refresh the application")}
             <IoRefresh />
           </Button>
           <DialogClose asChild>
-            <Button className="flex items-center justify-center gap-2 cursor-pointer w-1/2">{t("Close")}</Button>
+            <Button className="flex items-center justify-center w-1/2 gap-2 cursor-pointer">{t("Close")}</Button>
           </DialogClose>
         </div>
       </DialogContent>

@@ -158,7 +158,7 @@ const LayoutPage = () => {
               chosen || autoSelectCountdownTimer <= 0 ? "pointer-events-none" : null
             )}
           >
-            <div className="flex items-center flex-col justify-center gap-4 w-max">
+            <div className="flex flex-col items-center justify-center gap-4 w-max">
               <h1 className="text-5xl font-semibold uppercase">{t("Choose a frame")}</h1>
               <div className="relative rounded border-2 border-gray-500 flex items-center justify-center py-8 px-2 bg-gray-100 w-[50vw]">
                 <Spotlight
@@ -256,7 +256,7 @@ const LayoutPage = () => {
                     onValueChange={(value) => {
                       updatePhotoQuantity(parseInt(value!) / (photo.frameType == "singular" ? 1 : 2));
                     }}
-                    className="rounded-lg bg-green-700"
+                    className="bg-green-700 rounded-lg"
                     transition={{
                       ease: "easeInOut",
                       duration: 0.2,
@@ -281,7 +281,7 @@ const LayoutPage = () => {
                 </div>
               </div>
               <ScrollArea className="w-[350px] h-[35%]">
-                <div className="flex gap-4 flex-wrap items-center justify-center w-full">
+                <div className="flex flex-wrap items-center justify-center w-full gap-4">
                   {filteredFrames.map((item, index) => {
                     const thumbnail = item.thumbnail;
                     if (!thumbnail) return null;
@@ -302,7 +302,7 @@ const LayoutPage = () => {
                           height={100}
                           width={100}
                           alt="Option"
-                          className="hover:cursor-pointer rounded w-full h-full"
+                          className="w-full h-full rounded hover:cursor-pointer"
                         />
 
                         <IoIosCheckmark
@@ -316,7 +316,7 @@ const LayoutPage = () => {
                 </div>
               </ScrollArea>
 
-              <div className="flex flex-col gap-4 w-full">
+              <div className="flex flex-col w-full gap-4">
                 <Link
                   href={ROUTES.THEME}
                   className="flex  text-center font-light items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-2 hover:opacity-[85%] w-full"

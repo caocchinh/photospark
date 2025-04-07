@@ -6,7 +6,7 @@ import {SlidingNumber} from "@/components/ui/sliding-number";
 import usePreventNavigation from "@/hooks/usePreventNavigation";
 import {ROUTES} from "@/constants/routes";
 import {usePhotoState} from "@/context/PhotoStateContext";
-import { useRouter } from "next/navigation";
+import {useRouter} from "next/navigation";
 
 const ReviewPage = () => {
   const {photo, setPhoto} = usePhotoState();
@@ -18,7 +18,6 @@ const ReviewPage = () => {
       router.push(ROUTES.HOME);
       return;
     }
-   
   }, [photo, router]);
   const {navigateTo} = usePreventNavigation();
 
@@ -26,22 +25,26 @@ const ReviewPage = () => {
   usePreventNavigation();
 
   useEffect(() => {
+    let timer: NodeJS.Timeout | undefined = undefined;
+
     if (timeLeft > 0) {
-      const timerId = setInterval(() => {
+      timer = setTimeout(() => {
         setTimeLeft((prevTime) => prevTime - 1);
       }, 1000);
       if (timeLeft == 1) {
         setPhoto!((prev) => ({...prev!, isTransition: true}));
       }
-      return () => clearInterval(timerId);
     } else {
       setPhoto!(undefined);
       navigateTo(ROUTES.HOME);
     }
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
   }, [navigateTo, setPhoto, timeLeft]);
 
   return (
-    <div className="w-full h-full flex items-center justify-center gap-6 flex-col">
+    <div className="flex flex-col items-center justify-center w-full h-full gap-6">
       {photo && (
         <div className="flex items-center justify-around gap-4">
           <video
@@ -55,10 +58,10 @@ const ReviewPage = () => {
               if (el) el.playbackRate = 8;
             }}
           />
-          <div className="flex flex-col gap-5 items-center justify-center">
-            <div className="flex gap-2 flex-col items-center justify-center">
+          <div className="flex flex-col items-center justify-center gap-5">
+            <div className="flex flex-col items-center justify-center gap-2">
               <h1 className="text-4xl font-semibold text-center">{t("Please go outside to take the photo")}</h1>
-              <span className="text-rose-500 text-4xl font-bold ">
+              <span className="text-4xl font-bold text-rose-500 ">
                 <SlidingNumber
                   value={timeLeft}
                   padStart={true}

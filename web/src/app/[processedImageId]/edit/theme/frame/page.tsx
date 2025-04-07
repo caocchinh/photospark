@@ -110,7 +110,7 @@ const FrameEditpage = () => {
       {photo && photo.theme && (
         <div className={cn("flex items-center w-full justify-center h-full", chosen ? "pointer-events-none" : null)}>
           <div className="w-[90%] sm:w-[80%] flex flex-col gap-6 ">
-            <div className="flex items-center justify-between w-full sm:flex-row flex-col gap-4 sm:gap-0">
+            <div className="flex flex-col items-center justify-between w-full gap-4 sm:flex-row sm:gap-0">
               <Link
                 href={`/${photo?.previousProcessedImageId}/${ROUTES.THEME}`}
                 className="w-[250px] flex text-center items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-2 hover:opacity-[85%] order-1 sm:order-0 active:opacity-80"
@@ -127,7 +127,7 @@ const FrameEditpage = () => {
                   <BreadcrumbItem>
                     <DropdownMenu>
                       <DropdownMenuTrigger className="flex items-center gap-1 cursor-pointer">
-                        <BreadcrumbEllipsis className="h-4 w-4" />
+                        <BreadcrumbEllipsis className="w-4 h-4" />
                         <span className="sr-only">Toggle menu</span>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="start">
@@ -153,9 +153,9 @@ const FrameEditpage = () => {
                 </BreadcrumbList>
               </Breadcrumb>
             </div>
-            <h1 className="text-5xl font-semibold uppercase text-center">{t("Choose a frame")}</h1>
+            <h1 className="text-5xl font-semibold text-center uppercase">{t("Choose a frame")}</h1>
 
-            <div className="relative flex items-center justify-center flex-col my-4 px-2 w-full gap-5">
+            <div className="relative flex flex-col items-center justify-center w-full gap-5 px-2 my-4">
               <Carousel
                 setApi={setApi}
                 plugins={[WheelGesturesPlugin()]}
@@ -192,7 +192,7 @@ const FrameEditpage = () => {
                 </CarouselContent>
               </Carousel>
 
-              <div className="flex gap-4 items-center justify-center -mt-4">
+              <div className="flex items-center justify-center gap-4 -mt-4">
                 <MdOutlineArrowBackIos
                   size={30}
                   className="text-primary hover:cursor-pointer carousel-pointer"

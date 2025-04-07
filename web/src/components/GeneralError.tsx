@@ -19,7 +19,7 @@ const GeneralError = ({error, message, showRefreshButton = true}: {error: boolea
     <AlertDialog open={error}>
       <AlertDialogContent className="flex flex-col items-center justify-center gap-4 border border-red-500">
         <AlertDialogHeader>
-          <AlertDialogTitle className="text-red-600 text-4xl font-bold">{t("An error occurred")}</AlertDialogTitle>
+          <AlertDialogTitle className="text-4xl font-bold text-red-600">{t("An error occurred")}</AlertDialogTitle>
         </AlertDialogHeader>
         <MdWarning
           className="text-red-500"

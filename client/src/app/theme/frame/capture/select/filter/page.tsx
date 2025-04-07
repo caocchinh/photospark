@@ -220,14 +220,18 @@ const FilterPage = () => {
   }, [isSocketConnected, isMediaUploaded, photo, socket, isOnline]);
 
   useEffect(() => {
+    let timer: NodeJS.Timeout | undefined = undefined;
+
     if (isSocketConnected && isOnline && !printed && frameImgStatus === "loaded") {
       if (timeLeft > 0) {
-        const timerId = setInterval(() => {
+        timer = setTimeout(() => {
           setTimeLeft((prevTime) => prevTime - 1);
         }, 1000);
-        return () => clearInterval(timerId);
       }
     }
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
   }, [timeLeft, isSocketConnected, isOnline, printed, frameImgStatus]);
 
   useEffect(() => {
@@ -248,7 +252,7 @@ const FilterPage = () => {
 
   return (
     <>
-      <div className="w-full h-full relative flex items-center justify-center">
+      <div className="relative flex items-center justify-center w-full h-full">
         <div
           className={cn(
             "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full flex items-center justify-center",
@@ -266,8 +270,8 @@ const FilterPage = () => {
           )}
         >
           {photo && frameImg && (
-            <div className="flex items-center justify-evenly gap-3 h-max flex-col">
-              <div className="flex items-center justify-center flex-row gap-6">
+            <div className="flex flex-col items-center gap-3 justify-evenly h-max">
+              <div className="flex flex-row items-center justify-center gap-6">
                 <div className="frame-container">
                   <Stage
                     ref={stageRef}
@@ -334,10 +338,10 @@ const FilterPage = () => {
                     </Layer>
                   </Stage>
                 </div>
-                <div className="flex items-center justify-center flex-col gap-5">
-                  <div className="flex gap-2 items-center justify-center mb-4">
-                    <h1 className="text-4xl font-semibold  uppercase">{t("Choose a filter")}</h1>
-                    <span className="text-rose-500 text-4xl font-bold ">
+                <div className="flex flex-col items-center justify-center gap-5">
+                  <div className="flex items-center justify-center gap-2 mb-4">
+                    <h1 className="text-4xl font-semibold uppercase">{t("Choose a filter")}</h1>
+                    <span className="text-4xl font-bold text-rose-500 ">
                       <SlidingNumber
                         value={timeLeft}
                         padStart={true}
@@ -345,7 +349,7 @@ const FilterPage = () => {
                     </span>
                   </div>
                   <ScrollArea className=" h-[60vh] w-[100%] ">
-                    <div className="flex-wrap flex gap-4 items-center justify-center">
+                    <div className="flex flex-wrap items-center justify-center gap-4">
                       {FILTERS.map((item, index) => (
                         <div
                           onMouseDown={() => playClick()}
@@ -369,7 +373,7 @@ const FilterPage = () => {
                       ))}
                     </div>
                   </ScrollArea>
-                  <div className="flex gap-2 w-full">
+                  <div className="flex w-full gap-2">
                     <Button
                       className="w-full mt-2 font-light"
                       onClick={selectRandomFilter}
@@ -378,7 +382,7 @@ const FilterPage = () => {
                       {t("Random filter")} - {FILTERS.find((item) => item.value == filter)?.name}
                     </Button>
                     <Button
-                      className="w-full mt-2 flex items-center justify-center gap-1 font-light"
+                      className="flex items-center justify-center w-full gap-1 mt-2 font-light"
                       onClick={() => setFilter(null)}
                       onMouseDown={() => playClick()}
                     >

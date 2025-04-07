@@ -22,7 +22,7 @@ const NavBar = ({captureDate}: {captureDate?: Date}) => {
             }}
             size={70}
           />
-          <div className=" flex w-max justify-center items-center gap-2">
+          <div className="flex items-center justify-center gap-2 w-max">
             <Image
               src="/vteam-logo.webp"
               height={50}

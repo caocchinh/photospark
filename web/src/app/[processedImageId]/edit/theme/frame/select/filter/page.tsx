@@ -13,7 +13,7 @@ import {useEffect} from "react";
 import Head from "next/head";
 
 const LoadingIndicator = () => (
-  <div className="w-full h-full flex items-center justify-center">
+  <div className="flex items-center justify-center w-full h-full">
     <div className="loader2"></div>
   </div>
 );
@@ -54,7 +54,7 @@ const FilterEditPage = () => {
         />
       </Head>
       <div className="w-full h-full p-4">
-        <Breadcrumb className="-mt-[60px] mb-[40px]  flex items-center justify-end sm:w-[95%] w-[90%]">
+        <Breadcrumb className="-mt-[60px] mb-[40px] flex items-center justify-end sm:w-[95%] w-[90%]">
           <BreadcrumbList>
             <BreadcrumbItem>
               <Link href={`/${photo?.previousProcessedImageId}/`}>{t("Home")}</Link>
@@ -63,7 +63,7 @@ const FilterEditPage = () => {
             <BreadcrumbItem>
               <DropdownMenu>
                 <DropdownMenuTrigger className="flex items-center gap-1 cursor-pointer">
-                  <BreadcrumbEllipsis className="h-4 w-4" />
+                  <BreadcrumbEllipsis className="w-4 h-4" />
                   <span className="sr-only">Toggle menu</span>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start">

@@ -125,16 +125,20 @@ const SelectPage = () => {
   const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
+    let timer: NodeJS.Timeout | undefined = undefined;
+
     if (isSocketConnected && isOnline && !isSelected && frameImgStatus === "loaded") {
       if (timeLeft > 0) {
-        const timerId = setInterval(() => {
+        timer = setTimeout(() => {
           setTimeLeft((prevTime) => prevTime - 1);
         }, 1000);
-        return () => clearInterval(timerId);
       } else {
         setIsTimeOver(true);
       }
     }
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
   }, [timeLeft, isSocketConnected, isOnline, isSelected, frameImgStatus]);
 
   const handleSelect = useCallback(
@@ -212,7 +216,7 @@ const SelectPage = () => {
   }, [filteredSelectedImages, isLastImageUploaded, isTimeOver, navigateTo, photo, setSelectedImages, videoProcessed]);
 
   return (
-    <div className="w-full h-full relative flex items-center justify-center">
+    <div className="relative flex items-center justify-center w-full h-full">
       <div
         className={cn(
           "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full flex items-center justify-center",
@@ -229,7 +233,7 @@ const SelectPage = () => {
       >
         <div className={cn("flex items-center justify-evenly w-full h-full", isTimeOver || isSelected ? "pointer-events-none" : null)}>
           <div className="flex flex-col items-center justify-center h-full">
-            <div className="relative h-full flex items-center justify-center">
+            <div className="relative flex items-center justify-center h-full">
               <div className="frame-container">
                 <Reorder.Group
                   values={slots}
@@ -244,7 +248,7 @@ const SelectPage = () => {
                     });
                   }}
                   as="div"
-                  className="flex absolute flex-col z-50"
+                  className="absolute z-50 flex flex-col"
                   style={{
                     gap:
                       isSingle == 2 && photo
@@ -281,7 +285,7 @@ const SelectPage = () => {
                           width: FRAME_WIDTH / isSingle,
                           height: photo ? photo.theme!.frame.slotDimensions.height : 0,
                         }}
-                        className="hover:cursor-grab active:cursor-grabbing z-50 bg-transparent"
+                        className="z-50 bg-transparent hover:cursor-grab active:cursor-grabbing"
                       ></div>
                     </Reorder.Item>
                   ))}
@@ -332,9 +336,9 @@ const SelectPage = () => {
           </div>
           <div className="flex flex-col w-[60%] gap-11 items-start justify-center ">
             {photo && (
-              <div className="flex gap-2 w-full item-center justify-center ">
-                <h1 className="text-5xl font-semibold mb-4 flex gap-2 uppercase">{t("Choose pictures")} </h1>
-                <span className="text-rose-500 text-5xl font-bold ">
+              <div className="flex justify-center w-full gap-2 item-center ">
+                <h1 className="flex gap-2 mb-4 text-5xl font-semibold uppercase">{t("Choose pictures")} </h1>
+                <span className="text-5xl font-bold text-rose-500 ">
                   <SlidingNumber
                     value={timeLeft}
                     padStart={true}
@@ -343,7 +347,7 @@ const SelectPage = () => {
               </div>
             )}
 
-            <div className="grid grid-cols-3 gap-2 items-center justify-center justify-items-center w-full">
+            <div className="grid items-center justify-center w-full grid-cols-3 gap-2 justify-items-center">
               {photo && (
                 <>
                   {photo.images.map((item, index) => (

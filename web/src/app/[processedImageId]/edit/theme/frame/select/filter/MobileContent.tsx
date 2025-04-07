@@ -108,7 +108,7 @@ const MobileContent = () => {
     <>
       <div className="relative w-full h-full">
         {frameImgStatus != "loaded" && (
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+          <div className="absolute -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2">
             <div className="loader"></div>
           </div>
         )}
@@ -118,9 +118,9 @@ const MobileContent = () => {
             frameImgStatus != "loaded" ? "opacity-0 pointer-events-none" : "opacity-100"
           )}
         >
-          <h1 className="text-5xl font-semibold mb-4 flex gap-2 uppercase text-center mobile-frame-title">{t("Choose a filter")}</h1>
+          <h1 className="flex gap-2 mb-4 text-5xl font-semibold text-center uppercase mobile-frame-title">{t("Choose a filter")}</h1>
           {photo && frameImg && (
-            <div className="flex items-center justify-evenly gap-4 h-max flex-col md:flex-row w-full">
+            <div className="flex flex-col items-center w-full gap-4 justify-evenly h-max md:flex-row">
               <div className="pointer-events-none mobile-frame-container">
                 <Stage
                   ref={stageRef}
@@ -168,7 +168,7 @@ const MobileContent = () => {
                   ))}
                 </Stage>
               </div>
-              <div className="flex items-center justify-center flex-col gap-5 w-full">
+              <div className="flex flex-col items-center justify-center w-full gap-5">
                 <Drawer
                   open={isDrawerOpen}
                   onOpenChange={setIsDrawerOpen}
@@ -184,7 +184,7 @@ const MobileContent = () => {
                   </DrawerTrigger>
                   <DrawerContent className="h-[95vh]">
                     <DrawerHeader>
-                      <DrawerTitle className="text-center uppercase text-xl mb-2 flex items-center justify-center gap-2 flex-wrap">
+                      <DrawerTitle className="flex flex-wrap items-center justify-center gap-2 mb-2 text-xl text-center uppercase">
                         {t("Click on the image to choose filter")}{" "}
                         {isFilterLoading ? (
                           <LoadingSpinner
@@ -194,7 +194,7 @@ const MobileContent = () => {
                         ) : null}
                       </DrawerTitle>
                       <ScrollArea className={cn(" h-[500px] w-[100%]", isFilterLoading ? "pointer-events-none" : null)}>
-                        <div className="grid grid-cols-3 gr md:grid-cols-4 gap-4 items-center justify-center">
+                        <div className="grid items-center justify-center grid-cols-3 gap-4 gr md:grid-cols-4">
                           {FILTERS.map((item, index) => (
                             <div
                               ref={(el) => {
@@ -221,7 +221,7 @@ const MobileContent = () => {
                   </DrawerContent>
                 </Drawer>
                 <Button
-                  className="w-full  rounded-sm cursor-pointer flex items-center justify-center gap-2"
+                  className="flex items-center justify-center w-full gap-2 rounded-sm cursor-pointer"
                   onClick={selectRandomFilter}
                   disabled={isFilterLoading}
                 >
@@ -234,7 +234,7 @@ const MobileContent = () => {
                   )}
                 </Button>
                 <Button
-                  className="w-full flex items-center justify-center gap-1 rounded-sm cursor-pointer active:opacity-80"
+                  className="flex items-center justify-center w-full gap-1 rounded-sm cursor-pointer active:opacity-80"
                   onClick={() => setFilter(null)}
                   disabled={isFilterLoading}
                 >
@@ -271,15 +271,15 @@ const MobileContent = () => {
                         />
                       </Button>
                     </AlertDialogTrigger>
-                    <AlertDialogContent className="flex items-center justify-center gap-4 flex-col">
+                    <AlertDialogContent className="flex flex-col items-center justify-center gap-4">
                       <RxCross2
                         size={25}
                         color="red"
                         className={cn("absolute top-[11px] right-[11px] cursor-pointer", isUploading ? "pointer-events-none" : null)}
                         onClick={() => setIsOpen(false)}
                       />
-                      <AlertDialogHeader className="flex items-center justify-center gap-4 flex-col">
-                        <AlertDialogTitle className="text-center uppercase text-3xl">{t("Are you sure?")}</AlertDialogTitle>
+                      <AlertDialogHeader className="flex flex-col items-center justify-center gap-4">
+                        <AlertDialogTitle className="text-3xl text-center uppercase">{t("Are you sure?")}</AlertDialogTitle>
                       </AlertDialogHeader>
                       <img
                         src="/heart.gif"
@@ -287,7 +287,7 @@ const MobileContent = () => {
                         className="w-[45%]"
                         crossOrigin="anonymous"
                       />
-                      <div className="flex items-center justify-center gap-3 flex-col w-full">
+                      <div className="flex flex-col items-center justify-center w-full gap-3">
                         <AlertDialogCancel
                           className={cn(
                             "bg-red-600 hover:bg-red-700 w-full text-white hover:text-white cursor-pointer",
@@ -297,7 +297,7 @@ const MobileContent = () => {
                           {t("Cancel")}
                         </AlertDialogCancel>
                         <Button
-                          className="bg-green-600 hover:bg-green-700 w-full text-white hover:text-white cursor-pointer"
+                          className="w-full text-white bg-green-600 cursor-pointer hover:bg-green-700 hover:text-white"
                           onClick={handleImageUpload}
                           disabled={isMediaUploaded}
                         >
@@ -321,7 +321,7 @@ const MobileContent = () => {
                 >
                   <Link
                     href={`/${photo?.previousProcessedImageId}/${ROUTES.SELECT}`}
-                    className="flex items-center justify-center gap-2 text-2xl px-14 py-6 w-full"
+                    className="flex items-center justify-center w-full gap-2 py-6 text-2xl px-14"
                   >
                     <FaArrowLeft />
                     {t("Choose other images")}

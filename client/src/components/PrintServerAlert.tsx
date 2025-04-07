@@ -27,19 +27,19 @@ const PrintServerAlert = () => {
           </TextShimmer>
         </AlertDialogTitle>
         <div className="relative">
-          <PiPrinter className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-9 h-9" />
+          <PiPrinter className="absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 w-9 h-9" />
           <LoadingSpinner size={75} />
         </div>
         <AlertDialogDescription className="text-lg text-center">{t("Please wait while we connect to the print server")}</AlertDialogDescription>
-        <div className="bg-red-500 flex flex-col gap-2 rounded-lg px-4 py-2 w-full">
-          <div className="flex items-center gap-2 w-full group">
+        <div className="flex flex-col w-full gap-2 px-4 py-2 bg-red-500 rounded-lg">
+          <div className="flex items-center w-full gap-2 group">
             <IoMdArrowDropright
               color="white"
               size={20}
             />
             <h4 className="text-white group-hover:underline">cd server</h4>
           </div>
-          <div className="flex items-center gap-2 w-full group">
+          <div className="flex items-center w-full gap-2 group">
             <IoMdArrowDropright
               color="white"
               size={20}

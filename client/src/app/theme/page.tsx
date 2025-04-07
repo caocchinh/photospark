@@ -51,14 +51,14 @@ const ThemePage = () => {
     <>
       {photo && (
         <div className={cn("w-full h-full flex items-center", autoSelectCountdownTimer <= 0 ? "pointer-events-none" : null)}>
-          <div className="flex items-start justify-evenly w-full">
-            <div className="flex flex-col w-max items-center justify-center gap-6">
+          <div className="flex items-start w-full justify-evenly">
+            <div className="flex flex-col items-center justify-center gap-6 w-max">
               <CardTitle className="text-5xl uppercase">{t("Current layout")}</CardTitle>
               {photo.frameType == "singular" ? <SingularLayout /> : <DoubleLayout />}
               <Link
                 onMouseDown={() => playClick()}
                 href={ROUTES.HOME}
-                className="w-full self-start ext-white py-2 rounded flex items-center justify-center gap-2 bg-black text-white"
+                className="flex items-center self-start justify-center w-full gap-2 py-2 text-white bg-black rounded ext-white"
               >
                 <FaArrowLeftLong />
                 {t("Choose another layout")}
@@ -85,7 +85,7 @@ const ThemePage = () => {
                           width={220}
                           alt={item.title}
                           src={item.image_src}
-                          className="rounded w-full h-full"
+                          className="w-full h-full rounded"
                           style={item.style}
                         />
                       </div>

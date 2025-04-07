@@ -26,9 +26,9 @@ const LayoutEditPage = () => {
   };
 
   return (
-    <div className="w-full min-h-screen flex items-start justify-center bg-white ">
+    <div className="flex items-start justify-center w-full min-h-screen bg-white ">
       <div className="flex flex-col w-[80%] gap-12 items-center justify-center">
-        <div className="flex items-center justify-between w-full sm:flex-row flex-col gap-4 sm:gap-0">
+        <div className="flex flex-col items-center justify-between w-full gap-4 sm:flex-row sm:gap-0">
           <Link
             href={`/${photo?.previousProcessedImageId}/`}
             className="flex text-center w-[90%] sm:w-[280px] items-center self-center sm:self-start justify-center gap-2 bg-foreground text-background rounded px-4 py-2 hover:opacity-[85%] order-1 sm:order-0 active:opacity-80"
@@ -48,8 +48,8 @@ const LayoutEditPage = () => {
             </BreadcrumbList>
           </Breadcrumb>
         </div>
-        <h1 className="text-5xl font-semibold uppercase text-center">{t("Choose a layout")}</h1>
-        <div className="flex items-center justify-center gap-8 flex-wrap w-full">
+        <h1 className="text-5xl font-semibold text-center uppercase">{t("Choose a layout")}</h1>
+        <div className="flex flex-wrap items-center justify-center w-full gap-8">
           <Link
             href={`/${photo?.previousProcessedImageId}/edit/theme`}
             className=" cursor-pointer hover:scale-[1.02] active:scale-[0.99] flex items-center justify-center"

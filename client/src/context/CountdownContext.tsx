@@ -12,14 +12,12 @@ interface CountdownContextType {
   autoSelectCountdownTimer: number;
   shouldRunCountdown: boolean;
   setShouldRunCountdown: React.Dispatch<React.SetStateAction<boolean>> | undefined;
-  resetCountdown: () => void;
 }
 
 const CountdownContext = createContext<CountdownContextType>({
   autoSelectCountdownTimer: AUTO_SELECT_COUNTDOWN_DURATION,
   shouldRunCountdown: false,
   setShouldRunCountdown: undefined,
-  resetCountdown: () => {},
 });
 
 export const CountdownProvider = ({children}: {children: ReactNode}) => {
@@ -35,7 +33,6 @@ export const CountdownProvider = ({children}: {children: ReactNode}) => {
   const isValidPageForCountdown = useMemo(() => {
     return pathName === ROUTES.HOME || pathName === ROUTES.THEME || pathName === ROUTES.FRAME;
   }, [pathName]);
-
 
   // Update refs to keep latest values
   useEffect(() => {
@@ -66,15 +63,14 @@ export const CountdownProvider = ({children}: {children: ReactNode}) => {
 
   // Countdown timer and auto-navigation
   useEffect(() => {
+    let timer: NodeJS.Timeout | undefined = undefined;
+
     if (shouldRunCountdown && photoRef.current && isSocketConnected && isOnline) {
       if (autoSelectCountdownTimer > 0) {
-        const timer = setTimeout(() => {
+        timer = setTimeout(() => {
           setAutoSelectCountdownTimer(autoSelectCountdownTimer - 1);
         }, 1000);
-        return () => clearTimeout(timer);
-      }
-
-      if (autoSelectCountdownTimer <= 0 && setPhoto) {
+      } else if (autoSelectCountdownTimer <= 0 && setPhoto) {
         let themeToUse = photoRef.current.theme;
         const frameType = photoRef.current!.frameType;
 
@@ -117,13 +113,13 @@ export const CountdownProvider = ({children}: {children: ReactNode}) => {
         routerRef.current.push(ROUTES.CAPTURE);
       }
     }
-  }, [shouldRunCountdown, autoSelectCountdownTimer, isSocketConnected, isOnline, setPhoto]);
 
-  // Reset countdown to initial value
-  const resetCountdown = () => {
-    setAutoSelectCountdownTimer(AUTO_SELECT_COUNTDOWN_DURATION);
-    setShouldRunCountdown(false);
-  };
+    return () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    };
+  }, [shouldRunCountdown, autoSelectCountdownTimer, isSocketConnected, isOnline, setPhoto]);
 
   return (
     <CountdownContext.Provider
@@ -131,7 +127,6 @@ export const CountdownProvider = ({children}: {children: ReactNode}) => {
         autoSelectCountdownTimer,
         shouldRunCountdown,
         setShouldRunCountdown,
-        resetCountdown,
       }}
     >
       {children}

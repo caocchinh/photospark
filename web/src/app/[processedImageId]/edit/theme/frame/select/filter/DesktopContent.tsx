@@ -102,7 +102,7 @@ const DesktopContent = () => {
     <>
       <div className="relative w-full h-full">
         {frameImgStatus != "loaded" && (
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+          <div className="absolute -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2">
             <div className="loader"></div>
           </div>
         )}
@@ -113,8 +113,8 @@ const DesktopContent = () => {
           )}
         >
           {photo && frameImg && (
-            <div className="flex items-center justify-evenly gap-3 h-max flex-col">
-              <div className="flex items-center justify-center flex-row gap-6">
+            <div className="flex flex-col items-center gap-3 justify-evenly h-max">
+              <div className="flex flex-row items-center justify-center gap-6">
                 <div className="pointer-events-none">
                   <Stage
                     ref={stageRef}
@@ -162,9 +162,9 @@ const DesktopContent = () => {
                     ))}
                   </Stage>
                 </div>
-                <div className="flex items-center justify-center flex-col gap-5">
+                <div className="flex flex-col items-center justify-center gap-5">
                   <ScrollArea className={cn(" h-[60vh] w-[100%]", isFilterLoading ? "pointer-events-none" : null)}>
-                    <div className="flex-wrap flex gap-4 items-center justify-center">
+                    <div className="flex flex-wrap items-center justify-center gap-4">
                       {FILTERS.map((item, index) => (
                         <div
                           ref={(el) => {
@@ -188,7 +188,7 @@ const DesktopContent = () => {
                     </div>
                   </ScrollArea>
                   <Button
-                    className="w-full mt-2 rounded-sm cursor-pointer flex items-center justify-center gap-2"
+                    className="flex items-center justify-center w-full gap-2 mt-2 rounded-sm cursor-pointer"
                     onClick={selectRandomFilter}
                     disabled={isFilterLoading}
                   >
@@ -201,7 +201,7 @@ const DesktopContent = () => {
                     )}
                   </Button>
                   <Button
-                    className="w-full flex items-center justify-center gap-1 rounded-sm cursor-pointer active:opacity-80"
+                    className="flex items-center justify-center w-full gap-1 rounded-sm cursor-pointer active:opacity-80"
                     onClick={() => setFilter(null)}
                     disabled={isFilterLoading}
                   >
@@ -238,15 +238,15 @@ const DesktopContent = () => {
                           />
                         </Button>
                       </AlertDialogTrigger>
-                      <AlertDialogContent className="flex items-center justify-center gap-4 flex-col">
+                      <AlertDialogContent className="flex flex-col items-center justify-center gap-4">
                         <RxCross2
                           size={25}
                           color="red"
                           className={cn("absolute top-[11px] right-[11px] cursor-pointer", isUploading ? "pointer-events-none" : null)}
                           onClick={() => setIsOpen(false)}
                         />
-                        <AlertDialogHeader className="flex items-center justify-center gap-4 flex-col">
-                          <AlertDialogTitle className="text-center uppercase text-3xl">{t("Are you sure?")}</AlertDialogTitle>
+                        <AlertDialogHeader className="flex flex-col items-center justify-center gap-4">
+                          <AlertDialogTitle className="text-3xl text-center uppercase">{t("Are you sure?")}</AlertDialogTitle>
                         </AlertDialogHeader>
                         <img
                           src="/heart.gif"
@@ -254,7 +254,7 @@ const DesktopContent = () => {
                           className="w-[45%]"
                           crossOrigin="anonymous"
                         />
-                        <div className="flex items-center justify-center gap-3 flex-col w-full">
+                        <div className="flex flex-col items-center justify-center w-full gap-3">
                           <AlertDialogCancel
                             className={cn(
                               "bg-red-600 hover:bg-red-700 w-full text-white hover:text-white cursor-pointer",
@@ -264,7 +264,7 @@ const DesktopContent = () => {
                             {t("Cancel")}
                           </AlertDialogCancel>
                           <Button
-                            className="bg-green-600 hover:bg-green-700 w-full text-white hover:text-white cursor-pointer"
+                            className="w-full text-white bg-green-600 cursor-pointer hover:bg-green-700 hover:text-white"
                             onClick={handleImageUpload}
                             disabled={isMediaUploaded}
                           >
@@ -288,7 +288,7 @@ const DesktopContent = () => {
                   >
                     <Link
                       href={`/${photo?.previousProcessedImageId}/${ROUTES.SELECT}`}
-                      className="flex items-center justify-center gap-2 text-2xl px-14 py-6 w-full"
+                      className="flex items-center justify-center w-full gap-2 py-6 text-2xl px-14"
                     >
                       <FaArrowLeft />
                       {t("Choose other images")}

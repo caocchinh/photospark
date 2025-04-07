@@ -7,9 +7,9 @@ const Footer = () => {
   const {t} = useTranslation();
 
   return (
-    <footer className="w-full bottom-0 bg-black  ">
+    <footer className="bottom-0 w-full bg-black ">
       <a
-        className="w-full h-full cursor-pointer flex items-center justify-center flex-col sm:flex-row pb-4 sm:pb-1"
+        className="flex flex-col items-center justify-center w-full h-full pb-4 cursor-pointer sm:flex-row sm:pb-1"
         target="_blank"
         rel="noopener"
         href="https://www.instagram.com/vectr.vcp/"
