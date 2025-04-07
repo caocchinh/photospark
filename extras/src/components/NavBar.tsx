@@ -20,7 +20,7 @@ const NavBar = () => {
             href="/"
           >
             <Image
-              src="/logo.png"
+              src="/vteam-logo.webp"
               height={50}
               width={50}
               alt="VTEAM Logo"

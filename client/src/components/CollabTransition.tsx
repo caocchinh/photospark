@@ -111,7 +111,7 @@ const CollabTransition = () => {
           ></motion.pattern>
 
           <image
-            href="/logo.png"
+            href="/vteam-logo.webp"
             x="500"
             y="70"
             width="160"
@@ -122,7 +122,7 @@ const CollabTransition = () => {
             transform="translate(-80, -80)"
           />
           <image
-            href="/vectr.png"
+            href="/vectr.webp"
             x="710"
             y="90"
             width="125"

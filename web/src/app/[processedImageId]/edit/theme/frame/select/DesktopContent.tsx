@@ -17,7 +17,6 @@ import FrameImageWrapper from "@/components/FrameImageWrapper";
 import {FaArrowRight, FaArrowLeft} from "react-icons/fa6";
 import {useTranslation} from "react-i18next";
 import {Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog";
-import Head from "next/head";
 
 const DesktopContent = () => {
   const {photo, setPhoto} = usePhoto();
@@ -114,13 +113,6 @@ const DesktopContent = () => {
 
   return (
     <>
-      <Head>
-        <link
-          rel="preload"
-          href={photo!.theme?.frame?.src}
-          as="image"
-        />
-      </Head>
       {photo && photo.theme && (
         <div className="relative w-full h-full">
           {frameImgStatus != "loaded" && (

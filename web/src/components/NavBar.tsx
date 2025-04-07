@@ -24,7 +24,7 @@ const NavBar = ({captureDate}: {captureDate?: Date}) => {
           />
           <div className=" flex w-max justify-center items-center gap-2">
             <Image
-              src="/logo.png"
+              src="/vteam-logo.webp"
               height={50}
               width={50}
               alt="VTEAM Logo"

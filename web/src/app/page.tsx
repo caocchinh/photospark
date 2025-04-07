@@ -67,12 +67,12 @@ export default function HomePage() {
                 enableHover
               >
                 <ImageComparisonImage
-                  src="/vteam2.jpg"
+                  src="/vteam2.webp"
                   alt="Motion Primitives Dark"
                   position="left"
                 />
                 <ImageComparisonImage
-                  src="/vteam.jpg"
+                  src="/vteam.webp"
                   alt="Motion Primitives Light"
                   position="right"
                 />
@@ -89,7 +89,7 @@ export default function HomePage() {
                   {`one team • one dream • `}
                 </SpinningText>
                 <Image
-                  src="/logo.png"
+                  src="/vteam-logo.webp"
                   alt="VTEAM Logo"
                   width={100}
                   height={100}
@@ -164,7 +164,7 @@ export default function HomePage() {
                       onMouseLeave={() => setIsHover(false)}
                     >
                       <MorphingDialogImage
-                        src="/cute.jpg"
+                        src="/cute.webp"
                         alt="Cao Cự Chính is the developer of this website. All rights reserved."
                         className="h-48 w-full object-cover"
                       />
@@ -195,7 +195,7 @@ export default function HomePage() {
                       className="pointer-events-auto relative flex h-auto w-[90%] flex-col overflow-hidden border border-zinc-950/10 bg-white dark:border-zinc-50/10 dark:bg-zinc-900 sm:w-[500px]"
                     >
                       <MorphingDialogImage
-                        src="/cute.jpg"
+                        src="/cute.webp"
                         alt="Cao Cự Chính is the developer of this website. All rights reserved."
                         className="h-full w-full"
                       />

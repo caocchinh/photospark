@@ -14,7 +14,7 @@ const DoubleLayout = () => {
         <Image
           className="outline-none w-[45%] sm:w-1/2"
           key={index}
-          src="/double.jpg"
+          src="/double.webp"
           width={200}
           height={200}
           alt="single"

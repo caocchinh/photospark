@@ -17,12 +17,12 @@ export const IMAGE_SELECT_DURATION = 30;
 export const ThemeSelectButton: ThemeSelectButtonType[] = [
   {
     title: "PROM",
-    image_src: "/prom.jpg",
+    image_src: "/prom.webp",
     theme: "prom",
   },
   {
     title: "Usagyuuun",
-    image_src: "/rabbit.jpg",
+    image_src: "/rabbit.webp",
     theme: "usagyuun",
   },
 ];

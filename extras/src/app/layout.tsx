@@ -60,7 +60,7 @@ export default function RootLayout({
             <Image
               width={25}
               height={25}
-              src="/vectr.png"
+              src="/vectr.webp"
               alt="Vectr logo"
             />
           </footer>

@@ -13,7 +13,7 @@ const SingularLayout = () => {
         size={100}
       />
       <Image
-        src="/single.jpg"
+        src="/single.webp"
         width={400}
         height={700}
         alt="single"

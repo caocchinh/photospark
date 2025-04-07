@@ -27,7 +27,6 @@ import {useTranslation} from "react-i18next";
 import {useImageUpload} from "@/hooks/useImageUpload";
 import GeneralError from "@/components/GeneralError";
 import FrameImageWrapper from "@/components/FrameImageWrapper";
-import Head from "next/head";
 
 const MobileContent = () => {
   const {photo, setPhoto} = usePhoto();
@@ -107,13 +106,6 @@ const MobileContent = () => {
 
   return (
     <>
-      <Head>
-        <link
-          rel="preload"
-          href={photo!.theme?.frame?.src}
-          as="image"
-        />
-      </Head>
       <div className="relative w-full h-full">
         {frameImgStatus != "loaded" && (
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
