@@ -150,6 +150,8 @@ const i18nConfig = {
         "If button doesn't work, please open manually!": "If button doesn't work, please open manually!",
         "If Chrome hasn't been installed, please open external browser manually!":
           "If Chrome hasn't been installed, please open external browser manually!",
+        "QR Code": "QR Code",
+        "Download QR": "Download QR",
       },
     },
     vi: {
@@ -287,6 +289,8 @@ const i18nConfig = {
         "If button doesn't work, please open manually!": "Nếu nút không hoạt động, vui lòng mở thủ công!",
         "If Chrome hasn't been installed, please open external browser manually!":
           "Nếu Chrome chưa được cài đặt, vui lòng mở trình duyệt bên ngoài thủ công!",
+        "QR Code": "Mã QR",
+        "Download QR": "Tải QR",
       },
     },
     fr: {
@@ -426,6 +430,8 @@ const i18nConfig = {
         "If button doesn't work, please open manually!": "Si le bouton ne fonctionne pas, veuillez ouvrir manuellement!",
         "If Chrome hasn't been installed, please open external browser manually!":
           "Si Chrome n'a pas été installé, veuillez ouvrir le navigateur externe manuellement!",
+        "QR Code": "Code QR",
+        "Download QR": "Télécharger QR",
       },
     },
     cn: {
@@ -562,6 +568,8 @@ const i18nConfig = {
         "Open in Chrome": "在Chrome中打开",
         "If button doesn't work, please open manually!": "如果按钮不起作用，请手动打开！",
         "If Chrome hasn't been installed, please open external browser manually!": "如果尚未安装Chrome，请手动打开外部浏览器！",
+        "QR Code": "二维码",
+        "Download QR": "下载二维码",
       },
     },
     kr: {
@@ -698,6 +706,8 @@ const i18nConfig = {
         "Open in Chrome": "Chrome에서 열기",
         "If button doesn't work, please open manually!": "버튼이 작동하지 않으면 수동으로 여세요!",
         "If Chrome hasn't been installed, please open external browser manually!": "Chrome이 설치되지 않은 경우 외부 브라우저를 수동으로 여세요!",
+        "QR Code": "QR 코드",
+        "Download QR": "QR 다운로드",
       },
     },
   },

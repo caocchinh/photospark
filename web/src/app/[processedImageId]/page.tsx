@@ -20,6 +20,9 @@ import {useRouter} from "next/navigation";
 import NavBar from "@/components/NavBar";
 import {useProcessedImage} from "@/context/ProcssedImageContext";
 import Head from "next/head";
+import {IoQrCodeSharp} from "react-icons/io5";
+import {Dialog, DialogContent, DialogTitle, DialogTrigger} from "@/components/ui/dialog";
+import {QRCodeCanvas} from "qrcode.react";
 
 const Preview = () => {
   const {processedImage, images, video} = useProcessedImage();
@@ -31,6 +34,7 @@ const Preview = () => {
   const [copied, setCopied] = useState(false);
   const [initialCountDown, setInitialCountDown] = useState(10);
   const [isDownloading, setIsDownloading] = useState(false);
+  const qrRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -51,11 +55,11 @@ const Preview = () => {
     try {
       const dataURL = stageRef.current.toDataURL({
         pixelRatio: 2,
-        mimeType: "image/png",
+        mimeType: "image/jpg",
       });
 
       const link = document.createElement("a");
-      link.download = generateTimestampFilename("VTEAM", "png");
+      link.download = generateTimestampFilename("VTEAM", "jpg");
       link.href = dataURL;
       document.body.appendChild(link);
       link.click();
@@ -173,6 +177,53 @@ const Preview = () => {
                 <AiOutlineDownload size={27} />
               </div>
             )}
+            <Dialog>
+              <DialogTrigger asChild>
+                <div className="w-full h-[50px] text-white bg-black cursor-pointer text-xl rounded-sm flex items-center justify-center gap-3">
+                  {t("QR Code")}
+                  <IoQrCodeSharp size={27} />
+                </div>
+              </DialogTrigger>
+              <DialogContent className="flex items-center justify-center gap-2 w-max p-9 flex-col">
+                <DialogTitle className="sr-only">{t("QR Code")}</DialogTitle>
+                <QRCodeCanvas
+                  ref={qrRef}
+                  value={window.location.href}
+                  title={"VTEAM Photobooth"}
+                  size={300}
+                  marginSize={2}
+                  bgColor={"#ffffff"}
+                  fgColor={"#000000"}
+                  level={"H"}
+                  imageSettings={{
+                    src: "/vteam-logo.webp",
+                    x: undefined,
+                    y: undefined,
+                    height: 64,
+                    width: 73,
+                    opacity: 1,
+                    excavate: true,
+                  }}
+                />
+                <Button
+                  className="cursor-pointer flex items-center gap-2 w-full rounded-sm"
+                  onClick={() => {
+                    if (qrRef.current) {
+                      const canvas = qrRef.current;
+                      const link = document.createElement("a");
+                      link.download = generateTimestampFilename("VTEAM QR", "jpg");
+                      link.href = canvas.toDataURL("image/png");
+                      document.body.appendChild(link);
+                      link.click();
+                      document.body.removeChild(link);
+                    }
+                  }}
+                >
+                  {t("Download QR")}
+                  <AiOutlineDownload size={27} />
+                </Button>
+              </DialogContent>
+            </Dialog>
             <div
               className="w-full h-[50px] text-white bg-black cursor-pointer text-xl rounded-sm flex items-center justify-center gap-3"
               onClick={() => {

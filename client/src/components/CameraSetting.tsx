@@ -22,6 +22,7 @@ import {useCamera} from "@/context/CameraContext";
 import {usePhotoState} from "@/context/PhotoStateContext";
 import {CLICK_SOUND_URL, CLICK_SOUND_VOUME} from "@/constants/constants";
 import useSound from "use-sound";
+import {IoRefresh} from "react-icons/io5";
 
 const CameraSetting = () => {
   const [playClick] = useSound(CLICK_SOUND_URL, {volume: CLICK_SOUND_VOUME});
@@ -106,18 +107,30 @@ const CameraSetting = () => {
             playsInline
             muted
             className={cn(
-              "h-[80%] w-[80%] object-contain -scale-x-100 rounded-sm",
+              "h-[75%] w-[75%] object-contain -scale-x-100 rounded-sm",
               camera && videoRefReady && cameraStream && !isError ? "opacity-100 block" : "opacity-0 absolute"
             )}
           />
-          {!(camera && videoRefReady && cameraStream) && !isError && isOpen && <CameraLoading />}
+          {!(camera && videoRefReady && cameraStream) && !isError && isOpen && (
+            <div className="w-[70%]">
+              <CameraLoading />
+            </div>
+          )}
           {isError && (
-            <div className="flex items-center justify-center flex-col gap-3">
+            <div className="flex items-center justify-center flex-col gap-3 w-[65%]">
               <MdWarning
                 className="text-red-500"
                 size={130}
               />
               <p className="text-red-500 text-4xl uppercase font-semibold">{t("Error loading camera")}!</p>
+              <Button
+                variant="outline"
+                onClick={() => window.location.reload()}
+                className="flex items-center justify-center gap-2 cursor-pointer relative z-[100] w-[65%]"
+              >
+                {t("Refresh the application")}
+                <IoRefresh />
+              </Button>
             </div>
           )}
 
