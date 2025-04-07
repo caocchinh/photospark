@@ -6,7 +6,7 @@ import useImage from "use-image";
 import {Image as KonvaImage, Rect} from "react-konva";
 import {Layer, Stage} from "react-konva";
 import {Button} from "@/components/ui/button";
-import {FILTERS, FRAME_HEIGHT, FRAME_WIDTH, IMAGE_HEIGHT, IMAGE_WIDTH, OFFSET_X, OFFSET_Y} from "@/constants/constants";
+import {FILTERS, FRAME_HEIGHT, FRAME_WIDTH} from "@/constants/constants";
 import {cn} from "@/lib/utils";
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {Stage as StageElement} from "konva/lib/Stage";
@@ -124,22 +124,18 @@ const MobileContent = () => {
               <div className="pointer-events-none mobile-frame-container">
                 <Stage
                   ref={stageRef}
-                  width={IMAGE_WIDTH}
-                  height={IMAGE_HEIGHT}
+                  width={FRAME_WIDTH}
+                  height={FRAME_HEIGHT}
                 >
                   <Layer>
                     <Rect
-                      width={IMAGE_WIDTH}
-                      height={IMAGE_HEIGHT}
+                      width={FRAME_WIDTH}
+                      height={FRAME_HEIGHT}
                       fill="white"
                     />
                   </Layer>
                   {Array.from({length: photo.frameType == "singular" ? 1 : 2}, (_, _index) => (
-                    <Layer
-                      key={_index}
-                      x={OFFSET_X}
-                      y={OFFSET_Y}
-                    >
+                    <Layer key={_index}>
                       {photo.selectedImages.map((item, index) => {
                         return (
                           item &&
@@ -161,11 +157,7 @@ const MobileContent = () => {
                   ))}
 
                   {Array.from({length: photo.frameType == "singular" ? 1 : 2}, (_, index) => (
-                    <Layer
-                      key={index}
-                      x={OFFSET_X}
-                      y={OFFSET_Y}
-                    >
+                    <Layer key={index}>
                       <KonvaImage
                         image={frameImg}
                         x={(FRAME_WIDTH / 2) * index}

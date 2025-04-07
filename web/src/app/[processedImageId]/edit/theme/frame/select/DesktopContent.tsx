@@ -9,7 +9,7 @@ import {Layer, Rect, Stage} from "react-konva";
 import useImage from "use-image";
 import {Image as KonvaImage} from "react-konva";
 import Link from "next/link";
-import {FRAME_HEIGHT, FRAME_WIDTH, IMAGE_HEIGHT, IMAGE_WIDTH, OFFSET_X, OFFSET_Y} from "@/constants/constants";
+import {FRAME_HEIGHT, FRAME_WIDTH} from "@/constants/constants";
 import {GlowEffect} from "@/components/ui/glow-effect";
 import {ROUTES} from "@/constants/routes";
 import {Reorder} from "motion/react";
@@ -148,10 +148,9 @@ const DesktopContent = () => {
                         isSingle == 2 && photo
                           ? (photo.theme!.frame.slotPositions[0].y / isSingle) * 0.7
                           : photo
-                          ? OFFSET_Y * 2 + photo.theme!.frame.slotPositions[0].y
+                          ? photo.theme!.frame.slotPositions[0].y * 2
                           : 0,
-                      top: photo ? photo.theme!.frame.slotPositions[0].y + OFFSET_Y / isSingle : 0,
-                      left: OFFSET_X / isSingle,
+                      top: photo ? photo.theme!.frame.slotPositions[0].y : 0,
                     }}
                   >
                     {slots.map((slotIndex, index) => (
@@ -186,20 +185,17 @@ const DesktopContent = () => {
 
                   {frameImg && photo && (
                     <Stage
-                      width={IMAGE_WIDTH / isSingle}
-                      height={IMAGE_HEIGHT}
+                      width={FRAME_WIDTH / isSingle}
+                      height={FRAME_HEIGHT}
                     >
                       <Layer>
                         <Rect
-                          width={IMAGE_WIDTH / isSingle}
-                          height={IMAGE_HEIGHT}
+                          width={FRAME_WIDTH / isSingle}
+                          height={FRAME_HEIGHT}
                           fill="white"
                         />
                       </Layer>
-                      <Layer
-                        x={OFFSET_X / isSingle}
-                        y={OFFSET_Y / isSingle}
-                      >
+                      <Layer>
                         {selectedImage.map(
                           (item, index) =>
                             item && (
@@ -215,10 +211,7 @@ const DesktopContent = () => {
                             )
                         )}
                       </Layer>
-                      <Layer
-                        x={OFFSET_X / isSingle}
-                        y={OFFSET_Y / isSingle}
-                      >
+                      <Layer>
                         <KonvaImage
                           image={frameImg}
                           height={FRAME_HEIGHT}

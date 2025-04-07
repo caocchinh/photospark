@@ -119,8 +119,8 @@ const FrameStage = ({processedImage, images, stageRef, onLoadingComplete}: Frame
               <KonvaImage
                 key={index}
                 image={qrRef.current ? qrRef.current : undefined}
-                x={processedImage.type == "singular" ? FRAME_WIDTH - OFFSET_X - 19 : (FRAME_WIDTH / 2) * index + OFFSET_X + FRAME_WIDTH / 2.6}
-                y={FRAME_HEIGHT - OFFSET_Y - 12}
+                x={processedImage.type == "singular" ? FRAME_WIDTH - OFFSET_X - 20 : (FRAME_WIDTH / 2) * index + OFFSET_X + FRAME_WIDTH / 2.6}
+                y={FRAME_HEIGHT - OFFSET_Y - (processedImage.type == "singular" ? 10 : 12)}
                 height={45}
                 width={45}
               />

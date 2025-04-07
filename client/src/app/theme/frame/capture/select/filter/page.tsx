@@ -325,8 +325,8 @@ const FilterPage = () => {
                         <KonvaImage
                           key={index}
                           image={qrRef.current ? qrRef.current : undefined}
-                          x={photo.frameType == "singular" ? FRAME_WIDTH - OFFSET_X - 19 : (FRAME_WIDTH / 2) * index + OFFSET_X + FRAME_WIDTH / 2.6}
-                          y={FRAME_HEIGHT - OFFSET_Y - 12}
+                          x={photo.frameType == "singular" ? FRAME_WIDTH - OFFSET_X - 20 : (FRAME_WIDTH / 2) * index + OFFSET_X + FRAME_WIDTH / 2.6}
+                          y={FRAME_HEIGHT - OFFSET_Y - (photo.frameType == "singular" ? 10 : 12)}
                           height={45}
                           width={45}
                         />

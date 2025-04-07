@@ -9,7 +9,7 @@ import {Layer, Rect, Stage} from "react-konva";
 import useImage from "use-image";
 import {Image as KonvaImage} from "react-konva";
 import Link from "next/link";
-import {FRAME_HEIGHT, FRAME_WIDTH, IMAGE_HEIGHT, IMAGE_WIDTH, OFFSET_X, OFFSET_Y} from "@/constants/constants";
+import {FRAME_HEIGHT, FRAME_WIDTH} from "@/constants/constants";
 import {GlowEffect} from "@/components/ui/glow-effect";
 import {ROUTES} from "@/constants/routes";
 import {Reorder} from "motion/react";
@@ -246,22 +246,18 @@ const MobileContent = () => {
                   <div className="pointer-events-none mobile-frame-container">
                     {frameImg && photo && (
                       <Stage
-                        width={IMAGE_WIDTH}
-                        height={IMAGE_HEIGHT}
+                        width={FRAME_WIDTH}
+                        height={FRAME_HEIGHT}
                       >
                         <Layer>
                           <Rect
-                            width={IMAGE_WIDTH}
-                            height={IMAGE_HEIGHT}
+                            width={FRAME_WIDTH}
+                            height={FRAME_HEIGHT}
                             fill="white"
                           />
                         </Layer>
                         {Array.from({length: photo.frameType == "singular" ? 1 : 2}, (_, _index) => (
-                          <Layer
-                            key={_index}
-                            x={OFFSET_X}
-                            y={OFFSET_Y}
-                          >
+                          <Layer key={_index}>
                             {selectedImage.map(
                               (item, index) =>
                                 item && (
@@ -279,11 +275,7 @@ const MobileContent = () => {
                           </Layer>
                         ))}
                         {Array.from({length: photo.frameType == "singular" ? 1 : 2}, (_, index) => (
-                          <Layer
-                            key={index}
-                            x={OFFSET_X}
-                            y={OFFSET_Y}
-                          >
+                          <Layer key={index}>
                             <KonvaImage
                               image={frameImg}
                               x={(FRAME_WIDTH / 2) * index}
