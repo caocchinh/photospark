@@ -255,7 +255,7 @@ const Preview = () => {
                   }}
                 />
                 <Button
-                  className="cursor-pointer flex items-center gap-2 w-full rounded-sm active:opacity-80"
+                  className="cursor-pointer flex items-center gap-2 mt-3 w-full rounded-sm active:opacity-80"
                   onClick={() => {
                     if (qrRef.current) {
                       const canvas = qrRef.current;

@@ -120,7 +120,7 @@ const MobileContent = () => {
         >
           <h1 className="text-5xl font-semibold mb-4 flex gap-2 uppercase text-center mobile-frame-title">{t("Choose a filter")}</h1>
           {photo && frameImg && (
-            <div className="flex items-center justify-evenly gap-3 h-max flex-col md:flex-row w-full">
+            <div className="flex items-center justify-evenly gap-4 h-max flex-col md:flex-row w-full">
               <div className="pointer-events-none mobile-frame-container">
                 <Stage
                   ref={stageRef}

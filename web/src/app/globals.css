@@ -206,28 +206,28 @@
 @media (max-width: 520px) {
   .mobile-frame-container {
     transform: scale(0.8);
-    height: 650px;
+    height: 610px;
   }
   .mobile-frame-title {
-    margin-bottom: -55px;
+    margin-bottom: -40px;
   }
 }
 @media (max-width: 400px) {
   .mobile-frame-container {
     transform: scale(0.7);
-    height: 600px;
+    height: 560px;
   }
   .mobile-frame-title {
-    margin-bottom: -75px;
+    margin-bottom: -70px;
   }
 }
 @media (max-width: 360px) {
   .mobile-frame-container {
     transform: scale(0.6);
-    height: 570px;
+    height: 510px;
   }
   .mobile-frame-title {
-    margin-bottom: -105px;
+    margin-bottom: -85px;
   }
 }
 .filter-1977 {
