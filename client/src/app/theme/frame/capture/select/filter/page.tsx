@@ -436,7 +436,7 @@ const FilterPage = () => {
           src: "/vteam-logo.webp",
           x: undefined,
           y: undefined,
-          height: 79,
+          height: 78,
           width: 86,
           opacity: 1,
           excavate: true,
