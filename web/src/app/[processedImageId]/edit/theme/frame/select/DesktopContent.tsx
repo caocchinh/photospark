@@ -266,7 +266,7 @@ const DesktopContent = () => {
                 </div>
                 {photo && (
                   <div className="w-full flex gap-4 flex-col items-center justify-center">
-                    <div className="relative w-full h-full">
+                    <div className="relative w-full h-full active:opacity-80">
                       {photo.theme!.frame.slotCount - filteredSelectedImages.length == 0 && (
                         <GlowEffect
                           colors={["#FF5733", "#33FF57", "#3357FF", "#F1C40F"]}
@@ -294,7 +294,7 @@ const DesktopContent = () => {
                     </div>
                     <Button
                       asChild
-                      className="relative"
+                      className="relative active:opacity-90"
                     >
                       <Link
                         onClick={() => setIsSelected(true)}

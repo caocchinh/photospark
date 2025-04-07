@@ -144,10 +144,10 @@ const Preview = () => {
           </div>
 
           <div className="flex items-center justify-center gap-6 flex-col w-[90%] md:w-[70%] lg:w-[280px]">
-            <div className="relative w-full h-[50px]">
+            <div className="relative w-full h-[50px] active:opacity-80">
               <div
                 className={cn(
-                  "w-full h-full text-white cursor-pointer text-xl bg-black rounded-sm relative z-10 flex items-center justify-center gap-3",
+                  "w-full h-full text-white cursor-pointer  text-xl bg-black rounded-sm relative z-10 flex items-center justify-center gap-3",
                   !isAllImagesLoaded && "pointer-events-none opacity-50"
                 )}
                 onClick={() => {
@@ -170,7 +170,7 @@ const Preview = () => {
 
             {video?.url && (
               <div
-                className="w-full h-[50px] text-white bg-black cursor-pointer text-xl rounded-sm flex items-center justify-center gap-3"
+                className="w-full h-[50px] text-white bg-black cursor-pointer text-xl rounded-sm flex items-center justify-center gap-3 active:opacity-80"
                 onClick={downloadVideo}
               >
                 {t("Download video")}
@@ -179,7 +179,7 @@ const Preview = () => {
             )}
             <Dialog>
               <DialogTrigger asChild>
-                <div className="w-full h-[50px] text-white bg-black cursor-pointer text-xl rounded-sm flex items-center justify-center gap-3">
+                <div className="w-full h-[50px] text-white active:opacity-80 bg-black cursor-pointer text-xl rounded-sm flex items-center justify-center gap-3">
                   {t("QR Code")}
                   <IoQrCodeSharp size={27} />
                 </div>
@@ -188,7 +188,7 @@ const Preview = () => {
                 <DialogTitle className="sr-only">{t("QR Code")}</DialogTitle>
                 <QRCodeCanvas
                   ref={qrRef}
-                  value={window.location.href}
+                  value={typeof window != "undefined" ? window.location.href : ""}
                   title={"VTEAM Photobooth"}
                   size={300}
                   marginSize={2}
@@ -206,7 +206,7 @@ const Preview = () => {
                   }}
                 />
                 <Button
-                  className="cursor-pointer flex items-center gap-2 w-full rounded-sm"
+                  className="cursor-pointer flex items-center gap-2 w-full rounded-sm active:opacity-80"
                   onClick={() => {
                     if (qrRef.current) {
                       const canvas = qrRef.current;
@@ -225,7 +225,7 @@ const Preview = () => {
               </DialogContent>
             </Dialog>
             <div
-              className="w-full h-[50px] text-white bg-black cursor-pointer text-xl rounded-sm flex items-center justify-center gap-3"
+              className="w-full h-[50px] active:opacity-80 text-white bg-black cursor-pointer text-xl rounded-sm flex items-center justify-center gap-3"
               onClick={() => {
                 navigator.clipboard.writeText(window.location.href);
                 setCopied(true);
@@ -237,10 +237,10 @@ const Preview = () => {
               {copied ? t("Copied!") : t("Copy image link")}
               <LuLink size={27} />
             </div>
-            <div className="w-full h-[50px] text-white cursor-pointer text-xl bg-[#f97316] hover:opacity-90 hover:bg-[#f97316] rounded-sm flex items-center justify-center gap-3">
+            <div className="w-full h-[50px] text-white cursor-pointer text-xl bg-[#f97316] active:opacity-80 hover:opacity-90 hover:bg-[#f97316] rounded-sm flex items-center justify-center gap-3">
               <Link
                 href={`/${processedImage.id}/edit`}
-                className="flex items-center justify-center gap-2 h-full w-full"
+                className="flex items-center justify-center gap-2 h-full w-full "
               >
                 {t("Edit image")}
                 <MdModeEdit
@@ -250,7 +250,7 @@ const Preview = () => {
               </Link>
             </div>
 
-            <div className="w-full h-[50px] text-white cursor-pointer text-xl bg-[#f97316] hover:opacity-90 hover:bg-[#f97316] rounded-sm flex items-center justify-center gap-3">
+            <div className="w-full h-[50px] text-white cursor-pointer text-xl bg-[#f97316] active:opacity-80 hover:opacity-90 hover:bg-[#f97316] rounded-sm flex items-center justify-center gap-3">
               <Link
                 href={`/${processedImage.id}/print`}
                 className="flex items-center justify-center gap-2 h-full w-full"

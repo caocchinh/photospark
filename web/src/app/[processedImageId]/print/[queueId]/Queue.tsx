@@ -169,7 +169,7 @@ const Queue = ({queue}: {queue: typeof QueueTable.$inferSelect}) => {
               >
                 <Button
                   variant="outline"
-                  className="w-full gap-2 cursor-pointer"
+                  className="w-full gap-2 cursor-pointer active:opacity-80"
                 >
                   <FaArrowLeft /> {t("Back")}
                 </Button>

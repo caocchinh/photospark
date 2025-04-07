@@ -230,7 +230,7 @@ const Print = () => {
             href={`/${processedImage.id}`}
             className="w-full cursor-pointer"
           >
-            <Button className="w-full cursor-pointer">
+            <Button className="w-full cursor-pointer active:opacity-80">
               <FaArrowLeft />
               {t("Back")}
             </Button>

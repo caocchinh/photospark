@@ -301,7 +301,7 @@ const MobileContent = () => {
                     <div className="w-full flex gap-4 flex-col items-center justify-center">
                       <Button
                         onClick={() => setIsDrawerOpen(true)}
-                        className="w-full flex items-center justify-center gap-2 text-sm px-14 py-6 cursor-pointer"
+                        className="w-full flex items-center justify-center gap-2 text-sm px-14 py-6 cursor-pointer active:opacity-80"
                       >
                         <IoMdImages />
                         {t("Choose images")}
@@ -314,12 +314,12 @@ const MobileContent = () => {
                             setIsDialogOpen(true);
                           }
                         }}
-                        className="w-full flex items-center justify-center gap-2 text-sm px-14 py-6 cursor-pointer"
+                        className="w-full flex items-center justify-center gap-2 text-sm px-14 py-6 cursor-pointer active:opacity-80"
                       >
                         <GoArrowSwitch className="rotate-90" />
                         {t("Change image position")}
                       </Button>
-                      <div className="relative w-full h-full">
+                      <div className="relative w-full h-full  active:opacity-80">
                         {photo.theme!.frame.slotCount - filteredSelectedImages.length == 0 && (
                           <GlowEffect
                             colors={["#FF5733", "#33FF57", "#3357FF", "#F1C40F"]}
@@ -347,7 +347,7 @@ const MobileContent = () => {
                       </div>
                       <Button
                         asChild
-                        className="relative"
+                        className="relative  active:opacity-80"
                         onClick={() => setIsSelected(true)}
                       >
                         <Link

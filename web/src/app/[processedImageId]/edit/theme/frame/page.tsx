@@ -113,7 +113,7 @@ const FrameEditpage = () => {
             <div className="flex items-center justify-between w-full sm:flex-row flex-col gap-4 sm:gap-0">
               <Link
                 href={`/${photo?.previousProcessedImageId}/${ROUTES.THEME}`}
-                className="w-[250px] flex text-center items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-2 hover:opacity-[85%] order-1 sm:order-0"
+                className="w-[250px] flex text-center items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-2 hover:opacity-[85%] order-1 sm:order-0 active:opacity-80"
               >
                 <FaArrowLeft />
                 {t("Choose another theme")}
@@ -230,7 +230,7 @@ const FrameEditpage = () => {
               <Link
                 href={`/${photo?.previousProcessedImageId}/${ROUTES.SELECT}`}
                 className={cn(
-                  "flex text-center items-center justify-center gap-2 text-background rounded px-4 py-2 hover:opacity-[85%] w-full bg-green-700 z-10 relative"
+                  "flex text-center items-center justify-center gap-2 text-background rounded px-4 py-2 hover:opacity-[90%] w-full bg-green-700 z-10 relative active:opacity-80"
                 )}
                 onClick={() => setChosen(true)}
               >

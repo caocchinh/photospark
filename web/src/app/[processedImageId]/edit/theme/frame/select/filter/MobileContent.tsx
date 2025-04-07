@@ -242,7 +242,7 @@ const MobileContent = () => {
                   )}
                 </Button>
                 <Button
-                  className="w-full flex items-center justify-center gap-1 rounded-sm cursor-pointer"
+                  className="w-full flex items-center justify-center gap-1 rounded-sm cursor-pointer active:opacity-80"
                   onClick={() => setFilter(null)}
                   disabled={isFilterLoading}
                 >
@@ -325,7 +325,7 @@ const MobileContent = () => {
                 </div>
                 <Button
                   asChild
-                  className="relative"
+                  className="relative active:opacity-80"
                 >
                   <Link
                     href={`/${photo?.previousProcessedImageId}/${ROUTES.SELECT}`}

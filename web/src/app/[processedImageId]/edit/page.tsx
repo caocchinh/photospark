@@ -31,7 +31,7 @@ const LayoutEditPage = () => {
         <div className="flex items-center justify-between w-full sm:flex-row flex-col gap-4 sm:gap-0">
           <Link
             href={`/${photo?.previousProcessedImageId}/`}
-            className="flex text-center w-[90%] sm:w-[280px] items-center self-center sm:self-start justify-center gap-2 bg-foreground text-background rounded px-4 py-2 hover:opacity-[85%] order-1 sm:order-0"
+            className="flex text-center w-[90%] sm:w-[280px] items-center self-center sm:self-start justify-center gap-2 bg-foreground text-background rounded px-4 py-2 hover:opacity-[85%] order-1 sm:order-0 active:opacity-80"
           >
             <FaArrowLeft />
             {t("Back")}

@@ -45,7 +45,7 @@ const ThemePage = () => {
       <div className="w-[80%] flex items-center justify-between  sm:flex-row flex-col">
         <Link
           href={`/${photo?.previousProcessedImageId}/edit/`}
-          className="w-[260px] p-2 rounded flex items-center justify-center gap-2 bg-black text-white order-1 sm:order-0"
+          className="w-[260px] p-2 rounded flex items-center justify-center gap-2 bg-black text-white order-1 sm:order-0 active:opacity-80"
         >
           <FaArrowLeftLong />
           {t("Choose another layout")}
