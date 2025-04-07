@@ -10,7 +10,7 @@ const DoubleLayout = () => {
 
   return (
     <div
-      className="shadow-lg outline-none border flex items-center justify-center gap-4 relative w-max rounded-sm"
+      className="shadow-lg outline-none border flex items-center justify-center gap-4 relative w-max rounded-sm !bg-white"
       onMouseDown={() => playClick()}
     >
       <BorderTrail

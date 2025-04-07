@@ -9,7 +9,7 @@ const SingularLayout = () => {
   const [playClick] = useSound(CLICK_SOUND_URL, {volume: CLICK_SOUND_VOUME});
   return (
     <div
-      className="shadow-lg border w-max relative rounded-sm"
+      className="shadow-lg border w-max relative rounded-sm !bg-white"
       onMouseDown={() => playClick()}
     >
       <BorderTrail

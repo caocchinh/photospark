@@ -23,6 +23,7 @@ import Head from "next/head";
 import {IoQrCodeSharp} from "react-icons/io5";
 import {Dialog, DialogContent, DialogTitle, DialogTrigger} from "@/components/ui/dialog";
 import {QRCodeCanvas} from "qrcode.react";
+import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 
 const Preview = () => {
   const {processedImage, images, video} = useProcessedImage();
@@ -35,6 +36,7 @@ const Preview = () => {
   const [initialCountDown, setInitialCountDown] = useState(10);
   const [isDownloading, setIsDownloading] = useState(false);
   const qrRef = useRef<HTMLCanvasElement>(null);
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -50,17 +52,32 @@ const Preview = () => {
     return null;
   }
 
-  const downloadImage = () => {
+  const downloadImage = (isHalf: boolean) => {
     if (!stageRef.current || !isAllImagesLoaded) return;
     try {
-      const dataURL = stageRef.current.toDataURL({
-        pixelRatio: 2,
-        mimeType: "image/jpg",
-      });
+      let dataUrl = "";
+      if (isHalf) {
+        const canvas = stageRef.current.toCanvas({pixelRatio: 2});
+        const halfWidth = canvas.width / 2;
+
+        const halfCanvas = document.createElement("canvas");
+        halfCanvas.width = halfWidth;
+        halfCanvas.height = canvas.height;
+        const ctx = halfCanvas.getContext("2d");
+        if (ctx) {
+          ctx.drawImage(canvas, 0, 0, halfWidth, canvas.height, 0, 0, halfWidth, canvas.height);
+          dataUrl = halfCanvas.toDataURL("image/jpeg", 1.0);
+        }
+      } else {
+        dataUrl = stageRef.current.toDataURL({
+          pixelRatio: 2,
+          mimeType: "image/jpg",
+        });
+      }
 
       const link = document.createElement("a");
       link.download = generateTimestampFilename("VTEAM", "jpg");
-      link.href = dataURL;
+      link.href = dataUrl;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -145,19 +162,51 @@ const Preview = () => {
 
           <div className="flex items-center justify-center gap-6 flex-col w-[90%] md:w-[70%] lg:w-[280px]">
             <div className="relative w-full h-[50px] active:opacity-80">
-              <div
-                className={cn(
-                  "w-full h-full text-white cursor-pointer  text-xl bg-black rounded-sm relative z-10 flex items-center justify-center gap-3",
-                  !isAllImagesLoaded && "pointer-events-none opacity-50"
-                )}
-                onClick={() => {
-                  setIsDownloading(true);
-                  downloadImage();
-                }}
+              <Popover
+                open={isPopoverOpen && processedImage.type == "double"}
+                onOpenChange={setIsPopoverOpen}
               >
-                {isAllImagesLoaded ? t("Download image") : t("Loading image")}
-                {!isAllImagesLoaded || isDownloading ? <LoadingSpinner size={25} /> : <AiOutlineDownload size={27} />}
-              </div>
+                <PopoverTrigger asChild>
+                  <div
+                    className={cn(
+                      "w-full h-full text-white cursor-pointer  text-xl bg-black rounded-sm relative z-10 flex items-center justify-center gap-3",
+                      !isAllImagesLoaded && "pointer-events-none opacity-50"
+                    )}
+                    onClick={() => {
+                      if (processedImage.type == "double") {
+                        setIsPopoverOpen(true);
+                        return;
+                      }
+                      setIsDownloading(true);
+                      downloadImage(false);
+                    }}
+                  >
+                    {isAllImagesLoaded ? t("Download image") : t("Loading image")}
+                    {!isAllImagesLoaded || isDownloading ? <LoadingSpinner size={25} /> : <AiOutlineDownload size={27} />}
+                  </div>
+                </PopoverTrigger>
+                <PopoverContent className="flex items-center justify-center gap-4 p-4 flex-col">
+                  <h3 className="text-xl font-light">{t("Download options")}</h3>
+                  <Button
+                    className="w-full cursor-pointer"
+                    onClick={() => {
+                      setIsPopoverOpen(false);
+                      downloadImage(true);
+                    }}
+                  >
+                    {t("Half - 4 cuts")}
+                  </Button>
+                  <Button
+                    className="w-full cursor-pointer"
+                    onClick={() => {
+                      setIsPopoverOpen(false);
+                      downloadImage(false);
+                    }}
+                  >
+                    {t("Full - 8 cuts")}
+                  </Button>
+                </PopoverContent>
+              </Popover>
               {isAllImagesLoaded && (
                 <GlowEffect
                   colors={["#0894FF", "#C959DD", "#FF2E54", "#FF9004"]}

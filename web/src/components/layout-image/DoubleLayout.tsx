@@ -3,7 +3,7 @@ import {BorderTrail} from "../ui/border-trail";
 
 const DoubleLayout = () => {
   return (
-    <div className="shadow-lg w-[80%] sm:w-max outline-none border flex items-center justify-center gap-4 relative rounded-sm">
+    <div className="shadow-lg w-[80%] sm:w-max outline-none border flex items-center justify-center gap-4 relative rounded-sm !bg-white">
       <BorderTrail
         style={{
           boxShadow: "0px 0px 60px 30px rgb(255 255 255 / 50%), 0 0 100px 60px rgb(0 0 0 / 50%), 0 0 140px 90px rgb(0 0 0 / 50%)",
