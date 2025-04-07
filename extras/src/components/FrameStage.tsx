@@ -142,8 +142,8 @@ const FrameStage = ({processedImage, images, stageRef, onLoadingComplete}: Frame
           src: "/vteam-logo.webp",
           x: undefined,
           y: undefined,
-          height: 84,
-          width: 88,
+          height: 79,
+          width: 86,
           opacity: 1,
           excavate: true,
         }}
