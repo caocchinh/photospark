@@ -87,7 +87,9 @@ export const ProcessedImageProvider = ({
             </Button>
 
             <h5 className="font-light text-center text-red-500 text-sm w-full">
-              {!isAppleDevice() && t("If Chrome hasn't been installed, please open external browser manually!")}
+              {isAppleDevice()
+                ? t("If you are using iOS version 15 and below, please open external browser manually!")
+                : t("If Chrome hasn't been installed, please open external browser manually!")}
             </h5>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -155,6 +155,8 @@ const i18nConfig = {
         "Download options": "Download options",
         "Half - 4 cuts": "Half - 4 cuts",
         "Full - 8 cuts": "Full - 8 cuts",
+        "If you are using iOS version 15 and below, please open external browser manually!":
+          "If you are using iOS version 15 and below, please open external browser manually!",
       },
     },
     vi: {
@@ -297,6 +299,8 @@ const i18nConfig = {
         "Download options": "Tùy chọn tải xuống",
         "Half - 4 cuts": "Nửa - 4 cuts",
         "Full - 8 cuts": "Đủ - 8 cuts",
+        "If you are using iOS version 15 and below, please open external browser manually!":
+          "Nếu bạn đang sử dụng phiên bản iOS 15 trở xuống, vui lòng mở trình duyệt bên ngoài thủ công!",
       },
     },
     fr: {
@@ -441,6 +445,8 @@ const i18nConfig = {
         "Download options": "Options de téléchargement",
         "Full - 8 cuts": "Complet - 8 coupes",
         "Half - 4 cuts": "Demi - 4 coupes",
+        "If you are using iOS version 15 and below, please open external browser manually!":
+          "Si vous utilisez la version iOS 15 et inférieure, veuillez ouvrir le navigateur externe manuellement!",
       },
     },
     cn: {
@@ -582,6 +588,7 @@ const i18nConfig = {
         "Download options": "下载选项",
         "Half - 4 cuts": "半 - 4 切",
         "Full - 8 cuts": "全 - 8 刀",
+        "If you are using iOS version 15 and below, please open external browser manually!": "如果你使用的iOS版本是15及以下，請手動開啟外部瀏覽器！",
       },
     },
     kr: {
@@ -723,6 +730,8 @@ const i18nConfig = {
         "Download options": "다운로드 옵션",
         "Full - 8 cuts": "전체 - 8 컷",
         "Half - 4 cuts": "반 - 4 컷",
+        "If you are using iOS version 15 and below, please open external browser manually!":
+          "iOS 버전 15 이하를 사용 중이시라면, 외부 브라우저를 수동으로 열어주세요!",
       },
     },
   },
