@@ -61,9 +61,9 @@ export const ProcessedImageProvider = ({
           <AlertDialogDescription className="text-2xl text-center">
             {t("This application is not optimized for embeded browser. Please open the link in an external browser.")}
           </AlertDialogDescription>
-          <AlertDialogFooter>
+          <AlertDialogFooter className="flex flex-col items-center justify-center gap-3 w-full">
             <Button
-              className="flex items-center justify-center gap-2 cursor-pointer"
+              className="flex items-center justify-center gap-2 cursor-pointer w-full"
               onClick={(e) => {
                 e.preventDefault();
                 openInExternalBrowser(window.location.href);
@@ -73,7 +73,7 @@ export const ProcessedImageProvider = ({
               <RiExternalLinkLine />
             </Button>
             <Button
-              className="flex items-center justify-center gap-2 cursor-pointer"
+              className="flex items-center justify-center gap-2 cursor-pointer w-full"
               onClick={() => {
                 navigator.clipboard.writeText(window.location.href);
                 setCopied(true);
@@ -86,7 +86,7 @@ export const ProcessedImageProvider = ({
               <LuLink />
             </Button>
 
-            <h5 className="font-light text-center text-red-500 text-sm">
+            <h5 className="font-light text-center text-red-500 text-sm w-full">
               {!isAppleDevice() && t("If Chrome hasn't been installed, please open external browser manually!")}
             </h5>
           </AlertDialogFooter>
