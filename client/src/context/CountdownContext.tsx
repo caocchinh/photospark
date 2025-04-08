@@ -72,7 +72,7 @@ export const CountdownProvider = ({children}: {children: ReactNode}) => {
         }, 1000);
       } else if (autoSelectCountdownTimer <= 0 && setPhoto) {
         let themeToUse = photoRef.current.theme;
-        const frameType = photoRef.current!.frameType;
+        const frameType = photoRef.current.frameType;
 
         if (!themeToUse) {
           const validThemeNames = Object.keys(FrameOptions).filter((themeName) =>
@@ -80,21 +80,16 @@ export const CountdownProvider = ({children}: {children: ReactNode}) => {
           ) as ValidThemeType[];
 
           const randomThemeName = validThemeNames[Math.floor(Math.random() * validThemeNames.length)];
-          const themesFrames = FrameOptions[randomThemeName].filter((frame) => frame.type === frameType);
-          const randomThemeFrame = themesFrames[Math.floor(Math.random() * themesFrames.length)];
+          const randomThemeFrame = FrameOptions[randomThemeName][Math.floor(Math.random() * validThemeNames.length)];
 
           themeToUse = {name: randomThemeName, frame: randomThemeFrame};
-        } else {
-          const filteredFrame = FrameOptions[themeToUse!.name].filter((item) => item.type === frameType);
-          const randomFrame = filteredFrame[Math.floor(Math.random() * filteredFrame.length)];
-          themeToUse = {name: themeToUse!.name, frame: randomFrame};
         }
 
         setPhoto((prev) => {
           if (prev) {
             return {
               ...prev,
-              theme: prev.theme ? prev.theme : {name: themeToUse!.name, frame: themeToUse!.frame},
+              theme: {name: themeToUse.name, frame: themeToUse.frame},
               quantity: prev.quantity ? prev.quantity : 1 * (frameType == "singular" ? 1 : 2),
               images: [],
               selectedImages: [],

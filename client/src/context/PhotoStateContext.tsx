@@ -113,23 +113,21 @@ export const PhotoStateProvider = ({children}: {children: ReactNode}) => {
   };
 
   const updateFrameType = (frameType: ValidFrameType) => {
-    setPhoto((prev) => {
-      if (!prev)
-        return {
-          images: [],
-          selectedImages: [],
-          theme: null,
-          quantity: null,
-          video: {
-            data: new Blob(),
-            r2_url: null,
-          },
-          isTransition: false,
-          id: null,
-          error: false,
-          frameType: frameType,
-        };
-      return {...prev, frameType};
+    setPhoto(() => {
+      return {
+        images: [],
+        selectedImages: [],
+        theme: null,
+        quantity: null,
+        video: {
+          data: new Blob(),
+          r2_url: null,
+        },
+        isTransition: false,
+        id: null,
+        error: false,
+        frameType: frameType,
+      };
     });
   };
 
