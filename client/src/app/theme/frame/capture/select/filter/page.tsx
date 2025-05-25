@@ -71,24 +71,28 @@ const FilterPage = () => {
 
   useEffect(() => {
     async function calculatePrintQuantity() {
-      for (const image of photo!.images) {
-        if (image.data) {
-          const img = new Image();
-          img.src = image.data;
+      if (!photo?.images?.length) return;
 
-          await new Promise((resolve) => {
-            img.onload = resolve;
+      const detectionPromises = photo.images
+        .filter((image) => image.data)
+        .map(async (image) => {
+          return new Promise<number>((resolve) => {
+            const img = new Image();
+            img.src = image.data!;
+
+            img.onload = () => {
+              detectFaces(img)
+                .then((detections) => resolve(detections))
+                .catch(() => resolve(0));
+            };
+
+            img.onerror = () => resolve(0);
           });
-          detectFaces(img).then((detections) => {
-            setPeopleCount((prev) => {
-              if (detections > prev) {
-                return detections;
-              }
-              return prev;
-            });
-          });
-        }
-      }
+        });
+
+      const detectionResults = await Promise.all(detectionPromises);
+      const maxPeopleCount = Math.max(0, ...detectionResults);
+      setPeopleCount(maxPeopleCount);
       setIsDetectionDone(true);
     }
 
