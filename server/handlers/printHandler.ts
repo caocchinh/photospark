@@ -24,7 +24,6 @@ export const handlePrint = async (
   const printJobId = `print-${Date.now()}-${Math.random()
     .toString(36)
     .substr(2, 9)}`;
-  console.log(message.quantity);
   logger.info("Print job received", {
     jobId: printJobId,
     socketId: socket.id,

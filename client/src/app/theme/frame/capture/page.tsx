@@ -41,7 +41,7 @@ const CapturePage = () => {
   const [isCountingDown, setIsCountingDown] = useState(false);
   const [cycles, setCycles] = useState(1);
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const { detectFaces } = useFaceApi();
+  const { detectFaces, isModelLoaded } = useFaceApi();
   const [peopleCount, setPeopleCount] = useState(0);
   const { isSocketConnected, isOnline } = useSocket();
   const { t } = useTranslation();
@@ -355,7 +355,7 @@ const CapturePage = () => {
       navigateTo(ROUTES.SELECT);
       return;
     }
-    if (isCountingDown && isSocketConnected && isOnline) {
+    if (isCountingDown && isSocketConnected && isOnline && isModelLoaded) {
       timer = setTimeout(() => {
         if (count > 0 && cycles <= NUM_OF_CAPTURE_IMAGE) {
           setCount((prevCount) => prevCount - 1);
@@ -401,6 +401,7 @@ const CapturePage = () => {
     photo?.id,
     numberOfUploadedImage,
     photo?.images.length,
+    isModelLoaded,
   ]);
 
   return (
