@@ -1,48 +1,66 @@
 "use client";
 import usePreventNavigation from "@/hooks/usePreventNavigation";
-import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import CollabTransition from "@/components/CollabTransition";
-import {useTranslation} from "react-i18next";
-import {Button} from "@/components/ui/button";
-import {Check, ChevronsUpDown} from "lucide-react";
-import {cn} from "@/lib/utils";
+import { useTranslation } from "react-i18next";
+import { Button } from "@/components/ui/button";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { cn } from "@/lib/utils";
 import Image from "next/image";
-import {Command, CommandGroup, CommandItem, CommandList} from "@/components/ui/command";
-import {Card, CardContent, CardTitle} from "@/components/ui/card";
+import {
+  Command,
+  CommandGroup,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
-import {ROUTES} from "@/constants/routes";
+import { ROUTES } from "@/constants/routes";
 import SingularLayout from "@/components/layout-image/SingularLayout";
 import DoubleLayout from "@/components/layout-image/DoubleLayout";
-import {MdSettings} from "react-icons/md";
-import {useCallback, useState} from "react";
-import {Input} from "@/components/ui/input";
-import {Label} from "@/components/ui/label";
+import { MdSettings } from "react-icons/md";
+import { useCallback, useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import CameraSetting from "@/components/CameraSetting";
-import {RxCross1} from "react-icons/rx";
+import { RxCross1 } from "react-icons/rx";
 import Cooldown from "@/components/Cooldown";
-import {CLICK_SOUND_URL, CLICK_SOUND_VOUME, LANGUAGE_LIST} from "@/constants/constants";
-import {usePhotoState} from "@/context/PhotoStateContext";
-import {useCountdown} from "@/context/CountdownContext";
+import {
+  CLICK_SOUND_URL,
+  CLICK_SOUND_VOUME,
+  LANGUAGE_LIST,
+} from "@/constants/constants";
+import { usePhotoState } from "@/context/PhotoStateContext";
+import { useCountdown } from "@/context/CountdownContext";
 import useSound from "use-sound";
+import QuantitySetting from "@/components/QuantitySetting";
 
 const LayoutPage = () => {
-  const {photo, updateFrameType} = usePhotoState();
-  const {autoSelectCountdownTimer} = useCountdown();
-  const {t, i18n} = useTranslation();
+  const { photo, updateFrameType } = usePhotoState();
+  const { autoSelectCountdownTimer } = useCountdown();
+  const { t, i18n } = useTranslation();
   usePreventNavigation();
   const [isPasswordCorrect, setIsPasswordCorrect] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [password, setPassword] = useState("");
   const [isWrongPassword, setIsWrongPassword] = useState(false);
   const [language, setLanguage] = useState(() => {
-    const defaultLang = LANGUAGE_LIST.find((lang) => lang.value === i18n.language);
+    const defaultLang = LANGUAGE_LIST.find(
+      (lang) => lang.value === i18n.language
+    );
     return defaultLang?.label ?? "English";
   });
-  const [playClick] = useSound(CLICK_SOUND_URL, {volume: CLICK_SOUND_VOUME});
+  const [playClick] = useSound(CLICK_SOUND_URL, { volume: CLICK_SOUND_VOUME });
 
   const handleLanguageSelect = useCallback(
     (currentValue: string) => {
-      const selectedLang = LANGUAGE_LIST.find((lang) => lang.label === currentValue);
+      const selectedLang = LANGUAGE_LIST.find(
+        (lang) => lang.label === currentValue
+      );
       if (selectedLang) {
         setLanguage(currentValue);
         i18n.changeLanguage(selectedLang.value);
@@ -63,10 +81,7 @@ const LayoutPage = () => {
       >
         {!photo && <CollabTransition />}
 
-        <Popover
-          open={isOpen}
-          onOpenChange={setIsOpen}
-        >
+        <Popover open={isOpen} onOpenChange={setIsOpen}>
           <PopoverTrigger asChild>
             <Button
               variant="outline"
@@ -76,9 +91,17 @@ const LayoutPage = () => {
               onMouseDown={() => playClick()}
             >
               <div className="flex items-center justify-center gap-2">
-                {language ? LANGUAGE_LIST.find((_language) => _language.label === language)?.label : t("Select language...")}
+                {language
+                  ? LANGUAGE_LIST.find(
+                      (_language) => _language.label === language
+                    )?.label
+                  : t("Select language...")}
                 <Image
-                  src={LANGUAGE_LIST.find((_language) => _language.label === language)?.image_src ?? ""}
+                  src={
+                    LANGUAGE_LIST.find(
+                      (_language) => _language.label === language
+                    )?.image_src ?? ""
+                  }
                   alt="language"
                   width={20}
                   height={20}
@@ -105,7 +128,14 @@ const LayoutPage = () => {
                         width={20}
                         height={20}
                       />
-                      <Check className={cn("ml-auto", language === _language.label ? "opacity-100" : "opacity-0")} />
+                      <Check
+                        className={cn(
+                          "ml-auto",
+                          language === _language.label
+                            ? "opacity-100"
+                            : "opacity-0"
+                        )}
+                      />
                     </CommandItem>
                   ))}
                 </CommandGroup>
@@ -114,7 +144,9 @@ const LayoutPage = () => {
           </PopoverContent>
         </Popover>
 
-        <CardTitle className="mb-8 text-5xl uppercase">{t("Choose a layout")}</CardTitle>
+        <CardTitle className="mb-8 text-5xl uppercase">
+          {t("Choose a layout")}
+        </CardTitle>
         <CardContent className="flex items-center justify-center gap-12 w-[90%]">
           <Link
             href={ROUTES.THEME}
@@ -147,22 +179,32 @@ const LayoutPage = () => {
           <PopoverContent
             className="w-[250px]"
             sideOffset={10}
-            style={{marginRight: "77px"}}
+            style={{ marginRight: "77px" }}
           >
             {isPasswordCorrect ? (
-              <CameraSetting />
+              <div className="flex items-center justify-center gap-4 flex-col">
+                <CameraSetting />
+                <QuantitySetting />
+              </div>
             ) : (
               <form
                 className="flex flex-col w-full h-full gap-4"
                 onSubmit={(e) => {
                   e.preventDefault();
-                  setIsPasswordCorrect(password === process.env.NEXT_PUBLIC_ADMIN_PASSWORD);
-                  setIsWrongPassword(password !== process.env.NEXT_PUBLIC_ADMIN_PASSWORD);
+                  setIsPasswordCorrect(
+                    password === process.env.NEXT_PUBLIC_ADMIN_PASSWORD
+                  );
+                  setIsWrongPassword(
+                    password !== process.env.NEXT_PUBLIC_ADMIN_PASSWORD
+                  );
                 }}
               >
                 <Label
                   htmlFor="password"
-                  className={cn(isWrongPassword ? "text-red-500" : "", "text-center")}
+                  className={cn(
+                    isWrongPassword ? "text-red-500" : "",
+                    "text-center"
+                  )}
                 >
                   {t("Enter password to access settings")}
                 </Label>
@@ -189,7 +231,7 @@ const LayoutPage = () => {
                   )}
                 </div>
                 <Card className="flex flex-wrap items-center justify-center w-full h-full gap-2 p-2 border">
-                  {Array.from({length: 9}).map((_, index) => (
+                  {Array.from({ length: 9 }).map((_, index) => (
                     <div
                       onMouseDown={() => playClick()}
                       onClick={() => {
@@ -207,7 +249,9 @@ const LayoutPage = () => {
                 <Button
                   onMouseDown={() => playClick()}
                   type="submit"
-                  className={cn(isWrongPassword ? "bg-red-500 hover:bg-red-600" : "")}
+                  className={cn(
+                    isWrongPassword ? "bg-red-500 hover:bg-red-600" : ""
+                  )}
                 >
                   {isWrongPassword ? t("Wrong password") : t("Submit")}
                 </Button>

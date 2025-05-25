@@ -1,18 +1,38 @@
 "use client";
 
-import {createContext, ReactNode, useContext, useState} from "react";
-import {PhotoOptions, ValidThemeType, ValidFrameType} from "@/constants/types";
-import {FrameOptions} from "@/constants/constants";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import {
+  PhotoOptions,
+  ValidThemeType,
+  ValidFrameType,
+} from "@/constants/types";
+import { FrameOptions } from "@/constants/constants";
 
 interface PhotoStateContextType {
   photo: PhotoOptions<ValidThemeType> | undefined;
-  setPhoto: React.Dispatch<React.SetStateAction<PhotoOptions<ValidThemeType> | undefined>> | undefined;
+  quantityType: "manual" | "auto";
+  setPhoto:
+    | React.Dispatch<
+        React.SetStateAction<PhotoOptions<ValidThemeType> | undefined>
+      >
+    | undefined;
+  setQuantityType: (quantityType: "manual" | "auto") => void;
   updatePhotoTheme: (themeName: ValidThemeType, frameIndex: number) => void;
   updatePhotoQuantity: (quantity: number) => void;
   addPhotoImage: (id: string, imageData: string, r2Url?: string) => void;
-  setSelectedImages: (selectedImages: Array<{id: string; data: string; href: string}>) => void;
+  setSelectedImages: (
+    selectedImages: Array<{ id: string; data: string; href: string }>
+  ) => void;
   updateVideoData: (videoBlob: Blob | null, r2Url: string | null) => void;
-  updateFrame: (frameAttribute: (typeof FrameOptions)[ValidThemeType][number]) => void;
+  updateFrame: (
+    frameAttribute: (typeof FrameOptions)[ValidThemeType][number]
+  ) => void;
   clearPhotoState: () => void;
   updateFrameType: (frameType: ValidFrameType) => void;
 }
@@ -21,6 +41,8 @@ const PhotoStateContext = createContext<PhotoStateContextType>({
   photo: undefined,
   setPhoto: undefined,
   updatePhotoTheme: () => {},
+  quantityType: "manual",
+  setQuantityType: () => {},
   updatePhotoQuantity: () => {},
   addPhotoImage: () => {},
   setSelectedImages: () => {},
@@ -30,8 +52,20 @@ const PhotoStateContext = createContext<PhotoStateContextType>({
   updateFrameType: () => {},
 });
 
-export const PhotoStateProvider = ({children}: {children: ReactNode}) => {
-  const [photo, setPhoto] = useState<PhotoOptions<ValidThemeType> | undefined>(undefined);
+export const PhotoStateProvider = ({ children }: { children: ReactNode }) => {
+  const [photo, setPhoto] = useState<PhotoOptions<ValidThemeType> | undefined>(
+    undefined
+  );
+  const [quantityType, setQuantityType] = useState<"manual" | "auto">("manual");
+
+  useEffect(() => {
+    const quantityType = localStorage.getItem("quantityType");
+    if (quantityType) {
+      setQuantityType(quantityType as "manual" | "auto");
+    } else {
+      localStorage.setItem("quantityType", "manual");
+    }
+  }, []);
 
   // Helper functions for updating photo state
   const updatePhotoTheme = (themeName: ValidThemeType, frameIndex: number) => {
@@ -75,7 +109,9 @@ export const PhotoStateProvider = ({children}: {children: ReactNode}) => {
     });
   };
 
-  const updateFrame = (frameAttribute: (typeof FrameOptions)[ValidThemeType][number]) => {
+  const updateFrame = (
+    frameAttribute: (typeof FrameOptions)[ValidThemeType][number]
+  ) => {
     setPhoto((prevStyle) => {
       if (!prevStyle || !prevStyle.theme) return prevStyle;
       return {
@@ -89,7 +125,9 @@ export const PhotoStateProvider = ({children}: {children: ReactNode}) => {
     });
   };
 
-  const setSelectedImages = (selectedImages: Array<{id: string; data: string; href: string}>) => {
+  const setSelectedImages = (
+    selectedImages: Array<{ id: string; data: string; href: string }>
+  ) => {
     setPhoto((prev) => {
       if (!prev || !prev.images) return prev;
       return {
@@ -140,11 +178,13 @@ export const PhotoStateProvider = ({children}: {children: ReactNode}) => {
       value={{
         photo,
         setPhoto,
+        setQuantityType,
         updatePhotoTheme,
         updatePhotoQuantity,
         addPhotoImage,
         setSelectedImages,
         updateVideoData,
+        quantityType,
         clearPhotoState,
         updateFrame,
         updateFrameType,
