@@ -1,8 +1,19 @@
-import type {NextConfig} from "next";
+import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   webpack: (config) => {
-    config.externals = [...config.externals, {canvas: "canvas"}];
+    config.externals = [...config.externals, { canvas: "canvas" }];
+
+    // Add fallbacks for Node.js modules used by face-api.js
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false,
+      path: false,
+      crypto: false,
+      stream: false,
+      encoding: false,
+    };
+
     return config;
   },
   experimental: {

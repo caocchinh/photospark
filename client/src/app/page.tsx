@@ -23,7 +23,7 @@ import { ROUTES } from "@/constants/routes";
 import SingularLayout from "@/components/layout-image/SingularLayout";
 import DoubleLayout from "@/components/layout-image/DoubleLayout";
 import { MdSettings } from "react-icons/md";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import CameraSetting from "@/components/CameraSetting";
@@ -56,6 +56,26 @@ const LayoutPage = () => {
     return defaultLang?.label ?? "English";
   });
   const [playClick] = useSound(CLICK_SOUND_URL, { volume: CLICK_SOUND_VOUME });
+
+  useEffect(() => {
+    // Only load models in browser environment
+    if (typeof window !== "undefined") {
+      // Dynamically import face-api.js to avoid SSR issues
+      import("face-api.js").then((faceapi) => {
+        Promise.all([
+          faceapi.nets.ssdMobilenetv1.loadFromUri("/models"),
+          faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
+          faceapi.nets.faceRecognitionNet.loadFromUri("/models"),
+        ])
+          .then(() => {
+            console.log("Models loaded");
+          })
+          .catch((error) => {
+            console.error("Error loading face-api models:", error);
+          });
+      });
+    }
+  }, []);
 
   const handleLanguageSelect = useCallback(
     (currentValue: string) => {
