@@ -17,16 +17,8 @@ import { MdWarning } from "react-icons/md";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { IoRefresh } from "react-icons/io5";
-import { useFaceApi } from "@/context/FaceApiContext";
 const CapturePage = () => {
-  const {
-    photo,
-    setPhoto,
-    addPhotoImage,
-    updateVideoData,
-    updatePhotoQuantity,
-    quantityType,
-  } = usePhotoState();
+  const { photo, setPhoto, addPhotoImage, updateVideoData } = usePhotoState();
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -41,8 +33,6 @@ const CapturePage = () => {
   const [isCountingDown, setIsCountingDown] = useState(false);
   const [cycles, setCycles] = useState(1);
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const { detectFaces, isModelLoaded } = useFaceApi();
-  const [peopleCount, setPeopleCount] = useState(0);
   const { isSocketConnected, isOnline } = useSocket();
   const { t } = useTranslation();
   const [videoIntrinsicSize, setVideoIntrinsicSize] = useState<{
@@ -155,27 +145,7 @@ const CapturePage = () => {
         context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
         const dataURL = canvas.toDataURL("image/jpeg", 1.0);
 
-        if (quantityType == "auto") {
-          const img = new Image();
-          img.src = dataURL;
-
-          await new Promise((resolve) => {
-            img.onload = resolve;
-          });
-
-          const detections = await detectFaces(img);
-          setPeopleCount((prev) => {
-            if (detections > prev) {
-              return detections;
-            }
-            return prev;
-          });
-        }
-
         if (cycles == NUM_OF_CAPTURE_IMAGE) {
-          if (quantityType == "auto") {
-            updatePhotoQuantity(peopleCount);
-          }
           addPhotoImage(cycles.toString(), dataURL);
           return;
         }
@@ -204,15 +174,11 @@ const CapturePage = () => {
   }, [
     addPhotoImage,
     cycles,
-    detectFaces,
     mediaRecorder,
     navigateTo,
-    peopleCount,
     photo,
-    quantityType,
     setPhoto,
     stopCamera,
-    updatePhotoQuantity,
     videoIntrinsicSize,
   ]);
 
@@ -355,7 +321,7 @@ const CapturePage = () => {
       navigateTo(ROUTES.SELECT);
       return;
     }
-    if (isCountingDown && isSocketConnected && isOnline && isModelLoaded) {
+    if (isCountingDown && isSocketConnected && isOnline) {
       timer = setTimeout(() => {
         if (count > 0 && cycles <= NUM_OF_CAPTURE_IMAGE) {
           setCount((prevCount) => prevCount - 1);
@@ -401,7 +367,6 @@ const CapturePage = () => {
     photo?.id,
     numberOfUploadedImage,
     photo?.images.length,
-    isModelLoaded,
   ]);
 
   return (

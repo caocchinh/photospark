@@ -1,11 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import {useCallback, useEffect, useRef, useState} from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import useImage from "use-image";
-import {Image as KonvaImage, Rect} from "react-konva";
-import {Layer, Stage} from "react-konva";
+import { Image as KonvaImage, Rect } from "react-konva";
+import { Layer, Stage } from "react-konva";
 import FrameImage from "@/components/FrameImage";
-import {Button} from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   CLICK_SOUND_URL,
   CLICK_SOUND_VOUME,
@@ -18,25 +18,26 @@ import {
   OFFSET_X,
   OFFSET_Y,
 } from "@/constants/constants";
-import {cn} from "@/lib/utils";
-import {ScrollArea} from "@/components/ui/scroll-area";
-import {Stage as StageElement} from "konva/lib/Stage";
-import {useSocket} from "@/context/SocketContext";
-import {PiPrinter} from "react-icons/pi";
-import {useTranslation} from "react-i18next";
-import {GlowEffect} from "@/components/ui/glow-effect";
-import {SlidingNumber} from "@/components/ui/sliding-number";
+import { cn } from "@/lib/utils";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Stage as StageElement } from "konva/lib/Stage";
+import { useSocket } from "@/context/SocketContext";
+import { PiPrinter } from "react-icons/pi";
+import { useTranslation } from "react-i18next";
+import { GlowEffect } from "@/components/ui/glow-effect";
+import { SlidingNumber } from "@/components/ui/sliding-number";
 import usePreventNavigation from "@/hooks/usePreventNavigation";
-import {updateFilter} from "@/server/actions";
-import {QRCodeCanvas} from "qrcode.react";
-import {ROUTES} from "@/constants/routes";
+import { updateFilter } from "@/server/actions";
+import { QRCodeCanvas } from "qrcode.react";
+import { ROUTES } from "@/constants/routes";
 import LoadingSpinner from "@/components/LoadingSpinner";
-import {IoIosCheckmark} from "react-icons/io";
-import {usePhotoState} from "@/context/PhotoStateContext";
+import { IoIosCheckmark } from "react-icons/io";
+import { usePhotoState } from "@/context/PhotoStateContext";
 import useSound from "use-sound";
+import { useFaceApi } from "@/context/FaceApiContext";
 
 const FilterPage = () => {
-  const {photo} = usePhotoState();
+  const { photo, quantityType } = usePhotoState();
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -47,20 +48,60 @@ const FilterPage = () => {
   }, [photo]);
   const filterRefs = useRef<(HTMLDivElement | null)[]>([]);
   const uploadAttemptedRef = useRef(false);
-  const {setPhoto} = usePhotoState();
-  const {t} = useTranslation();
+  const { setPhoto } = usePhotoState();
+  const { t } = useTranslation();
   const qrRef = useRef<HTMLCanvasElement | null>(null);
   const [isQrLogoLoaded, setIsQrLogoLoaded] = useState(false);
-  const [frameImg, frameImgStatus] = useImage(photo ? photo.theme!.frame.src : "");
+  const [frameImg, frameImgStatus] = useImage(
+    photo ? photo.theme!.frame.src : ""
+  );
   const [filter, setFilter] = useState<string | null>(null);
   const stageRef = useRef<StageElement | null>(null);
-  const {socket, isSocketConnected, isOnline} = useSocket();
+  const { socket, isSocketConnected, isOnline } = useSocket();
   const [isMediaUploaded, setIsMediaUploaded] = useState(false);
   const [timeLeft, setTimeLeft] = useState(FILTER_SELECT_DURATION);
   const [printed, setPrinted] = useState(false);
-  const {navigateTo} = usePreventNavigation();
+  const { navigateTo } = usePreventNavigation();
   const filterRef = useRef(filter);
-  const [playClick] = useSound(CLICK_SOUND_URL, {volume: CLICK_SOUND_VOUME});
+  const [playClick] = useSound(CLICK_SOUND_URL, { volume: CLICK_SOUND_VOUME });
+  const { detectFaces, isModelLoaded } = useFaceApi();
+  const [peopleCount, setPeopleCount] = useState(0);
+  const [isDetectionDone, setIsDetectionDone] = useState(false);
+  const detectionAttemptedRef = useRef(false);
+
+  useEffect(() => {
+    async function calculatePrintQuantity() {
+      for (const image of photo!.images) {
+        if (image.data) {
+          const img = new Image();
+          img.src = image.data;
+
+          await new Promise((resolve) => {
+            img.onload = resolve;
+          });
+          detectFaces(img).then((detections) => {
+            setPeopleCount((prev) => {
+              if (detections > prev) {
+                return detections;
+              }
+              return prev;
+            });
+          });
+        }
+      }
+      setIsDetectionDone(true);
+    }
+
+    if (
+      quantityType == "auto" &&
+      isModelLoaded &&
+      !isDetectionDone &&
+      !detectionAttemptedRef.current
+    ) {
+      detectionAttemptedRef.current = true;
+      calculatePrintQuantity();
+    }
+  }, [detectFaces, isDetectionDone, isModelLoaded, photo, quantityType]);
 
   useEffect(() => {
     async function loadImage() {
@@ -87,7 +128,10 @@ const FilterPage = () => {
       if (printed) return;
       setPrinted(true);
       try {
-        const filterReponse = await updateFilter(photo.id, filterRef.current ? filterRef.current : "Original");
+        const filterReponse = await updateFilter(
+          photo.id,
+          filterRef.current ? filterRef.current : "Original"
+        );
         if (filterReponse.error) {
           throw new Error("Failed to update filter");
         } else {
@@ -97,16 +141,16 @@ const FilterPage = () => {
         console.error("Error updating filter:", error);
       }
 
-      const dataURL = stageRef.current.toDataURL({pixelRatio: 5});
+      const dataURL = stageRef.current.toDataURL({ pixelRatio: 5 });
 
       socket.emit(
         "print",
         {
-          quantity: photo.quantity,
+          quantity: quantityType == "auto" ? peopleCount : photo.quantity,
           dataURL: dataURL,
           theme: photo.theme!.name,
         },
-        async (response: {success: boolean; message?: string}) => {
+        async (response: { success: boolean; message?: string }) => {
           console.log("Print event emitted:", response);
           if (!response.success) {
             console.error("Print failed:", response.message);
@@ -153,27 +197,54 @@ const FilterPage = () => {
         }
       );
     }
-  }, [photo, socket, printed, isSocketConnected, isMediaUploaded, setPhoto, navigateTo]);
+  }, [
+    photo,
+    socket,
+    printed,
+    isSocketConnected,
+    quantityType,
+    peopleCount,
+    isMediaUploaded,
+    setPhoto,
+    navigateTo,
+  ]);
 
   useEffect(() => {
     async function uploadImageToDatabase() {
-      if (!photo || !socket || !isSocketConnected || !isOnline || uploadAttemptedRef.current) return;
+      if (
+        !photo ||
+        !socket ||
+        !isSocketConnected ||
+        !isOnline ||
+        uploadAttemptedRef.current
+      )
+        return;
 
       uploadAttemptedRef.current = true;
 
       console.log("Starting image upload process");
 
       for (const image of photo.images) {
-        console.log("Uploading image to database:", image.href, photo.images.length);
-        const slotPosition = photo.selectedImages.findIndex((selectedImage) => selectedImage.id == image.id);
+        console.log(
+          "Uploading image to database:",
+          image.href,
+          photo.images.length
+        );
+        const slotPosition = photo.selectedImages.findIndex(
+          (selectedImage) => selectedImage.id == image.id
+        );
         try {
-          const {createImage} = await import("@/server/actions");
+          const { createImage } = await import("@/server/actions");
 
           const imageResponse = await createImage(
             image.href,
             photo.id!,
-            slotPosition != -1 ? photo.theme!.frame.slotPositions[slotPosition].x : null,
-            slotPosition != -1 ? photo.theme!.frame.slotPositions[slotPosition].y : null,
+            slotPosition != -1
+              ? photo.theme!.frame.slotPositions[slotPosition].x
+              : null,
+            slotPosition != -1
+              ? photo.theme!.frame.slotPositions[slotPosition].y
+              : null,
             photo.theme!.frame.slotDimensions.height,
             photo.theme!.frame.slotDimensions.width
           );
@@ -190,16 +261,25 @@ const FilterPage = () => {
             proccessedImageId: photo.id!,
             width: photo.theme!.frame.slotDimensions.width,
             height: photo.theme!.frame.slotDimensions.height,
-            slotPositionX: slotPosition != -1 ? photo.theme!.frame.slotPositions[slotPosition].x : null,
-            slotPositionY: slotPosition != -1 ? photo.theme!.frame.slotPositions[slotPosition].y : null,
+            slotPositionX:
+              slotPosition != -1
+                ? photo.theme!.frame.slotPositions[slotPosition].x
+                : null,
+            slotPositionY:
+              slotPosition != -1
+                ? photo.theme!.frame.slotPositions[slotPosition].y
+                : null,
           });
         }
       }
 
       if (photo.video.r2_url) {
         try {
-          const {createVideo} = await import("@/server/actions");
-          const videoResponse = await createVideo(photo.video.r2_url, photo.id!);
+          const { createVideo } = await import("@/server/actions");
+          const videoResponse = await createVideo(
+            photo.video.r2_url,
+            photo.id!
+          );
           if (videoResponse.error) {
             throw new Error("Failed to upload video to database");
           } else {
@@ -207,7 +287,10 @@ const FilterPage = () => {
           }
         } catch (error) {
           console.error("Error uploading video to database:", error);
-          socket.emit("upload-video-error", {url: photo.video.r2_url, proccessedImageId: photo.id});
+          socket.emit("upload-video-error", {
+            url: photo.video.r2_url,
+            proccessedImageId: photo.id,
+          });
         }
       }
 
@@ -222,7 +305,12 @@ const FilterPage = () => {
   useEffect(() => {
     let timer: NodeJS.Timeout | undefined = undefined;
 
-    if (isSocketConnected && isOnline && !printed && frameImgStatus === "loaded") {
+    if (
+      isSocketConnected &&
+      isOnline &&
+      !printed &&
+      frameImgStatus === "loaded"
+    ) {
       if (timeLeft > 0) {
         timer = setTimeout(() => {
           setTimeLeft((prevTime) => prevTime - 1);
@@ -235,10 +323,25 @@ const FilterPage = () => {
   }, [timeLeft, isSocketConnected, isOnline, printed, frameImgStatus]);
 
   useEffect(() => {
-    if (isSocketConnected && isOnline && !printed && frameImgStatus === "loaded" && isMediaUploaded && timeLeft <= 0) {
+    if (
+      isSocketConnected &&
+      isOnline &&
+      !printed &&
+      frameImgStatus === "loaded" &&
+      isMediaUploaded &&
+      timeLeft <= 0
+    ) {
       printImage();
     }
-  }, [printImage, isSocketConnected, isOnline, printed, frameImgStatus, isMediaUploaded, timeLeft]);
+  }, [
+    printImage,
+    isSocketConnected,
+    isOnline,
+    printed,
+    frameImgStatus,
+    isMediaUploaded,
+    timeLeft,
+  ]);
 
   const selectRandomFilter = useCallback(() => {
     const randomIndex = Math.floor(Math.random() * FILTERS.length);
@@ -256,7 +359,9 @@ const FilterPage = () => {
         <div
           className={cn(
             "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full flex items-center justify-center",
-            frameImgStatus != "loaded" ? "opacity-100" : "opacity-0 pointer-events-none"
+            frameImgStatus != "loaded"
+              ? "opacity-100"
+              : "opacity-0 pointer-events-none"
           )}
         >
           <div className="loader"></div>
@@ -266,7 +371,9 @@ const FilterPage = () => {
           className={cn(
             !timeLeft || printed ? "pointer-events-none" : null,
             "w-[95%] flex items-center justify-center flex-col transition duration-300",
-            frameImgStatus != "loaded" ? "opacity-0 pointer-events-none" : "opacity-100"
+            frameImgStatus != "loaded"
+              ? "opacity-0 pointer-events-none"
+              : "opacity-100"
           )}
         >
           {photo && frameImg && (
@@ -285,67 +392,87 @@ const FilterPage = () => {
                         fill="white"
                       />
                     </Layer>
-                    {Array.from({length: photo.frameType == "singular" ? 1 : 2}, (_, _index) => (
-                      <Layer
-                        key={_index}
-                        x={OFFSET_X}
-                        y={OFFSET_Y}
-                      >
-                        {photo.selectedImages.map(({id, data}, index) => {
-                          return (
-                            data && (
-                              <FrameImage
-                                key={id}
-                                url={data}
-                                y={photo.theme!.frame.slotPositions[index].y}
-                                x={photo.theme!.frame.slotPositions[index].x + (FRAME_WIDTH / 2) * _index}
-                                height={photo.theme!.frame.slotDimensions.height}
-                                width={photo.theme!.frame.slotDimensions.width}
-                                filter={filter}
-                              />
-                            )
-                          );
-                        })}
-                      </Layer>
-                    ))}
+                    {Array.from(
+                      { length: photo.frameType == "singular" ? 1 : 2 },
+                      (_, _index) => (
+                        <Layer key={_index} x={OFFSET_X} y={OFFSET_Y}>
+                          {photo.selectedImages.map(({ id, data }, index) => {
+                            return (
+                              data && (
+                                <FrameImage
+                                  key={id}
+                                  url={data}
+                                  y={photo.theme!.frame.slotPositions[index].y}
+                                  x={
+                                    photo.theme!.frame.slotPositions[index].x +
+                                    (FRAME_WIDTH / 2) * _index
+                                  }
+                                  height={
+                                    photo.theme!.frame.slotDimensions.height
+                                  }
+                                  width={
+                                    photo.theme!.frame.slotDimensions.width
+                                  }
+                                  filter={filter}
+                                />
+                              )
+                            );
+                          })}
+                        </Layer>
+                      )
+                    )}
 
-                    {Array.from({length: photo.frameType == "singular" ? 1 : 2}, (_, index) => (
-                      <Layer
-                        key={index}
-                        x={OFFSET_X}
-                        y={OFFSET_Y}
-                      >
-                        <KonvaImage
-                          image={frameImg}
-                          x={(FRAME_WIDTH / 2) * index}
-                          height={FRAME_HEIGHT}
-                          width={FRAME_WIDTH / (photo.frameType == "singular" ? 1 : 2)}
-                        />
-                      </Layer>
-                    ))}
+                    {Array.from(
+                      { length: photo.frameType == "singular" ? 1 : 2 },
+                      (_, index) => (
+                        <Layer key={index} x={OFFSET_X} y={OFFSET_Y}>
+                          <KonvaImage
+                            image={frameImg}
+                            x={(FRAME_WIDTH / 2) * index}
+                            height={FRAME_HEIGHT}
+                            width={
+                              FRAME_WIDTH /
+                              (photo.frameType == "singular" ? 1 : 2)
+                            }
+                          />
+                        </Layer>
+                      )
+                    )}
 
                     <Layer>
-                      {Array.from({length: photo.frameType == "singular" ? 1 : 2}, (_, index) => (
-                        <KonvaImage
-                          key={index}
-                          image={qrRef.current ? qrRef.current : undefined}
-                          x={photo.frameType == "singular" ? FRAME_WIDTH - OFFSET_X - 20 : (FRAME_WIDTH / 2) * index + OFFSET_X + FRAME_WIDTH / 2.6}
-                          y={FRAME_HEIGHT - OFFSET_Y - (photo.frameType == "singular" ? 10 : 12)}
-                          height={45}
-                          width={45}
-                        />
-                      ))}
+                      {Array.from(
+                        { length: photo.frameType == "singular" ? 1 : 2 },
+                        (_, index) => (
+                          <KonvaImage
+                            key={index}
+                            image={qrRef.current ? qrRef.current : undefined}
+                            x={
+                              photo.frameType == "singular"
+                                ? FRAME_WIDTH - OFFSET_X - 20
+                                : (FRAME_WIDTH / 2) * index +
+                                  OFFSET_X +
+                                  FRAME_WIDTH / 2.6
+                            }
+                            y={
+                              FRAME_HEIGHT -
+                              OFFSET_Y -
+                              (photo.frameType == "singular" ? 10 : 12)
+                            }
+                            height={45}
+                            width={45}
+                          />
+                        )
+                      )}
                     </Layer>
                   </Stage>
                 </div>
                 <div className="flex flex-col items-center justify-center gap-5">
                   <div className="flex items-center justify-center gap-2 mb-4">
-                    <h1 className="text-4xl font-semibold uppercase">{t("Choose a filter")}</h1>
+                    <h1 className="text-4xl font-semibold uppercase">
+                      {t("Choose a filter")}
+                    </h1>
                     <span className="text-4xl font-bold text-rose-500 ">
-                      <SlidingNumber
-                        value={timeLeft}
-                        padStart={true}
-                      />
+                      <SlidingNumber value={timeLeft} padStart={true} />
                     </span>
                   </div>
                   <ScrollArea className=" h-[60vh] w-[100%] ">
@@ -358,7 +485,9 @@ const FilterPage = () => {
                           }}
                           className={cn(
                             "basis-1/6 flex flex-col gap-2 items-center justify-center border-[4px] cursor-pointer rounded hover:border-black",
-                            filter == item.value ? "border-rose-500 hover:border-rose-500" : null
+                            filter == item.value
+                              ? "border-rose-500 hover:border-rose-500"
+                              : null
                           )}
                           key={index}
                           onClick={() => setFilter(item.value)}
@@ -379,7 +508,8 @@ const FilterPage = () => {
                       onClick={selectRandomFilter}
                       onMouseDown={() => playClick()}
                     >
-                      {t("Random filter")} - {FILTERS.find((item) => item.value == filter)?.name}
+                      {t("Random filter")} -{" "}
+                      {FILTERS.find((item) => item.value == filter)?.name}
                     </Button>
                     <Button
                       className="flex items-center justify-center w-full gap-1 mt-2 font-light"
@@ -404,7 +534,9 @@ const FilterPage = () => {
                     <Button
                       className={cn(
                         "flex text-xl text-center items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-6 font-light hover:opacity-[85%] w-full relative z-10",
-                        printed || !isMediaUploaded ? "pointer-events-none opacity-[85%]" : null
+                        printed || !isMediaUploaded || !isDetectionDone
+                          ? "pointer-events-none opacity-[85%]"
+                          : null
                       )}
                       onClick={printImage}
                     >
@@ -428,7 +560,7 @@ const FilterPage = () => {
       </div>
       <QRCodeCanvas
         key={isQrLogoLoaded ? photo?.id : Math.random().toString()}
-        style={{display: "none"}}
+        style={{ display: "none" }}
         value={process.env.NEXT_PUBLIC_QR_DOMAIN + "/" + photo?.id}
         title={"VTEAM Photobooth"}
         ref={qrRef}
