@@ -1,25 +1,32 @@
 "use client";
-import {cn} from "@/lib/utils";
-import {useState, useEffect, useRef, useCallback} from "react";
+import { cn } from "@/lib/utils";
+import { useState, useEffect, useRef, useCallback } from "react";
 import useSound from "use-sound";
-import {NUM_OF_CAPTURE_IMAGE, CAPTURE_DURATION} from "@/constants/constants";
-import {uploadImageToR2} from "@/lib/r2";
-import {SlidingNumber} from "@/components/ui/sliding-number";
+import { NUM_OF_CAPTURE_IMAGE, CAPTURE_DURATION } from "@/constants/constants";
+import { uploadImageToR2 } from "@/lib/r2";
+import { SlidingNumber } from "@/components/ui/sliding-number";
 import usePreventNavigation from "@/hooks/usePreventNavigation";
-import {createProcessedImage} from "@/server/actions";
-import {ROUTES} from "@/constants/routes";
-import {CountdownCircleTimer} from "react-countdown-circle-timer";
+import { createProcessedImage } from "@/server/actions";
+import { ROUTES } from "@/constants/routes";
+import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import CameraLoading from "@/components/CameraLoading";
-import {usePhotoState} from "@/context/PhotoStateContext";
-import {useCamera} from "@/context/CameraContext";
-import {useSocket} from "@/context/SocketContext";
-import {MdWarning} from "react-icons/md";
-import {useTranslation} from "react-i18next";
-import {Button} from "@/components/ui/button";
-import {IoRefresh} from "react-icons/io5";
-
+import { usePhotoState } from "@/context/PhotoStateContext";
+import { useCamera } from "@/context/CameraContext";
+import { useSocket } from "@/context/SocketContext";
+import { MdWarning } from "react-icons/md";
+import { useTranslation } from "react-i18next";
+import { Button } from "@/components/ui/button";
+import { IoRefresh } from "react-icons/io5";
+import { useFaceApi } from "@/context/FaceApiContext";
 const CapturePage = () => {
-  const {photo, setPhoto, addPhotoImage, updateVideoData} = usePhotoState();
+  const {
+    photo,
+    setPhoto,
+    addPhotoImage,
+    updateVideoData,
+    updatePhotoQuantity,
+    quantityType,
+  } = usePhotoState();
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -28,15 +35,20 @@ const CapturePage = () => {
       return;
     }
   }, [photo]);
-  const {cameraStream, stopCamera, startCamera} = useCamera();
+  const { cameraStream, stopCamera, startCamera } = useCamera();
   const [count, setCount] = useState(CAPTURE_DURATION);
   const [isCameraError, setIsCameraError] = useState(false);
   const [isCountingDown, setIsCountingDown] = useState(false);
   const [cycles, setCycles] = useState(1);
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const {isSocketConnected, isOnline} = useSocket();
-  const {t} = useTranslation();
-  const [videoIntrinsicSize, setVideoIntrinsicSize] = useState<{width: number; height: number} | null>(null);
+  const { detectFaces } = useFaceApi();
+  const [peopleCount, setPeopleCount] = useState(0);
+  const { isSocketConnected, isOnline } = useSocket();
+  const { t } = useTranslation();
+  const [videoIntrinsicSize, setVideoIntrinsicSize] = useState<{
+    width: number;
+    height: number;
+  } | null>(null);
 
   const [isVideoRefReady, setIsVideoRefReady] = useState(false);
   const setVideoRef = useCallback((node: HTMLVideoElement | null) => {
@@ -45,10 +57,14 @@ const CapturePage = () => {
       setIsVideoRefReady(true);
     }
   }, []);
-  const [playCameraShutterSound] = useSound("/sound/shutter.mp3", {volume: 1});
-  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
+  const [playCameraShutterSound] = useSound("/sound/shutter.mp3", {
+    volume: 1,
+  });
+  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(
+    null
+  );
 
-  const {navigateTo} = usePreventNavigation();
+  const { navigateTo } = usePreventNavigation();
   const photoRef = useRef(photo);
   const [numberOfUploadedImage, setNumberOfUploadedImage] = useState(0);
   const initializationDoneRef = useRef(false);
@@ -64,7 +80,7 @@ const CapturePage = () => {
       const processedImageId = crypto.randomUUID();
       setPhoto!((prevStyle) => {
         if (prevStyle) {
-          return {...prevStyle, id: processedImageId};
+          return { ...prevStyle, id: processedImageId };
         }
         return prevStyle;
       });
@@ -87,7 +103,7 @@ const CapturePage = () => {
         stopCamera();
         setPhoto!((prevStyle) => {
           if (prevStyle) {
-            return {...prevStyle, error: true, id: null, images: []};
+            return { ...prevStyle, error: true, id: null, images: [] };
           }
           return prevStyle;
         });
@@ -99,25 +115,67 @@ const CapturePage = () => {
       }
     };
 
-    if (photoRef.current && !initializationDoneRef.current && isSocketConnected && isCountingDown && isOnline) {
+    if (
+      photoRef.current &&
+      !initializationDoneRef.current &&
+      isSocketConnected &&
+      isCountingDown &&
+      isOnline
+    ) {
       initializeProcessedImage();
     }
-  }, [cameraStream, isSocketConnected, isCountingDown, mediaRecorder, navigateTo, setPhoto, stopCamera, isOnline]);
+  }, [
+    cameraStream,
+    isSocketConnected,
+    isCountingDown,
+    mediaRecorder,
+    navigateTo,
+    setPhoto,
+    stopCamera,
+    isOnline,
+  ]);
 
   const handleCapture = useCallback(async () => {
     if (!photo) return;
     if (videoRef.current) {
       const canvas = document.createElement("canvas");
-      const context = canvas.getContext("2d", {colorSpace: "display-p3", willReadFrequently: true});
+      const context = canvas.getContext("2d", {
+        colorSpace: "display-p3",
+        willReadFrequently: true,
+      });
 
       if (context) {
-        canvas.width = videoIntrinsicSize!.width || photo.theme!.frame.slotDimensions.width;
-        canvas.height = videoIntrinsicSize!.height || photo.theme!.frame.slotDimensions.height;
+        canvas.width =
+          videoIntrinsicSize!.width || photo.theme!.frame.slotDimensions.width;
+        canvas.height =
+          videoIntrinsicSize!.height ||
+          photo.theme!.frame.slotDimensions.height;
         context.scale(-1, 1);
         context.translate(-canvas.width, 0);
         context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
         const dataURL = canvas.toDataURL("image/jpeg", 1.0);
+
+        if (quantityType == "auto") {
+          const img = new Image();
+          img.src = dataURL;
+
+          await new Promise((resolve) => {
+            img.onload = resolve;
+          });
+
+          const detections = await detectFaces(img);
+          setPeopleCount((prev) => {
+            if (detections > prev) {
+              return detections;
+            }
+            return prev;
+          });
+        }
+
         if (cycles == NUM_OF_CAPTURE_IMAGE) {
+          if (quantityType == "auto") {
+            updatePhotoQuantity(peopleCount);
+          }
           addPhotoImage(cycles.toString(), dataURL);
           return;
         }
@@ -131,7 +189,10 @@ const CapturePage = () => {
           setNumberOfUploadedImage((prev) => prev + 1);
           addPhotoImage(cycles.toString(), dataURL, imageUrl);
         } else {
-          setPhoto!((prevStyle) => prevStyle && {...prevStyle, error: true, id: null, images: []});
+          setPhoto!(
+            (prevStyle) =>
+              prevStyle && { ...prevStyle, error: true, id: null, images: [] }
+          );
           stopCamera();
           if (mediaRecorder && mediaRecorder.state === "recording") {
             mediaRecorder.stop();
@@ -140,10 +201,23 @@ const CapturePage = () => {
         }
       }
     }
-  }, [addPhotoImage, cycles, mediaRecorder, navigateTo, photo, setPhoto, stopCamera, videoIntrinsicSize]);
+  }, [
+    addPhotoImage,
+    cycles,
+    detectFaces,
+    mediaRecorder,
+    navigateTo,
+    peopleCount,
+    photo,
+    quantityType,
+    setPhoto,
+    stopCamera,
+    updatePhotoQuantity,
+    videoIntrinsicSize,
+  ]);
 
   const handleRecording = useCallback(
-    ({width, height}: {width: number; height: number}) => {
+    ({ width, height }: { width: number; height: number }) => {
       if (!videoRef.current?.srcObject) return;
 
       const stream = videoRef.current.srcObject as MediaStream;
@@ -178,13 +252,18 @@ const CapturePage = () => {
       let chunks: Blob[] = [];
 
       recorder.ondataavailable = (event) => {
-        if (event.data && event.data.size > 0 && isOnline && isSocketConnected) {
+        if (
+          event.data &&
+          event.data.size > 0 &&
+          isOnline &&
+          isSocketConnected
+        ) {
           chunks.push(event.data);
         }
       };
 
       recorder.onstop = () => {
-        const videoBlob = new Blob(chunks, {type: "video/webm"});
+        const videoBlob = new Blob(chunks, { type: "video/webm" });
         if (videoBlob.size > 0) {
           updateVideoData(videoBlob, null);
         }
@@ -250,7 +329,14 @@ const CapturePage = () => {
     if (!isCountingDown && cycles != NUM_OF_CAPTURE_IMAGE) {
       getVideo();
     }
-  }, [isCountingDown, handleRecording, cameraStream, isVideoRefReady, startCamera, cycles]);
+  }, [
+    isCountingDown,
+    handleRecording,
+    cameraStream,
+    isVideoRefReady,
+    startCamera,
+    cycles,
+  ]);
 
   useEffect(() => {
     let timer: NodeJS.Timeout | undefined = undefined;
@@ -329,11 +415,10 @@ const CapturePage = () => {
           {isCameraError && (
             <div className="absolute flex items-center justify-center w-full h-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
               <div className="flex flex-col items-center justify-center gap-3">
-                <MdWarning
-                  className="text-red-500"
-                  size={130}
-                />
-                <p className="text-4xl font-semibold text-red-500 uppercase">{t("Error loading camera")}!</p>
+                <MdWarning className="text-red-500" size={130} />
+                <p className="text-4xl font-semibold text-red-500 uppercase">
+                  {t("Error loading camera")}!
+                </p>
                 <Button
                   variant="outline"
                   onClick={() => window.location.reload()}
@@ -348,7 +433,9 @@ const CapturePage = () => {
           <div
             className={cn(
               "w-full h-full gap-2 flex items-center justify-evenly transition duration-300",
-              isCountingDown && !isCameraError ? "opacity-100" : "opacity-0 pointer-events-none"
+              isCountingDown && !isCameraError
+                ? "opacity-100"
+                : "opacity-0 pointer-events-none"
             )}
           >
             <div className="relative w-max h-[88vh]">
@@ -364,19 +451,25 @@ const CapturePage = () => {
                   <div
                     className={cn(
                       "absolute top-1/2  left-1/2 text-8xl text-white text-center w-full",
-                      !isCountingDown || cycles > NUM_OF_CAPTURE_IMAGE || count === 0 ? "hidden" : null
+                      !isCountingDown ||
+                        cycles > NUM_OF_CAPTURE_IMAGE ||
+                        count === 0
+                        ? "hidden"
+                        : null
                     )}
                     style={{
                       fontFamily: "var(--font-buffalo)",
                     }}
                   >
-                    <SlidingNumber
-                      value={count}
-                      padStart={false}
-                    />
+                    <SlidingNumber value={count} padStart={false} />
                   </div>
 
-                  <div className={cn("absolute w-full h-full bg-white top-0 opacity-0", count === 0 ? "flash-efect" : null)}></div>
+                  <div
+                    className={cn(
+                      "absolute w-full h-full bg-white top-0 opacity-0",
+                      count === 0 ? "flash-efect" : null
+                    )}
+                  ></div>
                 </>
               )}
             </div>
@@ -384,16 +477,20 @@ const CapturePage = () => {
             <div className="relative mt-3">
               <div className="absolute flex items-center justify-center -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
                 <span className="text-4xl font-bold">
-                  <SlidingNumber
-                    value={cycles}
-                    padStart={false}
-                  />
+                  <SlidingNumber value={cycles} padStart={false} />
                 </span>
-                <h1 className="text-4xl font-bold text-center">/{NUM_OF_CAPTURE_IMAGE}</h1>
+                <h1 className="text-4xl font-bold text-center">
+                  /{NUM_OF_CAPTURE_IMAGE}
+                </h1>
               </div>
               <div className="absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
                 <CountdownCircleTimer
-                  isPlaying={isCountingDown && isSocketConnected && isOnline && cycles < NUM_OF_CAPTURE_IMAGE}
+                  isPlaying={
+                    isCountingDown &&
+                    isSocketConnected &&
+                    isOnline &&
+                    cycles < NUM_OF_CAPTURE_IMAGE
+                  }
                   strokeWidth={9}
                   trailStrokeWidth={9}
                   updateInterval={1}
@@ -411,7 +508,9 @@ const CapturePage = () => {
           <div
             className={cn(
               "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full flex items-center justify-center",
-              !isCountingDown && cycles == NUM_OF_CAPTURE_IMAGE ? "opacity-100" : "opacity-0 pointer-events-none"
+              !isCountingDown && cycles == NUM_OF_CAPTURE_IMAGE
+                ? "opacity-100"
+                : "opacity-0 pointer-events-none"
             )}
           >
             <div className="loader"></div>

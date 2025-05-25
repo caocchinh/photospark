@@ -8,8 +8,7 @@ import {
 // export const VALID_THEMES = ["prom", "usagyuun"] as const;
 export const VALID_THEMES = ["prom"] as const;
 
-// export const VALID_FRAME_TYPES = ["singular", "double"] as const;
-export const VALID_FRAME_TYPES = ["singular"] as const;
+export const VALID_FRAME_TYPES = ["singular", "double"] as const;
 
 export const AUTO_SELECT_COUNTDOWN_DURATION = 65;
 
