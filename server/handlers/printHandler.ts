@@ -5,7 +5,7 @@ import { Socket } from "socket.io";
 import {
   currentTime,
   updatePrinterRegistry,
-  getCP1500Printer,
+  getAllCP1500Printers,
   logger,
   getProjectPath,
 } from "../utils";
@@ -66,58 +66,119 @@ export const handlePrint = async (
   await fs.promises.writeFile(filePath, Buffer.from(base64Data, "base64"));
   logger.info("Image file saved", { jobId: printJobId, path: filePath });
 
-  const printerName = await getCP1500Printer();
-  if (!printerName) {
-    const error = new Error("Printer not found");
-    logger.error("Printer not found", {
-      jobId: printJobId,
-      error: "PRINTER_NOT_FOUND",
-      message: "Unable to locate printer. Please check if it's connected.",
-    });
-    return;
-  }
-
-  logger.info("Printer found", { jobId: printJobId, printer: printerName });
-
   try {
-    await updatePrinterRegistry(printerName);
-    logger.info("Printer registry updates successfully", {
+    // Get all available printers of the CP1500 model
+    const printerNames = await getAllCP1500Printers();
+    if (printerNames.length === 0) {
+      logger.error("Printer not found", {
+        jobId: printJobId,
+        error: "PRINTER_NOT_FOUND",
+        message:
+          "Unable to locate any printer. Please check if they're connected.",
+      });
+      return;
+    }
+
+    logger.info("Printers found", {
       jobId: printJobId,
+      printers: printerNames,
+      count: printerNames.length,
+    });
+
+    // Distribute copies among printers
+    const baseCopies = Math.floor(message.quantity / printerNames.length);
+    const remainder = message.quantity % printerNames.length;
+
+    logger.info("Distributing print job", {
+      jobId: printJobId,
+      totalCopies: message.quantity,
+      printerCount: printerNames.length,
+      baseCopies,
+      remainder,
+    });
+
+    // Update registry for all printers
+    for (const printerName of printerNames) {
+      try {
+        await updatePrinterRegistry(printerName);
+        logger.info("Printer registry updated successfully", {
+          jobId: printJobId,
+          printer: printerName,
+        });
+      } catch (error) {
+        logger.error("Printer registry error", {
+          jobId: printJobId,
+          printer: printerName,
+          error: "PRINTER_REGISTRY_ERROR",
+          message: "Failed to update printer registry.",
+        });
+        // Continue with other printers if one fails
+      }
+    }
+
+    const scriptPath = path.join(
+      process.cwd(),
+      "powershell",
+      "print-image.ps1"
+    );
+
+    // Execute print jobs for each printer
+    const printPromises = printerNames.map(async (printerName, index) => {
+      // Calculate copies for this printer
+      const copies = index < remainder ? baseCopies + 1 : baseCopies;
+
+      // Skip if no copies assigned to this printer
+      if (copies <= 0) return;
+
+      const command = `powershell -NoProfile -NonInteractive -WindowStyle Hidden -ExecutionPolicy Bypass -File "${scriptPath}" -imagePath "${filePath}" -printer "${printerName}" -copies ${copies}`;
+
+      logger.debug("Executing print command", {
+        jobId: printJobId,
+        printer: printerName,
+        copies,
+        command,
+      });
+
+      return new Promise((resolve) => {
+        exec(command, { shell: "powershell.exe" }, (error, stdout, stderr) => {
+          if (error || stderr) {
+            logger.error("PowerShell command failed", {
+              jobId: printJobId,
+              printer: printerName,
+              error: error?.message || stderr,
+              code: error?.code,
+              stdout,
+              stderr,
+              errorType: stderr.includes("The handle is invalid")
+                ? "INVALID_PRINTER_HANDLE"
+                : "GENERAL_ERROR",
+            });
+            resolve(void 0);
+            return;
+          }
+
+          logger.info("Print job completed", {
+            jobId: printJobId,
+            printer: printerName,
+            copies,
+          });
+
+          resolve(void 0);
+        });
+      });
+    });
+
+    await Promise.all(printPromises);
+    logger.info("All print jobs completed", {
+      jobId: printJobId,
+      totalCopies: message.quantity,
     });
   } catch (error) {
-    logger.error("Printer registry error", {
+    logger.error("Print error", {
       jobId: printJobId,
-      error: "PRINTER_REGISTRY_ERROR",
-      message: "Failed to update printer registry.",
+      error: "PRINT_ERROR",
+      message:
+        error instanceof Error ? error.message : "Unknown error occurred",
     });
-    return;
   }
-
-  const scriptPath = path.join(process.cwd(), "powershell", "print-image.ps1");
-  const command = `powershell -NoProfile -NonInteractive -WindowStyle Hidden -ExecutionPolicy Bypass -File "${scriptPath}" -imagePath "${filePath}" -printer "${printerName}" -copies ${message.quantity}`;
-
-  logger.debug("Executing print command", { jobId: printJobId, command });
-
-  await new Promise((resolve) => {
-    exec(command, { shell: "powershell.exe" }, (error, stdout, stderr) => {
-      if (error || stderr) {
-        logger.error("PowerShell command failed", {
-          jobId: printJobId,
-          error: error?.message || stderr,
-          code: error?.code,
-          stdout,
-          stderr,
-          errorType: stderr.includes("The handle is invalid")
-            ? "INVALID_PRINTER_HANDLE"
-            : "GENERAL_ERROR",
-        });
-        resolve(void 0);
-        return;
-      }
-
-      logger.info("Print job completed", { jobId: printJobId });
-
-      resolve(void 0);
-    });
-  });
 };
