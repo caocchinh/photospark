@@ -32,6 +32,7 @@ import Cooldown from "@/components/Cooldown";
 import {
   CLICK_SOUND_URL,
   CLICK_SOUND_VOUME,
+  FrameOptions,
   LANGUAGE_LIST,
 } from "@/constants/constants";
 import { usePhotoState } from "@/context/PhotoStateContext";
@@ -148,22 +149,31 @@ const LayoutPage = () => {
           {t("Choose a layout")}
         </CardTitle>
         <CardContent className="flex items-center justify-center gap-12 w-[90%]">
-          <Link
-            href={ROUTES.THEME}
-            className=" cursor-pointer hover:scale-[1.02] active:scale-[0.99]"
-            onClick={() => updateFrameType("singular")}
-            tabIndex={-1}
-          >
-            <SingularLayout />
-          </Link>
-          <Link
-            href={ROUTES.THEME}
-            className=" cursor-pointer hover:scale-[1.02] active:scale-[0.99] "
-            onClick={() => updateFrameType("double")}
-            tabIndex={-1}
-          >
-            <DoubleLayout />
-          </Link>
+          {Object.values(FrameOptions).some((frames) =>
+            frames.some((frame) => frame.type === "singular")
+          ) && (
+            <Link
+              href={ROUTES.THEME}
+              className=" cursor-pointer hover:scale-[1.02] active:scale-[0.99]"
+              onClick={() => updateFrameType("singular")}
+              tabIndex={-1}
+            >
+              <SingularLayout />
+            </Link>
+          )}
+
+          {Object.values(FrameOptions).some((frames) =>
+            frames.some((frame) => frame.type === "double")
+          ) && (
+            <Link
+              href={ROUTES.THEME}
+              className=" cursor-pointer hover:scale-[1.02] active:scale-[0.99] "
+              onClick={() => updateFrameType("double")}
+              tabIndex={-1}
+            >
+              <DoubleLayout />
+            </Link>
+          )}
         </CardContent>
 
         <Popover>
