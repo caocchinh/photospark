@@ -1,29 +1,43 @@
 "use client";
-import {Carousel, CarouselContent, CarouselItem, type CarouselApi} from "@/components/ui/carousel";
-import {CLICK_SOUND_URL, CLICK_SOUND_VOUME, FrameOptions} from "@/constants/constants";
-import {cn} from "@/lib/utils";
-import {WheelGesturesPlugin} from "embla-carousel-wheel-gestures";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  type CarouselApi,
+} from "@/components/ui/carousel";
+import {
+  CLICK_SOUND_URL,
+  CLICK_SOUND_VOUME,
+  FrameOptions,
+} from "@/constants/constants";
+import { cn } from "@/lib/utils";
+import { WheelGesturesPlugin } from "embla-carousel-wheel-gestures";
 import Image from "next/image";
 import Link from "next/link";
-import {useCallback, useEffect, useRef, useState, useMemo} from "react";
-import {FaArrowLeft} from "react-icons/fa6";
-import {IoIosArrowBack, IoIosArrowForward, IoIosCheckmark} from "react-icons/io";
-import {useRouter} from "next/navigation";
-import {useTranslation} from "react-i18next";
-import {GlowEffect} from "@/components/ui/glow-effect";
-import {ScrollArea} from "@/components/ui/scroll-area";
-import {AnimatedBackground} from "@/components/ui/animated-background";
+import { useCallback, useEffect, useRef, useState, useMemo } from "react";
+import { FaArrowLeft } from "react-icons/fa6";
+import {
+  IoIosArrowBack,
+  IoIosArrowForward,
+  IoIosCheckmark,
+} from "react-icons/io";
+import { useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
+import { GlowEffect } from "@/components/ui/glow-effect";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { AnimatedBackground } from "@/components/ui/animated-background";
 import ErrorDialog from "@/components/ErrorDialog";
-import {ROUTES} from "@/constants/routes";
-import {Spotlight} from "@/components/ui/spotlight";
-import {PiVideoCameraLight} from "react-icons/pi";
-import {usePhotoState} from "@/context/PhotoStateContext";
-import {useCountdown} from "@/context/CountdownContext";
+import { ROUTES } from "@/constants/routes";
+import { Spotlight } from "@/components/ui/spotlight";
+import { PiVideoCameraLight } from "react-icons/pi";
+import { usePhotoState } from "@/context/PhotoStateContext";
+import { useCountdown } from "@/context/CountdownContext";
 import useSound from "use-sound";
 
-const LayoutPage = () => {
-  const {photo, setPhoto, updatePhotoQuantity, updateFrame} = usePhotoState();
-  const [playClick] = useSound(CLICK_SOUND_URL, {volume: CLICK_SOUND_VOUME});
+const FramePage = () => {
+  const { photo, setPhoto, updatePhotoQuantity, updateFrame, quantityType } =
+    usePhotoState();
+  const [playClick] = useSound(CLICK_SOUND_URL, { volume: CLICK_SOUND_VOUME });
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -34,13 +48,15 @@ const LayoutPage = () => {
     }
   }, [photo]);
   const router = useRouter();
-  const {autoSelectCountdownTimer} = useCountdown();
-  const {t} = useTranslation();
+  const { autoSelectCountdownTimer } = useCountdown();
+  const { t } = useTranslation();
   const maxQuantity = 5;
   const [api, setApi] = useState<CarouselApi>();
   const filteredFrames = useMemo(() => {
     if (!photo || !photo.theme) return [];
-    return FrameOptions[photo.theme.name].filter((item) => item.type == photo.frameType);
+    return FrameOptions[photo.theme.name].filter(
+      (item) => item.type == photo.frameType
+    );
   }, [photo]);
   const [apiPreview, setApiPreview] = useState<CarouselApi>();
   const [current, setCurrent] = useState(1);
@@ -70,7 +86,9 @@ const LayoutPage = () => {
   useEffect(() => {
     if (initializationDoneRef.current || !photo || !api || !apiPreview) return;
 
-    const initIndex = filteredFrames.findIndex((item) => item.thumbnail === photo?.theme!.frame.thumbnail);
+    const initIndex = filteredFrames.findIndex(
+      (item) => item.thumbnail === photo?.theme!.frame.thumbnail
+    );
 
     if (initIndex !== -1) {
       api.scrollTo(initIndex);
@@ -126,7 +144,14 @@ const LayoutPage = () => {
       api.off("select", handleAPISelect);
       apiPreview.off("select", handlePreviewAPISelect);
     };
-  }, [api, apiPreview, filteredFrames, handleCarouselItemClick, photo, updateFrame]);
+  }, [
+    api,
+    apiPreview,
+    filteredFrames,
+    handleCarouselItemClick,
+    photo,
+    updateFrame,
+  ]);
 
   const handleCaptureClick = useCallback(
     async (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -137,7 +162,7 @@ const LayoutPage = () => {
       setChosen(true);
       setPhoto((prevStyle) => {
         if (prevStyle) {
-          return {...prevStyle, error: false};
+          return { ...prevStyle, error: false };
         }
         return prevStyle;
       });
@@ -155,11 +180,15 @@ const LayoutPage = () => {
           <div
             className={cn(
               "flex items-center w-[90%] justify-center gap-24 h-full",
-              chosen || autoSelectCountdownTimer <= 0 ? "pointer-events-none" : null
+              chosen || autoSelectCountdownTimer <= 0
+                ? "pointer-events-none"
+                : null
             )}
           >
             <div className="flex flex-col items-center justify-center gap-4 w-max">
-              <h1 className="text-5xl font-semibold uppercase">{t("Choose a frame")}</h1>
+              <h1 className="text-5xl font-semibold uppercase">
+                {t("Choose a frame")}
+              </h1>
               <div className="relative rounded border-2 border-gray-500 flex items-center justify-center py-8 px-2 bg-gray-100 w-[50vw]">
                 <Spotlight
                   className="from-[#f97316] via-[#f97316] z-10 to-[#fdba74] blur-xl "
@@ -185,18 +214,25 @@ const LayoutPage = () => {
                         key={index}
                         className="flex gap-4 basis-[100%] items-center justify-center "
                       >
-                        {Array.from({length: item.type == "singular" ? 1 : 2}, (_, index) => {
-                          return (
-                            <Image
-                              key={index}
-                              src={item.src}
-                              alt="Frame"
-                              height={235}
-                              width={item.type == "singular" ? 235 : 120}
-                              className={cn(item.type == "singular" ? "w-[17vw]" : "w-[9vw]")}
-                            />
-                          );
-                        })}
+                        {Array.from(
+                          { length: item.type == "singular" ? 1 : 2 },
+                          (_, index) => {
+                            return (
+                              <Image
+                                key={index}
+                                src={item.src}
+                                alt="Frame"
+                                height={235}
+                                width={item.type == "singular" ? 235 : 120}
+                                className={cn(
+                                  item.type == "singular"
+                                    ? "w-[17vw]"
+                                    : "w-[9vw]"
+                                )}
+                              />
+                            );
+                          }
+                        )}
                       </CarouselItem>
                     ))}
                   </CarouselContent>
@@ -222,7 +258,10 @@ const LayoutPage = () => {
                       <CarouselItem
                         onMouseDown={() => playClick()}
                         key={index}
-                        className={cn("flex items-center justify-center cursor-pointer", item.type == "singular" ? " basis-1/4" : "basis-[15%]")}
+                        className={cn(
+                          "flex items-center justify-center cursor-pointer",
+                          item.type == "singular" ? " basis-1/4" : "basis-[15%]"
+                        )}
                         onClick={() => {
                           handleCarouselItemClick(index);
                         }}
@@ -230,7 +269,9 @@ const LayoutPage = () => {
                         <div
                           className={cn(
                             "bg-gray-100 p-3 rounded border border-gray-300",
-                            current - 1 === index ? "scale-[1.05] border-4 border-rose-500" : null
+                            current - 1 === index
+                              ? "scale-[1.05] border-4 border-rose-500"
+                              : null
                           )}
                         >
                           <Image
@@ -248,39 +289,56 @@ const LayoutPage = () => {
               </div>
             </div>
             <div className="flex flex-col items-center justify-center gap-8 h-[80vh]">
-              <div className="flex flex-col items-center justify-center gap-4">
-                <h1 className="text-5xl font-semibold uppercase text-wrap w-[100%] text-center">{t("Choose number of copies")}</h1>
-                <div className="flex gap-2 flex-wrap items-center justify-center w-[350px]">
-                  <AnimatedBackground
-                    defaultValue={photo.frameType == "singular" ? photo.quantity!.toString() : (photo.quantity! * 2).toString()}
-                    onValueChange={(value) => {
-                      updatePhotoQuantity(parseInt(value!) / (photo.frameType == "singular" ? 1 : 2));
-                    }}
-                    className="bg-green-700 rounded-lg"
-                    transition={{
-                      ease: "easeInOut",
-                      duration: 0.2,
-                    }}
-                  >
-                    {Array.from({length: maxQuantity}, (_, index) => {
-                      const quantiy = (index + 1) * (photo.frameType == "singular" ? 1 : 2);
-                      return (
-                        <div
-                          onMouseDown={() => playClick()}
-                          className={cn(
-                            " text-2xl text-white w-[90px] hover:cursor-pointer h-[90px] flex items-center justify-center mb-3 rounded-lg border bg-black"
-                          )}
-                          key={index}
-                          data-id={quantiy.toString()}
-                        >
-                          {quantiy}
-                        </div>
-                      );
-                    })}
-                  </AnimatedBackground>
+              {quantityType == "manual" && (
+                <div className="flex flex-col items-center justify-center gap-4">
+                  <h1 className="text-5xl font-semibold uppercase text-wrap w-[100%] text-center">
+                    {t("Choose number of copies")}
+                  </h1>
+                  <div className="flex gap-2 flex-wrap items-center justify-center w-[350px]">
+                    <AnimatedBackground
+                      defaultValue={
+                        photo.frameType == "singular"
+                          ? photo.quantity!.toString()
+                          : (photo.quantity! * 2).toString()
+                      }
+                      onValueChange={(value) => {
+                        updatePhotoQuantity(
+                          parseInt(value!) /
+                            (photo.frameType == "singular" ? 1 : 2)
+                        );
+                      }}
+                      className="bg-green-700 rounded-lg"
+                      transition={{
+                        ease: "easeInOut",
+                        duration: 0.2,
+                      }}
+                    >
+                      {Array.from({ length: maxQuantity }, (_, index) => {
+                        const quantiy =
+                          (index + 1) * (photo.frameType == "singular" ? 1 : 2);
+                        return (
+                          <div
+                            onMouseDown={() => playClick()}
+                            className={cn(
+                              " text-2xl text-white w-[90px] hover:cursor-pointer h-[90px] flex items-center justify-center mb-3 rounded-lg border bg-black"
+                            )}
+                            key={index}
+                            data-id={quantiy.toString()}
+                          >
+                            {quantiy}
+                          </div>
+                        );
+                      })}
+                    </AnimatedBackground>
+                  </div>
                 </div>
-              </div>
-              <ScrollArea className="w-[350px] h-[35%]">
+              )}
+              <ScrollArea
+                className={cn(
+                  "w-[350px] ",
+                  quantityType == "manual" ? "h-[35%]" : "h-full"
+                )}
+              >
                 <div className="flex flex-wrap items-center justify-center w-full gap-4">
                   {filteredFrames.map((item, index) => {
                     const thumbnail = item.thumbnail;
@@ -307,7 +365,12 @@ const LayoutPage = () => {
 
                         <IoIosCheckmark
                           color="#4ade80 "
-                          className={cn("absolute w-full h-full top-0 bg-black/50", photo.theme!.frame.thumbnail == thumbnail ? "block" : "hidden")}
+                          className={cn(
+                            "absolute w-full h-full top-0 bg-black/50",
+                            photo.theme!.frame.thumbnail == thumbnail
+                              ? "block"
+                              : "hidden"
+                          )}
                           size={50}
                         />
                       </div>
@@ -333,10 +396,7 @@ const LayoutPage = () => {
                   <FaArrowLeft />
                   {t("Choose another layout")}
                 </Link>
-                <div
-                  className="relative"
-                  onMouseDown={() => playClick()}
-                >
+                <div className="relative" onMouseDown={() => playClick()}>
                   <GlowEffect
                     colors={["#FF5733", "#33FF57", "#3357FF", "#F1C40F"]}
                     mode="colorShift"
@@ -352,10 +412,7 @@ const LayoutPage = () => {
                     onClick={handleCaptureClick}
                   >
                     {t("Capture")}
-                    <PiVideoCameraLight
-                      size={20}
-                      color="white"
-                    />
+                    <PiVideoCameraLight size={20} color="white" />
                   </Link>
                 </div>
               </div>
@@ -368,4 +425,4 @@ const LayoutPage = () => {
   );
 };
 
-export default LayoutPage;
+export default FramePage;

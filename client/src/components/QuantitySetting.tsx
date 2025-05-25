@@ -68,6 +68,7 @@ const QuantitySetting = () => {
             id="quantity-auto"
             onCheckedChange={() => {
               setQuantityType(quantityType === "auto" ? "manual" : "auto");
+              playClick();
               localStorage.setItem(
                 "quantityType",
                 quantityType === "manual" ? "auto" : "manual"
@@ -84,6 +85,7 @@ const QuantitySetting = () => {
             id="quantity-manual"
             onCheckedChange={() => {
               setQuantityType(quantityType === "manual" ? "auto" : "manual");
+              playClick();
               localStorage.setItem(
                 "quantityType",
                 quantityType === "manual" ? "auto" : "manual"
