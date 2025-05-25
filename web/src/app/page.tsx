@@ -1,12 +1,15 @@
 "use client";
-import {ImageComparisonImage, ImageComparisonSlider} from "@/components/ui/image-comparison";
-import {ImageComparison} from "@/components/ui/image-comparison";
-import {SpinningText} from "@/components/ui/spinning-text";
-import {Spotlight} from "@/components/ui/spotlight";
+import {
+  ImageComparisonImage,
+  ImageComparisonSlider,
+} from "@/components/ui/image-comparison";
+import { ImageComparison } from "@/components/ui/image-comparison";
+import { SpinningText } from "@/components/ui/spinning-text";
+import { Spotlight } from "@/components/ui/spotlight";
 import Image from "next/image";
-import {FaFacebookF} from "react-icons/fa";
-import {FaInstagram} from "react-icons/fa";
-import {FaArrowRight} from "react-icons/fa";
+import { FaFacebookF } from "react-icons/fa";
+import { FaInstagram } from "react-icons/fa";
+import { FaArrowRight } from "react-icons/fa";
 import {
   MorphingDialog,
   MorphingDialogTrigger,
@@ -18,20 +21,20 @@ import {
   MorphingDialogDescription,
   MorphingDialogContainer,
 } from "@/components/ui/morphing-dialog";
-import {SiMinutemailer} from "react-icons/si";
-import {SiGithub} from "react-icons/si";
-import {TfiEmail} from "react-icons/tfi";
+import { SiMinutemailer } from "react-icons/si";
+import { SiGithub } from "react-icons/si";
+import { TfiEmail } from "react-icons/tfi";
 import LanguageBar from "@/components/LanguageBar";
-import {useTranslation} from "react-i18next";
-import {useState} from "react";
-import {ProgressiveBlur} from "@/components/ui/progressive-blur";
+import { useTranslation } from "react-i18next";
+import { useState } from "react";
+import { ProgressiveBlur } from "@/components/ui/progressive-blur";
 import NavBar from "@/components/NavBar";
-import {TextShimmer} from "@/components/ui/text-shimmer";
+import { TextShimmer } from "@/components/ui/text-shimmer";
 import Link from "next/link";
-import {GlowEffect} from "@/components/ui/glow-effect";
+import { GlowEffect } from "@/components/ui/glow-effect";
 
 export default function HomePage() {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const [isHover, setIsHover] = useState(false);
 
   return (
@@ -95,8 +98,12 @@ export default function HomePage() {
                   height={100}
                 />
               </div>
-              <h3 className="font-mono text-3xl font-medium text-center text-zinc-500 dark:text-zinc-400">VTEAM - Vinschool Central Park</h3>
-              <p className="text-xl text-center text-black dark:text-white">2024-2025</p>
+              <h3 className="font-mono text-3xl font-medium text-center text-zinc-500 dark:text-zinc-400">
+                VTEAM - Vinschool Central Park
+              </h3>
+              <p className="text-xl text-center text-black dark:text-white">
+                2024-2025
+              </p>
               <div className="flex flex-col gap-3 w-[90%] sm:w-[300px] mt-4">
                 <a
                   href="https://www.facebook.com/vteam.vcp"
@@ -105,10 +112,7 @@ export default function HomePage() {
                   rel="noopener noreferrer"
                   className="flex items-center justify-center bg-[#0866ff] rounded-sm px-4 py-2 gap-2 w-full mx-auto"
                 >
-                  <FaFacebookF
-                    size={20}
-                    color="white"
-                  />
+                  <FaFacebookF size={20} color="white" />
                   <p className="text-white">Facebook</p>
                 </a>
 
@@ -119,10 +123,7 @@ export default function HomePage() {
                   rel="noopener noreferrer"
                   className="flex items-center justify-center bg-[#dd2a7b] rounded-sm px-4 py-2 gap-2 w-full mx-auto"
                 >
-                  <FaInstagram
-                    size={20}
-                    color="white"
-                  />
+                  <FaInstagram size={20} color="white" />
                   <p className="text-white">Instagram</p>
                 </a>
                 <div className="relative">
@@ -138,10 +139,7 @@ export default function HomePage() {
                     className="relative z-10 flex items-center justify-center w-full gap-2 px-4 py-2 mx-auto text-white bg-black rounded-sm"
                   >
                     {t("Demo")}
-                    <FaArrowRight
-                      size={15}
-                      color="white"
-                    />
+                    <FaArrowRight size={15} color="white" />
                   </Link>
                 </div>
 
@@ -173,18 +171,21 @@ export default function HomePage() {
                         blurIntensity={0.5}
                         animate={isHover ? "visible" : "hidden"}
                         variants={{
-                          hidden: {opacity: 0},
-                          visible: {opacity: 1},
+                          hidden: { opacity: 0 },
+                          visible: { opacity: 1 },
                         }}
-                        transition={{duration: 0.2, ease: "easeOut"}}
+                        transition={{ duration: 0.2, ease: "easeOut" }}
                       />
                     </div>
 
                     <div className="flex flex-col items-center justify-center px-3 py-2 grow">
                       <MorphingDialogTitle className="flex flex-wrap items-center justify-center gap-1 text-center text-zinc-950 dark:text-zinc-50">
-                        {t("Developer Information")} <SiMinutemailer size={17} />
+                        {t("Developer Information")}{" "}
+                        <SiMinutemailer size={17} />
                       </MorphingDialogTitle>
-                      <MorphingDialogSubtitle className="text-zinc-700 dark:text-zinc-400">Mr. Cao Cự Chính</MorphingDialogSubtitle>
+                      <MorphingDialogSubtitle className="text-zinc-700 dark:text-zinc-400">
+                        Mr. Cao Cự Chính
+                      </MorphingDialogSubtitle>
                     </div>
                   </MorphingDialogTrigger>
                   <MorphingDialogContainer>
@@ -202,30 +203,30 @@ export default function HomePage() {
                       <div className="p-6">
                         <div className="flex flex-col items-center justify-center px-3 py-2 grow">
                           <MorphingDialogTitle className="flex flex-wrap items-center justify-center gap-1 text-2xl text-center text-zinc-950 dark:text-zinc-50">
-                            {t("Developer Information")} <SiMinutemailer size={20} />
+                            {t("Developer Information")}{" "}
+                            <SiMinutemailer size={20} />
                           </MorphingDialogTitle>
-                          <MorphingDialogSubtitle className="text-lg text-zinc-700 dark:text-zinc-400">Mr. Cao Cự Chính</MorphingDialogSubtitle>
+                          <MorphingDialogSubtitle className="text-lg text-zinc-700 dark:text-zinc-400">
+                            Mr. Cao Cự Chính
+                          </MorphingDialogSubtitle>
                         </div>
                         <MorphingDialogDescription
                           className="flex flex-col items-center justify-center gap-3 "
                           disableLayoutAnimation
                           variants={{
-                            initial: {opacity: 0, scale: 0.8, y: 100},
-                            animate: {opacity: 1, scale: 1, y: 0},
-                            exit: {opacity: 0, scale: 0.8, y: 100},
+                            initial: { opacity: 0, scale: 0.8, y: 100 },
+                            animate: { opacity: 1, scale: 1, y: 0 },
+                            exit: { opacity: 0, scale: 0.8, y: 100 },
                           }}
                         >
                           <a
-                            href="https://github.com/ChinCao"
+                            href="https://github.com/caocchinh"
                             target="_blank"
                             title="Chinh Cao Github"
                             rel="noopener noreferrer"
                             className="flex items-center justify-center w-full gap-2 px-4 py-2 mx-auto text-white bg-black rounded-sm"
                           >
-                            <SiGithub
-                              size={20}
-                              color="white"
-                            />
+                            <SiGithub size={20} color="white" />
                             <p className="text-white">Github</p>
                           </a>
                           <a
@@ -235,10 +236,7 @@ export default function HomePage() {
                             rel="noopener noreferrer"
                             className="flex items-center justify-center bg-[#0866ff] rounded-sm px-4 py-2 gap-2 w-full mx-auto"
                           >
-                            <FaFacebookF
-                              size={20}
-                              color="white"
-                            />
+                            <FaFacebookF size={20} color="white" />
                             <p className="text-white">Facebook</p>
                           </a>
 
@@ -249,17 +247,17 @@ export default function HomePage() {
                             rel="noopener noreferrer"
                             className="flex items-center justify-center bg-[#dd2a7b] rounded-sm px-4 py-2 gap-2 w-full mx-auto"
                           >
-                            <FaInstagram
-                              size={20}
-                              color="white"
-                            />
+                            <FaInstagram size={20} color="white" />
                             <p className="text-white">Instagram</p>
                           </a>
 
                           <button
                             onClick={() => {
-                              navigator.clipboard.writeText("chinhcaocu@gmail.com");
-                              const btn = document.getElementById("copyEmailBtn");
+                              navigator.clipboard.writeText(
+                                "chinhcaocu@gmail.com"
+                              );
+                              const btn =
+                                document.getElementById("copyEmailBtn");
                               if (btn) {
                                 const originalText = btn.textContent;
                                 btn.textContent = t("Copied!");
@@ -270,14 +268,8 @@ export default function HomePage() {
                             }}
                             className="flex items-center justify-center w-full gap-2 px-4 py-2 mx-auto bg-orange-400 rounded-sm cursor-pointer"
                           >
-                            <TfiEmail
-                              size={20}
-                              color="white"
-                            />
-                            <p
-                              className="text-white"
-                              id="copyEmailBtn"
-                            >
+                            <TfiEmail size={20} color="white" />
+                            <p className="text-white" id="copyEmailBtn">
                               {t("Copy Email Address")}
                             </p>
                           </button>

@@ -33,7 +33,7 @@ A modern photo booth application built with Next.js and Socket.IO that offers re
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/ChinCao/photobooth-cp1500.git
+git clone https://github.com/caocchinh/photobooth-cp1500.git
 cd photobooth-cp1500
 ```
 
@@ -236,9 +236,9 @@ npm run build
 
 This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](LICENSE) file for details.
 
-© 2024 [@ChinCao](https://github.com/ChinCao). All rights reserved.
+© 2024 [@caocchinh](https://github.com/caocchinh). All rights reserved.
 
 ## 🙏 Acknowledgments
 
-- Developed by [@ChinCao](https://github.com/ChinCao)
+- Developed by [@caocchinh](https://github.com/caocchinh)
 - Sponsored by VECTR
