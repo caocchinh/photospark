@@ -1,16 +1,22 @@
 "use client";
 import DoubleLayout from "@/components/layout-image/DoubleLayout";
 import SingularLayout from "@/components/layout-image/SingularLayout";
-import {ValidFrameType} from "@/constants/types";
-import {usePhoto} from "@/context/PhotoContext";
-import {useTranslation} from "react-i18next";
+import { ValidFrameType } from "@/constants/types";
+import { usePhoto } from "@/context/PhotoContext";
+import { useTranslation } from "react-i18next";
 import Link from "next/link";
-import {FaArrowLeft} from "react-icons/fa6";
-import {Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbSeparator} from "@/components/ui/breadcrumb";
+import { FaArrowLeft } from "react-icons/fa6";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { FrameOptions } from "@/constants/constants";
 
 const LayoutEditPage = () => {
-  const {photo, setPhoto} = usePhoto();
-  const {t} = useTranslation();
+  const { photo, setPhoto } = usePhoto();
+  const { t } = useTranslation();
 
   const handleTypeChange = (type: ValidFrameType) => {
     if (!setPhoto) return;
@@ -39,7 +45,9 @@ const LayoutEditPage = () => {
           <Breadcrumb className="order-0 sm:order-1 -mt-[45px] sm:mt-0 mb-[35px] sm:mb-0 self-end sm:self-center">
             <BreadcrumbList>
               <BreadcrumbItem>
-                <Link href={`/${photo?.previousProcessedImageId}/`}>{t("Home")}</Link>
+                <Link href={`/${photo?.previousProcessedImageId}/`}>
+                  {t("Home")}
+                </Link>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
@@ -48,24 +56,35 @@ const LayoutEditPage = () => {
             </BreadcrumbList>
           </Breadcrumb>
         </div>
-        <h1 className="text-5xl font-semibold text-center uppercase">{t("Choose a layout")}</h1>
+        <h1 className="text-5xl font-semibold text-center uppercase">
+          {t("Choose a layout")}
+        </h1>
         <div className="flex flex-wrap items-center justify-center w-full gap-8">
-          <Link
-            href={`/${photo?.previousProcessedImageId}/edit/theme`}
-            className=" cursor-pointer hover:scale-[1.02] active:scale-[0.99] flex items-center justify-center"
-            onClick={() => handleTypeChange("singular")}
-            tabIndex={-1}
-          >
-            <SingularLayout />
-          </Link>
-          <Link
-            href={`/${photo?.previousProcessedImageId}/edit/theme`}
-            className=" cursor-pointer hover:scale-[1.02] active:scale-[0.99] flex items-center justify-center"
-            onClick={() => handleTypeChange("double")}
-            tabIndex={-1}
-          >
-            <DoubleLayout />
-          </Link>
+          {Object.values(FrameOptions).some((frames) =>
+            frames.some((frame) => frame.type === "singular")
+          ) && (
+            <Link
+              href={`/${photo?.previousProcessedImageId}/edit/theme`}
+              className=" cursor-pointer hover:scale-[1.02] active:scale-[0.99] flex items-center justify-center"
+              onClick={() => handleTypeChange("singular")}
+              tabIndex={-1}
+            >
+              <SingularLayout />
+            </Link>
+          )}
+
+          {Object.values(FrameOptions).some((frames) =>
+            frames.some((frame) => frame.type === "double")
+          ) && (
+            <Link
+              href={`/${photo?.previousProcessedImageId}/edit/theme`}
+              className=" cursor-pointer hover:scale-[1.02] active:scale-[0.99] flex items-center justify-center"
+              onClick={() => handleTypeChange("double")}
+              tabIndex={-1}
+            >
+              <DoubleLayout />
+            </Link>
+          )}
         </div>
       </div>
     </div>

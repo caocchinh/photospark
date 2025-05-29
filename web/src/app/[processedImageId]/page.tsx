@@ -1,33 +1,42 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import {useRef, useState, useEffect} from "react";
-import {Stage as StageElement} from "konva/lib/Stage";
-import {cn, generateTimestampFilename} from "@/lib/utils";
+import { useRef, useState, useEffect } from "react";
+import { Stage as StageElement } from "konva/lib/Stage";
+import { cn, generateTimestampFilename } from "@/lib/utils";
 import Link from "next/link";
-import {GlowEffect} from "@/components/ui/glow-effect";
+import { GlowEffect } from "@/components/ui/glow-effect";
 import LoadingSpinner from "@/components/LoadingSpinner";
-import {AiOutlineDownload} from "react-icons/ai";
-import {MdModeEdit} from "react-icons/md";
-import {IoCopySharp} from "react-icons/io5";
+import { AiOutlineDownload } from "react-icons/ai";
+// import {MdModeEdit} from "react-icons/md";
+import { IoCopySharp } from "react-icons/io5";
 import FrameStage from "@/components/FrameStage";
 import GeneralError from "@/components/GeneralError";
-import {Button} from "@/components/ui/button";
-import {LuRefreshCcw, LuLink} from "react-icons/lu";
+import { Button } from "@/components/ui/button";
+import { LuRefreshCcw, LuLink } from "react-icons/lu";
 import LanguageBar from "@/components/LanguageBar";
-import {useTranslation} from "react-i18next";
-import {useRouter} from "next/navigation";
+import { useTranslation } from "react-i18next";
+import { useRouter } from "next/navigation";
 import NavBar from "@/components/NavBar";
-import {useProcessedImage} from "@/context/ProcssedImageContext";
+import { useProcessedImage } from "@/context/ProcssedImageContext";
 import Head from "next/head";
-import {IoQrCodeSharp} from "react-icons/io5";
-import {Dialog, DialogContent, DialogTitle, DialogTrigger} from "@/components/ui/dialog";
-import {QRCodeCanvas} from "qrcode.react";
-import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
+import { IoQrCodeSharp } from "react-icons/io5";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { QRCodeCanvas } from "qrcode.react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 const Preview = () => {
-  const {processedImage, images, video} = useProcessedImage();
-  const {t} = useTranslation();
+  const { processedImage, images, video } = useProcessedImage();
+  const { t } = useTranslation();
   const stageRef = useRef<StageElement | null>(null);
   const [error, setError] = useState(false);
   const [isAllImagesLoaded, setIsAllImagesLoaded] = useState(false);
@@ -61,7 +70,7 @@ const Preview = () => {
     try {
       let dataUrl = "";
       if (isHalf) {
-        const canvas = stageRef.current.toCanvas({pixelRatio: 2});
+        const canvas = stageRef.current.toCanvas({ pixelRatio: 2 });
         const halfWidth = canvas.width / 2;
 
         const halfCanvas = document.createElement("canvas");
@@ -69,7 +78,17 @@ const Preview = () => {
         halfCanvas.height = canvas.height;
         const ctx = halfCanvas.getContext("2d");
         if (ctx) {
-          ctx.drawImage(canvas, 0, 0, halfWidth, canvas.height, 0, 0, halfWidth, canvas.height);
+          ctx.drawImage(
+            canvas,
+            0,
+            0,
+            halfWidth,
+            canvas.height,
+            0,
+            0,
+            halfWidth,
+            canvas.height
+          );
           dataUrl = halfCanvas.toDataURL("image/jpeg", 1.0);
         }
       } else {
@@ -106,11 +125,7 @@ const Preview = () => {
   return (
     <>
       <Head>
-        <link
-          rel="preload"
-          href={processedImage.frameURL}
-          as="image"
-        />
+        <link rel="preload" href={processedImage.frameURL} as="image" />
       </Head>
       <NavBar captureDate={processedImage.createdAt} />
       <div className="flex flex-col items-center justify-center gap-8 p-4  h-max w-full relative z-[0] bg-white pt-20 preview-page-container">
@@ -120,12 +135,19 @@ const Preview = () => {
 
         <div className="flex flex-col items-center justify-center w-full gap-8 m-8 mt-3 lg:flex-row h-max ">
           <div className="relative min-w-[300px] sm:min-w-[400px] w-full md:w-max">
-            <div className={cn(!isAllImagesLoaded && "pointer-events-none opacity-0")}>
+            <div
+              className={cn(
+                !isAllImagesLoaded && "pointer-events-none opacity-0"
+              )}
+            >
               <FrameStage
                 processedImage={processedImage}
                 images={images?.map((image) => ({
                   ...image,
-                  url: ["r2.dev", process.env.NEXT_PUBLIC_R2_PUBLIC_BUCKET_PRODUCTION_URL].some(
+                  url: [
+                    "r2.dev",
+                    process.env.NEXT_PUBLIC_R2_PUBLIC_BUCKET_PRODUCTION_URL,
+                  ].some(
                     (bucketUrl) => bucketUrl && image.url.includes(bucketUrl)
                   )
                     ? `/api/proxy?url=${encodeURIComponent(image.url)}`
@@ -185,12 +207,20 @@ const Preview = () => {
                       downloadImage(false);
                     }}
                   >
-                    {isAllImagesLoaded ? t("Download image") : t("Loading image")}
-                    {!isAllImagesLoaded || isDownloading ? <LoadingSpinner size={25} /> : <AiOutlineDownload size={27} />}
+                    {isAllImagesLoaded
+                      ? t("Download image")
+                      : t("Loading image")}
+                    {!isAllImagesLoaded || isDownloading ? (
+                      <LoadingSpinner size={25} />
+                    ) : (
+                      <AiOutlineDownload size={27} />
+                    )}
                   </div>
                 </PopoverTrigger>
                 <PopoverContent className="flex flex-col items-center justify-center gap-4 p-4">
-                  <h3 className="text-xl font-light">{t("Download options")}</h3>
+                  <h3 className="text-xl font-light">
+                    {t("Download options")}
+                  </h3>
                   <Button
                     className="w-full cursor-pointer"
                     onClick={() => {
@@ -241,7 +271,9 @@ const Preview = () => {
                 <DialogTitle className="sr-only">{t("QR Code")}</DialogTitle>
                 <QRCodeCanvas
                   ref={qrRef}
-                  value={typeof window != "undefined" ? window.location.href : ""}
+                  value={
+                    typeof window != "undefined" ? window.location.href : ""
+                  }
                   title={"VTEAM Photobooth"}
                   size={300}
                   marginSize={2}
@@ -264,7 +296,10 @@ const Preview = () => {
                     if (qrRef.current) {
                       const canvas = qrRef.current;
                       const link = document.createElement("a");
-                      link.download = generateTimestampFilename("VTEAM QR", "jpg");
+                      link.download = generateTimestampFilename(
+                        "VTEAM QR",
+                        "jpg"
+                      );
                       link.href = canvas.toDataURL("image/png");
                       document.body.appendChild(link);
                       link.click();
@@ -290,7 +325,7 @@ const Preview = () => {
               {copied ? t("Copied!") : t("Copy image link")}
               <LuLink size={27} />
             </div>
-            <div className="w-full h-[50px] text-white cursor-pointer text-xl bg-[#f97316] active:opacity-80 hover:opacity-90 hover:bg-[#f97316] rounded-sm flex items-center justify-center gap-3">
+            {/* <div className="w-full h-[50px] text-white cursor-pointer text-xl bg-[#f97316] active:opacity-80 hover:opacity-90 hover:bg-[#f97316] rounded-sm flex items-center justify-center gap-3">
               <Link
                 href={`/${processedImage.id}/edit`}
                 className="flex items-center justify-center w-full h-full gap-2 "
@@ -301,7 +336,7 @@ const Preview = () => {
                   color="white"
                 />
               </Link>
-            </div>
+            </div> */}
 
             <div className="w-full h-[50px] text-white cursor-pointer text-xl bg-[#f97316] active:opacity-80 hover:opacity-90 hover:bg-[#f97316] rounded-sm flex items-center justify-center gap-3">
               <Link
@@ -309,10 +344,7 @@ const Preview = () => {
                 className="flex items-center justify-center w-full h-full gap-2"
               >
                 {t("Print more")}
-                <IoCopySharp
-                  size={22}
-                  color="white"
-                />
+                <IoCopySharp size={22} color="white" />
               </Link>
             </div>
           </div>

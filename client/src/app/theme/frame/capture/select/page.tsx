@@ -415,7 +415,7 @@ const SelectPage = () => {
               </div>
             </div>
           </div>
-          <div className="flex flex-col w-[60%] gap-11 items-start justify-center ">
+          <div className="flex flex-col w-[60%] gap-8 items-start justify-center ">
             {photo && (
               <div className="flex justify-center w-full gap-2 item-center ">
                 <h1 className="flex gap-2 mb-4 text-5xl font-semibold uppercase">
@@ -427,7 +427,7 @@ const SelectPage = () => {
               </div>
             )}
 
-            <div className="flex items-center justify-center w-full flex-wrap  gap-2 ">
+            <div className="flex items-center justify-center w-full flex-wrap gap-6 ">
               {photo && (
                 <>
                   {photo.images.map((item, index) => (

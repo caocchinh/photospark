@@ -398,7 +398,7 @@ const CapturePage = () => {
           )}
           <div
             className={cn(
-              "w-full h-full gap-2 flex items-center px-4 justify-evenly transition duration-300",
+              "w-full h-full gap-[17px] flex items-center px-4 justify-evenly transition duration-300",
               isCountingDown && !isCameraError
                 ? "opacity-100"
                 : "opacity-0 pointer-events-none"

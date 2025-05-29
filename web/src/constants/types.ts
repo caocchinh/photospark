@@ -1,4 +1,5 @@
-export type ValidThemeType = "prom" | "usagyuun";
+// export type ValidThemeType = "prom" | "usagyuun";
+export type ValidThemeType = "prom";
 
 export type ValidFrameType = "singular" | "double";
 
@@ -42,7 +43,7 @@ export interface ThemeSelectButtonType {
   title: string;
   image_src: string;
   theme: ValidThemeType;
-  style?: {[key: string]: string};
+  style?: { [key: string]: string };
 }
 
 export interface FrameOptionType<T extends ValidThemeType = ValidThemeType> {
