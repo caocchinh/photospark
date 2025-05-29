@@ -1,7 +1,7 @@
 "use client";
 
 import i18next from "i18next";
-import {initReactI18next} from "react-i18next";
+import { initReactI18next } from "react-i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 
 const supportedLanguages = ["en", "vi", "fr", "cn", "kr"];
@@ -26,7 +26,7 @@ const i18nConfig = {
         "Choose number of copies": "Choose number of copies",
         "Choose another theme": "Choose another theme",
         Capture: "Capture",
-        "This application is developed and sponsored by VECTR": "This application is developed and sponsored by VECTR",
+        "This event is sponsored by ": "This event is sponsored by ",
         "Waiting for camera...": "Waiting for camera...",
         "Choose pictures": "Choose pictures",
         "Choose a filter": "Choose a filter",
@@ -35,7 +35,8 @@ const i18nConfig = {
         Submit: "Submit",
         Print: "Print",
         "Reset filter": "Reset filter",
-        "Please go outside to take the photo": "Please go outside to take the photo",
+        "Please go outside to take the photo":
+          "Please go outside to take the photo",
         "Random filter": "Random filter",
         "Click on image to unselect": "Click on image to unselect",
         "Drag to switch images position": "Drag to switch images position",
@@ -50,17 +51,22 @@ const i18nConfig = {
         "Choose another layout": "Choose another layout",
         "Current layout": "Current layout",
         "Waiting for print server": "Waiting for print server",
-        "Please wait while we connect to the print server": "Please wait while we connect to the print server",
-        "Please select a frame before the countdown ends": "Please select a frame before the countdown ends",
+        "Please wait while we connect to the print server":
+          "Please wait while we connect to the print server",
+        "Please select a frame before the countdown ends":
+          "Please select a frame before the countdown ends",
         "You have 30 seconds left to select a frame, or the frame will be selected automatically!":
           "You have 30 seconds left to select a frame, or the frame will be selected automatically!",
-        "Enter password to access settings": "Enter password to access settings",
+        "Enter password to access settings":
+          "Enter password to access settings",
         "No Internet Connection": "No Internet Connection",
-        "Please check your internet connection and try again": "Please check your internet connection and try again",
+        "Please check your internet connection and try again":
+          "Please check your internet connection and try again",
         "Refresh the application": "Refresh the application",
         Printing: "Printing",
         "Available cameras": "Available cameras",
-        "Please go out and let the other group in!": "Please go out and let the other group in!",
+        "Please go out and let the other group in!":
+          "Please go out and let the other group in!",
       },
     },
     vi: {
@@ -71,7 +77,7 @@ const i18nConfig = {
         "Choose number of copies": "Chọn số lượng in",
         "Choose another theme": "Chọn theme khác",
         Capture: "Chụp",
-        "This application is developed and sponsored by VECTR": "Ứng dụng này được phát triển và tài trợ bởi CLB VECTR",
+        "This event is sponsored by ": "Sự kiện này được tài trợ bởi ",
         "Waiting for camera...": "Đang chờ camera...",
         Submit: "Gửi",
         "Choose pictures": "Chọn hình",
@@ -95,17 +101,22 @@ const i18nConfig = {
         Save: "Lưu",
         "Wrong password": "Mật khẩu sai",
         "Waiting for print server": "Đang chờ server in",
-        "Please wait while we connect to the print server": "Vui lòng chờ trong khi ứng dụng kết nối với server in",
-        "Please select a frame before the countdown ends": "Vui lòng chọn frame trước khi countdown kết thúc",
+        "Please wait while we connect to the print server":
+          "Vui lòng chờ trong khi ứng dụng kết nối với server in",
+        "Please select a frame before the countdown ends":
+          "Vui lòng chọn frame trước khi countdown kết thúc",
         "You have 30 seconds left to select a frame, or the frame will be selected automatically!":
           "Bạn còn 30 giây để chọn frame, hoặc frame sẽ được chọn tự động!",
-        "Enter password to access settings": "Nhập mật khẩu để truy cập cài đặt",
+        "Enter password to access settings":
+          "Nhập mật khẩu để truy cập cài đặt",
         "No Internet Connection": "Không có kết nối Internet",
-        "Please check your internet connection and try again": "Vui lòng kiểm tra kết nối Internet và thử lại",
+        "Please check your internet connection and try again":
+          "Vui lòng kiểm tra kết nối Internet và thử lại",
         "Refresh the application": "Refresh ứng dụng",
         Printing: "Đang in",
         "Available cameras": "Camera có sẵn",
-        "Please go out and let the other group in!": "Vui lòng đi ra ngoài cho nhóm khác vào nha!",
+        "Please go out and let the other group in!":
+          "Vui lòng đi ra ngoài cho nhóm khác vào nha!",
       },
     },
     fr: {
@@ -116,7 +127,7 @@ const i18nConfig = {
         "Choose number of copies": "Choisir le nombre de copies",
         "Choose another theme": "Choisir un autre thème",
         Capture: "Capturer",
-        "This application is developed and sponsored by VECTR": "Cette application est développée et soutenue par VECTR",
+        "This event is sponsored by ": "Cette événement est soutenu par ",
         "Waiting for camera...": "En attente de la caméra...",
         "Choose pictures": "Choisir les images",
         "Choose a filter": "Choisir un filtre",
@@ -124,21 +135,26 @@ const i18nConfig = {
         Close: "Fermer",
         Print: "Imprimer",
         "Reset filter": "Réinitialiser le filtre",
-        "Please go outside to take the photo": "Allez dehors pour prendre la photo",
+        "Please go outside to take the photo":
+          "Allez dehors pour prendre la photo",
         "Random filter": "Filtre aléatoire",
         "Click on image to unselect": "Cliquer sur l'image pour désélectionner",
-        "Drag to switch images position": "Glisser pour changer la position des images",
+        "Drag to switch images position":
+          "Glisser pour changer la position des images",
         "An error occurred": "Une erreur est survenue",
         "Please try again": "Veuillez réessayer",
         "Choose a layout": "Choisir le layout",
         "Choose another layout": "Choisir un autre layout",
         "Current layout": "Layout actuel",
         "Waiting for print server": "En attente du serveur d'impression",
-        "Please wait while we connect to the print server": "Veuillez patienter pendant que nous nous connectons au serveur d'impression",
-        "Please select a frame before the countdown ends": "Veuillez sélectionner un cadre avant la fin du countdown",
+        "Please wait while we connect to the print server":
+          "Veuillez patienter pendant que nous nous connectons au serveur d'impression",
+        "Please select a frame before the countdown ends":
+          "Veuillez sélectionner un cadre avant la fin du countdown",
         "You have 30 seconds left to select a frame, or the frame will be selected automatically!":
           "Vous avez 30 secondes pour sélectionner un cadre, ou le cadre sera sélectionné automatiquement!",
-        "Enter password to access settings": "Entrez le mot de passe pour accéder aux paramètres",
+        "Enter password to access settings":
+          "Entrez le mot de passe pour accéder aux paramètres",
         Submit: "Envoyer",
         "Camera settings": "Paramètres de la caméra",
         Save: "Enregistrer",
@@ -146,10 +162,12 @@ const i18nConfig = {
         "Error loading camera": "Erreur de chargement de la caméra",
         "Wrong password": "Mot de passe incorrect",
         "No Internet Connection": "Pas de connexion Internet",
-        "Please check your internet connection and try again": "Veuillez vérifier votre connexion Internet et réessayer",
+        "Please check your internet connection and try again":
+          "Veuillez vérifier votre connexion Internet et réessayer",
         "Refresh the application": "Actualiser l'application",
         Printing: "Impression",
-        "Please go out and let the other group in!": "S'il vous plaît, sortez et laissez entrer l'autre groupe!",
+        "Please go out and let the other group in!":
+          "S'il vous plaît, sortez et laissez entrer l'autre groupe!",
         "Available cameras": "Cameras disponibles",
       },
     },
@@ -161,7 +179,7 @@ const i18nConfig = {
         "Choose number of copies": "选择打印数量",
         "Choose another theme": "选择另一个主题",
         Capture: "拍摄",
-        "This application is developed and sponsored by VECTR": "本应用程序由VECTR开发和赞助",
+        "This event is sponsored by ": "本活动由",
         "Waiting for camera...": "等待相机...",
         "Choose pictures": "选择图片",
         "Choose a filter": "选择滤镜",
@@ -179,8 +197,10 @@ const i18nConfig = {
         "Choose another layout": "选择另一个布局",
         "Current layout": "当前布局",
         "Waiting for print server": "等待打印服务器",
-        "Please wait while we connect to the print server": "请稍候，我们正在连接到打印服务器",
-        "Please select a frame before the countdown ends": "请在倒计时结束前选择一个框架",
+        "Please wait while we connect to the print server":
+          "请稍候，我们正在连接到打印服务器",
+        "Please select a frame before the countdown ends":
+          "请在倒计时结束前选择一个框架",
         "You have 30 seconds left to select a frame, or the frame will be selected automatically!":
           "您有30秒的时间选择一个框架，或者框架将自动选择！",
         "Enter password to access settings": "输入密码以访问设置",
@@ -191,7 +211,8 @@ const i18nConfig = {
         "Error loading camera": "加载相机错误",
         "Wrong password": "密码错误",
         "No Internet Connection": "没有互联网连接",
-        "Please check your internet connection and try again": "请检查您的互联网连接并重试",
+        "Please check your internet connection and try again":
+          "请检查您的互联网连接并重试",
         "Refresh the application": "刷新应用程序",
         Printing: "打印",
         "Available cameras": "可用的相机",
@@ -206,7 +227,7 @@ const i18nConfig = {
         "Choose number of copies": "복사본 수 선택",
         "Choose another theme": "다른 테마 선택",
         Capture: "캡쳐",
-        "This application is developed and sponsored by VECTR": "이 애플리케이션은 VECTR에서 개발 및 후원합니다.",
+        "This event is sponsored by ": "이 이벤트는 ",
         "Waiting for camera...": "카메라를 기다리는 중...",
         "Choose pictures": "사진 선택",
         "Choose a filter": "필터 선택",
@@ -227,17 +248,22 @@ const i18nConfig = {
         "Choose another layout": "다른 레이아웃 선택",
         "Current layout": "현재 레이아웃",
         "Waiting for print server": "인쇄 서버 대기",
-        "Please wait while we connect to the print server": "인쇄 서버에 연결하는 중입니다...",
-        "Please select a frame before the countdown ends": "카운트다운이 끝나기 전에 프레임을 선택하세요",
+        "Please wait while we connect to the print server":
+          "인쇄 서버에 연결하는 중입니다...",
+        "Please select a frame before the countdown ends":
+          "카운트다운이 끝나기 전에 프레임을 선택하세요",
         "You have 30 seconds left to select a frame, or the frame will be selected automatically!":
           "30초 남았습니다. 프레임을 선택하세요, 아니면 프레임이 자동으로 선택됩니다!",
-        "Enter password to access settings": "비밀번호를 입력하여 설정에 액세스하세요",
+        "Enter password to access settings":
+          "비밀번호를 입력하여 설정에 액세스하세요",
         "No Internet Connection": "인터넷 연결이 없습니다",
-        "Please check your internet connection and try again": "인터넷 연결을 확인하고 다시 시도해주세요",
+        "Please check your internet connection and try again":
+          "인터넷 연결을 확인하고 다시 시도해주세요",
         "Refresh the application": "애플리케이션 새로고침",
         Printing: "인쇄",
         "Available cameras": "사용 가능한 카메라",
-        "Please go out and let the other group in!": "다른 그룹이 들어오기 전에 나가세요!",
+        "Please go out and let the other group in!":
+          "다른 그룹이 들어오기 전에 나가세요!",
         Save: "저장",
         "Wrong password": "비밀번호가 틀렸습니다",
         Submit: "제출",

@@ -10,9 +10,9 @@ export const VALID_THEMES = ["prom"] as const;
 
 export const VALID_FRAME_TYPES = ["singular", "double"] as const;
 
-export const AUTO_SELECT_COUNTDOWN_DURATION = 65;
+export const AUTO_SELECT_COUNTDOWN_DURATION = 40;
 
-export const NUM_OF_CAPTURE_IMAGE = 6;
+export const NUM_OF_CAPTURE_IMAGE = 4;
 
 export const CAPTURE_DURATION = 4;
 
@@ -27,7 +27,7 @@ export const CLICK_SOUND_VOUME = 1;
 export const ThemeSelectButton: ThemeSelectButtonType[] = [
   {
     title: "PROM",
-    image_src: "/prom.webp",
+    image_src: "/prom.jpg",
     theme: "prom",
   },
   // {
@@ -103,8 +103,8 @@ export const FrameOptions: {
   prom: [
     {
       type: "singular",
-      src: "/frame/prom/prom_1.webp",
-      thumbnail: "/frame/prom/thumbnail/prom_1.jpg",
+      src: "/frame/prom/prom_1.png",
+      thumbnail: "/frame/prom/thumbnail/prom_1.png",
       slotCount: 2,
       slotDimensions: {
         height: PROM_IMAGE_HEIGHT,
@@ -124,8 +124,8 @@ export const FrameOptions: {
     },
     {
       type: "singular",
-      src: "/frame/prom/prom_2.webp",
-      thumbnail: "/frame/prom/thumbnail/prom_2.jpg",
+      src: "/frame/prom/prom_2.png",
+      thumbnail: "/frame/prom/thumbnail/prom_2.png",
       slotCount: 2,
       slotDimensions: {
         height: PROM_IMAGE_HEIGHT,
@@ -145,8 +145,8 @@ export const FrameOptions: {
     },
     {
       type: "singular",
-      src: "/frame/prom/prom_3.webp",
-      thumbnail: "/frame/prom/thumbnail/prom_3.jpg",
+      src: "/frame/prom/prom_3.png",
+      thumbnail: "/frame/prom/thumbnail/prom_3.png",
       slotCount: 2,
       slotDimensions: {
         height: PROM_IMAGE_HEIGHT,
@@ -166,51 +166,8 @@ export const FrameOptions: {
     },
     {
       type: "singular",
-      src: "/frame/prom/prom_4.webp",
-      thumbnail: "/frame/prom/thumbnail/prom_4.jpg",
-      slotCount: 2,
-      slotDimensions: {
-        height: PROM_IMAGE_HEIGHT,
-        width: PROM_IMAGE_WIDTH,
-      },
-      slotPositions: [
-        {
-          y: PROM_Y_INIT_POS,
-          x: PROM_X_POS,
-        },
-
-        {
-          y: PROM_Y_SLOT_SEPERATION(0),
-          x: PROM_X_POS,
-        },
-      ],
-    },
-
-    {
-      type: "singular",
-      src: "/frame/prom/prom_5.webp",
-      thumbnail: "/frame/prom/thumbnail/prom_5.jpg",
-      slotCount: 2,
-      slotDimensions: {
-        height: PROM_IMAGE_HEIGHT,
-        width: PROM_IMAGE_WIDTH,
-      },
-      slotPositions: [
-        {
-          y: PROM_Y_INIT_POS,
-          x: PROM_X_POS,
-        },
-
-        {
-          y: PROM_Y_SLOT_SEPERATION(0),
-          x: PROM_X_POS,
-        },
-      ],
-    },
-    {
-      type: "singular",
-      src: "/frame/prom/prom_6.webp",
-      thumbnail: "/frame/prom/thumbnail/prom_6.jpg",
+      src: "/frame/prom/prom_4.png",
+      thumbnail: "/frame/prom/thumbnail/prom_4.png",
       slotCount: 2,
       slotDimensions: {
         height: PROM_IMAGE_HEIGHT,

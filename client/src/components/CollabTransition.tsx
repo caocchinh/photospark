@@ -1,8 +1,8 @@
 "use client";
 
-import {AnimatePresence, motion} from "framer-motion";
-import {createPortal} from "react-dom";
-import {useState, useEffect} from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { createPortal } from "react-dom";
+import { useState, useEffect } from "react";
 
 const blackBox = {
   initial: {
@@ -57,8 +57,8 @@ const imageContainer = {
     y: 62,
     opacity: 1,
     transition: {
-      y: {duration: 1.5, ease: [0.87, 0, 0.13, 1], delay: 1.5},
-      opacity: {duration: 1, ease: [0.87, 0, 0.13, 1]},
+      y: { duration: 1.5, ease: [0.87, 0, 0.13, 1], delay: 1.5 },
+      opacity: { duration: 1, ease: [0.87, 0, 0.13, 1] },
     },
   },
 };
@@ -93,7 +93,9 @@ const CollabTransition = () => {
         initial="initial"
         animate="animate"
         onAnimationStart={() => document.body.classList.add("overflow-hidden")}
-        onAnimationComplete={() => document.body.classList.remove("overflow-hidden")}
+        onAnimationComplete={() =>
+          document.body.classList.remove("overflow-hidden")
+        }
         variants={blackBox}
       >
         <motion.svg
@@ -112,32 +114,18 @@ const CollabTransition = () => {
 
           <image
             href="/vteam-logo-large.png"
-            x="500"
+            x="600"
             y="70"
             width="160"
             height="160"
-            style={{fill: "url(#image-pattern)"}}
+            style={{ fill: "url(#image-pattern)" }}
             className="object-contain filter invert"
-            preserveAspectRatio="xMidYMid meet"
-            transform="translate(-80, -80)"
-          />
-          <image
-            href="/vectr-large.png"
-            x="710"
-            y="90"
-            width="125"
-            height="125"
-            style={{fill: "url(#image-pattern)"}}
-            className="object-contain"
             preserveAspectRatio="xMidYMid meet"
             transform="translate(-80, -80)"
           />
         </motion.svg>
 
-        <motion.svg
-          className="flex w-full"
-          variants={textContainer}
-        >
+        <motion.svg className="flex w-full" variants={textContainer}>
           <motion.pattern
             id="pattern"
             patternUnits="userSpaceOnUse"
@@ -158,9 +146,9 @@ const CollabTransition = () => {
             textAnchor="middle"
             x="50%"
             y="50%"
-            style={{fill: "url(#pattern)"}}
+            style={{ fill: "url(#pattern)" }}
           >
-            VTEAM x VECTR
+            VTEAM
           </text>
         </motion.svg>
       </motion.div>

@@ -76,20 +76,24 @@ export default function RootLayout({
                     </PageTransitionEffect>
                     <Toaster />
 
-                    <footer className="fixed bottom-0 flex items-center justify-center w-full overflow-hidden bg-black h-max">
+                    <footer className="fixed bottom-0 flex items-center py-2 justify-center w-full overflow-hidden bg-white border-2 border-dashed border-t-black h-max">
                       <TextShimmer
-                        className="w-max relative  [--base-color:#f97316] [--base-gradient-color:#fdba74] text-center text-md p-2 gap-3"
+                        className="w-max relative  [--base-color:black] [--base-gradient-color:white] text-center text-md p-2 gap-3"
                         duration={6}
                       >
-                        {t(
-                          "This application is developed and sponsored by VECTR"
-                        )}
+                        {t("This event is sponsored by ")}
                       </TextShimmer>
                       <Image
-                        width={25}
-                        height={25}
-                        src="/vectr.webp"
-                        alt="Vectr logo"
+                        width={125}
+                        height={125}
+                        src="/ddv.jpg"
+                        alt="DDV"
+                      />
+                      <Image
+                        width={40}
+                        height={40}
+                        src="/vinfast.jpg"
+                        alt="Vinfast"
                       />
                     </footer>
                   </body>
