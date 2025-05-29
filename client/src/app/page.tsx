@@ -100,6 +100,7 @@ const LayoutPage = () => {
           autoSelectCountdownTimer <= 0 ? "pointer-events-none" : null
         )}
       >
+      
         {!photo && <CollabTransition />}
 
         <Popover open={isOpen} onOpenChange={setIsOpen}>

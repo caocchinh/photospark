@@ -10,15 +10,15 @@ export const VALID_THEMES = ["prom"] as const;
 
 export const VALID_FRAME_TYPES = ["singular", "double"] as const;
 
-export const AUTO_SELECT_COUNTDOWN_DURATION = 40;
+export const AUTO_SELECT_COUNTDOWN_DURATION = Infinity;
 
-export const NUM_OF_CAPTURE_IMAGE = 4;
+export const NUM_OF_CAPTURE_IMAGE = 5;
 
 export const CAPTURE_DURATION = 4;
 
-export const FILTER_SELECT_DURATION = 25;
+export const FILTER_SELECT_DURATION = 30;
 
-export const IMAGE_SELECT_DURATION = 30;
+export const IMAGE_SELECT_DURATION = Infinity;
 
 export const CLICK_SOUND_URL = "/sound/click.mp3";
 
@@ -27,7 +27,7 @@ export const CLICK_SOUND_VOUME = 1;
 export const ThemeSelectButton: ThemeSelectButtonType[] = [
   {
     title: "PROM",
-    image_src: "/prom.jpg",
+    image_src: "/prom.webp",
     theme: "prom",
   },
   // {
@@ -103,8 +103,8 @@ export const FrameOptions: {
   prom: [
     {
       type: "singular",
-      src: "/frame/prom/prom_1.png",
-      thumbnail: "/frame/prom/thumbnail/prom_1.png",
+      src: "/frame/prom/prom_1.webp",
+      thumbnail: "/frame/prom/thumbnail/prom_1.webp",
       slotCount: 2,
       slotDimensions: {
         height: PROM_IMAGE_HEIGHT,
@@ -124,8 +124,8 @@ export const FrameOptions: {
     },
     {
       type: "singular",
-      src: "/frame/prom/prom_2.png",
-      thumbnail: "/frame/prom/thumbnail/prom_2.png",
+      src: "/frame/prom/prom_2.webp",
+      thumbnail: "/frame/prom/thumbnail/prom_2.webp",
       slotCount: 2,
       slotDimensions: {
         height: PROM_IMAGE_HEIGHT,
@@ -145,8 +145,8 @@ export const FrameOptions: {
     },
     {
       type: "singular",
-      src: "/frame/prom/prom_3.png",
-      thumbnail: "/frame/prom/thumbnail/prom_3.png",
+      src: "/frame/prom/prom_3.webp",
+      thumbnail: "/frame/prom/thumbnail/prom_3.webp",
       slotCount: 2,
       slotDimensions: {
         height: PROM_IMAGE_HEIGHT,
@@ -166,8 +166,8 @@ export const FrameOptions: {
     },
     {
       type: "singular",
-      src: "/frame/prom/prom_4.png",
-      thumbnail: "/frame/prom/thumbnail/prom_4.png",
+      src: "/frame/prom/prom_4.webp",
+      thumbnail: "/frame/prom/thumbnail/prom_4.webp",
       slotCount: 2,
       slotDimensions: {
         height: PROM_IMAGE_HEIGHT,

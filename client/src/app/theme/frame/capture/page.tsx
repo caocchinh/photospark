@@ -284,7 +284,7 @@ const CapturePage = () => {
                   width: videoRef.current!.videoWidth,
                   height: videoRef.current!.videoHeight,
                 });
-              }, 2500);
+              }, 4222);
             });
           };
         } catch (error) {

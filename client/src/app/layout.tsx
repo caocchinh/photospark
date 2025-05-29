@@ -76,7 +76,7 @@ export default function RootLayout({
                     </PageTransitionEffect>
                     <Toaster />
 
-                    <footer className="fixed bottom-0 flex items-center py-2 justify-center w-full overflow-hidden bg-white border-2 border-dashed border-t-black h-max">
+                    <footer className="fixed bottom-0 flex items-center py-1 justify-center w-full overflow-hidden bg-white border-2 border-dashed border-t-black h-max">
                       <TextShimmer
                         className="w-max relative  [--base-color:black] [--base-gradient-color:white] text-center text-md p-2 gap-3"
                         duration={6}
@@ -84,14 +84,14 @@ export default function RootLayout({
                         {t("This event is sponsored by ")}
                       </TextShimmer>
                       <Image
-                        width={125}
-                        height={125}
+                        width={100}
+                        height={100}
                         src="/ddv.jpg"
                         alt="DDV"
                       />
                       <Image
-                        width={40}
-                        height={40}
+                        width={25}
+                        height={25}
                         src="/vinfast.jpg"
                         alt="Vinfast"
                       />
