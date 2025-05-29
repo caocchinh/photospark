@@ -23,7 +23,7 @@ const Sponsor = () => {
           <Image
             width={160}
             height={160}
-            src="/assets/ddv.jpg"
+            src="/ddv.jpg"
             alt="Di động Việt logo"
           />
         </a>
@@ -33,12 +33,7 @@ const Sponsor = () => {
           rel="noopener noreferrer"
           title="Vinfast"
         >
-          <Image
-            width={50}
-            height={50}
-            src="/assets/vinfast.jpg"
-            alt="Vinfast logo"
-          />
+          <Image width={50} height={50} src="/vinfast.jpg" alt="Vinfast logo" />
         </a>
       </div>
     </footer>
