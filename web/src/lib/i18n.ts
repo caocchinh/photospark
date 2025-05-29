@@ -1,7 +1,7 @@
 "use client";
 
 import i18next from "i18next";
-import {initReactI18next} from "react-i18next";
+import { initReactI18next } from "react-i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 
 const supportedLanguages = ["en", "vi", "fr", "cn", "kr"];
@@ -26,7 +26,8 @@ const i18nConfig = {
         "Choose number of copies": "Choose number of copies",
         "Choose another theme": "Choose another theme",
         Capture: "Capture",
-        "This application is developed and sponsored by VECTR": "This application is developed and sponsored by VECTR",
+        "This application is developed and sponsored by VECTR":
+          "This application is developed and sponsored by VECTR",
         "Waiting for camera...": "Waiting for camera...",
         "Choose pictures": "Choose pictures",
         "Choose a filter": "Choose a filter",
@@ -35,7 +36,8 @@ const i18nConfig = {
         Submit: "Submit",
         Print: "Print",
         "Reset filter": "Reset filter",
-        "Please go outside to take the photo": "Please go outside to take the photo",
+        "Please go outside to take the photo":
+          "Please go outside to take the photo",
         "Random filter": "Random filter",
         "Click on image to unselect": "Click on image to unselect",
         "Drag to switch images position": "Drag to switch images position",
@@ -50,17 +52,22 @@ const i18nConfig = {
         "Choose another layout": "Choose another layout",
         "Current layout": "Current layout",
         "Waiting for print server": "Waiting for print server",
-        "Please wait while we connect to the print server": "Please wait while we connect to the print server",
-        "Please select a frame before the countdown ends": "Please select a frame before the countdown ends",
+        "Please wait while we connect to the print server":
+          "Please wait while we connect to the print server",
+        "Please select a frame before the countdown ends":
+          "Please select a frame before the countdown ends",
         "You have 30 seconds left to select a frame, or the frame will be selected automatically!":
           "You have 30 seconds left to select a frame, or the frame will be selected automatically!",
-        "Enter password to access settings": "Enter password to access settings",
+        "Enter password to access settings":
+          "Enter password to access settings",
         "No Internet Connection": "No Internet Connection",
-        "Please check your internet connection and try again": "Please check your internet connection and try again",
+        "Please check your internet connection and try again":
+          "Please check your internet connection and try again",
         "Refresh the application": "Refresh the application",
         Printing: "Printing",
         "Available cameras": "Available cameras",
-        "Please go out and let the other group in!": "Please go out and let the other group in!",
+        "Please go out and let the other group in!":
+          "Please go out and let the other group in!",
         "Please enter a valid image ID": "Please enter a valid image ID",
         "Find image": "Find image",
         "Enter image ID": "Enter image ID",
@@ -68,7 +75,8 @@ const i18nConfig = {
         image: "image",
         video: "video",
         "print order": "print order",
-        "Please try again later, or contact VTEAM for support!": "Please try again later, or contact VTEAM for support!",
+        "Please try again later, or contact VTEAM for support!":
+          "Please try again later, or contact VTEAM for support!",
         "Image not found!": "Image not found!",
         "Return to homepage": "Return to homepage",
         Reload: "Reload",
@@ -86,7 +94,8 @@ const i18nConfig = {
         Price: "Price",
         Time: "Time",
         Back: "Back",
-        "Please meet staff VTEAM and bring the order ID to get help!": "Please meet staff VTEAM and bring the order ID to get help!",
+        "Please meet staff VTEAM and bring the order ID to get help!":
+          "Please meet staff VTEAM and bring the order ID to get help!",
         Failed: "Failed",
         Printed: "Printed",
         "Waiting for printing": "Waiting for printing",
@@ -100,13 +109,17 @@ const i18nConfig = {
         Refresh: "Refresh",
         "Quantity of prints": "Quantity of prints",
         "Processing...": "Processing...",
-        "There was an error while ordering!": "There was an error while ordering!",
+        "There was an error while ordering!":
+          "There was an error while ordering!",
         "Price table": "Price table",
         Order: "Order",
         "Image printing information": "Image printing information",
-        "Details about the image printing order": "Details about the image printing order",
-        "If you need to print more images, please see the price table below.": "If you need to print more images, please see the price table below.",
-        "The maximum quantity of prints is": "The maximum quantity of prints is",
+        "Details about the image printing order":
+          "Details about the image printing order",
+        "If you need to print more images, please see the price table below.":
+          "If you need to print more images, please see the price table below.",
+        "The maximum quantity of prints is":
+          "The maximum quantity of prints is",
         Images: "Images",
         Prints: "Prints",
         images: "images",
@@ -114,9 +127,11 @@ const i18nConfig = {
         "Choose images": "Choose images",
         "Change image position": "Change image position",
         Finish: "Finish",
-        "Unable to fetch data from the database!": "Unable to fetch data from the database!",
+        "Unable to fetch data from the database!":
+          "Unable to fetch data from the database!",
         "Choose other images": "Choose other images",
-        "Click on the image to choose filter": "Click on the image to choose filter",
+        "Click on the image to choose filter":
+          "Click on the image to choose filter",
         "Random Filter": "Random Filter",
         "Reset Filter": "Reset Filter",
         "Create image": "Create image",
@@ -124,7 +139,8 @@ const i18nConfig = {
         Cancel: "Cancel",
         "Drag image to change position": "Drag image to change position",
         "Click on the image to choose": "Click on the image to choose",
-        "An error occurred while creating the image!": "An error occurred while creating the image!",
+        "An error occurred while creating the image!":
+          "An error occurred while creating the image!",
         Filter: "Filter",
         Select: "Select",
         Layout: "Layout",
@@ -132,11 +148,13 @@ const i18nConfig = {
         Frame: "Frame",
         Home: "Home",
         "Navigating...": "Navigating...",
-        "You may order to print your image.": "You may order to print your image.",
+        "You may order to print your image.":
+          "You may order to print your image.",
         "Successfully created image!": "Successfully created image!",
         "Loading...": "Loading...",
         "Please choose images": "Please choose images",
-        "You need to choose images to continue": "You need to choose images to continue",
+        "You need to choose images to continue":
+          "You need to choose images to continue",
         Understood: "Understood",
         "Developer Information": "Developer Information",
         "Copy Email Address": "Copy Email Address",
@@ -147,7 +165,8 @@ const i18nConfig = {
         "Open in external browser": "Open in external browser",
         "Open in Safari": "Open in Safari",
         "Open in Chrome": "Open in Chrome",
-        "If button doesn't work, please open manually!": "If button doesn't work, please open manually!",
+        "If button doesn't work, please open manually!":
+          "If button doesn't work, please open manually!",
         "If Chrome hasn't been installed, please open external browser manually!":
           "If Chrome hasn't been installed, please open external browser manually!",
         "QR Code": "QR Code",
@@ -157,6 +176,7 @@ const i18nConfig = {
         "Full - 8 cuts": "Full - 8 cuts",
         "If you are using iOS version 15 and below, please open external browser manually!":
           "If you are using iOS version 15 and below, please open external browser manually!",
+        this_event_is_sponsored_by: "This event is sponsored by",
       },
     },
     vi: {
@@ -167,7 +187,8 @@ const i18nConfig = {
         "Choose number of copies": "Chọn số lượng in",
         "Choose another theme": "Chọn theme khác",
         Capture: "Chụp",
-        "This application is developed and sponsored by VECTR": "Ứng dụng này được phát triển và tài trợ bởi CLB VECTR",
+        "This application is developed and sponsored by VECTR":
+          "Ứng dụng này được phát triển và tài trợ bởi CLB VECTR",
         "Waiting for camera...": "Đang chờ camera...",
         Submit: "Gửi",
         "Choose pictures": "Chọn hình",
@@ -191,17 +212,22 @@ const i18nConfig = {
         Save: "Lưu",
         "Wrong password": "Mật khẩu sai",
         "Waiting for print server": "Đang chờ server in",
-        "Please wait while we connect to the print server": "Vui lòng chờ trong khi ứng dụng kết nối với server in",
-        "Please select a frame before the countdown ends": "Vui lòng chọn frame trước khi countdown kết thúc",
+        "Please wait while we connect to the print server":
+          "Vui lòng chờ trong khi ứng dụng kết nối với server in",
+        "Please select a frame before the countdown ends":
+          "Vui lòng chọn frame trước khi countdown kết thúc",
         "You have 30 seconds left to select a frame, or the frame will be selected automatically!":
           "Bạn còn 30 giây để chọn frame, hoặc frame sẽ được chọn tự động!",
-        "Enter password to access settings": "Nhập mật khẩu để truy cập cài đặt",
+        "Enter password to access settings":
+          "Nhập mật khẩu để truy cập cài đặt",
         "No Internet Connection": "Không có kết nối Internet",
-        "Please check your internet connection and try again": "Vui lòng kiểm tra kết nối Internet và thử lại",
+        "Please check your internet connection and try again":
+          "Vui lòng kiểm tra kết nối Internet và thử lại",
         "Refresh the application": "Refresh ứng dụng",
         Printing: "Đang in",
         "Available cameras": "Camera có sẵn",
-        "Please go out and let the other group in!": "Vui lòng đi ra ngoài cho nhóm khác vào nha!",
+        "Please go out and let the other group in!":
+          "Vui lòng đi ra ngoài cho nhóm khác vào nha!",
         "Please enter a valid image ID": "Vui lòng nhập ID hình hợp lệ",
         "Find image": "Tìm hình",
         "Enter image ID": "Nhập ID hình",
@@ -209,7 +235,8 @@ const i18nConfig = {
         image: "hình",
         video: "video",
         "print order": "lệnh in",
-        "Please try again later, or contact VTEAM for support!": "Vui lòng thử lại sau, hoặc liên hệ VTEAM để được hỗ trợ!",
+        "Please try again later, or contact VTEAM for support!":
+          "Vui lòng thử lại sau, hoặc liên hệ VTEAM để được hỗ trợ!",
         "Image not found!": "Hình không tồn tại!",
         "Return to homepage": "Quay lại trang chủ",
         Reload: "Tải lại",
@@ -228,7 +255,8 @@ const i18nConfig = {
         Time: "Thời gian",
         "Details about the image printing order": "Chi tiết đơn hàng in hình",
         Back: "Quay lại",
-        "Please meet staff VTEAM and bring the order ID to get help!": "Hãy gặp staff VTEAM và đưa mã đơn hàng để được hỗ trợ!",
+        "Please meet staff VTEAM and bring the order ID to get help!":
+          "Hãy gặp staff VTEAM và đưa mã đơn hàng để được hỗ trợ!",
         Failed: "Thất bại",
         Printed: "Đã in xong",
         "Waiting for printing": "Đang chờ in",
@@ -242,14 +270,16 @@ const i18nConfig = {
         Refresh: "Tải lại",
         images: "hình",
         VND: "VND",
-        "Please meet staff VTEAM to print more images!": "Hãy gặp staff VTEAM để in thêm hình nha!",
+        "Please meet staff VTEAM to print more images!":
+          "Hãy gặp staff VTEAM để in thêm hình nha!",
         "Quantity of prints": "Số lượng in",
         "Processing...": "Đang xử lý...",
         "There was an error while ordering!": "Đã xảy ra lỗi khi đặt hàng!",
         "Price table": "Bảng giá",
         Order: "Đặt hàng",
         "Image printing information": "Thông tin in hình",
-        "If you need to print more images, please see the price table below.": "Nếu bạn muốn in thêm hình, vui lòng xem bảng giá dưới đây.",
+        "If you need to print more images, please see the price table below.":
+          "Nếu bạn muốn in thêm hình, vui lòng xem bảng giá dưới đây.",
         "The maximum quantity of prints is": "Số lượng in tối đa là",
         Images: "Ảnh",
         Prints: "In",
@@ -257,7 +287,8 @@ const i18nConfig = {
         "Choose images": "Chọn hình",
         "Change image position": "Đổi vị trí hình",
         Finish: "Hoàn tất",
-        "Unable to fetch data from the database!": "Không thể tải dữ liệu từ cơ sở dữ liệu!",
+        "Unable to fetch data from the database!":
+          "Không thể tải dữ liệu từ cơ sở dữ liệu!",
         "Choose other images": "Chọn hình khác",
         "Click on the image to choose filter": "Bấm vào hình để chọn filter",
         "Random Filter": "Filter ngẫu nhiên",
@@ -268,7 +299,8 @@ const i18nConfig = {
         Sure: "Chắc chắn",
         "Drag image to change position": "Kéo hình để đổi vị trí",
         "Click on the image to choose": "Bấm vào hình để chọn",
-        "An error occurred while creating the image!": "Đã xảy ra lỗi khi tạo hình!",
+        "An error occurred while creating the image!":
+          "Đã xảy ra lỗi khi tạo hình!",
         Filter: "Filter",
         Select: "Chọn",
         Layout: "Layout",
@@ -276,11 +308,13 @@ const i18nConfig = {
         Frame: "Frame",
         Home: "Trang chủ",
         "Navigating...": "Đang chuyển hướng...",
-        "You may order to print your image.": "Bạn có thể đặt hàng để in hình của bạn.",
+        "You may order to print your image.":
+          "Bạn có thể đặt hàng để in hình của bạn.",
         "Successfully created image!": "Đã tạo hình thành công!",
         "Loading...": "Đang tải...",
         "Please choose images": "Vui lòng chọn hình",
-        "You need to choose images to continue": "Bạn cần chọn hình để tiếp tục",
+        "You need to choose images to continue":
+          "Bạn cần chọn hình để tiếp tục",
         Understood: "Đã hiểu",
         "Developer Information": "Thông tin nhà phát triển",
         "Copy Email Address": "Sao chép địa chỉ email",
@@ -291,7 +325,8 @@ const i18nConfig = {
         "Open in external browser": "Mở trong trình duyệt bên ngoài",
         "Open in Safari": "Mở bằng Safari",
         "Open in Chrome": "Mở bằng Chrome",
-        "If button doesn't work, please open manually!": "Nếu nút không hoạt động, vui lòng mở thủ công!",
+        "If button doesn't work, please open manually!":
+          "Nếu nút không hoạt động, vui lòng mở thủ công!",
         "If Chrome hasn't been installed, please open external browser manually!":
           "Nếu Chrome chưa được cài đặt, vui lòng mở trình duyệt bên ngoài thủ công!",
         "QR Code": "Mã QR",
@@ -301,6 +336,7 @@ const i18nConfig = {
         "Full - 8 cuts": "Đủ - 8 cuts",
         "If you are using iOS version 15 and below, please open external browser manually!":
           "Nếu bạn đang sử dụng phiên bản iOS 15 trở xuống, vui lòng mở trình duyệt bên ngoài thủ công!",
+        this_event_is_sponsored_by: "Sự kiện này được tài trợ bởi",
       },
     },
     fr: {
@@ -311,7 +347,8 @@ const i18nConfig = {
         "Choose number of copies": "Choisir le nombre de copies",
         "Choose another theme": "Choisir un autre thème",
         Capture: "Capturer",
-        "This application is developed and sponsored by VECTR": "Cette application est développée et soutenue par VECTR",
+        "This application is developed and sponsored by VECTR":
+          "Cette application est développée et soutenue par VECTR",
         "Waiting for camera...": "En attente de la caméra...",
         "Choose pictures": "Choisir les images",
         "Choose a filter": "Choisir un filtre",
@@ -319,21 +356,26 @@ const i18nConfig = {
         Close: "Fermer",
         Print: "Imprimer",
         "Reset filter": "Réinitialiser le filtre",
-        "Please go outside to take the photo": "Allez dehors pour prendre la photo",
+        "Please go outside to take the photo":
+          "Allez dehors pour prendre la photo",
         "Random filter": "Filtre aléatoire",
         "Click on image to unselect": "Cliquer sur l'image pour désélectionner",
-        "Drag to switch images position": "Glisser pour changer la position des images",
+        "Drag to switch images position":
+          "Glisser pour changer la position des images",
         "An error occurred": "Une erreur est survenue",
         "Please try again": "Veuillez réessayer",
         "Choose a layout": "Choisir le layout",
         "Choose another layout": "Choisir un autre layout",
         "Current layout": "Layout actuel",
         "Waiting for print server": "En attente du serveur d'impression",
-        "Please wait while we connect to the print server": "Veuillez patienter pendant que nous nous connectons au serveur d'impression",
-        "Please select a frame before the countdown ends": "Veuillez sélectionner un cadre avant la fin du countdown",
+        "Please wait while we connect to the print server":
+          "Veuillez patienter pendant que nous nous connectons au serveur d'impression",
+        "Please select a frame before the countdown ends":
+          "Veuillez sélectionner un cadre avant la fin du countdown",
         "You have 30 seconds left to select a frame, or the frame will be selected automatically!":
           "Vous avez 30 secondes pour sélectionner un cadre, ou le cadre sera sélectionné automatiquement!",
-        "Enter password to access settings": "Entrez le mot de passe pour accéder aux paramètres",
+        "Enter password to access settings":
+          "Entrez le mot de passe pour accéder aux paramètres",
         Submit: "Envoyer",
         "Camera settings": "Paramètres de la caméra",
         Save: "Enregistrer",
@@ -341,10 +383,12 @@ const i18nConfig = {
         "Error loading camera": "Erreur de chargement de la caméra",
         "Wrong password": "Mot de passe incorrect",
         "No Internet Connection": "Pas de connexion Internet",
-        "Please check your internet connection and try again": "Veuillez vérifier votre connexion Internet et réessayer",
+        "Please check your internet connection and try again":
+          "Veuillez vérifier votre connexion Internet et réessayer",
         "Refresh the application": "Actualiser l'application",
         Printing: "Impression",
-        "Please go out and let the other group in!": "S'il vous plaît, sortez et laissez entrer l'autre groupe!",
+        "Please go out and let the other group in!":
+          "S'il vous plaît, sortez et laissez entrer l'autre groupe!",
         "Available cameras": "Cameras disponibles",
         "Please enter a valid image ID": "Veuillez entrer un ID d'image valide",
         "Find image": "Trouver l'image",
@@ -353,7 +397,8 @@ const i18nConfig = {
         image: "image",
         video: "vidéo",
         "print order": "ordre d'impression",
-        "Please try again later, or contact VTEAM for support!": "Veuillez réessayer plus tard, ou contactez VTEAM pour obtenir de l'aide!",
+        "Please try again later, or contact VTEAM for support!":
+          "Veuillez réessayer plus tard, ou contactez VTEAM pour obtenir de l'aide!",
         "Image not found!": "Image non trouvée!",
         "Return to homepage": "Retour à la page d'accueil",
         Reload: "Recharger",
@@ -364,7 +409,8 @@ const i18nConfig = {
         "Copy image link": "Copier le lien de l'image",
         "Edit image": "Modifier l'image",
         "Print more": "Imprimer plus",
-        "Error while downloading image!": "Erreur lors du téléchargement de l'image!",
+        "Error while downloading image!":
+          "Erreur lors du téléchargement de l'image!",
         "Order ID": "ID de commande",
         "Image type": "Type d'image",
         Quantity: "Quantité",
@@ -388,33 +434,41 @@ const i18nConfig = {
         VND: "VND",
         "If you need to print more images, please see the price table below.":
           "Si vous souhaitez imprimer plus d'images, veuillez consulter le tableau des prix ci-dessous.",
-        "The maximum quantity of prints is": "La quantité maximale d'impressions est",
+        "The maximum quantity of prints is":
+          "La quantité maximale d'impressions est",
         Images: "Images",
         Prints: "Impressions",
-        "Please meet staff VTEAM to print more images!": "Veuillez rencontrer le personnel VTEAM pour imprimer plus d'images!",
+        "Please meet staff VTEAM to print more images!":
+          "Veuillez rencontrer le personnel VTEAM pour imprimer plus d'images!",
         "Quantity of prints": "Quantité d'impressions",
         "Processing...": "En cours de traitement...",
-        "There was an error while ordering!": "Une erreur est survenue lors de la commande!",
+        "There was an error while ordering!":
+          "Une erreur est survenue lors de la commande!",
         "Price table": "Tableau des prix",
         Order: "Commande",
         "Image printing information": "Informations d'impression d'image",
-        "Details about the image printing order": "Détails de la commande d'impression d'image",
+        "Details about the image printing order":
+          "Détails de la commande d'impression d'image",
         "Choose another frame": "Choisir un autre cadre",
         "Choose images": "Choisir l'image",
         "Change image position": "Changer la position de l'image",
         Finish: "Terminer",
-        "Unable to fetch data from the database!": "Impossible de récupérer les données de la base de données!",
+        "Unable to fetch data from the database!":
+          "Impossible de récupérer les données de la base de données!",
         "Choose other images": "Choisir d'autres images",
-        "Click on the image to choose filter": "Cliquer sur l'image pour choisir le filtre",
+        "Click on the image to choose filter":
+          "Cliquer sur l'image pour choisir le filtre",
         "Random Filter": "Filtre aléatoire",
         "Reset Filter": "Réinitialiser le filtre",
         "Create image": "Créer l'image",
         "Are you sure?": "Êtes-vous sûr?",
         Cancel: "Annuler",
         Sure: "Sûr",
-        "Drag image to change position": "Glisser pour changer la position de l'image",
+        "Drag image to change position":
+          "Glisser pour changer la position de l'image",
         "Click on the image to choose": "Cliquer sur l'image pour choisir",
-        "An error occurred while creating the image!": "Une erreur est survenue lors de la création de l'image!",
+        "An error occurred while creating the image!":
+          "Une erreur est survenue lors de la création de l'image!",
         Filter: "Filtre",
         Select: "Choisir",
         Layout: "Layout",
@@ -422,11 +476,13 @@ const i18nConfig = {
         Frame: "Cadre",
         Home: "Accueil",
         "Navigating...": "Navigation...",
-        "You may order to print your image.": "Vous pouvez passer commande pour imprimer votre image.",
+        "You may order to print your image.":
+          "Vous pouvez passer commande pour imprimer votre image.",
         "Successfully created image!": "Image créée avec succès!",
         "Loading...": "Chargement...",
         "Please choose images": "Veuillez choisir des images",
-        "You need to choose images to continue": "Vous devez choisir des images pour continuer",
+        "You need to choose images to continue":
+          "Vous devez choisir des images pour continuer",
         Understood: "Compris",
         "Developer Information": "Informations sur le développeur",
         "Copy Email Address": "Copier l'adresse email",
@@ -437,7 +493,8 @@ const i18nConfig = {
         "Open in external browser": "Ouvrir dans un navigateur externe",
         "Open in Safari": "Ouvrir dans Safari",
         "Open in Chrome": "Ouvrir dans Chrome",
-        "If button doesn't work, please open manually!": "Si le bouton ne fonctionne pas, veuillez ouvrir manuellement!",
+        "If button doesn't work, please open manually!":
+          "Si le bouton ne fonctionne pas, veuillez ouvrir manuellement!",
         "If Chrome hasn't been installed, please open external browser manually!":
           "Si Chrome n'a pas été installé, veuillez ouvrir le navigateur externe manuellement!",
         "QR Code": "Code QR",
@@ -447,6 +504,7 @@ const i18nConfig = {
         "Half - 4 cuts": "Demi - 4 coupes",
         "If you are using iOS version 15 and below, please open external browser manually!":
           "Si vous utilisez la version iOS 15 et inférieure, veuillez ouvrir le navigateur externe manuellement!",
+        this_event_is_sponsored_by: "Cette événement est sponsorisé par",
       },
     },
     cn: {
@@ -457,7 +515,8 @@ const i18nConfig = {
         "Choose number of copies": "选择打印数量",
         "Choose another theme": "选择另一个主题",
         Capture: "拍摄",
-        "This application is developed and sponsored by VECTR": "本应用程序由VECTR开发和赞助",
+        "This application is developed and sponsored by VECTR":
+          "本应用程序由VECTR开发和赞助",
         "Waiting for camera...": "等待相机...",
         "Choose pictures": "选择图片",
         "Choose a filter": "选择滤镜",
@@ -475,8 +534,10 @@ const i18nConfig = {
         "Choose another layout": "选择另一个布局",
         "Current layout": "当前布局",
         "Waiting for print server": "等待打印服务器",
-        "Please wait while we connect to the print server": "请稍候，我们正在连接到打印服务器",
-        "Please select a frame before the countdown ends": "请在倒计时结束前选择一个框架",
+        "Please wait while we connect to the print server":
+          "请稍候，我们正在连接到打印服务器",
+        "Please select a frame before the countdown ends":
+          "请在倒计时结束前选择一个框架",
         "You have 30 seconds left to select a frame, or the frame will be selected automatically!":
           "您有30秒的时间选择一个框架，或者框架将自动选择！",
         "Enter password to access settings": "输入密码以访问设置",
@@ -487,7 +548,8 @@ const i18nConfig = {
         "Error loading camera": "加载相机错误",
         "Wrong password": "密码错误",
         "No Internet Connection": "没有互联网连接",
-        "Please check your internet connection and try again": "请检查您的互联网连接并重试",
+        "Please check your internet connection and try again":
+          "请检查您的互联网连接并重试",
         "Refresh the application": "刷新应用程序",
         Printing: "打印",
         "Available cameras": "可用的相机",
@@ -499,7 +561,8 @@ const i18nConfig = {
         image: "图像",
         video: "视频",
         "print order": "打印订单",
-        "Please try again later, or contact VTEAM for support!": "请稍后再试，或联系VTEAM寻求支持！",
+        "Please try again later, or contact VTEAM for support!":
+          "请稍后再试，或联系VTEAM寻求支持！",
         "Image not found!": "找不到图像！",
         "Return to homepage": "返回主页",
         Reload: "重新加载",
@@ -517,7 +580,8 @@ const i18nConfig = {
         Price: "价格",
         Time: "时间",
         Back: "返回",
-        "Please meet staff VTEAM and bring the order ID to get help!": "请会见VTEAM工作人员并携带订单ID以获取帮助！",
+        "Please meet staff VTEAM and bring the order ID to get help!":
+          "请会见VTEAM工作人员并携带订单ID以获取帮助！",
         Failed: "失败",
         Printed: "已打印",
         "Waiting for printing": "等待打印",
@@ -538,11 +602,13 @@ const i18nConfig = {
         Order: "订单",
         "Image printing information": "图像打印信息",
         "Details about the image printing order": "图像打印订单详情",
-        "If you need to print more images, please see the price table below.": "如果需要打印更多图像，请查看下面的价格表。",
+        "If you need to print more images, please see the price table below.":
+          "如果需要打印更多图像，请查看下面的价格表。",
         "The maximum quantity of prints is": "最大打印数量是",
         Images: "图像",
         Prints: "打印",
-        "Please meet staff VTEAM to print more images!": "请会见VTEAM工作人员以打印更多图像！",
+        "Please meet staff VTEAM to print more images!":
+          "请会见VTEAM工作人员以打印更多图像！",
         "Choose another frame": "选择另一个框架",
         "Choose images": "选择图像",
         "Change image position": "更改图像位置",
@@ -581,14 +647,18 @@ const i18nConfig = {
         "Open in external browser": "在外部浏览器中打开",
         "Open in Safari": "在Safari中打开",
         "Open in Chrome": "在Chrome中打开",
-        "If button doesn't work, please open manually!": "如果按钮不起作用，请手动打开！",
-        "If Chrome hasn't been installed, please open external browser manually!": "如果尚未安装Chrome，请手动打开外部浏览器！",
+        "If button doesn't work, please open manually!":
+          "如果按钮不起作用，请手动打开！",
+        "If Chrome hasn't been installed, please open external browser manually!":
+          "如果尚未安装Chrome，请手动打开外部浏览器！",
         "QR Code": "二维码",
         "Download QR": "下载二维码",
         "Download options": "下载选项",
         "Half - 4 cuts": "半 - 4 切",
         "Full - 8 cuts": "全 - 8 刀",
-        "If you are using iOS version 15 and below, please open external browser manually!": "如果你使用的iOS版本是15及以下，請手動開啟外部瀏覽器！",
+        "If you are using iOS version 15 and below, please open external browser manually!":
+          "如果你使用的iOS版本是15及以下，请手动开启外部浏览器！",
+        this_event_is_sponsored_by: "此活动由",
       },
     },
     kr: {
@@ -599,7 +669,8 @@ const i18nConfig = {
         "Choose number of copies": "복사본 수 선택",
         "Choose another theme": "다른 테마 선택",
         Capture: "캡쳐",
-        "This application is developed and sponsored by VECTR": "이 애플리케이션은 VECTR에서 개발 및 후원합니다.",
+        "This application is developed and sponsored by VECTR":
+          "이 애플리케이션은 VECTR에서 개발 및 후원합니다.",
         "Waiting for camera...": "카메라를 기다리는 중...",
         "Choose pictures": "사진 선택",
         "Choose a filter": "필터 선택",
@@ -620,20 +691,25 @@ const i18nConfig = {
         "Choose another layout": "다른 레이아웃 선택",
         "Current layout": "현재 레이아웃",
         "Waiting for print server": "인쇄 서버 대기",
-        "Please wait while we connect to the print server": "인쇄 서버에 연결하는 동안 기다려 주세요",
-        "Please select a frame before the countdown ends": "카운트다운이 끝나기 전에 프레임을 선택하세요",
+        "Please wait while we connect to the print server":
+          "인쇄 서버에 연결하는 동안 기다려 주세요",
+        "Please select a frame before the countdown ends":
+          "카운트다운이 끝나기 전에 프레임을 선택하세요",
         "You have 30 seconds left to select a frame, or the frame will be selected automatically!":
           "프레임을 선택할 시간이 30초 남았습니다. 선택하지 않으면 자동으로 선택됩니다!",
-        "Enter password to access settings": "설정에 액세스하려면 비밀번호를 입력하세요",
+        "Enter password to access settings":
+          "설정에 액세스하려면 비밀번호를 입력하세요",
         Submit: "제출",
         Save: "저장",
         "Wrong password": "잘못된 비밀번호",
         "No Internet Connection": "인터넷 연결 없음",
-        "Please check your internet connection and try again": "인터넷 연결을 확인하고 다시 시도하세요",
+        "Please check your internet connection and try again":
+          "인터넷 연결을 확인하고 다시 시도하세요",
         "Refresh the application": "응용 프로그램 새로고침",
         Printing: "인쇄 중",
         "Available cameras": "사용 가능한 카메라",
-        "Please go out and let the other group in!": "밖으로 나가서 다른 그룹이 들어오게 하세요!",
+        "Please go out and let the other group in!":
+          "밖으로 나가서 다른 그룹이 들어오게 하세요!",
         "Please enter a valid image ID": "유효한 이미지 ID를 입력하세요",
         "Find image": "이미지 찾기",
         "Enter image ID": "이미지 ID 입력",
@@ -641,7 +717,8 @@ const i18nConfig = {
         image: "이미지",
         video: "비디오",
         "print order": "인쇄 주문",
-        "Please try again later, or contact VTEAM for support!": "나중에 다시 시도하거나 VTEAM에 지원을 문의하세요!",
+        "Please try again later, or contact VTEAM for support!":
+          "나중에 다시 시도하거나 VTEAM에 지원을 문의하세요!",
         "Image not found!": "이미지를 찾을 수 없습니다!",
         "Return to homepage": "홈페이지로 돌아가기",
         Reload: "다시 로드",
@@ -659,7 +736,8 @@ const i18nConfig = {
         Price: "가격",
         Time: "시간",
         Back: "돌아가기",
-        "Please meet staff VTEAM and bring the order ID to get help!": "VTEAM 직원을 만나고 주문 ID를 가져오세요!",
+        "Please meet staff VTEAM and bring the order ID to get help!":
+          "VTEAM 직원을 만나고 주문 ID를 가져오세요!",
         Failed: "실패",
         Printed: "인쇄됨",
         "Waiting for printing": "인쇄 대기 중",
@@ -680,16 +758,19 @@ const i18nConfig = {
         Order: "주문",
         "Image printing information": "이미지 인쇄 정보",
         "Details about the image printing order": "이미지 인쇄 주문 세부 정보",
-        "If you need to print more images, please see the price table below.": "더 많은 이미지를 인쇄하려면 아래 가격 표를 참조하세요.",
+        "If you need to print more images, please see the price table below.":
+          "더 많은 이미지를 인쇄하려면 아래 가격 표를 참조하세요.",
         "The maximum quantity of prints is": "최대 인쇄 수량은",
         Images: "이미지",
         Prints: "인쇄",
-        "Please meet staff VTEAM to print more images!": "VTEAM 직원을 만나고 더 많은 이미지를 인쇄하세요!",
+        "Please meet staff VTEAM to print more images!":
+          "VTEAM 직원을 만나고 더 많은 이미지를 인쇄하세요!",
         "Choose another frame": "다른 프레임 선택",
         "Choose images": "이미지 선택",
         "Change image position": "이미지 위치 변경",
         Finish: "완료",
-        "Unable to fetch data from the database!": "데이터베이스에서 데이터를 가져오지 못했습니다!",
+        "Unable to fetch data from the database!":
+          "데이터베이스에서 데이터를 가져오지 못했습니다!",
         "Choose other images": "다른 이미지 선택",
         "Click on the image to choose filter": "이미지를 클릭하여 필터 선택",
         "Random Filter": "랜덤 필터",
@@ -700,7 +781,8 @@ const i18nConfig = {
         Sure: "확실합니다",
         "Drag image to change position": "이미지를 드래그하여 위치 변경",
         "Click on the image to choose": "이미지를 클릭하여 선택",
-        "An error occurred while creating the image!": "이미지 생성 중 오류가 발생했습니다!",
+        "An error occurred while creating the image!":
+          "이미지 생성 중 오류가 발생했습니다!",
         Filter: "필터",
         Select: "선택",
         Layout: "레이아웃",
@@ -723,8 +805,10 @@ const i18nConfig = {
         "Open in external browser": "외부 브라우저에서 열기",
         "Open in Safari": "Safari에서 열기",
         "Open in Chrome": "Chrome에서 열기",
-        "If button doesn't work, please open manually!": "버튼이 작동하지 않으면 수동으로 여세요!",
-        "If Chrome hasn't been installed, please open external browser manually!": "Chrome이 설치되지 않은 경우 외부 브라우저를 수동으로 여세요!",
+        "If button doesn't work, please open manually!":
+          "버튼이 작동하지 않으면 수동으로 여세요!",
+        "If Chrome hasn't been installed, please open external browser manually!":
+          "Chrome이 설치되지 않은 경우 외부 브라우저를 수동으로 여세요!",
         "QR Code": "QR 코드",
         "Download QR": "QR 다운로드",
         "Download options": "다운로드 옵션",
@@ -732,6 +816,7 @@ const i18nConfig = {
         "Half - 4 cuts": "반 - 4 컷",
         "If you are using iOS version 15 and below, please open external browser manually!":
           "iOS 버전 15 이하를 사용 중이시라면, 외부 브라우저를 수동으로 열어주세요!",
+        this_event_is_sponsored_by: "이 이벤트는",
       },
     },
   },

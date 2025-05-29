@@ -8,8 +8,8 @@ import Link from "next/link";
 import { GlowEffect } from "@/components/ui/glow-effect";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { AiOutlineDownload } from "react-icons/ai";
-// import {MdModeEdit} from "react-icons/md";
-import { IoCopySharp } from "react-icons/io5";
+import { MdModeEdit } from "react-icons/md";
+// import { IoCopySharp } from "react-icons/io5";
 import FrameStage from "@/components/FrameStage";
 import GeneralError from "@/components/GeneralError";
 import { Button } from "@/components/ui/button";
@@ -260,6 +260,15 @@ const Preview = () => {
                 <AiOutlineDownload size={27} />
               </div>
             )}
+            <div className="w-full h-[50px] text-white cursor-pointer text-xl bg-[#f97316] active:opacity-80 hover:opacity-90 hover:bg-[#f97316] rounded-sm flex items-center justify-center gap-3">
+              <Link
+                href={`/${processedImage.id}/edit`}
+                className="flex items-center justify-center w-full h-full gap-2 "
+              >
+                {t("Edit image")}
+                <MdModeEdit size={27} color="white" />
+              </Link>
+            </div>
             <Dialog>
               <DialogTrigger asChild>
                 <div className="w-full h-[50px] text-white active:opacity-80 bg-black cursor-pointer text-xl rounded-sm flex items-center justify-center gap-3">
@@ -325,19 +334,8 @@ const Preview = () => {
               {copied ? t("Copied!") : t("Copy image link")}
               <LuLink size={27} />
             </div>
-            {/* <div className="w-full h-[50px] text-white cursor-pointer text-xl bg-[#f97316] active:opacity-80 hover:opacity-90 hover:bg-[#f97316] rounded-sm flex items-center justify-center gap-3">
-              <Link
-                href={`/${processedImage.id}/edit`}
-                className="flex items-center justify-center w-full h-full gap-2 "
-              >
-                {t("Edit image")}
-                <MdModeEdit
-                  size={27}
-                  color="white"
-                />
-              </Link>
-            </div> */}
 
+            {/* 
             <div className="w-full h-[50px] text-white cursor-pointer text-xl bg-[#f97316] active:opacity-80 hover:opacity-90 hover:bg-[#f97316] rounded-sm flex items-center justify-center gap-3">
               <Link
                 href={`/${processedImage.id}/print`}
@@ -346,7 +344,7 @@ const Preview = () => {
                 {t("Print more")}
                 <IoCopySharp size={22} color="white" />
               </Link>
-            </div>
+            </div> */}
           </div>
         </div>
         <GeneralError

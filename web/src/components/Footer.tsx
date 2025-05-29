@@ -1,34 +1,48 @@
 "use client";
-import {TextShimmer} from "@/components/ui/text-shimmer";
 import Image from "next/image";
-import {useTranslation} from "react-i18next";
+import { TextShimmer } from "./ui/text-shimmer";
+import { useTranslation } from "react-i18next";
 
-const Footer = () => {
-  const {t} = useTranslation();
-
+const Sponsor = () => {
+  const { t } = useTranslation();
   return (
-    <footer className="bottom-0 w-full bg-black ">
-      <a
-        className="flex flex-col items-center justify-center w-full h-full pb-4 cursor-pointer sm:flex-row sm:pb-1"
-        target="_blank"
-        rel="noopener"
-        href="https://www.instagram.com/vectr.vcp/"
+    <footer className="relative dark:border-t-white  flex-wrap px-4 border-t-black border-dashed border-t-2 border-2 py-1  bottom-0 flex items-center justify-center w-full overflow-hidden bg-white gap-2 h-max">
+      <TextShimmer
+        className="w-max relative   [--base-color:#000000] [--base-gradient-color:white] text-center text-md p-2 gap-3"
+        duration={6}
       >
-        <TextShimmer
-          className="whitespace-wrap [--base-color:#f97316] [--base-gradient-color:#fdba74] text-center text-md p-2 gap-3"
-          duration={6}
+        {t("this_event_is_sponsored_by")}
+      </TextShimmer>
+      <div className="flex items-center justify-center gap-2">
+        <a
+          href="https://didongviet.vn/"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Di Động Việt"
         >
-          {t("This application is developed and sponsored by VECTR")}
-        </TextShimmer>
-        <Image
-          width={25}
-          height={25}
-          src="/vectr.webp"
-          alt="Vectr logo"
-        />
-      </a>
+          <Image
+            width={160}
+            height={160}
+            src="/assets/ddv.jpg"
+            alt="Di động Việt logo"
+          />
+        </a>
+        <a
+          href="https://vinfast.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Vinfast"
+        >
+          <Image
+            width={50}
+            height={50}
+            src="/assets/vinfast.jpg"
+            alt="Vinfast logo"
+          />
+        </a>
+      </div>
     </footer>
   );
 };
 
-export default Footer;
+export default Sponsor;
