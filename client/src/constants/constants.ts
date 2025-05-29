@@ -10,7 +10,7 @@ export const VALID_THEMES = ["prom"] as const;
 
 export const VALID_FRAME_TYPES = ["singular", "double"] as const;
 
-export const AUTO_SELECT_COUNTDOWN_DURATION = Infinity;
+export const AUTO_SELECT_COUNTDOWN_DURATION = 35;
 
 export const NUM_OF_CAPTURE_IMAGE = 5;
 
@@ -18,7 +18,7 @@ export const CAPTURE_DURATION = 4;
 
 export const FILTER_SELECT_DURATION = 30;
 
-export const IMAGE_SELECT_DURATION = Infinity;
+export const IMAGE_SELECT_DURATION = 30;
 
 export const CLICK_SOUND_URL = "/sound/click.mp3";
 

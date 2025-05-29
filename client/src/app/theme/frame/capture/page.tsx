@@ -398,7 +398,7 @@ const CapturePage = () => {
           )}
           <div
             className={cn(
-              "w-full h-full gap-2 flex items-center justify-evenly transition duration-300",
+              "w-full h-full gap-2 flex items-center px-4 justify-evenly transition duration-300",
               isCountingDown && !isCameraError
                 ? "opacity-100"
                 : "opacity-0 pointer-events-none"
@@ -442,10 +442,10 @@ const CapturePage = () => {
 
             <div className="relative mt-3">
               <div className="absolute flex items-center justify-center -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-                <span className="text-4xl font-bold">
+                <span className="text-3xl font-bold">
                   <SlidingNumber value={cycles} padStart={false} />
                 </span>
-                <h1 className="text-4xl font-bold text-center">
+                <h1 className="text-3xl font-bold text-center">
                   /{NUM_OF_CAPTURE_IMAGE}
                 </h1>
               </div>
@@ -457,10 +457,10 @@ const CapturePage = () => {
                     isOnline &&
                     cycles < NUM_OF_CAPTURE_IMAGE
                   }
-                  strokeWidth={9}
-                  trailStrokeWidth={9}
+                  strokeWidth={6}
+                  trailStrokeWidth={6}
                   updateInterval={1}
-                  size={135}
+                  size={100}
                   strokeLinecap="square"
                   key={`${cycles}-${count}`}
                   initialRemainingTime={count}
