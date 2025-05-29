@@ -427,7 +427,7 @@ const SelectPage = () => {
               </div>
             )}
 
-            <div className="flex items-center justify-center w-full  gap-2 ">
+            <div className="flex items-center justify-center w-full flex-wrap  gap-2 ">
               {photo && (
                 <>
                   {photo.images.map((item, index) => (
@@ -443,13 +443,13 @@ const SelectPage = () => {
                       onClick={() => handleSelect(item)}
                     >
                       <Image
-                        height={400}
-                        width={400}
+                        height={300}
+                        width={300}
                         src={item.data}
                         alt="image"
                         priority
                         className={cn(
-                          "pointer-events-none",
+                          "pointer-events-none !max-w-[unset]",
                           `w-[${
                             photo.theme!.frame.slotDimensions.width * 1.1
                           }px] h-[${

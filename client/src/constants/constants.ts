@@ -87,13 +87,13 @@ export const OFFSET_Y = (47 / 3) * MULTIPLIER;
 //   );
 // };
 
-const PROM_Y_INIT_POS = 20 * MULTIPLIER;
-const PROM_IMAGE_HEIGHT = 210 * MULTIPLIER;
-const PROM_IMAGE_WIDTH = 292 * MULTIPLIER;
-const PROM_X_POS = 31 * MULTIPLIER;
+const PROM_Y_INIT_POS = 41 * MULTIPLIER;
+const PROM_IMAGE_HEIGHT = 184 * MULTIPLIER;
+const PROM_IMAGE_WIDTH = 293 * MULTIPLIER;
+const PROM_X_POS = 30 * MULTIPLIER;
 const PROM_Y_SLOT_SEPERATION = (index: number) => {
   return (
-    (280 * (index + 1) - (PROM_Y_INIT_POS / MULTIPLIER) * index) * MULTIPLIER
+    (301 * (index + 1) - (PROM_Y_INIT_POS / MULTIPLIER) * index) * MULTIPLIER
   );
 };
 
