@@ -52,7 +52,7 @@ export async function updatePrinterRegistry(printerName: string) {
 
   return new Promise<void>((resolve, reject) => {
     const importCommand = `reg import "${regFilePath}"`;
-    exec(importCommand, { shell: "powershell.exe" }, (error, _, stderr) => {
+    exec(importCommand, { shell: "powershell.exe" }, (error) => {
       if (error) {
         reject(
           new Error(`Failed to import registry settings: ${error.message}`)
