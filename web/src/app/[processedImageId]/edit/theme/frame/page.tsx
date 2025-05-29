@@ -1,34 +1,55 @@
 "use client";
-import {Carousel, CarouselContent, CarouselItem, type CarouselApi} from "@/components/ui/carousel";
-import {FrameOptions} from "@/constants/constants";
-import {usePhoto} from "@/context/PhotoContext";
-import {cn} from "@/lib/utils";
-import {WheelGesturesPlugin} from "embla-carousel-wheel-gestures";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  type CarouselApi,
+} from "@/components/ui/carousel";
+import { FrameOptions } from "@/constants/constants";
+import { usePhoto } from "@/context/PhotoContext";
+import { cn } from "@/lib/utils";
+import { WheelGesturesPlugin } from "embla-carousel-wheel-gestures";
 import Image from "next/image";
 import Link from "next/link";
-import {useCallback, useEffect, useRef, useState, useMemo} from "react";
-import {FaArrowLeft, FaArrowRight} from "react-icons/fa6";
-import {GlowEffect} from "@/components/ui/glow-effect";
-import {ValidThemeType} from "@/constants/types";
-import {ROUTES} from "@/constants/routes";
-import {useTranslation} from "react-i18next";
-import {MdOutlineArrowForwardIos, MdOutlineArrowBackIos} from "react-icons/md";
-import {useReloadConfirm} from "@/hooks/useReloadConfirm";
-import {Breadcrumb, BreadcrumbEllipsis, BreadcrumbItem, BreadcrumbList, BreadcrumbSeparator} from "@/components/ui/breadcrumb";
-import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
+import { useCallback, useEffect, useRef, useState, useMemo } from "react";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
+import { GlowEffect } from "@/components/ui/glow-effect";
+import { ValidThemeType } from "@/constants/types";
+import { ROUTES } from "@/constants/routes";
+import { useTranslation } from "react-i18next";
+import {
+  MdOutlineArrowForwardIos,
+  MdOutlineArrowBackIos,
+} from "react-icons/md";
+import { useReloadConfirm } from "@/hooks/useReloadConfirm";
+import {
+  Breadcrumb,
+  BreadcrumbEllipsis,
+  BreadcrumbItem,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const FrameEditpage = () => {
   useReloadConfirm();
-  const {photo, setPhoto} = usePhoto();
+  const { photo, setPhoto } = usePhoto();
   const [api, setApi] = useState<CarouselApi>();
   const filteredFrames = useMemo(() => {
     if (!photo || !photo.theme) return [];
-    return FrameOptions[photo.theme.name].filter((item) => item.type == photo.frameType);
+    return FrameOptions[photo.theme.name].filter(
+      (item) => item.type == photo.frameType
+    );
   }, [photo]);
   const [current, setCurrent] = useState(0);
   const initializationDoneRef = useRef(false);
   const [chosen, setChosen] = useState<boolean>(false);
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!photo?.frameType || !photo?.theme) {
@@ -56,27 +77,55 @@ const FrameEditpage = () => {
   );
 
   const handleLeftClick = useCallback(() => {
-    if (!api) return;
-    api.scrollPrev();
-  }, [api]);
+    if (!api || filteredFrames.length === 0) return;
+    // Calculate new index with wraparound
+    const newIndex = current - 1 <= 0 ? filteredFrames.length : current - 1;
+
+    // Update carousel position
+    api.scrollTo(newIndex - 1);
+
+    // Update state directly
+    setCurrent(newIndex);
+    handleFrameChange(filteredFrames[newIndex - 1]);
+    console.log("Left clicked, new index:", newIndex);
+  }, [api, current, filteredFrames, handleFrameChange]);
 
   const handleRightClick = useCallback(() => {
-    if (!api) return;
-    api.scrollNext();
-  }, [api]);
+    if (!api || filteredFrames.length === 0) return;
+    // Calculate new index with wraparound
+    const newIndex = (current % filteredFrames.length) + 1;
+
+    // Update carousel position
+    api.scrollTo(newIndex - 1);
+
+    // Update state directly
+    setCurrent(newIndex);
+    handleFrameChange(filteredFrames[newIndex - 1]);
+    console.log("Right clicked, new index:", newIndex);
+  }, [api, current, filteredFrames, handleFrameChange]);
 
   const handleCarouselItemClick = useCallback(
     (index: number) => {
-      if (!api) return;
+      if (!api || filteredFrames.length === 0) return;
+      console.log("Item clicked, index:", index);
+
+      // Update carousel position
       api.scrollTo(index);
+
+      // Update state directly
+      setCurrent(index + 1);
+      handleFrameChange(filteredFrames[index]);
+      console.log("States updated:", index + 1);
     },
-    [api]
+    [api, filteredFrames, handleFrameChange]
   );
 
   useEffect(() => {
     if (initializationDoneRef.current || !photo || !api) return;
 
-    const initIndex = filteredFrames.findIndex((item) => item.thumbnail === photo?.theme!.frame.thumbnail);
+    const initIndex = filteredFrames.findIndex(
+      (item) => item.thumbnail === photo?.theme!.frame.thumbnail
+    );
 
     if (initIndex !== -1) {
       api.scrollTo(initIndex);
@@ -92,8 +141,10 @@ const FrameEditpage = () => {
     }
 
     const handleAPISelect = () => {
+      console.log("api", api);
       if (!api) return;
       const selectedIndex = api.selectedScrollSnap();
+      console.log("api", selectedIndex);
       setCurrent(selectedIndex + 1);
       handleCarouselItemClick(selectedIndex);
       handleFrameChange(filteredFrames[selectedIndex]);
@@ -108,7 +159,12 @@ const FrameEditpage = () => {
   return (
     <>
       {photo && photo.theme && (
-        <div className={cn("flex items-center w-full justify-center h-full", chosen ? "pointer-events-none" : null)}>
+        <div
+          className={cn(
+            "flex items-center w-full justify-center h-full",
+            chosen ? "pointer-events-none" : null
+          )}
+        >
           <div className="w-[90%] sm:w-[80%] flex flex-col gap-6 ">
             <div className="flex flex-col items-center justify-between w-full gap-4 sm:flex-row sm:gap-0">
               <Link
@@ -121,7 +177,9 @@ const FrameEditpage = () => {
               <Breadcrumb className="order-0 sm:order-1 -mt-[45px] sm:mt-0 mb-[35px] sm:mb-0 self-end sm:self-center">
                 <BreadcrumbList>
                   <BreadcrumbItem>
-                    <Link href={`/${photo?.previousProcessedImageId}/`}>{t("Home")}</Link>
+                    <Link href={`/${photo?.previousProcessedImageId}/`}>
+                      {t("Home")}
+                    </Link>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
@@ -144,7 +202,11 @@ const FrameEditpage = () => {
                   </BreadcrumbItem>
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
-                    <Link href={`/${photo?.previousProcessedImageId}/edit/theme/`}>{t("Theme")}</Link>
+                    <Link
+                      href={`/${photo?.previousProcessedImageId}/edit/theme/`}
+                    >
+                      {t("Theme")}
+                    </Link>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
@@ -153,7 +215,9 @@ const FrameEditpage = () => {
                 </BreadcrumbList>
               </Breadcrumb>
             </div>
-            <h1 className="text-5xl font-semibold text-center uppercase">{t("Choose a frame")}</h1>
+            <h1 className="text-5xl font-semibold text-center uppercase">
+              {t("Choose a frame")}
+            </h1>
 
             <div className="relative flex flex-col items-center justify-center w-full gap-5 px-2 my-4">
               <Carousel
@@ -168,24 +232,40 @@ const FrameEditpage = () => {
                   {filteredFrames.map((item, index) => (
                     <CarouselItem
                       key={index}
+                      onClick={() => {
+                        handleCarouselItemClick(index);
+                      }}
                       className="pl-4 md:pl-8 relative max-w-[290px] mb-8 sm:basis-[100%] md:basis-1/2 lg:basis-1/3 hover:cursor-pointer "
                     >
-                      <div className={cn(current == index + 1 ? "border-red-500" : "border-transparent", " border-6 rounded-md", "flex flex-row")}>
-                        {Array.from({length: item.type == "singular" ? 1 : 2}, (_, _index) => {
-                          return (
-                            <Image
-                              key={_index}
-                              src={item.src}
-                              alt="Frame"
-                              height={235}
-                              width={item.type == "singular" ? 235 : 120}
-                              onClick={() => {
-                                handleCarouselItemClick(index);
-                              }}
-                              className={cn(item.type == "singular" ? "w-full" : "w-1/2", current != index + 1 ? "blur-[2px] grayscale-25" : null)}
-                            />
-                          );
-                        })}
+                      <div
+                        className={cn(
+                          current == index + 1
+                            ? "border-red-500"
+                            : "border-transparent",
+                          " border-6 rounded-md",
+                          "flex flex-row"
+                        )}
+                      >
+                        {Array.from(
+                          { length: item.type == "singular" ? 1 : 2 },
+                          (_, _index) => {
+                            return (
+                              <Image
+                                key={_index}
+                                src={item.src}
+                                alt="Frame"
+                                height={235}
+                                width={item.type == "singular" ? 235 : 120}
+                                className={cn(
+                                  item.type == "singular" ? "w-full" : "w-1/2",
+                                  current != index + 1
+                                    ? "blur-[2px] grayscale-25"
+                                    : null
+                                )}
+                              />
+                            );
+                          }
+                        )}
                       </div>
                     </CarouselItem>
                   ))}
@@ -199,16 +279,14 @@ const FrameEditpage = () => {
                   onClick={handleLeftClick}
                 />
 
-                {Array.from({length: filteredFrames.length}, (_, index) => (
+                {Array.from({ length: filteredFrames.length }, (_, index) => (
                   <div
                     key={index}
                     className="min-w-[15px] min-h-[15px] rounded-[2px] border-2 border-primary hover:cursor-pointer core-navigate"
                     style={{
                       background: current === index + 1 ? "black" : "#e2e8f0",
                     }}
-                    onClick={() => {
-                      api?.scrollTo(index);
-                    }}
+                    onClick={() => handleCarouselItemClick(index)}
                   ></div>
                 ))}
                 <MdOutlineArrowForwardIos
