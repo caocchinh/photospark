@@ -91,7 +91,7 @@ const FilterPage = () => {
         });
 
       const detectionResults = await Promise.all(detectionPromises);
-      const maxPeopleCount = Math.max(1, ...detectionResults);
+      const maxPeopleCount = Math.ceil(Math.max(1, ...detectionResults) / 2);
       setPeopleCount(maxPeopleCount);
       setIsDetectionDone(true);
     }
