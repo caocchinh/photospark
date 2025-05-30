@@ -12,7 +12,7 @@ export const VALID_FRAME_TYPES = ["singular", "double"] as const;
 
 export const AUTO_SELECT_COUNTDOWN_DURATION = 35;
 
-export const NUM_OF_CAPTURE_IMAGE = 5;
+export const NUM_OF_CAPTURE_IMAGE = 4;
 
 export const CAPTURE_DURATION = 4;
 

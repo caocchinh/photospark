@@ -10,7 +10,7 @@ export const VALID_THEMES = ["prom"] as const;
 
 export const VALID_FRAME_TYPES = ["singular", "double"] as const;
 
-export const NUM_OF_CAPTURE_IMAGE = 5;
+export const NUM_OF_CAPTURE_IMAGE = 4;
 
 export const PRINT_PRICING = [
   { quantity: 1, price: 20000 },
