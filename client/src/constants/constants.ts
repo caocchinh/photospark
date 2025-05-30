@@ -18,7 +18,7 @@ export const CAPTURE_DURATION = 4;
 
 export const FILTER_SELECT_DURATION = 30;
 
-export const IMAGE_SELECT_DURATION = 30;
+export const IMAGE_SELECT_DURATION = 45;
 
 export const CLICK_SOUND_URL = "/sound/click.mp3";
 

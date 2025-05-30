@@ -91,7 +91,7 @@ const FilterPage = () => {
         });
 
       const detectionResults = await Promise.all(detectionPromises);
-      const maxPeopleCount = Math.max(0, ...detectionResults);
+      const maxPeopleCount = Math.max(1, ...detectionResults);
       setPeopleCount(maxPeopleCount);
       setIsDetectionDone(true);
     }
@@ -538,7 +538,9 @@ const FilterPage = () => {
                     <Button
                       className={cn(
                         "flex text-xl text-center items-center justify-center gap-2 bg-foreground text-background rounded px-4 py-6 font-light hover:opacity-[85%] w-full relative z-10",
-                        printed || !isMediaUploaded || !isDetectionDone
+                        printed ||
+                          !isMediaUploaded ||
+                          (!isDetectionDone && quantityType == "auto")
                           ? "pointer-events-none opacity-[85%]"
                           : null
                       )}
