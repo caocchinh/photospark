@@ -1,5 +1,5 @@
 <div align="center">
- <img src="client/public/vteam-logo-large.png" alt="Photospark Logo" width="200"/>
+ <img src="https://github.com/caocchinh/photospark/blob/master/client/public/vteam-logo.webp?raw=true" alt="Photospark Logo" width="167"/>
   <h1>Photospark 📸</h1>
   <p>
     <strong>A modern photo booth application built with Next.js and Socket.IO that offers real-time photo capture, custom frames, Instagram-style filters, and direct printing to Canon SELPHY CP1500 printers.</strong>
@@ -30,34 +30,66 @@
 
 ## 📖 Introduction
 
-**Photospark** is a feature-rich photo booth application designed to capture memories with style. Built for events and personal use, it seamlessly integrates high-quality photo capture with instant printing capabilities using the Canon SELPHY CP1500. With a suite of creative tools including custom frames, filters, and video recording, Photospark transforms any gathering into an interactive photo experience.
+**Photospark** is a feature-rich photo booth application designed to capture memories with style. Built specifically for the **Vinschool Central Park Student Council's PROM event**, it's engineered to handle large-scale gatherings with up to **600 attendees**. The application integrates high-quality photo capture with a Canon camera with instant printing capabilities using the Canon SELPHY CP1500. With a custom frames, filters, and live video recording.
+
+## 📷 Gallery
+
+Beautiful, heartfelt memories captured by the app — bringing the countless smiles to students and teachers before and on the event 🥰📸:
+
+<div align="center">
+  <table>
+    <tr>
+      <td width="33%">
+        <img src="https://placehold.co/400x300/png?text=PROM+Memories+1" alt="Gallery 1" style="border-radius: 10px; width: 100%;" />
+      </td>
+      <td width="33%">
+        <img src="https://placehold.co/400x300/png?text=PROM+Memories+2" alt="Gallery 2" style="border-radius: 10px; width: 100%;" />
+      </td>
+      <td width="33%">
+        <img src="https://placehold.co/400x300/png?text=PROM+Memories+3" alt="Gallery 3" style="border-radius: 10px; width: 100%;" />
+      </td>
+    </tr>
+    <tr>
+      <td width="33%">
+        <img src="https://placehold.co/400x300/png?text=PROM+Memories+4" alt="Gallery 4" style="border-radius: 10px; width: 100%;" />
+      </td>
+      <td width="33%">
+        <img src="https://placehold.co/400x300/png?text=PROM+Memories+5" alt="Gallery 5" style="border-radius: 10px; width: 100%;" />
+      </td>
+      <td width="33%">
+        <img src="https://placehold.co/400x300/png?text=PROM+Memories+6" alt="Gallery 6" style="border-radius: 10px; width: 100%;" />
+      </td>
+    </tr>
+  </table>
+</div>
 
 ## ✨ Features
 
 Photospark is packed with features to create the perfect photo booth experience:
 
-- **📸 Real-time Photo Capture**: High-quality webcam support with real-time preview, allowing users to strike the perfect pose.
+- **🎨 Creative Themes**: Apply beautiful single or double layouts to your photos, perfect for branding or themed events.
 
 <div align="center">
-  <img src="https://placehold.co/600x400/png?text=Real-time+Capture+Preview" alt="Real-time Capture" style="border-radius: 10px; margin-bottom: 20px; border: 3px solid #0084ff;" />
+  <img src="https://github.com/caocchinh/photospark/blob/master/client/public/github/chose.webp?raw=true" alt="Filters and Themes" style="border-radius: 10px; margin-bottom: 20px;" />
+  <img src="https://github.com/caocchinh/photospark/blob/master/client/public/github/frame.webp?raw=true" alt="Filters and Themes" style="border-radius: 10px; margin-bottom: 20px;" />
 </div>
 
-- **🎨 Creative Filters & Themes**: Choose from over 30 Instagram-style filters and multiple themes like PROM and Usagyuuun to match the event's vibe.
+- **📸 Real-time Photo Capture**: High-quality webcam/camera support with real-time preview, allowing users to strike the perfect pose.
 
 <div align="center">
-  <img src="https://placehold.co/600x400/png?text=Filters+and+Themes" alt="Filters and Themes" style="border-radius: 10px; margin-bottom: 20px; border: 3px solid #0084ff;" />
+  <img src="https://github.com/caocchinh/photospark/blob/master/client/public/github/capture.webp?raw=true" alt="Real-time Capture" style="border-radius: 10px; margin-bottom: 20px;" />
 </div>
 
 - **🖨️ Direct Printing**: Seamless integration with Canon SELPHY CP1500 printers for instant physical keepsakes. Supports Japan Hagaki postcard size.
 
 <div align="center">
-  <img src="https://placehold.co/600x400/png?text=Direct+Printing" alt="Direct Printing" style="border-radius: 10px; margin-bottom: 20px; border: 3px solid #0084ff;" />
+  <img src="https://placehold.co/600x400/png?text=Direct+Printing" alt="Direct Printing" style="border-radius: 10px; margin-bottom: 20px;" />
 </div>
 
-- **🎞️ Custom Frames**: Apply beautiful single or double layouts to your photos, perfect for branding or themed events.
+- **🎞️ Custom Frames**: Choose from over 30 Instagram-style filters and multiple themes like PROM and Usagyuuun to match the event's vibe.
 
 <div align="center">
-  <img src="https://placehold.co/600x400/png?text=Custom+Frames" alt="Custom Frames" style="border-radius: 10px; margin-bottom: 20px; border: 3px solid #0084ff;" />
+  <img src="https://placehold.co/600x400/png?text=Custom+Frames" alt="Custom Frames" style="border-radius: 10px; margin-bottom: 20px;" />
 </div>
 
 - **🎥 Video Recording**: Capture moments in motion with video recording capabilities, processed automatically with FFmpeg.
@@ -68,7 +100,7 @@ Photospark is packed with features to create the perfect photo booth experience:
   - **Share**: Generate and download QR codes or copy direct links for easy sharing with friends
 
 <div align="center">
-  <img src="https://placehold.co/600x400/png?text=QR+Code+Feature" alt="QR Code Feature" style="border-radius: 10px; margin-bottom: 20px; border: 3px solid #0084ff;" />
+  <img src="https://placehold.co/600x400/png?text=QR+Code+Feature" alt="QR Code Feature" style="border-radius: 10px; margin-bottom: 20px;" />
 </div>
 
 - **☁️ Cloud Integration**: Securely store images using Cloudflare R2 and manage data with Neon PostgreSQL.
