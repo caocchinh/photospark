@@ -134,7 +134,7 @@ export default function HomePage() {
                     className="z-[0]"
                   />
                   <Link
-                    href="/fb1e1c95-364a-4254-b477-0f8bd6bf4394"
+                    href="/c2bd4468-4841-4a9c-84e0-48b68e6846ba"
                     title="Photobooth demo"
                     className="relative z-10 flex items-center justify-center w-full gap-2 px-4 py-2 mx-auto text-white bg-black rounded-sm"
                   >
