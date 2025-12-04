@@ -113,16 +113,22 @@ Photospark is packed with features to create the perfect photo booth experience:
   <img src="https://github.com/caocchinh/photospark/blob/master/client/public/github/capture.webp?raw=true" alt="Real-time Capture" style="border-radius: 10px; margin-bottom: 20px;" />
 </div>
 
+- **🖼️ Photo selection**: User can chose their favorite photos after the capture is completed.
+
+<div align="center">
+  <img src="https://github.com/caocchinh/photospark/blob/master/client/public/github/select.webp?raw=true" alt="Direct Printing" style="border-radius: 10px; margin-bottom: 20px;" />
+</div>
+
+- **🎞️ Custom filters**: Choose from over 30 Instagram-style filters to match the event's vibe.
+
+<div align="center">
+  <img src="https://github.com/caocchinh/photospark/blob/master/client/public/github/filter.webp?raw=true" alt="Custom Frames" style="border-radius: 10px; margin-bottom: 20px;" />
+</div>
+
 - **🖨️ Direct Printing**: Seamless integration with Canon SELPHY CP1500 printers for instant physical keepsakes. Supports Japan Hagaki postcard size.
 
 <div align="center">
-  <img src="https://placehold.co/600x400/png?text=Direct+Printing" alt="Direct Printing" style="border-radius: 10px; margin-bottom: 20px;" />
-</div>
-
-- **🎞️ Custom Frames**: Choose from over 30 Instagram-style filters and multiple themes like PROM and Usagyuuun to match the event's vibe.
-
-<div align="center">
-  <img src="https://placehold.co/600x400/png?text=Custom+Frames" alt="Custom Frames" style="border-radius: 10px; margin-bottom: 20px;" />
+  <img src="https://github.com/caocchinh/photospark/blob/master/client/public/github/product.webp?raw=true" alt="Direct Printing" style="border-radius: 10px; margin-bottom: 20px;" />
 </div>
 
 - **🎥 Video Recording**: Capture moments in motion with video recording capabilities, processed automatically with FFmpeg.
@@ -133,7 +139,8 @@ Photospark is packed with features to create the perfect photo booth experience:
   - **Share**: Generate and download QR codes or copy direct links for easy sharing with friends
 
 <div align="center">
-  <img src="https://placehold.co/600x400/png?text=QR+Code+Feature" alt="QR Code Feature" style="border-radius: 10px; margin-bottom: 20px;" />
+  <img src="https://github.com/caocchinh/photospark/blob/master/client/public/github/web.webp?raw=true" alt="Direct Printing" style="border-radius: 10px; margin-bottom: 20px;" />
+  <img src="https://github.com/caocchinh/photospark/blob/master/client/public/github/web2.webp?raw=true" alt="Direct Printing" style="border-radius: 10px; margin-bottom: 20px;" />
 </div>
 
 - **☁️ Cloud Integration**: Securely store images using Cloudflare R2 and manage data with Neon PostgreSQL.
