@@ -34,32 +34,65 @@
 
 ## 📷 Gallery
 
-Beautiful, heartfelt memories captured by the app — bringing the countless smiles to students and teachers before and on the event 🥰📸:
+Some beautiful, heartfelt memories captured by the app — bringing the countless smiles to students and teachers before and on the event 🥰📸:
 
 <div align="center">
   <table>
     <tr>
       <td width="33%">
-        <img src="https://placehold.co/400x300/png?text=PROM+Memories+1" alt="Gallery 1" style="border-radius: 10px; width: 100%;" />
+        <img src="https://github.com/caocchinh/photospark/blob/master/client/public/github/1.webp?raw=true" alt="Gallery 1" style="border-radius: 10px; width: 100%;" />
       </td>
       <td width="33%">
-        <img src="https://placehold.co/400x300/png?text=PROM+Memories+2" alt="Gallery 2" style="border-radius: 10px; width: 100%;" />
+        <img src="https://github.com/caocchinh/photospark/blob/master/client/public/github/2.webp?raw=true" alt="Gallery 2" style="border-radius: 10px; width: 100%;" />
       </td>
       <td width="33%">
-        <img src="https://placehold.co/400x300/png?text=PROM+Memories+3" alt="Gallery 3" style="border-radius: 10px; width: 100%;" />
+        <img src="https://github.com/caocchinh/photospark/blob/master/client/public/github/3.webp?raw=true" alt="Gallery 3" style="border-radius: 10px; width: 100%;" />
       </td>
     </tr>
     <tr>
       <td width="33%">
-        <img src="https://placehold.co/400x300/png?text=PROM+Memories+4" alt="Gallery 4" style="border-radius: 10px; width: 100%;" />
+        <img src="https://github.com/caocchinh/photospark/blob/master/client/public/github/4.webp?raw=true" alt="Gallery 4" style="border-radius: 10px; width: 100%;" />
       </td>
       <td width="33%">
-        <img src="https://placehold.co/400x300/png?text=PROM+Memories+5" alt="Gallery 5" style="border-radius: 10px; width: 100%;" />
+        <img src="https://github.com/caocchinh/photospark/blob/master/client/public/github/5.webp?raw=true" alt="Gallery 5" style="border-radius: 10px; width: 100%;" />
       </td>
       <td width="33%">
-        <img src="https://placehold.co/400x300/png?text=PROM+Memories+6" alt="Gallery 6" style="border-radius: 10px; width: 100%;" />
+        <img src="https://github.com/caocchinh/photospark/blob/master/client/public/github/6.webp?raw=true" alt="Gallery 6" style="border-radius: 10px; width: 100%;" />
       </td>
     </tr>
+     <tr>
+      <td width="33%">
+        <img src="https://github.com/caocchinh/photospark/blob/master/client/public/github/7.webp?raw=true" alt="Gallery 7" style="border-radius: 10px; width: 100%;" />
+      </td>
+      <td width="33%">
+        <img src="https://github.com/caocchinh/photospark/blob/master/client/public/github/8.webp?raw=true" alt="Gallery 8" style="border-radius: 10px; width: 100%;" />
+      </td>
+      <td width="33%">
+        <img src="https://github.com/caocchinh/photospark/blob/master/client/public/github/9.webp?raw=true" alt="Gallery 9" style="border-radius: 10px; width: 100%;" />
+      </td>
+    </tr>
+    <tr>
+      <td width="33%">
+        <img src="https://github.com/caocchinh/photospark/blob/master/client/public/github/10.webp?raw=true" alt="Gallery 10" style="border-radius: 10px; width: 100%;" />
+      </td>
+      <td width="33%">
+        <img src="https://github.com/caocchinh/photospark/blob/master/client/public/github/11.webp?raw=true" alt="Gallery 11" style="border-radius: 10px; width: 100%;" />
+      </td>
+      <td width="33%">
+        <img src="https://github.com/caocchinh/photospark/blob/master/client/public/github/12.webp?raw=true" alt="Gallery 12" style="border-radius: 10px; width: 100%;" />
+      </td>
+    </tr>
+     <tr>
+      <td width="33%">
+        <img src="https://github.com/caocchinh/photospark/blob/master/client/public/github/13.webp?raw=true" alt="Gallery 13" style="border-radius: 10px; width: 100%;" />
+      </td>
+      <td width="33%">
+        <img src="https://github.com/caocchinh/photospark/blob/master/client/public/github/14.webp?raw=true" alt="Gallery 14" style="border-radius: 10px; width: 100%;" />
+      </td>
+       <td width="33%">
+        <img src="https://github.com/caocchinh/photospark/blob/master/client/public/github/15.webp?raw=true" alt="Gallery 15" style="border-radius: 10px; width: 100%;" />
+      </td>
+    
   </table>
 </div>
 
@@ -67,7 +100,7 @@ Beautiful, heartfelt memories captured by the app — bringing the countless smi
 
 Photospark is packed with features to create the perfect photo booth experience:
 
-- **🎨 Creative Themes**: Apply beautiful single or double layouts to your photos, perfect for branding or themed events.
+- **🎨 Creative Themes**: Apply beautiful single or double layouts to your photos.
 
 <div align="center">
   <img src="https://github.com/caocchinh/photospark/blob/master/client/public/github/chose.webp?raw=true" alt="Filters and Themes" style="border-radius: 10px; margin-bottom: 20px;" />
